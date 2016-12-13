@@ -1,0 +1,26 @@
+{
+  "name": "ui-core",
+  "version": "2.56.0",
+  "description": "ManyWho HTML5 React Bootstrap components",
+  "author": "ManyWho",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manywho/ui-bootstrap.git"
+  },
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-add-src": "^0.2.0",
+    "gulp-load-plugins": "^1.2.2",
+    "gulp-rev": "^7.0.0",
+    "gulp-sourcemaps": "^1.5.1",
+    "gulp-tslint": "^7.0.1",
+    "gulp-typescript": "^2.13.4",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "run-sequence": "^1.2.1",
+    "tslint": "^4.0.2",
+    "typescript": "^2.0.2",
+    "yargs": "^2.3.0"
+  }
+}
