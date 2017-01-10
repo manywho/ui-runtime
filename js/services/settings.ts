@@ -128,6 +128,21 @@ manywho.settings = (function (manywho, $) {
 		formatting: {
 			isEnabled: false,
 			currency: '0.00'
+		},
+		tours: {
+			defaults: {
+				target: null,
+				title: null,
+				content: null,
+				placement: 'bottom',
+				showNext: true,
+				showBack: true,
+				offset: null,
+				align: 'center',
+				order: null
+			},
+			autoStart: false,
+			container: '.mw-bs'
 		}
 	};
 
