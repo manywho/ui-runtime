@@ -59,7 +59,25 @@ manywho.formatting = (function (manywho, moment) {
         { key: 'zzz', value: 'ZZ' }
     ];
 
+    let culture = 'en-US';
+
     return {
+        initialize(flowKey) {
+            if (manywho.settings.global('i18n.culture', flowKey) && numbro) {
+                culture = manywho.settings.global('i18n.culture', flowKey);
+            }
+            else if (window.navigator && window.navigator.language && window.navigator.language.includes('-')) {
+                const parts = window.navigator.language.split('-');
+                const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
+                if (numbro.cultures()[userCulture])
+                    culture = userCulture;
+                else
+                    culture = 'en-US';
+            }
+            else
+                culture = 'en-US';
+        },
+
         format(value, format, contentType, flowKey) {
             if (!manywho.settings.global('formatting.isEnabled', flowKey, false) || manywho.utils.isNullOrWhitespace(contentType))
                 return value;
@@ -90,11 +108,11 @@ manywho.formatting = (function (manywho, moment) {
                     return 'L LT';
                 else if (format === 'G')
                     return 'L LTS';
-                else if (format === 'm' || format === 'M')
+                else if (format === 'm')
                     return 'MMMM D';
-                else if (format === 'r' || format === 'R')
+                else if (format === 'r')
                     return 'ddd, DD MMM YYYY HH:mm:ss [GMT]';
-                else if (format === 's' || format === 'S')
+                else if (format === 's')
                     return 'YYYY-MM-DD[T]HH:mm:ss';
                 else if (format === 't')
                     return 'LT';
@@ -104,7 +122,7 @@ manywho.formatting = (function (manywho, moment) {
                     return 'YYYY-MM-DD HH:mm:ss[Z]';
                 else if (format === 'U')
                     return 'dddd, LL LTS';
-                else if (format === 'y' || format === 'Y')
+                else if (format === 'y')
                     return 'MMMM YYYY';
 
                 const parts = format.split(dateTimeFormatRegex);
@@ -149,7 +167,7 @@ manywho.formatting = (function (manywho, moment) {
                 if (!parsedDateTime.isValid())
                     return dateTime;
 
-                if (format !== 'r' && format !== 'R' && format !== 'u')
+                if (format !== 'r' && format !== 'u')
                     parsedDateTime.utcOffset(offset);
 
                 return parsedDateTime.format(momentFormat);
@@ -172,10 +190,15 @@ manywho.formatting = (function (manywho, moment) {
                 if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
                     return (new Number(value)).toExponential();
 
-                if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1)
-                    return numbro(value).formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'), (value) => {
-                        return value;
-                    });
+                if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
+                    let formattedNumber = numbro(value);
+                    numbro.culture(culture);
+
+                    formattedNumber = formattedNumber.formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'));
+                    numbro.culture('en-US');
+
+                    return formattedNumber;
+                }
 
                 format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
 
@@ -200,7 +223,13 @@ manywho.formatting = (function (manywho, moment) {
                     });
                 }
 
-                return numbro(value).format(format);
+                let formattedNumber = numbro(value);
+                numbro.culture(culture);
+
+                formattedNumber.format(format);
+                numbro.culture('en-US');
+
+                return formattedNumber;
             }
             catch (ex) {
                 manywho.log.error(ex);
