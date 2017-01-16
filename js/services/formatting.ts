@@ -17,197 +17,197 @@ declare var numbro: any;
 
 manywho.formatting = (function (manywho, moment) {
 
-	const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
-	const dateTimeFormatMappings: any = [
-		{ key: 'd', value: 'D' },
-		{ key: 'dd', value: 'DD' },
-		{ key: 'ddd', value: 'ddd' },
-		{ key: 'dddd', value: 'dddd' },
-		{ key: 'f', value: 'S' },
-		{ key: 'ff', value: 'SS' },
-		{ key: 'fff', value: 'SSS' },
-		{ key: 'ffff', value: 'SSSS' },
-		{ key: 'fffff', value: 'SSSSS' },
-		{ key: 'ffffff', value: 'SSSSSS' },
-		{ key: 'F', value: 'S' },
-		{ key: 'FF', value: 'SS' },
-		{ key: 'FFF', value: 'SSS' },
-		{ key: 'FFFF', value: 'SSSS' },
-		{ key: 'FFFFF', value: 'SSSSS' },
-		{ key: 'FFFFFF', value: 'SSSSSS' },
-		{ key: 'h', value: 'h' },
-		{ key: 'hh', value: 'hh' },
-		{ key: 'H', value: 'HH' },
-		{ key: 'HH', value: 'HH' },
-		{ key: 'K', value: 'Z' },
-		{ key: 'm', value: 'm' },
-		{ key: 'mm', value: 'mm' },
-		{ key: 'M', value: 'M' },
-		{ key: 'MM', value: 'MM' },
-		{ key: 'MMM', value: 'MMM' },
-		{ key: 'MMMM', value: 'MMMM' },
-		{ key: 's', value: 's' },
-		{ key: 'ss', value: 'ss' },
-		{ key: 't', value: 'a' },
-		{ key: 'tt', value: 'A' },
-		{ key: 'y', value: 'YY' },
-		{ key: 'yy', value: 'YY' },
-		{ key: 'yyy', value: 'YYYY' },
-		{ key: 'yyyy', value: 'YYYY' },
-		{ key: 'z', value: 'ZZ' },
-		{ key: 'zz', value: 'ZZ' },
-		{ key: 'zzz', value: 'ZZ' }
-	];
+    const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
+    const dateTimeFormatMappings: any = [
+        { key: 'd', value: 'D' },
+        { key: 'dd', value: 'DD' },
+        { key: 'ddd', value: 'ddd' },
+        { key: 'dddd', value: 'dddd' },
+        { key: 'f', value: 'S' },
+        { key: 'ff', value: 'SS' },
+        { key: 'fff', value: 'SSS' },
+        { key: 'ffff', value: 'SSSS' },
+        { key: 'fffff', value: 'SSSSS' },
+        { key: 'ffffff', value: 'SSSSSS' },
+        { key: 'F', value: 'S' },
+        { key: 'FF', value: 'SS' },
+        { key: 'FFF', value: 'SSS' },
+        { key: 'FFFF', value: 'SSSS' },
+        { key: 'FFFFF', value: 'SSSSS' },
+        { key: 'FFFFFF', value: 'SSSSSS' },
+        { key: 'h', value: 'h' },
+        { key: 'hh', value: 'hh' },
+        { key: 'H', value: 'HH' },
+        { key: 'HH', value: 'HH' },
+        { key: 'K', value: 'Z' },
+        { key: 'm', value: 'm' },
+        { key: 'mm', value: 'mm' },
+        { key: 'M', value: 'M' },
+        { key: 'MM', value: 'MM' },
+        { key: 'MMM', value: 'MMM' },
+        { key: 'MMMM', value: 'MMMM' },
+        { key: 's', value: 's' },
+        { key: 'ss', value: 'ss' },
+        { key: 't', value: 'a' },
+        { key: 'tt', value: 'A' },
+        { key: 'y', value: 'YY' },
+        { key: 'yy', value: 'YY' },
+        { key: 'yyy', value: 'YYYY' },
+        { key: 'yyyy', value: 'YYYY' },
+        { key: 'z', value: 'ZZ' },
+        { key: 'zz', value: 'ZZ' },
+        { key: 'zzz', value: 'ZZ' }
+    ];
 
-	return {
-		format(value, format, contentType, flowKey) {
-			if (!manywho.settings.global('formatting.isEnabled', flowKey, false) || manywho.utils.isNullOrWhitespace(contentType))
-				return value;
+    return {
+        format(value, format, contentType, flowKey) {
+            if (!manywho.settings.global('formatting.isEnabled', flowKey, false) || manywho.utils.isNullOrWhitespace(contentType))
+                return value;
 
-			switch (contentType.toUpperCase()) {
-				case manywho.component.contentTypes.datetime:
-					return manywho.formatting.dateTime(value, format, flowKey);
+            switch (contentType.toUpperCase()) {
+                case manywho.component.contentTypes.datetime:
+                    return manywho.formatting.dateTime(value, format, flowKey);
 
-				case manywho.component.contentTypes.number:
-					return manywho.formatting.number(value, format, flowKey);
-			}
+                case manywho.component.contentTypes.number:
+                    return manywho.formatting.number(value, format, flowKey);
+            }
 
-			return value;
-		},
+            return value;
+        },
 
-		toMomentFormat(format: string) {
-			if (!manywho.utils.isNullOrEmpty(format)) {
+        toMomentFormat(format: string) {
+            if (!manywho.utils.isNullOrEmpty(format)) {
 
-				if (format === 'd')
-					return 'l';
-				else if (format === 'D')
-					return 'dddd, MMMM DD, YYYY';
-				else if (format === 'f')
-					return 'LLLL';
-				else if (format === 'F')
-					return 'dddd, LL LTS';
-				else if (format === 'g')
-					return 'L LT';
-				else if (format === 'G')
-					return 'L LTS';
-				else if (format === 'm' || format === 'M')
-					return 'MMMM D';
-				else if (format === 'r' || format === 'R')
-					return 'ddd, DD MMM YYYY HH:mm:ss [GMT]';
-				else if (format === 's' || format === 'S')
-					return 'YYYY-MM-DD[T]HH:mm:ss';
-				else if (format === 't')
-					return 'LT';
-				else if (format === 'T')
-					return 'LTS';
-				else if (format === 'u')
-					return 'YYYY-MM-DD HH:mm:ss[Z]';
-				else if (format === 'U')
-					return 'dddd, LL LTS';
-				else if (format === 'y' || format === 'Y')
-					return 'MMMM YYYY';
+                if (format === 'd')
+                    return 'l';
+                else if (format === 'D')
+                    return 'dddd, MMMM DD, YYYY';
+                else if (format === 'f')
+                    return 'LLLL';
+                else if (format === 'F')
+                    return 'dddd, LL LTS';
+                else if (format === 'g')
+                    return 'L LT';
+                else if (format === 'G')
+                    return 'L LTS';
+                else if (format === 'm' || format === 'M')
+                    return 'MMMM D';
+                else if (format === 'r' || format === 'R')
+                    return 'ddd, DD MMM YYYY HH:mm:ss [GMT]';
+                else if (format === 's' || format === 'S')
+                    return 'YYYY-MM-DD[T]HH:mm:ss';
+                else if (format === 't')
+                    return 'LT';
+                else if (format === 'T')
+                    return 'LTS';
+                else if (format === 'u')
+                    return 'YYYY-MM-DD HH:mm:ss[Z]';
+                else if (format === 'U')
+                    return 'dddd, LL LTS';
+                else if (format === 'y' || format === 'Y')
+                    return 'MMMM YYYY';
 
-				const parts = format.split(dateTimeFormatRegex);
+                const parts = format.split(dateTimeFormatRegex);
 
-				if (parts) {
-					let parsedFormat = format;
+                if (parts) {
+                    let parsedFormat = format;
 
-					parts.forEach(part => {
-						const mapping = dateTimeFormatMappings.find(item => item.key === part);
-						parsedFormat = mapping ? parsedFormat.replace(part, mapping.value) : parsedFormat;
-					});
+                    parts.forEach(part => {
+                        const mapping = dateTimeFormatMappings.find(item => item.key === part);
+                        parsedFormat = mapping ? parsedFormat.replace(part, mapping.value) : parsedFormat;
+                    });
 
-					return parsedFormat;
-				}
-			}
+                    return parsedFormat;
+                }
+            }
 
-			return null;
-		},
+            return null;
+        },
 
-		dateTime: function (dateTime, format: string, flowKey: string) {
-			if (!manywho.settings.global('formatting.isEnabled', flowKey, false))
-				return dateTime;
+        dateTime: function (dateTime, format: string, flowKey: string) {
+            if (!manywho.settings.global('formatting.isEnabled', flowKey, false))
+                return dateTime;
 
-			let offset = null;
+            let offset = null;
 
-			if (manywho.settings.global('i18n.overrideTimezoneOffset', flowKey)
-				&& !manywho.utils.isNullOrUndefined(manywho.settings.global('i18n.timezoneOffset', flowKey)))
-				offset = manywho.settings.global('i18n.timezoneOffset', flowKey);
+            if (manywho.settings.global('i18n.overrideTimezoneOffset', flowKey)
+                && !manywho.utils.isNullOrUndefined(manywho.settings.global('i18n.timezoneOffset', flowKey)))
+                offset = manywho.settings.global('i18n.timezoneOffset', flowKey);
 
-			if (manywho.utils.isNullOrUndefined(offset) && manywho.utils.isNullOrWhitespace(format))
-				return dateTime;
+            if (manywho.utils.isNullOrUndefined(offset) && manywho.utils.isNullOrWhitespace(format))
+                return dateTime;
 
-			try {
-				const momentFormat = manywho.formatting.toMomentFormat(format);
-				const formats = [moment.ISO_8601];
+            try {
+                const momentFormat = manywho.formatting.toMomentFormat(format);
+                const formats = [moment.ISO_8601];
 
-				if (momentFormat)
-					formats.unshift(momentFormat);
+                if (momentFormat)
+                    formats.unshift(momentFormat);
 
-				let parsedDateTime = offset !== null ? moment.utc(dateTime, formats) : moment(dateTime, formats);
+                let parsedDateTime = offset !== null ? moment.utc(dateTime, formats) : moment(dateTime, formats);
 
-				if (!parsedDateTime.isValid())
-					return dateTime;
+                if (!parsedDateTime.isValid())
+                    return dateTime;
 
-				if (format !== 'r' && format !== 'R' && format !== 'u')
-					parsedDateTime.utcOffset(offset);
+                if (format !== 'r' && format !== 'R' && format !== 'u')
+                    parsedDateTime.utcOffset(offset);
 
-				return parsedDateTime.format(momentFormat);
-			}
-			catch (ex) {
-				manywho.log.error(ex);
-			}
+                return parsedDateTime.format(momentFormat);
+            }
+            catch (ex) {
+                manywho.log.error(ex);
+            }
 
-			return dateTime;
-		},
+            return dateTime;
+        },
 
-		number: function (value: number | string, format: string, flowKey: string): string {
-			if (manywho.utils.isNullOrWhitespace(format) || !manywho.settings.global('formatting.isEnabled', flowKey, false))
-				return value.toString();
+        number: function (value: number | string, format: string, flowKey: string): string {
+            if (manywho.utils.isNullOrWhitespace(format) || !manywho.settings.global('formatting.isEnabled', flowKey, false))
+                return value.toString();
 
-			if (typeof value === 'string' && manywho.utils.isNullOrWhitespace(value))
-				return value;
+            if (typeof value === 'string' && manywho.utils.isNullOrWhitespace(value))
+                return value;
 
-			try {
-				if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
-					return (new Number(value)).toExponential();
+            try {
+                if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
+                    return (new Number(value)).toExponential();
 
-				if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1)
-					return numbro(value).formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'), (value) => {
-						return value;
-					});
+                if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1)
+                    return numbro(value).formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'), (value) => {
+                        return value;
+                    });
 
-				format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
+                format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
 
-				if (format.indexOf('.') !== -1) {
-					const numberString = value.toString();
-					const decimals = numberString.substring(numberString.indexOf('.') + 1);
-					const decimalsFormat = format.substring(format.indexOf('.') + 1);
+                if (format.indexOf('.') !== -1) {
+                    const numberString = value.toString();
+                    const decimals = numberString.substring(numberString.indexOf('.') + 1);
+                    const decimalsFormat = format.substring(format.indexOf('.') + 1);
 
-					format = format.substring(0, format.indexOf('.') + 1);
+                    format = format.substring(0, format.indexOf('.') + 1);
 
-					decimalsFormat.split('').forEach((part, index) => {
-						switch (part.toUpperCase()) {
-							case '#':
-								if (index < decimals.length)
-									format += 0;
-								break;
+                    decimalsFormat.split('').forEach((part, index) => {
+                        switch (part.toUpperCase()) {
+                            case '#':
+                                if (index < decimals.length)
+                                    format += 0;
+                                break;
 
-							case '0':
-								format += '0';
-								break;
-						}
-					});
-				}
+                            case '0':
+                                format += '0';
+                                break;
+                        }
+                    });
+                }
 
-				return numbro(value).format(format);
-			}
-			catch (ex) {
-				manywho.log.error(ex);
-			}
+                return numbro(value).format(format);
+            }
+            catch (ex) {
+                manywho.log.error(ex);
+            }
 
-			return value.toString();
-		}
-	};
+            return value.toString();
+        }
+    };
 
 })(manywho, moment);
