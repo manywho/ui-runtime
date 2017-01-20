@@ -226,7 +226,7 @@ manywho.formatting = (function (manywho, moment) {
                 let formattedNumber = numbro(value);
                 numbro.culture(culture);
 
-                formattedNumber.format(format);
+                formattedNumber = formattedNumber.format(format);
                 numbro.culture('en-US');
 
                 return formattedNumber;
