@@ -66,7 +66,7 @@ manywho.formatting = (function (manywho, moment) {
             if (manywho.settings.global('i18n.culture', flowKey) && numbro) {
                 culture = manywho.settings.global('i18n.culture', flowKey);
             }
-            else if (window.navigator && window.navigator.language && window.navigator.language.includes('-')) {
+            else if (window.navigator && window.navigator.language && window.navigator.language.indexOf('-') !== -1) {
                 const parts = window.navigator.language.split('-');
                 const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
                 if (numbro.cultures()[userCulture])
@@ -146,31 +146,34 @@ manywho.formatting = (function (manywho, moment) {
             if (!manywho.settings.global('formatting.isEnabled', flowKey, false))
                 return dateTime;
 
-            let offset = null;
+            let offset = moment().utcOffset();
+            const overrideTimezoneOffset = manywho.settings.global('i18n.overrideTimezoneOffset', flowKey);
 
-            if (manywho.settings.global('i18n.overrideTimezoneOffset', flowKey)
-                && !manywho.utils.isNullOrUndefined(manywho.settings.global('i18n.timezoneOffset', flowKey)))
+            if (overrideTimezoneOffset && !manywho.utils.isNullOrUndefined(manywho.settings.global('i18n.timezoneOffset', flowKey)))
                 offset = manywho.settings.global('i18n.timezoneOffset', flowKey);
 
-            if (manywho.utils.isNullOrUndefined(offset) && manywho.utils.isNullOrWhitespace(format))
+            if ((manywho.utils.isNullOrUndefined(offset) || offset === 0) && manywho.utils.isNullOrWhitespace(format) && !overrideTimezoneOffset)
                 return dateTime;
 
             try {
-                const momentFormat = manywho.formatting.toMomentFormat(format);
+                const momentFormat = manywho.utils.isNullOrWhitespace(format) ? null : manywho.formatting.toMomentFormat(format);
                 const formats = [moment.ISO_8601];
 
                 if (momentFormat)
                     formats.unshift(momentFormat);
 
-                let parsedDateTime = offset !== null ? moment.utc(dateTime, formats) : moment(dateTime, formats);
+                let parsedDateTime = moment.utc(dateTime, formats);
 
                 if (!parsedDateTime.isValid())
                     return dateTime;
 
-                if (format !== 'r' && format !== 'u')
+                if (format !== 'r' && format !== 'u' && overrideTimezoneOffset)
                     parsedDateTime.utcOffset(offset);
 
-                return parsedDateTime.format(momentFormat);
+                if (overrideTimezoneOffset)
+                    return parsedDateTime.format(momentFormat);
+                else
+                    return parsedDateTime.utc().format(momentFormat);
             }
             catch (ex) {
                 manywho.log.error(ex);
@@ -179,19 +182,19 @@ manywho.formatting = (function (manywho, moment) {
             return dateTime;
         },
 
-        number: function (value: number | string, format: string, flowKey: string): string {
+        number: function (number: number | string, format: string, flowKey: string): string {
             if (manywho.utils.isNullOrWhitespace(format) || !manywho.settings.global('formatting.isEnabled', flowKey, false))
-                return value.toString();
+                return number.toString();
 
-            if (typeof value === 'string' && manywho.utils.isNullOrWhitespace(value))
-                return value;
+            if (typeof number === 'string' && manywho.utils.isNullOrWhitespace(number))
+                return number;
 
             try {
                 if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
-                    return (new Number(value)).toExponential();
+                    return (new Number(number)).toExponential();
 
                 if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
-                    let formattedNumber = numbro(value);
+                    let formattedNumber = numbro(number);
                     numbro.culture(culture);
 
                     formattedNumber = formattedNumber.formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'));
@@ -203,7 +206,7 @@ manywho.formatting = (function (manywho, moment) {
                 format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
 
                 if (format.indexOf('.') !== -1) {
-                    const numberString = value.toString();
+                    const numberString = number.toString();
                     const decimals = numberString.substring(numberString.indexOf('.') + 1);
                     const decimalsFormat = format.substring(format.indexOf('.') + 1);
 
@@ -223,7 +226,7 @@ manywho.formatting = (function (manywho, moment) {
                     });
                 }
 
-                let formattedNumber = numbro(value);
+                let formattedNumber = numbro(number);
                 numbro.culture(culture);
 
                 formattedNumber = formattedNumber.format(format);
@@ -235,7 +238,7 @@ manywho.formatting = (function (manywho, moment) {
                 manywho.log.error(ex);
             }
 
-            return value.toString();
+            return number.toString();
         }
     };
 
