@@ -43,9 +43,14 @@ manywho.ajax = (function (manywho) {
         request.listFilter.orderByPropertyDeveloperName = orderBy;
         request.listFilter.orderByDirectionType = orderByDirection;
         
-        if (page > 0) {
+        if (orderBy)
+            request.listFilter.orderByPropertyDeveloperName = orderBy;
+
+        if (orderByDirection)
+            request.listFilter.orderByDirectionType = orderByDirection;
+        
+        if (page > 0)
             request.listFilter.offset = (page - 1) * request.listFilter.limit;
-        }
 
         return $.ajax({
             url: manywho.settings.global('platform.uri') + url,

@@ -182,19 +182,19 @@ manywho.formatting = (function (manywho, moment) {
             return dateTime;
         },
 
-        number: function (number: number | string, format: string, flowKey: string): string {
+        number: function (value: number | string, format: string, flowKey: string): string {
             if (manywho.utils.isNullOrWhitespace(format) || !manywho.settings.global('formatting.isEnabled', flowKey, false))
-                return number.toString();
+                return value.toString();
 
-            if (typeof number === 'string' && manywho.utils.isNullOrWhitespace(number))
-                return number;
+            if (typeof value === 'string' && manywho.utils.isNullOrWhitespace(value))
+                return value;
 
             try {
                 if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
-                    return (new Number(number)).toExponential();
+                    return (new Number(value)).toExponential();
 
                 if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
-                    let formattedNumber = numbro(number);
+                    let formattedNumber = numbro(value);
                     numbro.culture(culture);
 
                     formattedNumber = formattedNumber.formatCurrency(manywho.settings.global('formatting.currency', flowKey, '0[.]00'));
@@ -206,7 +206,7 @@ manywho.formatting = (function (manywho, moment) {
                 format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
 
                 if (format.indexOf('.') !== -1) {
-                    const numberString = number.toString();
+                    const numberString = value.toString();
                     const decimals = numberString.substring(numberString.indexOf('.') + 1);
                     const decimalsFormat = format.substring(format.indexOf('.') + 1);
 
@@ -222,11 +222,15 @@ manywho.formatting = (function (manywho, moment) {
                             case '0':
                                 format += '0';
                                 break;
+
+                            default:
+                                format += part;
+                                break;
                         }
                     });
                 }
 
-                let formattedNumber = numbro(number);
+                let formattedNumber = numbro(value);
                 numbro.culture(culture);
 
                 formattedNumber = formattedNumber.format(format);
@@ -238,7 +242,7 @@ manywho.formatting = (function (manywho, moment) {
                 manywho.log.error(ex);
             }
 
-            return number.toString();
+            return value.toString();
         }
     };
 
