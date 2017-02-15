@@ -4,17 +4,18 @@ module.exports = function(gulp, plugins, argv) {
             typescript: require('typescript')
         });
 
-        return gulp.src(['js/services/*.tsx', 'js/services/*.ts'])
+        return gulp.src(['js/services/*.tsx', 'js/services/*.ts'], { base: 'js' })
             .pipe(plugins.tslint({
-                formatter: 'verbose'
+                formatter: 'verbose',
             }))
             .pipe(plugins.tslint.report({
-                summarizeFailureOutput: true
+                summarizeFailureOutput: true,
+                emitError: false
             }))
             .pipe(plugins.addSrc(['js/services/*.js', 'js/lib/*.*', '!js/services/loader.js', '!js/services/ajaxproxy.js', '!js/services/ajaxproxy2.js']))
             .pipe(plugins.sourcemaps.init())
             .pipe(plugins.typescript(tsProject))
-            .pipe(plugins.sourcemaps.write('.'))
+            .pipe(plugins.sourcemaps.write())
             .pipe(gulp.dest(argv.jsDir || 'build/js'));
     }
 };
