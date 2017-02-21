@@ -1,14 +1,3 @@
-/*!
-Copyright 2015 ManyWho, Inc.
-Licensed under the ManyWho License, Version 1.0 (the "License"); you may not use this
-file except in compliance with the License.
-You may obtain a copy of the License at: http://manywho.com/sharedsource
-Unless required by applicable law or agreed to in writing, software distributed under
-the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the specific language governing
- permissions and limitations under the License.
-*/
-
 // Currently React 0.14.6 is back compat with 0.13.3. Some old players may have a reference to 0.13.3 and thus won't have ReactDOM.
 // Until the players are updated we can workaround this issue by referencing React instead.
 ReactDOM = window.ReactDOM || window.React;
