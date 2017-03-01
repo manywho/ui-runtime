@@ -1,6 +1,6 @@
 # ManyWho UI Core
 
-Core javascript services used by the [ManyWho](https://manywho.com) UI framework to do the heavy lifting.
+Core JavaScript services used by the [ManyWho](https://manywho.com) UI framework to do the heavy lifting.
 
 ## Usage
 
@@ -15,11 +15,27 @@ npm install
 typings install
 ```
 
-Then run the dev build `gulp dev-ts` or dist build `gulp dist-ts`
+Then run the dev build:
+
+```
+gulp dev-ts
+```
+
+Or dist build:
+
+```
+gulp dist-ts
+```
 
 ### Running
 
-You can run `gulp watch` which will re-run the `dev-ts` task whenever a change to the script files is made.
+You can run:
+
+```
+gulp watch
+``` 
+
+Which will re-run the `dev-ts` task whenever a change to the JavaScript files is made.
 
 ## Contributing
 
@@ -28,4 +44,4 @@ Contribution are welcome to the project - whether they are feature requests, imp
 
 ## License
 
-[MIT license](https://opensource.org/licenses/MIT)
+This service is released under the [MIT license](https://opensource.org/licenses/MIT).
