@@ -1,6 +1,6 @@
 # ManyWho UI Core
 
-Core javascript services used by the [ManyWho](https://manywho.com) UI framework to do the heavy lifting.
+Core JavaScript services used by the [ManyWho](https://manywho.com) UI framework to do the heavy lifting.
 
 ## Usage
 
@@ -35,7 +35,7 @@ You can run:
 gulp watch
 ``` 
 
-Which will re-run the `dev-ts` task whenever a change to the script files is made.
+Which will re-run the `dev-ts` task whenever a change to the JavaScript files is made.
 
 ## Contributing
 
