@@ -28,9 +28,6 @@ manywho.ajax = (function (manywho) {
         request.listFilter.limit = limit;
         if (limit == null || limit == undefined)
             request.listFilter.limit = manywho.settings.global('paging.files');
-
-        request.listFilter.orderByPropertyDeveloperName = orderBy;
-        request.listFilter.orderByDirectionType = orderByDirection;
         
         if (orderBy)
             request.listFilter.orderByPropertyDeveloperName = orderBy;
