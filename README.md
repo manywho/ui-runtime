@@ -39,9 +39,9 @@ Which will re-run the `dev-ts` task whenever a change to the JavaScript files is
 
 ## Contributing
 
-Contribution are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to 
+Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to 
 [CONTRIBUTING.md](CONTRIBUTING.md) for our contribution requirements.
 
 ## License
 
-This service is released under the [MIT license](https://opensource.org/licenses/MIT).
+ui-core is released under our shared source license: https://manywho.com/sharedsource
