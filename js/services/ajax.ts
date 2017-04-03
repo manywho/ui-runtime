@@ -52,7 +52,7 @@ manywho.ajax = class Ajax {
 
     static join(stateId, tenantId, authenticationToken) {
         manywho.log.info('Joining State: ' + stateId);
-        return manywho.connection.request(null, 'join', '/api/run/1/state/' + stateId, 'POST', tenantId, stateId, authenticationToken, null);
+        return manywho.connection.request(null, 'join', '/api/run/1/state/' + stateId, 'GET', tenantId, stateId, authenticationToken);
     }
 
     static invoke(engineInvokeRequest, tenantId, authenticationToken) {
