@@ -236,7 +236,6 @@ manywho.component = (function (manywho) {
                 container = document.createElement('div');
                 container.setAttribute('id', lookUpKey);
                 container.className = containerClasses;
-                container.style.minHeight = manywhoContainer.clientHeight + 'px';
                 manywhoContainer.appendChild(container);
 
             }
