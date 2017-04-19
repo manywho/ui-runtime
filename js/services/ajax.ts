@@ -4,7 +4,7 @@ declare var manywho: any;
 
 manywho.ajax = class Ajax {
 
-    static dispatchDataRequest(url, eventPrefix, request, tenantId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
+    static dispatchDataRequest(url, eventPrefix, request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
 
         request.listFilter = request.listFilter || {};
         request.listFilter.search = search || null;
@@ -22,7 +22,7 @@ manywho.ajax = class Ajax {
         if (page > 0)
             request.listFilter.offset = (page - 1) * request.listFilter.limit;
 
-        return manywho.connection.request(null, eventPrefix, url, 'POST', tenantId, null, authenticationToken, request);
+        return manywho.connection.request(null, eventPrefix, url, 'POST', tenantId, stateId, authenticationToken, request);
     }
 
     static login(loginUrl, username, password, sessionId, sessionUrl, stateId, tenantId) {
@@ -52,7 +52,7 @@ manywho.ajax = class Ajax {
 
     static join(stateId, tenantId, authenticationToken) {
         manywho.log.info('Joining State: ' + stateId);
-        return manywho.connection.request(null, 'join', '/api/run/1/state/' + stateId, 'POST', tenantId, stateId, authenticationToken, null);
+        return manywho.connection.request(null, 'join', '/api/run/1/state/' + stateId, 'GET', tenantId, stateId, authenticationToken, null);
     }
 
     static invoke(engineInvokeRequest, tenantId, authenticationToken) {
@@ -69,14 +69,14 @@ manywho.ajax = class Ajax {
         return manywho.connection.request(null, 'getFlowByName', '/api/run/1/flow/name/' + flowName, 'GET', tenantId, null, authenticationToken, null);
     }
 
-    static dispatchObjectDataRequest(request, tenantId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
+    static dispatchObjectDataRequest(request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
         manywho.log.info('Dispatching object data request');
-        return manywho.ajax.dispatchDataRequest('/api/service/1/data', 'objectData', request, tenantId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+        return manywho.ajax.dispatchDataRequest('/api/service/1/data', 'objectData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
     }
 
-    static dispatchFileDataRequest(request, tenantId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
+    static dispatchFileDataRequest(request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
         manywho.log.info('Dispatching object data request');
-        return manywho.ajax.dispatchDataRequest('/api/service/1/file', 'fileData', request, tenantId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+        return manywho.ajax.dispatchDataRequest('/api/service/1/file', 'fileData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
     }
 
     static uploadFile(formData, tenantId, authenticationToken, onProgress) {
