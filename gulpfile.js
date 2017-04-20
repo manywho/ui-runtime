@@ -3,7 +3,6 @@ var plugins = require('gulp-load-plugins')();
 var del = require('del');
 var argv = require('yargs').argv;
 var path = require('path');
-var filelist = require('gulp-filelist');
 
 function getTask(task) {
     return require('./gulp-tasks/' + task)(gulp, plugins, argv);
@@ -28,9 +27,14 @@ gulp.task('dist-clean', function() {
     return del('./dist/**/*');
 })
 
-gulp.task('dist-hashes', ['dist-ts'], function() {
-    return gulp.src(['./dist/js/*.js'])
-        .pipe(filelist('ui-core-hashes.json', { relative: true }))
+gulp.task('dist-hashes', function() {
+    return gulp.src(['js/*.js'], { cwd: './dist' })
+        .pipe(plugins.filelist('ui-core-hashes.json'))
+        .pipe(plugins.jsonEditor(function(hashes) {
+            return hashes.map(function(hash) {
+                return '/' + hash;
+            });
+        }))
         .pipe(gulp.dest('./dist'));  
 });
 
