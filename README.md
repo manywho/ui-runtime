@@ -37,6 +37,13 @@ gulp watch
 
 Which will re-run the `dev-ts` task whenever a change to the JavaScript files is made.
 
+By default the compiled assets will be output to the `build` folder, you can override this using the `--build` arg:
+
+```
+gulp dev-ts --build="custom-folder"
+gulp watch --build="custom-folder"
+```
+
 ## Contributing
 
 Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to 

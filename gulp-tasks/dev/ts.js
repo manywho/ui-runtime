@@ -15,7 +15,7 @@ module.exports = function(gulp, plugins, argv) {
             .pipe(plugins.addSrc(['js/services/*.js', 'js/lib/*.*', '!js/services/loader.js', '!js/services/ajaxproxy.js', '!js/services/ajaxproxy2.js']))
             .pipe(plugins.sourcemaps.init())
             .pipe(plugins.typescript(tsProject))
-            .pipe(plugins.sourcemaps.write())
-            .pipe(gulp.dest(argv.jsDir || 'build/js'));
+            .pipe(plugins.sourcemaps.write('.'))
+            .pipe(gulp.dest((argv.build || 'build') + '/js'));
     }
 };
