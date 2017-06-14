@@ -272,8 +272,13 @@
             if (response.mapElementInvokeResponses) {
 
                 response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses.forEach(function (item) {
+                    var containerId = item.pageContainerId;
 
-                    flowModel[lookUpKey].containers[item.pageContainerId] = manywho.utils.extend(flowModel[lookUpKey].containers[item.pageContainerId], item);
+                    // Steps will only ever have one container, the id is re-generated server side so it won't match up here, grab the existing id instead
+                    if (manywho.utils.isEqual(response.mapElementInvokeResponses[0].developerName, 'step'))
+                        containerId = Object.keys(flowModel[lookUpKey].containers)[0];
+
+                    flowModel[lookUpKey].containers[containerId] = manywho.utils.extend(flowModel[lookUpKey].containers[containerId], item);
 
                 }, this);
 
