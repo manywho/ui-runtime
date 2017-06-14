@@ -446,6 +446,10 @@
             }
 
             var outcomesArray = manywho.utils.convertToArray(flowModel[lookUpKey].outcomes) || [];
+            
+            outcomesArray.sort(function(a, b) {
+                return a.order - b.order;
+            });
 
             return outcomesArray.filter(function (outcome) {
 
