@@ -766,6 +766,9 @@ manywho.engine = (function (manywho) {
                 })
                 .always(function() {
                     manywho.state.setComponentLoading(manywho.utils.extractElement(flowKey), null, flowKey);
+                })
+                .always(function() {
+                    manywho.engine.render(flowKey);
                 });
 
         },
