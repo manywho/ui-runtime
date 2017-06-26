@@ -518,12 +518,16 @@ manywho.utils = (function (manywho, $) {
 
         // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         guid: function guid() {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-            }
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+            var now = new Date().getTime();
+
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function')
+                now += performance.now();
+
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = (now + Math.random() * 16) % 16 | 0;
+                now = Math.floor(now / 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
         }
 
     }
