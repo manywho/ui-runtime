@@ -134,6 +134,9 @@ manywho.settings = (function (manywho, $) {
             },
             autoStart: false,
             container: '.mw-bs'
+        },
+        components: {
+            static: []
         }
     };
 

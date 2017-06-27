@@ -854,7 +854,7 @@ manywho.engine = (function (manywho) {
             manywho.state.setComponentLoading(id, { message: manywho.settings.global('localization.loading') }, flowKey);
             self.render(flowKey);
 
-            return manywho.ajax.dispatchObjectDataRequest(request, manywho.utils.extractTenantId(flowKey), manywho.state.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
+            return manywho.ajax.dispatchObjectDataRequest(request, manywho.utils.extractTenantId(flowKey), manywho.utils.extractStateId(flowKey), manywho.state.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
                 .then(function (response) {
 
                     var component = manywho.model.getComponent(id, flowKey);
