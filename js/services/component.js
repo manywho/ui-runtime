@@ -142,11 +142,10 @@ manywho.component = (function (manywho) {
                 // Re-sync with the server here so that any events attached to the component are processed
                 manywho.engine.sync(flowKey).then(function() {
 
+                    manywho.collaboration.sync(flowKey);
                     manywho.engine.render(flowKey);
 
                 }).then(callback);
-
-                manywho.collaboration.sync(flowKey);
 
             }
 

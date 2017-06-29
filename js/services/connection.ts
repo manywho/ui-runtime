@@ -48,6 +48,8 @@ manywho.connection = class Connection {
             url: manywho.settings.global('platform.uri') + url,
             type: 'POST',
             data: formData,
+            contentType: false,
+            processData: false,
             xhr: () => {
                 const xhr = new XMLHttpRequest();
                 xhr.upload.addEventListener('progress', onProgress, false);
