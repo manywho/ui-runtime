@@ -10,7 +10,8 @@ manywho.engine = (function (manywho) {
 
             var requestComponents = manywho.utils.convertToArray(components).filter(function (component) {
 
-                if (component.attributes && component.attributes.isExecuteRequestOnRenderDisabled)
+                if (component.attributes 
+                    && (component.attributes.isExecuteRequestOnRenderDisabled === false || manywho.utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'false', true)))
                     return false;
 
                 return component.objectDataRequest != null || component.fileDataRequest != null;
