@@ -7,7 +7,7 @@ manywho.collaboration = (function (manywho) {
 
         var stateId = manywho.utils.extractStateId(flowKey);
 
-        if (socket && rooms[stateId].isEnabled) {
+        if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
 
             data = data || {};
             data.stateId = stateId;
@@ -243,7 +243,7 @@ manywho.collaboration = (function (manywho) {
 
             var stateId = manywho.utils.extractStateId(flowKey);
 
-            if (socket && rooms[stateId].isEnabled) {
+            if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
 
                 rooms[stateId].user = user;
                 emit(flowKey, 'join', { user: user });
