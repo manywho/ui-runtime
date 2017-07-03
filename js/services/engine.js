@@ -185,8 +185,6 @@ manywho.engine = (function (manywho) {
         return manywho.ajax.initialize(initializationRequest, tenantId, authenticationToken)
             .then(function (response) {
 
-                sessionStorage.setItem('testing', 'hello');
-
                 sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
                     tenantId: tenantId,
                     flowId: flowId,
