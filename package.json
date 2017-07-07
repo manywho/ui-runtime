@@ -5,7 +5,7 @@
   "author": "ManyWho",
   "repository": {
     "type": "git",
-    "url": "https://github.com/manywho/ui-bootstrap.git"
+    "url": "https://github.com/manywho/ui-core.git"
   },
   "scripts": {
     "dist": "webpack -p --config webpack.prod.config.js && node bundle",
