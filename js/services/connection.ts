@@ -2,23 +2,23 @@
 
 declare var manywho: any;
 
-manywho.connection = class Connection {
+function onError(xhr, status, error) {
+    manywho.log.error(error);
+}
 
-    static onError(xhr, status, error) {
-        manywho.log.error(error);
-    }
+function beforeSend(xhr, tenantId, authenticationToken, event, request) {
+    xhr.setRequestHeader('ManyWhoTenant', tenantId);
 
-    static beforeSend(xhr, tenantId, authenticationToken, event, request) {
-        xhr.setRequestHeader('ManyWhoTenant', tenantId);
+    if (authenticationToken)
+        xhr.setRequestHeader('Authorization', authenticationToken);
 
-        if (authenticationToken)
-            xhr.setRequestHeader('Authorization', authenticationToken);
+    if (manywho.settings.event(event + '.beforeSend'))
+        manywho.settings.event(event + '.beforeSend').call(this, xhr, request);
+}
 
-        if (manywho.settings.event(event + '.beforeSend'))
-            manywho.settings.event(event + '.beforeSend').call(this, xhr, request);
-    }
+export default {
 
-    static request(context, event, url, type, tenantId, stateId, authenticationToken, request) {
+    request(context, event, url, type, tenantId, stateId, authenticationToken, request) {
         let json = null;
 
         if (request != null)
@@ -41,9 +41,9 @@ manywho.connection = class Connection {
             .done(manywho.settings.event(event + '.done'))
             .fail(manywho.connection.onError)
             .fail(manywho.settings.event(event + '.fail'));
-    }
+    },
 
-    static upload(context, event, url, formData, tenantId, authenticationToken, onProgress) {
+    upload(context, event, url, formData, tenantId, authenticationToken, onProgress) {
         return $.ajax({
             url: manywho.settings.global('platform.uri') + url,
             type: 'POST',
@@ -65,3 +65,4 @@ manywho.connection = class Connection {
     }
 
 };
+

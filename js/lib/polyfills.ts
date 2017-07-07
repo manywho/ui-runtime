@@ -1,4 +1,4 @@
-// https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+// Stolen from: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/find
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
     'use strict';
@@ -8,12 +8,12 @@ if (!Array.prototype.find) {
     if (typeof predicate !== 'function') {
       throw new TypeError('predicate must be a function');
     }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
+    let list = Object(this);
+    let length = list.length >>> 0;
+    let thisArg = arguments[1];
+    let value;
 
-    for (var i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       value = list[i];
       if (predicate.call(thisArg, value, i, list)) {
         return value;

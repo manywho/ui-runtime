@@ -2,9 +2,9 @@
 
 declare var manywho: any;
 
-manywho.json = {
+export default {
 
-    generateFlowInputs: function (inputsData) {
+    generateFlowInputs(inputsData) {
         if (inputsData && !Array.isArray(inputsData))
             inputsData = [inputsData];
 
@@ -33,7 +33,7 @@ manywho.json = {
         });
     },
 
-    generateInitializationRequest: function(flowId, stateId, annotations, inputs, playerUrl, joinUrl, mode, reportingMode) {
+    generateInitializationRequest(flowId, stateId, annotations, inputs, playerUrl, joinUrl, mode, reportingMode) {
         return {
             'flowId': {
                 'id': flowId.id,
@@ -49,7 +49,7 @@ manywho.json = {
         };
     },
 
-    generateInvokeRequest: function(stateData, invokeType, selectedOutcomeId, selectedMapElementId, pageComponentInputResponses, navigationElementId, selectedNavigationElementId, annotations, location, mode) {
+    generateInvokeRequest(stateData, invokeType, selectedOutcomeId, selectedMapElementId, pageComponentInputResponses, navigationElementId, selectedNavigationElementId, annotations, location, mode) {
         return {
             'stateId': stateData.id,
             'stateToken': stateData.token,
@@ -70,7 +70,7 @@ manywho.json = {
         };
     },
 
-    generateNavigateRequest: function (stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses, annotations, location) {
+    generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses, annotations, location) {
         return {
             'stateId': stateData.id,
             'stateToken': stateData.token,
@@ -90,7 +90,7 @@ manywho.json = {
         };
     },
 
-    generateSessionRequest: function (sessionId, sessionUrl, loginUrl, username, password, token) {
+    generateSessionRequest(sessionId, sessionUrl, loginUrl, username, password, token) {
         return {
             'sessionToken': sessionId,
             'sessionUrl': sessionUrl,
@@ -100,4 +100,6 @@ manywho.json = {
             'token': token || null
         };
     }
+
 };
+

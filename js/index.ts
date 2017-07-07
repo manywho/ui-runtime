@@ -1,0 +1,61 @@
+import * as numbro from 'numbro';
+import './lib/jquery.plugins.ts';
+import './lib/polyfills';
+
+import Ajax from './services/ajax';
+import Authorization from './services/authorization';
+import Callbacks from './services/callbacks';
+import Collaboration from './services/collaboration';
+import Component from './services/component';
+import Connection from './services/connection';
+import Formatting from './services/formatting';
+import Json from './services/json';
+import Log from './services/log';
+import Model from './services/model';
+import Settings from './services/settings';
+import Social from './services/social';
+import State from './services/state';
+import Styling from './services/styling';
+import Tours from './services/tours';
+import Utils from './services/utils';
+
+const window2 = window as any;
+
+if (window && window2.manywho) {
+    window2.manywho.ajax = Ajax;
+    window2.manywho.authorization = Authorization;
+    window2.manywho.callbacks = Callbacks;
+    window2.manywho.collaboration = Collaboration;
+    window2.manywho.component = Component;
+    window2.manywho.connection = Connection;
+    window2.manywho.formatting = Formatting;
+    window2.manywho.json = Json;
+    window2.manywho.log = Log;
+    window2.manywho.model = Model;
+    window2.manywho.settings = Settings;
+    window2.manywho.social = Social;
+    window2.manywho.state = State;
+    window2.manywho.styling = Styling;
+    window2.manywho.tours = Tours;
+    window2.manywho.utils = Utils;
+    window2.numbro = numbro;
+}
+
+export {
+    Ajax,
+    Authorization,
+    Callbacks,
+    Collaboration,
+    Component,
+    Connection,
+    Formatting,
+    Json,
+    Log,
+    Model,
+    Settings,
+    Social,
+    State,
+    Styling,
+    Tours,
+    Utils
+}

@@ -25,7 +25,13 @@
     "gulp-util": "^3.0.4",
     "guppy-pre-commit": "^0.4.0",
     "tslint": "^4.0.2",
+    "tslint-loader": "^3.5.3",
     "typescript": "^2.0.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "yargs": "^2.3.0"
+  },
+  "dependencies": {
+    "exports-loader": "^0.6.4",
+    "numbro": "^1.11.0"
   }
 }

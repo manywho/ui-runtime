@@ -1,8 +1,8 @@
-(function ($) {
+(function ($: any) {
     // Stolen from: https://github.com/soundcloud/jquery-whenall
     $.whenAll = function (deferreds) {
         if (deferreds && deferreds.length) {
-            var deferred = $.Deferred(),
+            let deferred = $.Deferred(),
                 toResolve = deferreds.length,
                 someFailed = false,
                 fail,

@@ -2,53 +2,50 @@
 
 declare var manywho: any;
 
-manywho.callbacks = (function (manywho) {
+const callbacks = {};
 
-    const callbacks = {};
+export default {
 
-    return {
+    register(flowKey, options) {
+        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
-        register: function (flowKey, options) {
-            const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        callbacks[lookUpKey] = callbacks[lookUpKey] || [];
 
-            callbacks[lookUpKey] = callbacks[lookUpKey] || [];
+        if (!options.flowKey)
+            options.flowKey = flowKey;
 
-            if (!options.flowKey)
-                options.flowKey = flowKey;
+        callbacks[lookUpKey].push(options);
+    },
 
-            callbacks[lookUpKey].push(options);
-        },
+    execute(flowKey, type, name, mapElementId, args) {
+        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
-        execute: function (flowKey, type, name, mapElementId, args) {
-            const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        if (callbacks[lookUpKey])
+            callbacks[lookUpKey].filter(function (item) {
 
-            if (callbacks[lookUpKey])
-                callbacks[lookUpKey].filter(function (item) {
+                if (type && !manywho.utils.isEqual(item.type, type, true))
+                    return false;
 
-                    if (type && !manywho.utils.isEqual(item.type, type, true))
-                        return false;
+                if (name && !manywho.utils.isEqual(item.name, name, true))
+                    return false;
 
-                    if (name && !manywho.utils.isEqual(item.name, name, true))
-                        return false;
+                if (!manywho.utils.isEqual(type, 'done', true) && mapElementId && !manywho.utils.isEqual(item.mapElement, mapElementId, true))
+                    return false;
 
-                    if (!manywho.utils.isEqual(type, 'done', true) && mapElementId && !manywho.utils.isEqual(item.mapElement, mapElementId, true))
-                        return false;
+                return true;
+            })
+            .forEach(function (item) {
 
-                    return true;
-                })
-                .forEach(function (item) {
+                item.execute.apply(undefined, [item].concat(item.args || [], args));
 
-                    item.execute.apply(undefined, [item].concat(item.args || [], args));
+                if (callbacks[lookUpKey] && !item.repeat)
+                    callbacks[lookUpKey].splice(callbacks[lookUpKey].indexOf(item), 1);
+            });
+    },
 
-                    if (callbacks[lookUpKey] && !item.repeat)
-                        callbacks[lookUpKey].splice(callbacks[lookUpKey].indexOf(item), 1);
-                });
-        },
+    remove(flowKey) {
+        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        callbacks[lookUpKey] = null;
+    }
 
-        remove: function(flowKey) {
-            const lookUpKey = manywho.utils.getLookUpKey(flowKey);
-            callbacks[lookUpKey] = null;
-        }
-    };
-
-})(manywho);
+};
