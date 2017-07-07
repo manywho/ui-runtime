@@ -892,6 +892,17 @@
 
             flowModel[lookUpKey].attributes = attributes;
 
+        },
+
+        setModal: function(flowKey, modal) {
+            var lookUpKey = manywho.utils.getLookUpKey(flowKey);
+            flowModel[lookUpKey].modal = modal;
+            manywho.engine.render(flowKey);
+        },
+
+        getModal: function(flowKey, modal) {
+            var lookUpKey = manywho.utils.getLookUpKey(flowKey);
+            return flowModel[lookUpKey].modal;
         }
 
     }

@@ -10,7 +10,8 @@ manywho.engine = (function (manywho) {
 
             var requestComponents = manywho.utils.convertToArray(components).filter(function (component) {
 
-                if (component.attributes && component.attributes.isExecuteRequestOnRenderDisabled)
+                if (component.attributes 
+                    && (component.attributes.isExecuteRequestOnRenderDisabled === false || manywho.utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'false', true)))
                     return false;
 
                 return component.objectDataRequest != null || component.fileDataRequest != null;
@@ -184,7 +185,7 @@ manywho.engine = (function (manywho) {
         return manywho.ajax.initialize(initializationRequest, tenantId, authenticationToken)
             .then(function (response) {
 
-                localStorage.setItem('oauth-' + response.stateId, JSON.stringify({
+                sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
                     tenantId: tenantId,
                     flowId: flowId,
                     flowVersionId: flowVersionId,
@@ -265,7 +266,7 @@ manywho.engine = (function (manywho) {
             })
             .then(function (response) {
 
-                localStorage.removeItem('oauth-' + response.stateId);
+                sessionStorage.removeItem('oauth-' + response.stateId);
 
                 self.parseResponse(response, manywho.model.parseEngineResponse, flowKey);
 
@@ -368,7 +369,7 @@ manywho.engine = (function (manywho) {
             .then(function (response) {
 
                 isAuthenticated = true;
-                localStorage.removeItem('oauth-' + response.stateId);
+                sessionStorage.removeItem('oauth-' + response.stateId);
 
                 manywho.model.initializeModel(flowKey);
                 self.parseResponse(response, manywho.model.parseEngineResponse, flowKey);
@@ -596,7 +597,7 @@ manywho.engine = (function (manywho) {
 
             }
 
-            var storedConfig = localStorage.getItem('oauth-' + stateId);
+            var storedConfig = sessionStorage.getItem('oauth-' + stateId);
             var config = (stateId) ? !manywho.utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
             if (!config) {
 
@@ -828,7 +829,7 @@ manywho.engine = (function (manywho) {
 
             manywho.component.appendFlowContainer(flowKey);
 
-            localStorage.setItem('oauth-' + stateId, JSON.stringify({
+            sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
                 tenantId: tenantId,
                 flowId: flowId,
                 flowVersionId: flowVersionId,
