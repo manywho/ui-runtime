@@ -1,5 +1,4 @@
 var path = require('path');
-var BomPlugin = require('webpack-utf8-bom');
 
 var config = {
     entry: {
