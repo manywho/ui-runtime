@@ -29,7 +29,7 @@ export default {
                         'objectData': null,
                         'typeElementDeveloperName': null
                     };
-            };
+            }
         });
     },
 

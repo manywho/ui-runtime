@@ -1,37 +1,31 @@
 {
   "name": "manywho-ui-core",
-  "version": "2.65.0",
+  "version": "2.68.0",
   "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
   "author": "ManyWho",
   "repository": {
     "type": "git",
     "url": "https://github.com/manywho/ui-bootstrap.git"
   },
+  "scripts": {
+    "dist": "webpack -p --config webpack.prod.config.js && node bundle",
+    "watch": "webpack --watch",
+    "lint": "tslint -c tslint.json js/**/*.ts --fix",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": "lint"
+  },
   "devDependencies": {
     "del": "^1.1.1",
-    "git-guppy": "^2.0.0",
-    "gulp": "^3.8.11",
-    "gulp-add-src": "^0.2.0",
-    "gulp-filelist": "^1.0.0",
-    "gulp-filter": "^5.0.0",
-    "gulp-json-editor": "^2.2.1",
-    "gulp-load-plugins": "^1.2.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-rev": "^7.0.0",
-    "gulp-sourcemaps": "^2.6.0",
-    "gulp-tslint": "^7.0.1",
-    "gulp-typescript": "^2.13.4",
-    "gulp-uglify": "^1.1.0",
-    "gulp-util": "^3.0.4",
-    "guppy-pre-commit": "^0.4.0",
-    "tslint": "^4.0.2",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.1",
+    "tslint": "^5.5.0",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.0.2",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "yargs": "^2.3.0"
+    "typescript": "^2.3.2",
+    "uglifyjs-webpack-plugin": "^0.4.6"
   },
   "dependencies": {
-    "exports-loader": "^0.6.4",
     "numbro": "^1.11.0"
   }
 }

@@ -1,4 +1,5 @@
-import * as numbro from 'numbro';
+
+import * as numbro from '../node_modules/numbro/dist/numbro.js';
 import './lib/jquery.plugins.ts';
 import './lib/polyfills';
 
@@ -8,6 +9,7 @@ import Callbacks from './services/callbacks';
 import Collaboration from './services/collaboration';
 import Component from './services/component';
 import Connection from './services/connection';
+import Engine from './services/engine';
 import Formatting from './services/formatting';
 import Json from './services/json';
 import Log from './services/log';
@@ -28,6 +30,7 @@ if (window && window2.manywho) {
     window2.manywho.collaboration = Collaboration;
     window2.manywho.component = Component;
     window2.manywho.connection = Connection;
+    window2.manywho.engine = Engine;
     window2.manywho.formatting = Formatting;
     window2.manywho.json = Json;
     window2.manywho.log = Log;
@@ -48,6 +51,7 @@ export {
     Collaboration,
     Component,
     Connection,
+    Engine,
     Formatting,
     Json,
     Log,
@@ -58,4 +62,4 @@ export {
     Styling,
     Tours,
     Utils
-}
+};

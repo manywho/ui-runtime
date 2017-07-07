@@ -63,7 +63,7 @@ export default {
         return Connection.request(null, 'invoke', '/api/run/1/state/' + engineInvokeRequest.stateId, 'POST', tenantId, engineInvokeRequest.stateId, authenticationToken, engineInvokeRequest);
     },
 
-    getNavigation(stateId, stateToken, navigationElementId, tenantId, authenticationToken) {
+    getNavigation(stateId, stateToken, navigationElementId, tenantId, authenticationToken?) {
         const request = { 'stateId': stateId, 'stateToken': stateToken, 'navigationElementId': navigationElementId };
         return Connection.request(null, 'navigation', '/api/run/1/navigation/' + stateId, 'POST', tenantId, stateId, authenticationToken, request);
     },

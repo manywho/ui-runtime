@@ -1,12 +1,13 @@
 var path = require('path');
-var BomPlugin = require('webpack-utf8-bom');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var config = {
     entry: {
         'ui-core': './js/index.ts'
     },
     output: {
-        filename: 'ui-core.js',
+        path: path.resolve(__dirname, 'dist/js'),
+        filename: 'ui-core-[chunkhash].js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
@@ -15,6 +16,13 @@ var config = {
         extensions: ['.ts', '.tsx', '.js']
     },
     devtool: 'source-map',
+    plugins: [
+        new UglifyJSPlugin({
+            minimize: true,
+            sourceMap: true,
+            include: /\.min\.js$/,
+        })
+    ],
     module: {
         loaders: [
             {
@@ -39,12 +47,4 @@ var config = {
     }
 }
 
-module.exports = function(env) {
-    var dir = 'build';
-
-    if (env && env.build)
-        dir = env.build;
-
-    config.output.path = path.resolve(__dirname, dir, 'js');
-    return config;
-};
+module.exports = config;

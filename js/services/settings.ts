@@ -208,7 +208,7 @@ export default {
         return manywho.utils.getValueByPath(themes, path.toLowerCase());
     },
 
-    isDebugEnabled(flowKey, value) {
+    isDebugEnabled(flowKey, value?) {
         const lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
         if (typeof value === 'undefined')

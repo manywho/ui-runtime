@@ -1,3 +1,5 @@
+/// <reference path="../interfaces/IJqueryPlugins.ts" />
+
 (function ($: any) {
     // Stolen from: https://github.com/soundcloud/jquery-whenall
     $.whenAll = function (deferreds) {

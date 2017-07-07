@@ -11,10 +11,6 @@
             true,
             "spaces"
         ],
-        "interface-name": [
-            true,
-            "always-prefix"
-        ],
         "no-console": [
             true,
             "log",
