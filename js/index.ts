@@ -42,7 +42,6 @@ if (window && window2.manywho) {
     window2.manywho.styling = Styling;
     window2.manywho.tours = Tours;
     window2.manywho.utils = Utils;
-    window2.numbro = numbro;
 }
 
 export {
