@@ -1,5 +1,6 @@
 
-import * as numbro from '../node_modules/numbro/dist/numbro.js';
+import 'script-loader!../node_modules/numbro/dist/numbro.min.js';
+import 'script-loader!../node_modules/numbro/dist/languages.min.js';
 import './lib/jquery.plugins.ts';
 import './lib/polyfills';
 

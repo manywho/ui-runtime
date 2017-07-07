@@ -33,7 +33,7 @@
             true,
             "check-open-brace"
         ],
-        "ordered-imports": true,
+        "ordered-imports": false,
         "prefer-for-of": false,
         "quotemark": [
             true,
