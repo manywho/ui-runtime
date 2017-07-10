@@ -1,32 +1,36 @@
 {
-  "name": "manywho-ui-core",
-  "version": "2.68.0",
-  "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
-  "author": "ManyWho",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/manywho/ui-core.git"
-  },
-  "scripts": {
-    "dist": "webpack -p --config webpack.prod.config.js && node bundle",
-    "watch": "webpack --watch",
-    "lint": "tslint -c tslint.json js/**/*.ts --fix",
-    "precommit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.ts": "lint"
-  },
-  "devDependencies": {
-    "del": "^1.1.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.0.1",
-    "script-loader": "^0.7.0",
-    "tslint": "^5.5.0",
-    "tslint-loader": "^3.5.3",
-    "typescript": "^2.3.2",
-    "uglifyjs-webpack-plugin": "^0.4.6"
-  },
-  "dependencies": {
-    "numbro": "^1.11.0"
-  }
+    "name": "manywho-ui-core",
+    "version": "2.68.0",
+    "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
+    "author": "ManyWho",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/manywho/ui-core.git"
+    },
+    "scripts": {
+        "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
+        "watch": "webpack --watch",
+        "lint": "tslint -c tslint.json js/**/*.ts --fix",
+        "precommit": "lint-staged"
+    },
+    "lint-staged": {
+        "*.ts": "lint"
+    },
+    "main": "publish/js/manywho-ui-core.js",
+    "files": [
+        "publish/"
+    ],
+    "devDependencies": {
+        "del": "^1.1.1",
+        "husky": "^0.14.3",
+        "lint-staged": "^4.0.1",
+        "script-loader": "^0.7.0",
+        "tslint": "^5.5.0",
+        "tslint-loader": "^3.5.3",
+        "typescript": "^2.3.2",
+        "uglifyjs-webpack-plugin": "^0.4.6"
+    },
+    "dependencies": {
+        "numbro": "^1.11.0"
+    }
 }
