@@ -7,7 +7,7 @@ var config = {
     },
     output: {
         path: path.resolve(__dirname, 'publish/js'),
-        filename: 'manywho-ui-core.js',
+        filename: 'ui-core.js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true

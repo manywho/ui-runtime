@@ -1,5 +1,5 @@
 {
-    "name": "manywho-ui-core",
+    "name": "@manywho/ui-core",
     "version": "2.68.0",
     "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
     "author": "ManyWho",
@@ -16,7 +16,7 @@
     "lint-staged": {
         "*.ts": "lint"
     },
-    "main": "publish/js/manywho-ui-core.js",
+    "main": "publish/js/ui-core.js",
     "files": [
         "publish/"
     ],
