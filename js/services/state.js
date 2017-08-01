@@ -37,7 +37,7 @@ manywho.state = (function (manywho) {
 
     return {
 
-        refreshComponents: function(models, flowKey) {
+        refreshComponents: function(models, validate, flowKey) {
 
             var lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
@@ -62,6 +62,9 @@ manywho.state = (function (manywho) {
                     contentValue: models[id].contentValue || null,
                     objectData: selectedObjectData || null
                 }
+
+                if (validate)
+                    components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], manywho.state.isValid(id, flowKey));
 
             }
 
@@ -219,26 +222,10 @@ manywho.state = (function (manywho) {
         },
 
         isValid: function(id, flowKey) {
-            var result = { isValid: false, validationMessage: manywho.settings.global('localization.validation.required', flowKey) };
             var model = manywho.model.getComponent(id, flowKey);
-            
-            if (model.isValid === false)
-                return result;
-
             var state = manywho.state.getComponent(id, flowKey);
-            
-            if (state && state.isValid === false) {
-                result.validationMessage = manywho.utils.isNullOrWhitespace(state.validationMessage) ? result.validationMessage : state.validationMessage
-                return result;
-            }
 
-            if (state && model.isRequired 
-                && (manywho.utils.isNullOrEmpty(state.contentValue) 
-                    && (manywho.utils.isNullOrUndefined(state.objectData) || state.objectData.length === 0)))
-                return result;
-
-            result.isValid = true;
-            return result;
+            return manywho.validation.validate(model, state, flowKey);
         },
 
         setState: function(id, token, mapElementId, flowKey) {
