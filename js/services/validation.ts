@@ -44,7 +44,7 @@ manywho.validation = (function (manywho) {
     return {
         validate(model: any, state: any, flowKey: string) {
             if (!manywho.settings.global('validation.isenabled', flowKey, false))
-                return {};
+                return { isValid: true, validationMessage: null };
 
             if (model.isValid === false)
                 return { isValid: false, validationMessage: manywho.settings.global('localization.validation.required', flowKey) };
