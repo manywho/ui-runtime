@@ -113,7 +113,7 @@ manywho.validation = (function (manywho) {
             if (isNaN(value) && !manywho.utils.isNullOrWhitespace(value))
                 return getInvalidResponse(message, flowKey);
 
-            if (!validateRegex(value.toString(), regex))
+            if (!validateRegex(manywho.utils.isNullOrUndefined(value) ? '' : value.toString(), regex))
                 return getInvalidResponse(message, flowKey);
 
             return { isValid: true, validationMessage: true };
