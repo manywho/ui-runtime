@@ -13,7 +13,14 @@ manywho.validation = (function (manywho) {
                 return value.length > 0;
 
             case manywho.component.contentTypes.boolean:
-                return value;
+                if (typeof value === 'string') {
+                    if (manywho.utils.isEqual(value, 'true', true))
+                        return false;
+                    else if (manywho.utils.isEqual(value, 'false', true))
+                        return true;
+                }
+                else
+                    return !value;
 
             default:
                 return manywho.utils.isNullOrEmpty(value);
@@ -74,6 +81,9 @@ manywho.validation = (function (manywho) {
 
                 case manywho.component.contentTypes.number:
                     return manywho.validation.validateNumber(value, regex, message, model.isRequired, flowKey);
+
+                case manywho.component.contentTypes.boolean:
+                    return manywho.validation.validateBoolean(value, message, model.isRequired, flowKey);
 
                 case manywho.component.contentTypes.object:
                     return manywho.validation.validateObject(value, message, model.isRequired, flowKey);
