@@ -268,7 +268,7 @@ manywho.engine = (function (manywho) {
 
                 sessionStorage.removeItem('oauth-' + response.stateId);
 
-                self.parseResponse(response, manywho.model.parseEngineResponse, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, false, flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -372,7 +372,7 @@ manywho.engine = (function (manywho) {
                 sessionStorage.removeItem('oauth-' + response.stateId);
 
                 manywho.model.initializeModel(flowKey);
-                self.parseResponse(response, manywho.model.parseEngineResponse, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, false, flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -469,7 +469,7 @@ manywho.engine = (function (manywho) {
 
                 moveResponse = response;
 
-                self.parseResponse(response, manywho.model.parseEngineResponse, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, true, flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
                 manywho.state.setLocation(flowKey);
@@ -759,7 +759,7 @@ manywho.engine = (function (manywho) {
                     }
                     else {
 
-                        self.parseResponse(response, manywho.model.parseEngineSyncResponse, flowKey);
+                        self.parseResponse(response, manywho.model.parseEngineSyncResponse, true, flowKey);
                         return processObjectDataRequests(manywho.model.getComponents(flowKey), flowKey);
 
                     }
@@ -914,12 +914,12 @@ manywho.engine = (function (manywho) {
 
         },
 
-        parseResponse: function(response, responseParser, flowKey) {
+        parseResponse: function(response, responseParser, validate, flowKey) {
 
             responseParser.call(manywho.model, response, flowKey);
 
             manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-            manywho.state.refreshComponents(manywho.model.getComponents(flowKey), flowKey);
+            manywho.state.refreshComponents(manywho.model.getComponents(flowKey), validate, flowKey);
 
             if (manywho.settings.flow('replaceUrl', flowKey)) {
                 manywho.utils.replaceBrowserUrl(response);
