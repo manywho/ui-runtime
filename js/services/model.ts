@@ -50,7 +50,7 @@ function updateData(collection, item, key) {
         if (item.hasOwnProperty('contentType') && item.contentType == null)
             item.contentType = Component.contentTypes.string;
 
-        return Utils.extend({}, [item, data], false);
+        return Utils.extend({}, [item, data]);
     }
 
     return item;
@@ -312,7 +312,7 @@ export default {
             return [];
 
         if (containerId === 'root')
-            return Utils.getAll(flowModel[lookUpKey].containers, null, 'parent');
+            return Utils.getAll(flowModel[lookUpKey].containers, undefined, 'parent');
 
         let children = [];
         let container = flowModel[lookUpKey].containers[containerId];

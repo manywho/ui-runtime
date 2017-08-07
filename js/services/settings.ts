@@ -185,11 +185,12 @@ export default {
 
             if (typeof flowValue !== 'undefined')
                 return flowValue;
-            else if (typeof globalValue !== 'undefined')
-                return globalValue;
-            else if (typeof defaultValue !== 'undefined')
-                return defaultValue;
         }
+
+        if (typeof globalValue !== 'undefined')
+            return globalValue;
+        else if (typeof defaultValue !== 'undefined')
+            return defaultValue;
 
         return globalValue;
     },

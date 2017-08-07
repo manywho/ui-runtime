@@ -114,9 +114,9 @@ export default {
             if (!Array.isArray(objects))
                 objects = [objects];
 
-            if (arguments.length === 2)
+            if (!isDeep)
                 mergedObject = extendShallow(mergedObject, objects);
-            else if (arguments.length === 3 && isDeep)
+            else
                 objects.forEach(object => {
                     mergedObject = extendDeep(mergedObject, object);
                 });
@@ -266,7 +266,30 @@ export default {
 
     // Stolen from here: http://stackoverflow.com/questions/8817394/javascript-get-deep-value-from-object-by-passing-path-to-it-as-string
     getValueByPath: function(obj, path) {
-        return null;
+        if (!path || path === '')
+            return obj;
+
+        try {
+            let parts = path.split('.');
+
+            for (let i = 0; i < parts.length; i++) {
+                let foundKey = null;
+
+                for (let key in obj) {
+                    if (key.toLowerCase() === parts[i].toLowerCase())
+                        foundKey = key;
+                }
+
+                if (foundKey)
+                    obj = obj[foundKey];
+                else
+                    obj = undefined;
+            }
+            return obj;
+        }
+        catch (ex) {
+            return undefined;
+        }
     },
 
     removeFlowFromDOM: function(flowKey) {
