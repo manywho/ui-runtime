@@ -14,6 +14,7 @@ var config = {
         extensions: ['.ts', '.tsx', '.js']
     },
     devtool: 'source-map',
+    watch: true,
     module: {
         loaders: [
             {

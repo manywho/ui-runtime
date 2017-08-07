@@ -9,7 +9,6 @@
     },
     "scripts": {
         "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
-        "watch": "webpack --watch",
         "lint": "tslint -c tslint.json js/**/*.ts --fix",
         "precommit": "lint-staged"
     },
