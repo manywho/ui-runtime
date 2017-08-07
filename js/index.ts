@@ -21,6 +21,7 @@ import State from './services/state';
 import Styling from './services/styling';
 import Tours from './services/tours';
 import Utils from './services/utils';
+import Validation from './services/validation';
 
 const window2 = window as any;
 
@@ -42,6 +43,7 @@ if (window && window2.manywho) {
     window2.manywho.styling = Styling;
     window2.manywho.tours = Tours;
     window2.manywho.utils = Utils;
+    window2.manywho.validation = Validation;
 }
 
 export {
@@ -61,5 +63,6 @@ export {
     State,
     Styling,
     Tours,
-    Utils
+    Utils,
+    Validation
 };

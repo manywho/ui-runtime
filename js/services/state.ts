@@ -3,6 +3,7 @@
 import Collaboration from './collaboration';
 import Model from './model';
 import Settings from './settings';
+import Validation from './validation';
 
 declare var manywho: any;
 declare var moment: any;
@@ -19,7 +20,7 @@ const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 
 export default {
 
-    refreshComponents: function(models, flowKey) {
+    refreshComponents: function(models, validate: boolean, flowKey) {
         const lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
         components[lookUpKey] = {};
@@ -36,6 +37,9 @@ export default {
                 contentValue: models[id].contentValue || null,
                 objectData: selectedObjectData || null
             };
+
+            if (validate)
+                components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], exports.isValid(id, flowKey));
         }
     },
 
@@ -160,26 +164,10 @@ export default {
     },
 
     isValid: function(id, flowKey) {
-        const result = { isValid: false, validationMessage: Settings.global('localization.validation.required', flowKey) };
         const model = Model.getComponent(id, flowKey);
-
-        if (model.isValid === false)
-            return result;
-
         const state = exports.getComponent(id, flowKey);
 
-        if (state && state.isValid === false) {
-            result.validationMessage = manywho.utils.isNullOrWhitespace(state.validationMessage) ? result.validationMessage : state.validationMessage;
-            return result;
-        }
-
-        if (state && model.isRequired
-            && (manywho.utils.isNullOrEmpty(state.contentValue)
-            && (manywho.utils.isNullOrUndefined(state.objectData) || state.objectData.length === 0)))
-            return result;
-
-        result.isValid = true;
-        return result;
+        return Validation.validate(model, state, flowKey);
     },
 
     setState: function(id, token, mapElementId, flowKey) {

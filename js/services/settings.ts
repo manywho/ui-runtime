@@ -15,7 +15,8 @@ let globals = {
         noResults: 'No Results',
         status: null,
         validation: {
-            required: 'This field is required'
+            required: 'This field is required',
+            invalid: 'This value is invalid'
         },
         searchFirst: 'Perform a search to display results here'
     },

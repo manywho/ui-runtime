@@ -25,7 +25,7 @@ function processObjectDataRequests(components, flowKey) {
         let requestComponents = Utils.convertToArray(components).filter(function (component) {
 
             if (component.attributes
-                && (component.attributes.isExecuteRequestOnRenderDisabled === false || Utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'false', true)))
+                && (component.attributes.isExecuteRequestOnRenderDisabled === true || Utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'true', true)))
                 return false;
 
             return component.objectDataRequest != null || component.fileDataRequest != null;
@@ -282,7 +282,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             sessionStorage.removeItem('oauth-' + response.stateId);
 
-            self.parseResponse(response, Model.parseEngineResponse, flowKey);
+            self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -375,7 +375,7 @@ function joinWithAuthorization(callback, flowKey) {
             sessionStorage.removeItem('oauth-' + response.stateId);
 
             Model.initializeModel(flowKey);
-            self.parseResponse(response, Model.parseEngineResponse, flowKey);
+            self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -473,7 +473,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             moveResponse = response;
 
-            self.parseResponse(response, Model.parseEngineResponse, flowKey);
+            self.parseResponse(response, Model.parseEngineResponse, true, flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
             State.setLocation(flowKey);
@@ -750,7 +750,7 @@ export default {
                 }
                 else {
 
-                    self.parseResponse(response, Model.parseEngineSyncResponse, flowKey);
+                    self.parseResponse(response, Model.parseEngineSyncResponse, true, flowKey);
                     return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
 
                 }
@@ -905,12 +905,12 @@ export default {
 
     },
 
-    parseResponse: function(response, responseParser, flowKey) {
+    parseResponse: function(response, responseParser, validate, flowKey) {
 
         responseParser.call(Model, response, flowKey);
 
         State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-        State.refreshComponents(Model.getComponents(flowKey), flowKey);
+        State.refreshComponents(Model.getComponents(flowKey), validate, flowKey);
 
         if (Settings.flow('replaceUrl', flowKey)) {
             Utils.replaceBrowserUrl(response);
