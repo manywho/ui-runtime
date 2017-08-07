@@ -76,10 +76,10 @@ export default {
 
         switch (contentType.toUpperCase()) {
             case Component.contentTypes.datetime:
-                return exports.dateTime(value, format, flowKey);
+                return exports.default.dateTime(value, format, flowKey);
 
             case Component.contentTypes.number:
-                return exports.number(value, format, flowKey);
+                return exports.default.number(value, format, flowKey);
         }
 
         return value;
@@ -148,7 +148,7 @@ export default {
             return dateTime;
 
         try {
-            const momentFormat = Utils.isNullOrWhitespace(format) ? null : exports.toMomentFormat(format);
+            const momentFormat = Utils.isNullOrWhitespace(format) ? null : exports.default.toMomentFormat(format);
             const formats = [moment.ISO_8601];
 
             if (momentFormat)

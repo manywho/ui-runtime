@@ -1,35 +1,39 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import Ajax from './ajax';
+import Callbacks from './callbacks';
+import Json from './json';
+import State from './state';
+import Utils from './utils';
 
 declare var manywho: any;
 
 export default {
 
     setAuthenticationToken(authenticationToken, flowKey) {
-        manywho.state.setAuthenticationToken(authenticationToken, flowKey);
+        State.setAuthenticationToken(authenticationToken, flowKey);
     },
 
     isAuthorized(response, flowKey) {
         return !(response.authorizationContext != null
             && response.authorizationContext.directoryId != null
-            && manywho.utils.isNullOrWhitespace(manywho.state.getAuthenticationToken(flowKey)));
+            && Utils.isNullOrWhitespace(State.getAuthenticationToken(flowKey)));
     },
 
     invokeAuthorization(response, flowKey, doneCallback) {
         if (response.authorizationContext != null && response.authorizationContext.directoryId != null) {
 
-            if (manywho.utils.isEqual(response.authorizationContext.authenticationType, 'oauth2', true)) {
+            if (Utils.isEqual(response.authorizationContext.authenticationType, 'oauth2', true)) {
                 window.location.href = response.authorizationContext.loginUrl;
                 return;
             }
 
-            if (manywho.utils.isEqual(response.authorizationContext.authenticationType, 'saml', true)) {
+            if (Utils.isEqual(response.authorizationContext.authenticationType, 'saml', true)) {
                 window.location.href = response.authorizationContext.loginUrl;
                 return;
             }
 
-            manywho.state.setLogin({
+            State.setLogin({
                 isVisible: true,
                 directoryId: response.authorizationContext.directoryId,
                 directoryName: response.authorizationContext.directoryName,
@@ -41,15 +45,15 @@ export default {
     },
 
     authorizeBySession(loginUrl, flowKey, doneCallback) {
-        const requestData = manywho.json.generateSessionRequest(manywho.state.getSessionData(flowKey).id, manywho.state.getSessionData(flowKey).url, loginUrl);
-        const state = manywho.state.getState(flowKey);
+        const requestData = Json.generateSessionRequest(State.getSessionData(flowKey).id, State.getSessionData(flowKey).url, loginUrl);
+        const state = State.getState(flowKey);
 
-        manywho.callbacks.register(flowKey, doneCallback);
+        Callbacks.register(flowKey, doneCallback);
 
-        Ajax.sessionAuthentication(manywho.utils.extractTenantId(flowKey), state.id, requestData, null)
+        Ajax.sessionAuthentication(Utils.extractTenantId(flowKey), state.id, requestData, null)
             .then(function (response) {
-                manywho.state.setAuthenticationToken(response, flowKey);
-                manywho.callbacks.execute(flowKey, 'done', null, null, [response]);
+                State.setAuthenticationToken(response, flowKey);
+                Callbacks.execute(flowKey, 'done', null, null, [response]);
             });
     }
 

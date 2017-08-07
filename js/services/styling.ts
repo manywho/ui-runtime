@@ -4,6 +4,8 @@ import Model from './model';
 
 declare var manywho;
 
+import Utils from './utils';
+
 const components = {};
 const containers = {};
 
@@ -26,7 +28,7 @@ export default {
         if (model) {
             const type = model.componentType || model.containerType;
 
-            if (!manywho.utils.isNullOrWhitespace(type)) {
+            if (!Utils.isNullOrWhitespace(type)) {
                 const typeLowerCase = type.toLowerCase();
 
                 if (components.hasOwnProperty(typeLowerCase)) {
@@ -40,7 +42,7 @@ export default {
             }
         }
 
-        if (model.attributes && !manywho.utils.isNullOrWhitespace(model.attributes.classes))
+        if (model.attributes && !Utils.isNullOrWhitespace(model.attributes.classes))
             classes.push(model.attributes.classes);
 
         if (Model.isContainer(model))

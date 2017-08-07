@@ -90,7 +90,7 @@ export default {
         };
     },
 
-    generateSessionRequest(sessionId, sessionUrl, loginUrl, username, password, token) {
+    generateSessionRequest(sessionId, sessionUrl, loginUrl, username?, password?, token?) {
         return {
             'sessionToken': sessionId,
             'sessionUrl': sessionUrl,

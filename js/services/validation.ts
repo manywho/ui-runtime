@@ -81,19 +81,19 @@ export default {
             case Component.contentTypes.password:
             case Component.contentTypes.content:
             case Component.contentTypes.datetime:
-                return exports.validateString(value, regex, message, model.isRequired, flowKey);
+                return exports.default.validateString(value, regex, message, model.isRequired, flowKey);
 
             case Component.contentTypes.number:
-                return exports.validateNumber(value, regex, message, model.isRequired, flowKey);
+                return exports.default.validateNumber(value, regex, message, model.isRequired, flowKey);
 
             case Component.contentTypes.boolean:
-                return exports.validateBoolean(value, message, model.isRequired, flowKey);
+                return exports.default.validateBoolean(value, message, model.isRequired, flowKey);
 
             case Component.contentTypes.object:
-                return exports.validateObject(value, message, model.isRequired, flowKey);
+                return exports.default.validateObject(value, message, model.isRequired, flowKey);
 
             case Component.contentTypes.list:
-                return exports.validateList(value, message, model.isRequired, flowKey);
+                return exports.default.validateList(value, message, model.isRequired, flowKey);
 
             default:
                 return { isValid: true, validationMessage: null };

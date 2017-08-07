@@ -2,6 +2,7 @@
 
 import Connection from './connection';
 import Log from './log';
+import Settings from './settings';
 
 declare var manywho: any;
 
@@ -14,7 +15,7 @@ export default {
 
         request.listFilter.limit = limit;
         if (limit == null || limit === undefined)
-            request.listFilter.limit = manywho.settings.global('paging.files');
+            request.listFilter.limit = Settings.global('paging.files');
 
         if (orderBy)
             request.listFilter.orderByPropertyDeveloperName = orderBy;
@@ -74,12 +75,12 @@ export default {
 
     dispatchObjectDataRequest(request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
         Log.info('Dispatching object data request');
-        return exports.dispatchDataRequest('/api/service/1/data', 'objectData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+        return exports.default.dispatchDataRequest('/api/service/1/data', 'objectData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
     },
 
     dispatchFileDataRequest(request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page) {
         Log.info('Dispatching object data request');
-        return exports.dispatchDataRequest('/api/service/1/file', 'fileData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+        return exports.default.dispatchDataRequest('/api/service/1/file', 'fileData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
     },
 
     uploadFile(formData, tenantId, authenticationToken, onProgress) {

@@ -2,6 +2,7 @@
 
 import Ajax from './ajax';
 import Collaboration from './collaboration';
+import Engine from './engine';
 import Settings from './settings';
 import State from './state';
 import Utils from './utils';
@@ -37,7 +38,7 @@ export default {
             .then(response => {
                 streams[lookUpKey].messages = response;
                 State.setComponentLoading('feed', null, flowKey);
-                manywho.engine.render(flowKey);
+                Engine.render(flowKey);
             });
     },
 
@@ -50,7 +51,7 @@ export default {
         const lookUpKey = Utils.getLookUpKey(flowKey);
 
         State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
-        manywho.engine.render(flowKey);
+        Engine.render(flowKey);
 
         const tenantId = Utils.extractTenantId(flowKey);
         const stateId = Utils.extractStateId(flowKey);
@@ -61,7 +62,7 @@ export default {
             .then(response => {
                 streams[lookUpKey].messages = response;
                 State.setComponentLoading('feed', null, flowKey);
-                manywho.engine.render(flowKey);
+                Engine.render(flowKey);
             });
 
     },
@@ -70,7 +71,7 @@ export default {
         const lookUpKey = Utils.getLookUpKey(flowKey);
 
         State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
-        manywho.engine.render(flowKey);
+        Engine.render(flowKey);
 
         const tenantId = Utils.extractTenantId(flowKey);
         const stateId = Utils.extractStateId(flowKey);
@@ -83,7 +84,7 @@ export default {
                 streams[lookUpKey].messages.nextPage = response.nextPage;
 
                 State.setComponentLoading('feed', null, flowKey);
-                manywho.engine.render(flowKey);
+                Engine.render(flowKey);
             });
 
     },
@@ -114,7 +115,7 @@ export default {
         });
 
         State.setComponentLoading('feed', { message: Settings.global('localization.sending') }, flowKey);
-        manywho.engine.render(flowKey);
+        Engine.render(flowKey);
 
         return Ajax.sendSocialMessage(tenantId, stream.id, stateId, request, authenticationToken)
             .then(response => {
@@ -132,7 +133,7 @@ export default {
                 Collaboration.syncFeed(flowKey);
 
                 State.setComponentLoading('feed', null, flowKey);
-                manywho.engine.render(flowKey);
+                Engine.render(flowKey);
             });
     },
 
@@ -145,7 +146,7 @@ export default {
         const stream = streams[lookUpKey];
 
         State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
-        manywho.engine.render(flowKey);
+        Engine.render(flowKey);
 
         return Ajax.follow(tenantId, stream.id, stateId, !stream.me.isFollower, authenticationToken)
             .then(response => {
@@ -155,7 +156,7 @@ export default {
             .then(response => {
                 streams[lookUpKey].followers = response;
                 State.setComponentLoading('feed', null, flowKey);
-                manywho.engine.render(flowKey);
+                Engine.render(flowKey);
             });
     },
 

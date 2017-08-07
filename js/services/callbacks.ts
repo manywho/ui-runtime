@@ -1,5 +1,7 @@
 /// <reference path="../../typings/index.d.ts" />
 
+import Utils from './utils';
+
 declare var manywho: any;
 
 const callbacks = {};
@@ -7,7 +9,7 @@ const callbacks = {};
 export default {
 
     register(flowKey, options) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         callbacks[lookUpKey] = callbacks[lookUpKey] || [];
 
@@ -18,18 +20,18 @@ export default {
     },
 
     execute(flowKey, type, name, mapElementId, args) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         if (callbacks[lookUpKey])
             callbacks[lookUpKey].filter(function (item) {
 
-                if (type && !manywho.utils.isEqual(item.type, type, true))
+                if (type && !Utils.isEqual(item.type, type, true))
                     return false;
 
-                if (name && !manywho.utils.isEqual(item.name, name, true))
+                if (name && !Utils.isEqual(item.name, name, true))
                     return false;
 
-                if (!manywho.utils.isEqual(type, 'done', true) && mapElementId && !manywho.utils.isEqual(item.mapElement, mapElementId, true))
+                if (!Utils.isEqual(type, 'done', true) && mapElementId && !Utils.isEqual(item.mapElement, mapElementId, true))
                     return false;
 
                 return true;
@@ -44,7 +46,7 @@ export default {
     },
 
     remove(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         callbacks[lookUpKey] = null;
     }
 

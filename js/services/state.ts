@@ -3,6 +3,7 @@
 import Collaboration from './collaboration';
 import Model from './model';
 import Settings from './settings';
+import Utils from './utils';
 import Validation from './validation';
 
 declare var manywho: any;
@@ -21,7 +22,7 @@ const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 export default {
 
     refreshComponents: function(models, validate: boolean, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         components[lookUpKey] = {};
 
@@ -30,7 +31,7 @@ export default {
             let selectedObjectData = null;
 
             // We need to do a little work on the object data as we only want the selected values in the state
-            if (models[id].objectData && !manywho.utils.isEmptyObjectData(models[id]))
+            if (models[id].objectData && !Utils.isEmptyObjectData(models[id]))
                 selectedObjectData = models[id].objectData.filter(item => item.isSelected);
 
             components[lookUpKey][id] = {
@@ -39,12 +40,12 @@ export default {
             };
 
             if (validate)
-                components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], exports.isValid(id, flowKey));
+                components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], exports.default.isValid(id, flowKey));
         }
     },
 
     getLocation: function (flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return location[lookUpKey];
     },
 
@@ -52,32 +53,32 @@ export default {
         if ('geolocation' in navigator
             && (Settings.global('trackLocation', flowKey, false) || Settings.global('location.isTrackingEnabled', flowKey, false))) {
 
-            const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+            const lookUpKey = Utils.getLookUpKey(flowKey);
 
             navigator.geolocation.getCurrentPosition(position => {
 
                 if (position != null && position.coords != null) {
                     location[lookUpKey] = {
-                        latitude: manywho.utils.getNumber(position.coords.latitude),
-                        longitude: manywho.utils.getNumber(position.coords.longitude),
-                        accuracy: manywho.utils.getNumber(position.coords.accuracy),
-                        altitude: manywho.utils.getNumber(position.coords.altitude),
-                        altitudeAccuracy: manywho.utils.getNumber(position.coords.altitudeAccuracy),
-                        heading: manywho.utils.getNumber(position.coords.heading),
-                        speed: manywho.utils.getNumber(position.coords.speed)
+                        latitude: Utils.getNumber(position.coords.latitude),
+                        longitude: Utils.getNumber(position.coords.longitude),
+                        accuracy: Utils.getNumber(position.coords.accuracy),
+                        altitude: Utils.getNumber(position.coords.altitude),
+                        altitudeAccuracy: Utils.getNumber(position.coords.altitudeAccuracy),
+                        heading: Utils.getNumber(position.coords.heading),
+                        speed: Utils.getNumber(position.coords.speed)
                     };
 
-                    exports.setUserTime(flowKey);
+                    exports.default.setUserTime(flowKey);
                 }
             }, null, { timeout: 60000 });
         }
     },
 
     setUserTime: function(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         const now = moment();
 
-        if (!manywho.utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey)))
+        if (!Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey)))
             now.utcOffset(Settings.global('i18n.timezoneOffset', flowKey));
 
         if (location[lookUpKey])
@@ -87,19 +88,19 @@ export default {
     },
 
     getComponent: function(id, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return (components[lookUpKey] || {})[id];
     },
 
     getComponents: function(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return components[lookUpKey];
     },
 
     setComponent: function(id, values, flowKey, push) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
-        components[lookUpKey][id] = manywho.utils.extend(components[lookUpKey][id], values);
+        components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], values);
 
         if (values != null)
             components[lookUpKey][id].objectData = values.objectData;
@@ -108,7 +109,7 @@ export default {
             const model = Model.getComponent(id, flowKey);
 
             if (model.isRequired &&
-                (!manywho.utils.isNullOrEmpty(values.contentValue)  || (values.objectData && values.objectData.length > 0))) {
+                (!Utils.isNullOrEmpty(values.contentValue)  || (values.objectData && values.objectData.length > 0))) {
 
                 components[lookUpKey][id].isValid = true;
                 components[lookUpKey][id].validationMessage = null;
@@ -120,12 +121,12 @@ export default {
     },
 
     setComponents: function (value, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         components[lookUpKey] = value;
     },
 
     getPageComponentInputResponseRequests: function(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         let pageComponentInputResponseRequests = null;
 
         if (components[lookUpKey] != null) {
@@ -152,10 +153,10 @@ export default {
 
         if (components)
             for (const id in components) {
-                const result = exports.isValid(id, flowKey);
+                const result = exports.default.isValid(id, flowKey);
 
                 if (result.isValid === false) {
-                    exports.setComponent(id, result, flowKey, true);
+                    exports.default.setComponent(id, result, flowKey, true);
                     isValid = false;
                 }
             }
@@ -165,13 +166,13 @@ export default {
 
     isValid: function(id, flowKey) {
         const model = Model.getComponent(id, flowKey);
-        const state = exports.getComponent(id, flowKey);
+        const state = exports.default.getComponent(id, flowKey);
 
         return Validation.validate(model, state, flowKey);
     },
 
     setState: function(id, token, mapElementId, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         state[lookUpKey] = {
             id: id,
@@ -181,47 +182,47 @@ export default {
     },
 
     getState: function(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return state[lookUpKey];
     },
 
     setOptions: function (flowOptions, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         options[lookUpKey] = flowOptions;
     },
 
     getOptions: function (flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return options[lookUpKey];
     },
 
     setLogin: function (loginData, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         login[lookUpKey] = loginData;
     },
 
     getLogin: function (flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return login[lookUpKey];
     },
 
     setAuthenticationToken: function (token, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         authenticationToken[lookUpKey] = token;
     },
 
     getAuthenticationToken: function (flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return authenticationToken[lookUpKey];
     },
 
     getSessionData: function (flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         return sessionId[lookUpKey];
     },
 
     setSessionData: function (sessionID, sessionUrl, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         sessionId[lookUpKey] = {
             id: sessionID,
@@ -230,7 +231,7 @@ export default {
     },
 
     setComponentLoading: function (componentId, data, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         components[lookUpKey] = components[lookUpKey] || {};
         components[lookUpKey][componentId] = components[lookUpKey][componentId] || {};
@@ -239,7 +240,7 @@ export default {
     },
 
     setComponentError: function(componentId, error, flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         components[lookUpKey] = components[lookUpKey] || {};
         components[lookUpKey][componentId] = components[lookUpKey][componentId] || {};
@@ -258,7 +259,7 @@ export default {
     },
 
     remove: function(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         components[lookUpKey] == null;
         delete components[lookUpKey];

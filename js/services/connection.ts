@@ -1,9 +1,13 @@
 /// <reference path="../../typings/index.d.ts" />
 
+import Log from './log';
+import Settings from './settings';
+import Utils from './utils';
+
 declare var manywho: any;
 
 function onError(xhr, status, error) {
-    manywho.log.error(error);
+    Log.error(error);
 }
 
 function beforeSend(xhr, tenantId, authenticationToken, event, request) {
@@ -12,8 +16,8 @@ function beforeSend(xhr, tenantId, authenticationToken, event, request) {
     if (authenticationToken)
         xhr.setRequestHeader('Authorization', authenticationToken);
 
-    if (manywho.settings.event(event + '.beforeSend'))
-        manywho.settings.event(event + '.beforeSend').call(this, xhr, request);
+    if (Settings.event(event + '.beforeSend'))
+        Settings.event(event + '.beforeSend').call(this, xhr, request);
 }
 
 export default {
@@ -25,27 +29,27 @@ export default {
             json = JSON.stringify(request);
 
         return $.ajax({
-                url: manywho.settings.global('platform.uri') + url,
+                url: Settings.global('platform.uri') + url,
                 type: type,
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: true,
                 data: json,
                 beforeSend: xhr => {
-                    manywho.connection.beforeSend.call(this, xhr, tenantId, authenticationToken, event, request);
+                    beforeSend.call(this, xhr, tenantId, authenticationToken, event, request);
 
-                    if (manywho.utils.isNullOrWhitespace(stateId) === false)
+                    if (Utils.isNullOrWhitespace(stateId) === false)
                         xhr.setRequestHeader('ManyWhoState', stateId);
                 }
             })
-            .done(manywho.settings.event(event + '.done'))
-            .fail(manywho.connection.onError)
-            .fail(manywho.settings.event(event + '.fail'));
+            .done(Settings.event(event + '.done'))
+            .fail(exports.default.onError)
+            .fail(Settings.event(event + '.fail'));
     },
 
     upload(context, event, url, formData, tenantId, authenticationToken, onProgress) {
         return $.ajax({
-            url: manywho.settings.global('platform.uri') + url,
+            url: Settings.global('platform.uri') + url,
             type: 'POST',
             data: formData,
             contentType: false,
@@ -56,12 +60,12 @@ export default {
                 return xhr;
             },
             beforeSend: xhr => {
-                manywho.connection.beforeSend.call(this, xhr, tenantId, authenticationToken, event);
+                exports.default.beforeSend.call(this, xhr, tenantId, authenticationToken, event);
             }
         })
-        .done(manywho.settings.event(event + '.done'))
-        .fail(manywho.connection.onError)
-        .fail(manywho.settings.event(event + '.fail'));
+        .done(Settings.event(event + '.done'))
+        .fail(exports.default.onError)
+        .fail(Settings.event(event + '.fail'));
     }
 
 };

@@ -44,12 +44,12 @@ function processObjectDataRequests(components, flowKey) {
 
                 if (component.fileDataRequest) {
 
-                    return exports.fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
+                    return exports.default.fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
 
                 }
                 else {
 
-                    return exports.objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
+                    return exports.default.objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
 
                 }
 
@@ -642,7 +642,7 @@ export default {
 
             let isValid = State.isAllValid(flowKey);
             if (!isValid) {
-                exports.render(flowKey);
+                exports.default.render(flowKey);
                 let deferred = jQuery.Deferred();
                 deferred.fail();
                 return deferred;
@@ -696,7 +696,7 @@ export default {
 
                     Utils.removeFlow(flowKey);
 
-                    exports.join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
+                    exports.default.join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
 
                 });
 
@@ -716,7 +716,7 @@ export default {
 
         Utils.removeFlow(flowKey);
 
-        exports.join(tenantId, null, null, 'main', parentStateId, authenticationToken, options);
+        exports.default.join(tenantId, null, null, 'main', parentStateId, authenticationToken, options);
 
     },
 
@@ -760,7 +760,7 @@ export default {
                 State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
             })
             .always(function() {
-                exports.render(flowKey);
+                exports.default.render(flowKey);
             });
 
     },
@@ -919,7 +919,7 @@ export default {
         if (Utils.isEqual(response.invokeType, 'wait', true) ||
             Utils.isEqual(response.invokeType, 'status', true)) {
 
-            exports.ping(flowKey);
+            exports.default.ping(flowKey);
         }
 
     },

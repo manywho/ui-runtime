@@ -1,7 +1,12 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import Log from './log';
+import Engine from './engine';
 import Model from './model';
+import Settings from './settings';
+import Social from './social';
+import State from './state';
+import Utils from './utils';
 
 declare var manywho: any;
 declare var io: any;
@@ -10,7 +15,7 @@ let socket = null;
 const rooms = {};
 
 function emit(flowKey, kind, data?) {
-    const stateId = manywho.utils.extractStateId(flowKey);
+    const stateId = Utils.extractStateId(flowKey);
 
     if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
         data = data || {};
@@ -62,8 +67,8 @@ function onLeft(data) {
 function onChange(data) {
     Log.info('change to: ' + data.component + ' in ' + data.stateId);
 
-    manywho.state.setComponent(data.component, data.values, rooms[data.stateId].flowKey, false);
-    manywho.engine.render(rooms[data.stateId].flowKey);
+    State.setComponent(data.component, data.values, rooms[data.stateId].flowKey, false);
+    Engine.render(rooms[data.stateId].flowKey);
 }
 
 function onMove(data) {
@@ -71,14 +76,14 @@ function onMove(data) {
 
     const flowKey = rooms[data.stateId].flowKey;
 
-    const tenantId = manywho.utils.extractTenantId(flowKey);
-    const flowId = manywho.utils.extractFlowId(flowKey);
-    const flowVersionId = manywho.utils.extractFlowVersionId(flowKey);
-    const stateId = manywho.utils.extractStateId(flowKey);
-    const element = manywho.utils.extractElement(flowKey);
+    const tenantId = Utils.extractTenantId(flowKey);
+    const flowId = Utils.extractFlowId(flowKey);
+    const flowVersionId = Utils.extractFlowVersionId(flowKey);
+    const stateId = Utils.extractStateId(flowKey);
+    const element = Utils.extractElement(flowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    manywho.engine.join(tenantId, flowId, flowVersionId, element, stateId, manywho.state.getAuthenticationToken(flowKey), manywho.settings.flow(null, flowKey))
+    Engine.join(tenantId, flowId, flowVersionId, element, stateId, State.getAuthenticationToken(flowKey), Settings.flow(null, flowKey))
         .then(() => {
             socket.emit('getValues', data);
         });
@@ -87,64 +92,64 @@ function onMove(data) {
 function onFlowOut(data) {
     Log.info('joining subflow ' + data.subStateId);
 
-    const element = manywho.utils.extractElement(data.parentFlowKey);
-    const tenantId = manywho.utils.extractTenantId(data.parentFlowKey);
+    const element = Utils.extractElement(data.parentFlowKey);
+    const tenantId = Utils.extractTenantId(data.parentFlowKey);
 
-    manywho.state.setComponentLoading(element, null, data.parentFlowKey);
-    manywho.engine.render(data.parentFlowKey);
+    State.setComponentLoading(element, null, data.parentFlowKey);
+    Engine.render(data.parentFlowKey);
 
-    manywho.utils.removeFlow(data.parentFlowKey);
-    const stateId = manywho.utils.extractStateId(data.subFlowKey);
+    Utils.removeFlow(data.parentFlowKey);
+    const stateId = Utils.extractStateId(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    manywho.engine.join(tenantId, null, null, element, stateId, null, manywho.settings.flow(null, data.parentFlowKey));
+    Engine.join(tenantId, null, null, element, stateId, null, Settings.flow(null, data.parentFlowKey));
 }
 
 function onReturnToParent(data) {
     Log.info('returning to parent ' + data.parentStateId);
 
-    const tenantId = manywho.utils.extractTenantId(data.subFlowKey);
-    const element = manywho.utils.extractElement(data.subFlowKey);
+    const tenantId = Utils.extractTenantId(data.subFlowKey);
+    const element = Utils.extractElement(data.subFlowKey);
 
-    manywho.state.setComponentLoading(element, null, data.subFlowKey);
-    manywho.engine.render(data.subFlowKey);
+    State.setComponentLoading(element, null, data.subFlowKey);
+    Engine.render(data.subFlowKey);
 
-    manywho.utils.removeFlow(data.subFlowKey);
+    Utils.removeFlow(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    manywho.engine.join(tenantId, null, null, element, data.parentStateId, manywho.state.getAuthenticationToken(data.subFlowKey), manywho.settings.flow(null, data.subFlowKey));
+    Engine.join(tenantId, null, null, element, data.parentStateId, State.getAuthenticationToken(data.subFlowKey), Settings.flow(null, data.subFlowKey));
 }
 
 function onSync(data) {
     Log.info('syncing ' + data.stateId);
-    manywho.engine.sync(rooms[data.stateId].flowKey);
+    Engine.sync(rooms[data.stateId].flowKey);
 }
 
 function onGetValues(data) {
     const stateId = data.subStateId || data.stateId;
 
     Log.info('get values from: ' + data.owner + ' in ' + stateId);
-    socket.emit('setValues', { stateId: stateId, id: data.id, components: manywho.state.getComponents(rooms[stateId].flowKey) });
+    socket.emit('setValues', { stateId: stateId, id: data.id, components: State.getComponents(rooms[stateId].flowKey) });
 }
 
 function onSetValues(data) {
     Log.info('setting values in ' + data.stateId);
-    manywho.state.setComponents(data.components, rooms[data.stateId].flowKey);
-    manywho.engine.render(rooms[data.stateId].flowKey);
+    State.setComponents(data.components, rooms[data.stateId].flowKey);
+    Engine.render(rooms[data.stateId].flowKey);
 }
 
 function onSyncFeed(data) {
     Log.info('syncing feed in ' + data.stateId);
-    manywho.social.refreshMessages(rooms[data.stateId].flowKey);
+    Social.refreshMessages(rooms[data.stateId].flowKey);
 }
 
 export default {
 
     initialize(enable, flowKey) {
-        const stateId = manywho.utils.extractStateId(flowKey);
+        const stateId = Utils.extractStateId(flowKey);
 
         if (!socket && enable) {
-            socket = io.connect(manywho.settings.global('collaboration.uri'), {
+            socket = io.connect(Settings.global('collaboration.uri'), {
                 transports: ['websocket']
             });
 
@@ -174,22 +179,22 @@ export default {
     },
 
     isInitialized(flowKey) {
-        return rooms.hasOwnProperty(manywho.utils.extractStateId(flowKey));
+        return rooms.hasOwnProperty(Utils.extractStateId(flowKey));
     },
 
     enable(flowKey) {
-        rooms[manywho.utils.extractStateId(flowKey)].isEnabled = true;
+        rooms[Utils.extractStateId(flowKey)].isEnabled = true;
 
         if (!socket)
             this.initialize(true, flowKey);
     },
 
     disable(flowKey) {
-        rooms[manywho.utils.extractStateId(flowKey)].isEnabled = false;
+        rooms[Utils.extractStateId(flowKey)].isEnabled = false;
     },
 
     join(user, flowKey) {
-        const stateId = manywho.utils.extractStateId(flowKey);
+        const stateId = Utils.extractStateId(flowKey);
 
         if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
             rooms[stateId].user = user;
@@ -198,12 +203,12 @@ export default {
             if (!socket.connected)
                 socket.on('connect', this.getValues.bind(null, flowKey));
             else
-                exports.getValues(flowKey);
+                exports.default.getValues(flowKey);
         }
     },
 
     leave(user, flowKey) {
-        const stateId = manywho.utils.extractStateId(flowKey);
+        const stateId = Utils.extractStateId(flowKey);
         socket.emit('left', { user: user, stateId: stateId });
     },
 
@@ -224,11 +229,11 @@ export default {
     },
 
     returnToParent(flowKey, parentStateId) {
-        emit(flowKey, 'returnToParent', { subFlowKey: flowKey, parentStateId: parentStateId, stateId: manywho.utils.extractStateId(flowKey) });
+        emit(flowKey, 'returnToParent', { subFlowKey: flowKey, parentStateId: parentStateId, stateId: Utils.extractStateId(flowKey) });
     },
 
     getValues(flowKey) {
-        socket.emit('getValues', { stateId: manywho.utils.extractStateId(flowKey), id: socket.id });
+        socket.emit('getValues', { stateId: Utils.extractStateId(flowKey), id: socket.id });
     },
 
     syncFeed(flowKey) {
@@ -236,7 +241,7 @@ export default {
     },
 
     remove(flowKey) {
-        const stateId = manywho.utils.extractStateId(flowKey);
+        const stateId = Utils.extractStateId(flowKey);
         rooms[stateId] == null;
         delete rooms[stateId];
     }

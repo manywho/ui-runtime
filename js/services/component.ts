@@ -1,6 +1,10 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import Log from './log';
+import Collaboration from './collaboration';
+import Engine from './engine';
+import Settings from './settings';
+import Utils from './utils';
 
 declare var manywho: any;
 declare var io: any;
@@ -91,10 +95,10 @@ export default {
     handleEvent(component, model, flowKey, callback) {
         if (model.hasEvents) {
             // Re-sync with the server here so that any events attached to the component are processed
-            manywho.engine.sync(flowKey)
+            Engine.sync(flowKey)
                 .then(() => {
-                    manywho.collaboration.sync(flowKey);
-                    manywho.engine.render(flowKey);
+                    Collaboration.sync(flowKey);
+                    Engine.render(flowKey);
                 })
                 .then(callback);
         }
@@ -108,9 +112,9 @@ export default {
         if (selectedIds) {
             selectedIds.forEach(selectedId => {
 
-                if (!manywho.utils.isNullOrWhitespace(selectedId))
+                if (!Utils.isNullOrWhitespace(selectedId))
                     selectedObjectData = selectedObjectData.concat(
-                        model.objectData.filter(item => manywho.utils.isEqual(item.externalId, selectedId, true))
+                        model.objectData.filter(item => Utils.isEqual(item.externalId, selectedId, true))
                                         .map(item => {
                                             const clone = JSON.parse(JSON.stringify(item));
                                             clone.isSelected = true;
@@ -129,8 +133,8 @@ export default {
         if (columns)
             displayColumns = columns.filter(column => {
                 if (column.properties) {
-                    const property = manywho.utils.getObjectDataProperty(column.properties, 'isDisplayValue');
-                    return property ? manywho.utils.isEqual(property.contentValue, 'true', true) : false;
+                    const property = Utils.getObjectDataProperty(column.properties, 'isDisplayValue');
+                    return property ? Utils.isEqual(property.contentValue, 'true', true) : false;
                 }
                 else
                     return column.isDisplayValue;
@@ -143,47 +147,47 @@ export default {
     },
 
     appendFlowContainer(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
 
         let container = document.getElementById(lookUpKey);
-        const containerType = manywho.utils.extractElement(flowKey);
+        const containerType = Utils.extractElement(flowKey);
 
         // Added this fix because embedded Flows and normal Flows should not be positioned absolute on their main container, that should only happen for modal containers
 
         let containerClasses = 'mw-bs flow-container';
 
-        if (manywho.utils.isEqual(containerType, 'modal', true))
+        if (Utils.isEqual(containerType, 'modal', true))
             containerClasses += ' modal-container';
 
-        if (!container && !manywho.utils.isEqual(containerType, 'modal-standalone', true)) {
-            const manywhoContainer = document.querySelector(manywho.settings.global('containerSelector', flowKey, '#manywho'));
+        if (!container && !Utils.isEqual(containerType, 'modal-standalone', true)) {
+            const manywhoContainer = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
             container = document.createElement('div');
             container.setAttribute('id', lookUpKey);
             container.className = containerClasses;
             manywhoContainer.appendChild(container);
         }
-        else if (manywho.utils.isEqual(containerType, 'modal-standalone', true))
-            container = document.querySelector(manywho.settings.global('containerSelector', flowKey, '#manywho'));
+        else if (Utils.isEqual(containerType, 'modal-standalone', true))
+            container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
         return container;
     },
 
     focusInput(flowKey) {
         // Focus the first input or textarea control on larger screen devices, this should help stop a keyboard from becoming visible on mobile devices when the flow first renders
-        if (manywho.settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
+        if (Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
             const input = document.querySelector('.main .mw-input input, .main .mw-content input, .main .mw-textarea textarea, .modal-container .mw-input input, .modal-container .mw-content input, .modal-container .mw-textarea textarea') as HTMLInputElement;
             if (input) {
                 input.focus();
 
-                if (manywho.utils.isEqual(input.type, 'text', true))
+                if (Utils.isEqual(input.type, 'text', true))
                     input.setSelectionRange(input.value.length, input.value.length);
             }
         }
     },
 
     scrollToTop(flowKey) {
-        const lookUpKey = manywho.utils.getLookUpKey(flowKey);
+        const lookUpKey = Utils.getLookUpKey(flowKey);
         const container = document.getElementById(lookUpKey);
         if (container)
             window.scroll(0, container.offsetTop);
@@ -197,7 +201,7 @@ export default {
             }
 
             if (outcome.attributes.uriTypeElementPropertyId && objectData) {
-                const property = objectData[0].properties.find(prop => manywho.utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true));
+                const property = objectData[0].properties.find(prop => Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true));
 
                 if (property) {
                     window.open(property.contentValue, '_blank');
@@ -206,10 +210,10 @@ export default {
             }
         }
 
-        manywho.engine.move(outcome, flowKey)
+        Engine.move(outcome, flowKey)
             .then(() => {
                 if (outcome.isOut)
-                    manywho.engine.flowOut(outcome, flowKey);
+                    Engine.flowOut(outcome, flowKey);
             });
     }
 

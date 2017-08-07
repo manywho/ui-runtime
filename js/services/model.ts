@@ -1,6 +1,7 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import Component from './component';
+import Engine from './engine';
 import Log from './log';
 import Settings from './settings';
 import State from './state';
@@ -150,7 +151,7 @@ export default {
 
                 flowModel[lookUpKey].label = engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.label;
 
-                exports.setAttributes(flowKey, engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.attributes || null);
+                exports.default.setAttributes(flowKey, engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.attributes || null);
 
                 this.setContainers(flowKey,
                                     engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageContainerResponses,
@@ -202,7 +203,7 @@ export default {
             }
 
             if (Settings.global('history', flowKey) && Utils.isEqual(engineInvokeResponse.invokeType, 'FORWARD', true))
-                exports.setHistory(engineInvokeResponse, flowKey);
+                exports.default.setHistory(engineInvokeResponse, flowKey);
 
             flowModel[lookUpKey].preCommitStateValues = engineInvokeResponse.preCommitStateValues;
             flowModel[lookUpKey].stateValues = engineInvokeResponse.stateValues;
@@ -400,7 +401,7 @@ export default {
             let index = flowModel[lookUpKey].notifications.indexOf(notification);
             flowModel[lookUpKey].notifications.splice(index, 1);
 
-            manywho.engine.render(flowKey);
+            Engine.render(flowKey);
         }
     },
 
@@ -413,7 +414,7 @@ export default {
             flowModel[lookUpKey].notifications = flowModel[lookUpKey].notifications || [];
 
             flowModel[lookUpKey].notifications.push(notification);
-            manywho.engine.render(flowKey);
+            Engine.render(flowKey);
         }
     },
 
@@ -673,7 +674,7 @@ export default {
     setModal: function(flowKey, modal) {
         const lookUpKey = Utils.getLookUpKey(flowKey);
         flowModel[lookUpKey].modal = modal;
-        manywho.engine.render(flowKey);
+        Engine.render(flowKey);
     },
 
     getModal: function(flowKey, modal) {

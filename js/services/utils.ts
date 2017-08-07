@@ -5,6 +5,7 @@ import Collaboration from './collaboration';
 import Log from './log';
 import Model from './model';
 import Settings from './settings';
+import Social from './social';
 import State from './state';
 
 declare const manywho: any;
@@ -69,7 +70,7 @@ export default {
     replaceBrowserUrl: function(response) {
         // Check to make sure the browser supports the switch of the url
         if (history && history.replaceState) {
-            const queryParameters = exports.parseQueryString(window.location.search.substring(1));
+            const queryParameters = exports.default.parseQueryString(window.location.search.substring(1));
 
             let newJoinUri = response.joinFlowUri;
             const ignoreParameters = ['tenant-id', 'flow-id', 'flow-version-id', 'navigation-element-id', 'join', 'initialization', 'authorization'];
@@ -139,9 +140,9 @@ export default {
 
                     mergedObjectData.forEach(property => {
 
-                        if (exports.isEqual(property.developerName, objectProperty.developerName, true))
+                        if (exports.default.isEqual(property.developerName, objectProperty.developerName, true))
                             if (objectProperty.contentValue != null)
-                                exports.extend(property, objectProperty, true);
+                                exports.default.extend(property, objectProperty, true);
                             else if (objectProperty.objectData != null)
                                 property.objectData = objectProperty.objectData;
                     });
@@ -153,7 +154,7 @@ export default {
     },
 
     isNullOrWhitespace: function (value) {
-        if (exports.isNullOrUndefined(value))
+        if (exports.default.isNullOrUndefined(value))
             return true;
 
         return value.replace(/\s/g, '').length < 1;
@@ -164,7 +165,7 @@ export default {
     },
 
     isNullOrEmpty: function(value) {
-        return exports.isNullOrUndefined(value) || value === '';
+        return exports.default.isNullOrUndefined(value) || value === '';
     },
 
     isEqual: function (value1, value2, ignoreCase) {
@@ -259,7 +260,7 @@ export default {
     },
 
     isSmallScreen: function (flowKey) {
-        const lookUpKey = exports.getLookUpKey(flowKey);
+        const lookUpKey = exports.default.getLookUpKey(flowKey);
         return document.getElementById(lookUpKey).clientWidth < 768;
     },
 
@@ -269,7 +270,7 @@ export default {
     },
 
     removeFlowFromDOM: function(flowKey) {
-        const lookUpKey = exports.getLookUpKey(flowKey);
+        const lookUpKey = exports.default.getLookUpKey(flowKey);
         const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
         for (let i = 0, len = rootElement.children.length; i < len; i++) {
@@ -282,18 +283,18 @@ export default {
     },
 
     getObjectDataProperty: function (properties, propertyName) {
-        return properties.find(property => exports.isEqual(property.developerName, propertyName, true));
+        return properties.find(property => exports.default.isEqual(property.developerName, propertyName, true));
     },
 
     setObjectDataProperty: function (properties, propertyName, value) {
-        const property = properties.find(property => exports.isEqual(property.developerName, propertyName, true));
+        const property = properties.find(property => exports.default.isEqual(property.developerName, propertyName, true));
         if (property)
             property.contentValue = value;
     },
 
     isEmptyObjectData: function(model) {
         if (model.objectDataRequest && model.objectData && model.objectData.length === 1)
-            return exports.isPlaceholderObjectData(model.objectData);
+            return exports.default.isPlaceholderObjectData(model.objectData);
         else if (model.objectData)
             return false;
 
@@ -303,7 +304,7 @@ export default {
     isPlaceholderObjectData: function(objectData) {
         if (objectData.length === 1) {
             for (const prop in objectData[0].properties) {
-                if (!exports.isNullOrWhitespace(objectData[0].properties[prop].contentValue))
+                if (!exports.default.isNullOrWhitespace(objectData[0].properties[prop].contentValue))
                     return false;
             }
             return true;
@@ -335,10 +336,10 @@ export default {
 
     removeFlow: function (flowKey) {
         Model.deleteFlowModel(flowKey);
-        exports.removeFlowFromDOM(flowKey);
+        exports.default.removeFlowFromDOM(flowKey);
         Settings.remove(flowKey);
         State.remove(flowKey);
-        manywho.social.remove(flowKey);
+        Social.remove(flowKey);
         Callbacks.remove(flowKey);
 
         if (Settings.flow('collaboration.isEnabled', flowKey)) {

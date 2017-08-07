@@ -4,6 +4,7 @@
 import Component from './component';
 import Log from './log';
 import Settings from './settings';
+import Utils from './utils';
 
 declare var manywho: any;
 
@@ -11,18 +12,18 @@ let configs = {};
 let domWatcher = null;
 
 const onInterval = function (tour, step, nextStep, moveImmediately: boolean) {
-    if (exports.getTargetElement(nextStep)
-        && (moveImmediately || !exports.getTargetElement)) {
+    if (exports.default.getTargetElement(nextStep)
+        && (moveImmediately || !exports.default.getTargetElement)) {
 
         clearInterval(domWatcher);
-        exports.move(tour, tour.steps.indexOf(nextStep));
+        exports.default.move(tour, tour.steps.indexOf(nextStep));
     }
 };
 
 const onDoneInterval = function (tour, step) {
-    if (!exports.getTargetElement(step)) {
+    if (!exports.default.getTargetElement(step)) {
         clearInterval(domWatcher);
-        exports.done(tour);
+        exports.default.done(tour);
     }
 };
 
@@ -58,7 +59,7 @@ export default {
                 container.appendChild(tourContainer);
             }
 
-            if (manywho.utils.isNullOrWhitespace(id))
+            if (Utils.isNullOrWhitespace(id))
                 id = Object.keys(configs)[0];
 
             if (!configs[id]) {
@@ -89,7 +90,7 @@ export default {
             return;
 
         if (tour.currentStep + 1 >= tour.steps.length)
-            exports.done(tour);
+            exports.default.done(tour);
         else
             tour.currentStep++;
 
