@@ -7,10 +7,8 @@ manywho.validation = (function (manywho) {
     const isNull = function(value: any, contentType: string) {
         switch (contentType) {
             case manywho.component.contentTypes.object:
-                return value !== null;
-
             case manywho.component.contentTypes.list:
-                return value.length > 0;
+                return value === null || value.length === 0;
 
             case manywho.component.contentTypes.boolean:
                 if (typeof value === 'string') {
@@ -21,6 +19,7 @@ manywho.validation = (function (manywho) {
                 }
                 else
                     return !value;
+                break;
 
             default:
                 return manywho.utils.isNullOrEmpty(value);
