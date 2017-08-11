@@ -138,6 +138,25 @@ manywho.validation = (function (manywho) {
                 return getRequiredResponse(message, flowKey);
 
             return { isValid: true, validationMessage: true };
+        },
+
+        scrollToInvalidElement(flowKey: string) {
+            if (manywho.settings.global('validation.scroll.isEnabled', flowKey, false)) {
+                const invalidElement = document.querySelector(manywho.settings.global('validation.scroll.selector', flowKey, '.has-error'));
+                if (invalidElement)
+                    invalidElement.scrollIntoView();
+            }
+        },
+
+        addNotification(flowKey: string) {
+            if (manywho.settings.global('validation.notification.isEnabled', flowKey, false))
+                manywho.model.addNotification(flowKey, {
+                    message: manywho.settings.global('validation.notification.message', flowKey),
+                    position: 'center',
+                    type: 'danger',
+                    timeout: '0',
+                    dismissible: true
+                });
         }
 
     };

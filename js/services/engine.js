@@ -647,6 +647,12 @@ manywho.engine = (function (manywho) {
                 var isValid = manywho.state.isAllValid(flowKey);
                 if (!isValid) {
                     manywho.engine.render(flowKey);
+                    
+                    setTimeout(function() {
+                        manywho.validation.scrollToInvalidElement(flowKey);
+                        manywho.validation.addNotification(flowKey);
+                    }, 0);
+
                     var deferred = jQuery.Deferred();
                     deferred.fail();
                     return deferred;

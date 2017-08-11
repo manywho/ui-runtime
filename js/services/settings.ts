@@ -111,7 +111,15 @@ manywho.settings = (function (manywho, $) {
             }
         },
         validation: {
-            isEnabled: false
+            isEnabled: false,
+            scroll: {
+                isEnabled: false,
+                selector: '.has-error'
+            },
+            notification: {
+                isEnabled: true,
+                message: 'oh dear'
+            }
         },
         location: {
             isTrackingEnabled: false
