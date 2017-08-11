@@ -48,6 +48,10 @@ manywho.validation = (function (manywho) {
     };
 
     return {
+        shouldValidate(when: string, flowKey: string) {
+            return manywho.settings.global('validation.when', flowKey).indexOf(when.toLowerCase()) !== -1;
+        },
+
         validate(model: any, state: any, flowKey: string) {
             if (!manywho.settings.global('validation.isenabled', flowKey, false))
                 return { isValid: true, validationMessage: null };

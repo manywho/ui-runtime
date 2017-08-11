@@ -119,7 +119,8 @@ manywho.settings = (function (manywho, $) {
             notification: {
                 isEnabled: true,
                 message: 'Page contains invalid values'
-            }
+            },
+            when: ['move']
         },
         location: {
             isTrackingEnabled: false
