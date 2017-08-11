@@ -118,7 +118,7 @@ manywho.settings = (function (manywho, $) {
             },
             notification: {
                 isEnabled: true,
-                message: 'oh dear'
+                message: 'Page contains invalid values'
             }
         },
         location: {
