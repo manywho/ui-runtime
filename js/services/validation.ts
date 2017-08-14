@@ -8,7 +8,7 @@ manywho.validation = (function (manywho) {
         switch (contentType) {
             case manywho.component.contentTypes.object:
             case manywho.component.contentTypes.list:
-                return value === null || value.length === 0;
+                return value === null || value.length === 0 || value.filter(item => item.isSelected).length === 0;
 
             case manywho.component.contentTypes.boolean:
                 if (typeof value === 'string') {
