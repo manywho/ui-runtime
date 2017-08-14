@@ -154,7 +154,7 @@ manywho.validation = (function (manywho) {
         addNotification(flowKey: string) {
             if (manywho.settings.global('validation.notification.isEnabled', flowKey, false))
                 manywho.model.addNotification(flowKey, {
-                    message: manywho.settings.global('validation.notification.message', flowKey),
+                    message: manywho.settings.global('localization.validation.notification', flowKey),
                     position: 'center',
                     type: 'danger',
                     timeout: '0',
