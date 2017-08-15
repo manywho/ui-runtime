@@ -4,7 +4,7 @@ declare var manywho: any;
 
 manywho.validation = (function (manywho) {
 
-    const isNull = function(value: any, contentType: string) {
+    const isValueDefined = function(value: any, contentType: string) {
         switch (contentType) {
             case manywho.component.contentTypes.object:
             case manywho.component.contentTypes.list:
@@ -100,7 +100,7 @@ manywho.validation = (function (manywho) {
         },
 
         validateString(value: string, regex: string, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isNull(value, manywho.component.contentTypes.string))
+            if (isRequired && isValueDefined(value, manywho.component.contentTypes.string))
                 return getRequiredResponse(message, flowKey);
 
             if (!validateRegex(value, regex))
@@ -110,7 +110,7 @@ manywho.validation = (function (manywho) {
         },
 
         validateNumber(value: any, regex: string, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isNull(value, manywho.component.contentTypes.number))
+            if (isRequired && isValueDefined(value, manywho.component.contentTypes.number))
                 return getRequiredResponse(message, flowKey);
 
             if (isNaN(value) && !manywho.utils.isNullOrWhitespace(value))
@@ -123,21 +123,21 @@ manywho.validation = (function (manywho) {
         },
 
         validateBoolean(value: boolean, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isNull(value, manywho.component.contentTypes.boolean))
+            if (isRequired && isValueDefined(value, manywho.component.contentTypes.boolean))
                 return getRequiredResponse(message, flowKey);
 
             return { isValid: true, validationMessage: true };
         },
 
         validateObject(value: object, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isNull(value, manywho.component.contentTypes.object))
+            if (isRequired && isValueDefined(value, manywho.component.contentTypes.object))
                 return getRequiredResponse(message, flowKey);
 
             return { isValid: true, validationMessage: true };
         },
 
         validateList(value: Array<object>, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isNull(value, manywho.component.contentTypes.list))
+            if (isRequired && isValueDefined(value, manywho.component.contentTypes.list))
                 return getRequiredResponse(message, flowKey);
 
             return { isValid: true, validationMessage: true };
