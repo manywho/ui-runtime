@@ -18,7 +18,8 @@ manywho.settings = (function (manywho, $) {
             status: null,
             validation: {
                 required: 'This field is required',
-                invalid: 'This valid is invalid'
+                invalid: 'This valid is invalid',
+                notification: 'Page contains invalid values'
             },
             searchFirst: 'Perform a search to display results here'
         },
@@ -111,7 +112,15 @@ manywho.settings = (function (manywho, $) {
             }
         },
         validation: {
-            isEnabled: false
+            isEnabled: false,
+            scroll: {
+                isEnabled: false,
+                selector: '.has-error'
+            },
+            notification: {
+                isEnabled: true
+            },
+            when: ['move']
         },
         location: {
             isTrackingEnabled: false

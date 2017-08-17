@@ -37,7 +37,7 @@ manywho.state = (function (manywho) {
 
     return {
 
-        refreshComponents: function(models, validate, flowKey) {
+        refreshComponents: function(models, invokeType, flowKey) {
 
             var lookUpKey = manywho.utils.getLookUpKey(flowKey);
 
@@ -63,7 +63,7 @@ manywho.state = (function (manywho) {
                     objectData: selectedObjectData || null
                 }
 
-                if (validate)
+                if (manywho.validation.shouldValidate(invokeType))
                     components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], manywho.state.isValid(id, flowKey));
 
             }

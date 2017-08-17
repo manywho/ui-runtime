@@ -268,7 +268,7 @@ manywho.engine = (function (manywho) {
 
                 sessionStorage.removeItem('oauth-' + response.stateId);
 
-                self.parseResponse(response, manywho.model.parseEngineResponse, false, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, 'initialize', flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -372,7 +372,7 @@ manywho.engine = (function (manywho) {
                 sessionStorage.removeItem('oauth-' + response.stateId);
 
                 manywho.model.initializeModel(flowKey);
-                self.parseResponse(response, manywho.model.parseEngineResponse, false, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, 'join', flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -469,7 +469,7 @@ manywho.engine = (function (manywho) {
 
                 moveResponse = response;
 
-                self.parseResponse(response, manywho.model.parseEngineResponse, true, flowKey);
+                self.parseResponse(response, manywho.model.parseEngineResponse, 'move', flowKey);
 
                 manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
                 manywho.state.setLocation(flowKey);
@@ -647,6 +647,12 @@ manywho.engine = (function (manywho) {
                 var isValid = manywho.state.isAllValid(flowKey);
                 if (!isValid) {
                     manywho.engine.render(flowKey);
+                    
+                    setTimeout(function() {
+                        manywho.validation.scrollToInvalidElement(flowKey);
+                        manywho.validation.addNotification(flowKey);
+                    }, 0);
+
                     var deferred = jQuery.Deferred();
                     deferred.fail();
                     return deferred;
@@ -759,7 +765,7 @@ manywho.engine = (function (manywho) {
                     }
                     else {
 
-                        self.parseResponse(response, manywho.model.parseEngineSyncResponse, true, flowKey);
+                        self.parseResponse(response, manywho.model.parseEngineSyncResponse, 'sync', flowKey);
                         return processObjectDataRequests(manywho.model.getComponents(flowKey), flowKey);
 
                     }
@@ -914,12 +920,12 @@ manywho.engine = (function (manywho) {
 
         },
 
-        parseResponse: function(response, responseParser, validate, flowKey) {
+        parseResponse: function(response, responseParser, invokeType, flowKey) {
 
             responseParser.call(manywho.model, response, flowKey);
 
             manywho.state.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-            manywho.state.refreshComponents(manywho.model.getComponents(flowKey), validate, flowKey);
+            manywho.state.refreshComponents(manywho.model.getComponents(flowKey), invokeType, flowKey);
 
             if (manywho.settings.flow('replaceUrl', flowKey)) {
                 manywho.utils.replaceBrowserUrl(response);
