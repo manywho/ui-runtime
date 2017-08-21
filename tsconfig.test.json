@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "outDir": "dist_test",
+        "inlineSourceMap": true,
+        "jsx": "react",
+        "lib": ["dom", "es6"]    
+    },
+    "include": [
+        "test/*.ts",
+        "js/lib/*.ts",
+        "test/helpers/setup-browser-env.ts"
+    ]
+}
