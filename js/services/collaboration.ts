@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+
 
 import Log from './log';
 import Engine from './engine';

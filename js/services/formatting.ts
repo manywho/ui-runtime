@@ -1,12 +1,10 @@
-/// <reference path="../../typings/index.d.ts" />
+import * as numbro from 'numbro';
+import * as moment from 'moment';
 
 import Component from './component';
 import Log from './log';
 import Settings from './settings';
 import Utils from './utils';
-
-declare var moment: any;
-declare var numbro: any;
 
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
 const dateTimeFormatMappings: any = [
@@ -186,10 +184,10 @@ export default {
                 return (new Number(value)).toExponential();
 
             if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
-                let formattedNumber = numbro(value);
+                let number = numbro(value);
                 numbro.culture(culture);
 
-                formattedNumber = formattedNumber.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
+                let formattedNumber = number.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
                 numbro.culture('en-US');
 
                 return formattedNumber;
@@ -222,10 +220,10 @@ export default {
                 });
             }
 
-            let formattedNumber = numbro(value);
+            let number = numbro(value);
             numbro.culture(culture);
 
-            formattedNumber = formattedNumber.format(format);
+            let formattedNumber = number.format(format);
             numbro.culture('en-US');
 
             return formattedNumber;

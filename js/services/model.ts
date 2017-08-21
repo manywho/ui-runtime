@@ -1,4 +1,6 @@
-/// <reference path="../../typings/index.d.ts" />
+
+
+import * as React from 'react';
 
 import Component from './component';
 import Engine from './engine';

@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+
 
 import Component from './component';
 import Settings from './settings';
@@ -94,9 +94,6 @@ export default {
 
             case Component.contentTypes.list:
                 return exports.default.validateList(value, message, model.isRequired, flowKey);
-
-            default:
-                return { isValid: true, validationMessage: null };
         }
     },
 

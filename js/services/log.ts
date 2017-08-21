@@ -1,4 +1,5 @@
-declare var manywho: any;
-declare var log: any;
+import log from 'loglevel';
 
-export default log.noConflict();
+declare var manywho: any;
+
+export default log;

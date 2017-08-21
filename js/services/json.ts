@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+
 
 declare var manywho: any;
 
@@ -16,14 +16,14 @@ export default {
                         'contentType': input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
                         'contentValue': null,
                         'developerName': property,
-                        'objectData': [input[property].objectData],
-                        'typeElementDeveloperName': input[property].typeElementDeveloperName || null
+                        'objectData': input[property].objectData,
+                        'typeElementDeveloperName': input[property].typeElementDeveloperName
                     };
                 else if (input[property].contentType && input[property].developerName)
                     return input[property];
                 else
                     return {
-                        'contentType': 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase() || 'ContentString',
+                        'contentType': 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase(),
                         'contentValue': input[property],
                         'developerName': property,
                         'objectData': null,
@@ -33,7 +33,7 @@ export default {
         });
     },
 
-    generateInitializationRequest(flowId, stateId, annotations, inputs, playerUrl, joinUrl, mode, reportingMode) {
+    generateInitializationRequest(flowId, stateId?, annotations?, inputs?, playerUrl?, joinUrl?, mode?, reportingMode?) {
         return {
             'flowId': {
                 'id': flowId.id,
@@ -49,7 +49,7 @@ export default {
         };
     },
 
-    generateInvokeRequest(stateData, invokeType, selectedOutcomeId, selectedMapElementId, pageComponentInputResponses, navigationElementId, selectedNavigationElementId, annotations, location, mode) {
+    generateInvokeRequest(stateData, invokeType, selectedOutcomeId?, selectedMapElementId?, pageComponentInputResponses?, navigationElementId?, selectedNavigationElementId?, annotations?, location?, mode?) {
         return {
             'stateId': stateData.id,
             'stateToken': stateData.token,
@@ -70,7 +70,7 @@ export default {
         };
     },
 
-    generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses, annotations, location) {
+    generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses?, annotations?, location?) {
         return {
             'stateId': stateData.id,
             'stateToken': stateData.token,

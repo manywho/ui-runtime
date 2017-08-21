@@ -1,4 +1,7 @@
-/// <reference path="../../typings/index.d.ts" />
+
+
+import * as React from 'react';
+import ReactDOM from 'react-dom';
 
 import Callbacks from './callbacks';
 import Collaboration from './collaboration';
@@ -383,6 +386,31 @@ export default {
             now = Math.floor(now / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
+    },
+
+    // Stolen from: https://github.com/soundcloud/jquery-whenall
+    whenAll: function (deferreds) {
+        if (deferreds && deferreds.length) {
+            let deferred = $.Deferred(),
+                toResolve = deferreds.length,
+                someFailed = false,
+                fail,
+                always;
+            always = function () {
+                if (!--toResolve) {
+                    deferred[someFailed ? 'reject' : 'resolve']();
+                }
+            };
+            fail = function () {
+                someFailed = true;
+            };
+            deferreds.forEach(function (d) {
+                d.fail(fail).always(always);
+            });
+            return deferred;
+        } else {
+            return $.Deferred().resolve();
+        }
     }
 
 };

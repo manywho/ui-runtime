@@ -1,5 +1,8 @@
-/// <reference path="../../typings/index.d.ts" />
+
 /// <reference path="../interfaces/ITour.ts" />
+
+import * as React from 'react';
+import ReactDOM from 'react-dom';
 
 import Component from './component';
 import Log from './log';

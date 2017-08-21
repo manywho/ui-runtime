@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+
 
 import Ajax from './ajax';
 import Callbacks from './callbacks';

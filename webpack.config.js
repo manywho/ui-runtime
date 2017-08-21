@@ -30,7 +30,7 @@ var config = {
             {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader',
-                exclude: /node_modules/,
+                exclude: [/node_modules/, /dist_test/],
                 query: {
                     declaration: false,
                 }

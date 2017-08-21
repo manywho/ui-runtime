@@ -39,15 +39,16 @@
     "uglifyjs-webpack-plugin": "^0.4.6"
   },
   "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
     "jquery": "^3.2.1",
     "loglevel": "^1.4.1",
-    "numbro": "^1.11.0"
+    "moment": "^2.18.1",
+    "numbro": "^1.11.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "ava": {
-	"require": [
-	  "./dist_test/test/helpers/setup-browser-env.js"
-	]
+    "require": [
+      "./dist_test/test/helpers/setup-browser-env.js"
+    ]
   }
 }

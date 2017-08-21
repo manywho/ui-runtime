@@ -1,3 +1,0 @@
-interface JQueryStatic {
-    whenAll: Function
-}

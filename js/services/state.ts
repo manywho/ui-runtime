@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+import * as $ from 'jquery';
 
 import Collaboration from './collaboration';
 import Model from './model';

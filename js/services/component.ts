@@ -1,4 +1,6 @@
-/// <reference path="../../typings/index.d.ts" />
+
+
+import * as React from 'react';
 
 import Log from './log';
 import Collaboration from './collaboration';

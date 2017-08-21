@@ -1,7 +1,6 @@
 
 import 'script-loader!../node_modules/numbro/dist/numbro.min.js';
 import 'script-loader!../node_modules/numbro/dist/languages.min.js';
-import './lib/jquery.plugins.ts';
 import './lib/polyfills';
 
 import Ajax from './services/ajax';

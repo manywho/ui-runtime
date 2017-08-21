@@ -1,4 +1,8 @@
-/// <reference path="../../typings/index.d.ts" />
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import * as $ from 'jquery';
+
+import '../lib/jquery.plugins';
 
 import Ajax from './ajax';
 import Authorization from './authorization';
@@ -307,7 +311,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
             if (Utils.isEqual(response.invokeType, 'DONE', true))
                 Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
 
-            return $.whenAll(deferreds);
+            return Utils.whenAll(deferreds);
 
         }, function(response) {
 
@@ -409,7 +413,7 @@ function joinWithAuthorization(callback, flowKey) {
 
             }
 
-            return $.whenAll(deferreds);
+            return Utils.whenAll(deferreds);
 
         }, function (response) {
 
@@ -517,7 +521,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
             if (Settings.isDebugEnabled(flowKey))
                 deferreds.push(loadExecutionLog(flowKey, authenticationToken));
 
-            return $.whenAll(deferreds);
+            return Utils.whenAll(deferreds);
 
         })
         .always(function () {
@@ -643,8 +647,8 @@ export default {
             let isValid = State.isAllValid(flowKey);
             if (!isValid) {
                 exports.default.render(flowKey);
-                let deferred = jQuery.Deferred();
-                deferred.fail();
+                let deferred = $.Deferred();
+                deferred.fail(null);
                 return deferred;
             }
         }
