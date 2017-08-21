@@ -1,35 +1,53 @@
 {
-    "name": "@manywho/ui-core",
-    "version": "2.68.0",
-    "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
-    "author": "ManyWho",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/manywho/ui-core.git"
-    },
-    "scripts": {
-        "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
-        "lint": "tslint -c tslint.json js/**/*.ts --fix",
-        "precommit": "lint-staged"
-    },
-    "lint-staged": {
-        "*.ts": "lint"
-    },
-    "main": "publish/js/ui-core.js",
-    "files": [
-        "publish/"
-    ],
-    "devDependencies": {
-        "del": "^1.1.1",
-        "husky": "^0.14.3",
-        "lint-staged": "^4.0.1",
-        "script-loader": "^0.7.0",
-        "tslint": "^5.5.0",
-        "tslint-loader": "^3.5.3",
-        "typescript": "^2.3.2",
-        "uglifyjs-webpack-plugin": "^0.4.6"
-    },
-    "dependencies": {
-        "numbro": "^1.11.0"
-    }
+  "name": "@manywho/ui-core",
+  "version": "2.68.0",
+  "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
+  "author": "ManyWho",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manywho/ui-core.git"
+  },
+  "scripts": {
+    "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
+    "lint": "tslint -c tslint.json js/**/*.ts --fix",
+    "precommit": "lint-staged",
+    "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\"",
+    "coverage": "nyc check-coverage --lines 100 --functions 100 --branches 90",
+    "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
+  },
+  "lint-staged": {
+    "*.ts": "lint"
+  },
+  "main": "publish/js/ui-core.js",
+  "files": [
+    "publish/"
+  ],
+  "devDependencies": {
+    "@types/jquery": "^3.2.11",
+    "@types/react": "^16.0.2",
+    "ava": "^0.22.0",
+    "browser-env": "^3.1.2",
+    "chokidar-cli": "^1.2.0",
+    "del": "^1.1.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.1",
+    "nyc": "^11.1.0",
+    "script-loader": "^0.7.0",
+    "tslint": "^5.5.0",
+    "tslint-loader": "^3.5.3",
+    "typescript": "^2.4.2",
+    "uglifyjs-webpack-plugin": "^0.4.6"
+  },
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "jquery": "^3.2.1",
+    "loglevel": "^1.4.1",
+    "numbro": "^1.11.0"
+  },
+  "ava": {
+	"require": [
+	  "./dist_test/test/helpers/setup-browser-env.js"
+	]
+  }
 }

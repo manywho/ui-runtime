@@ -1,5 +1,8 @@
 /node_modules
+/coverage
 /dist
+/dist_test
 /build
 /publish
 /typings
+.nyc_output

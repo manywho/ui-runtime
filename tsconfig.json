@@ -1,13 +1,9 @@
 {
-    "files": [
-        "typings/index.d.ts"
-    ],
     "compilerOptions": {
         "pretty": true,
         "target": "es5",
         "allowJs": true,
         "jsx": "react",
-        "lib": ["dom", "es6"],
-        "outFile": "ui-core.js"        
+        "lib": ["dom", "es6"]       
     }
 }
