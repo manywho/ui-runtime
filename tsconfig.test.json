@@ -5,7 +5,8 @@
         "outDir": "dist_test",
         "inlineSourceMap": true,
         "jsx": "react",
-        "lib": ["dom", "es6"]    
+        "lib": ["dom", "es6"],
+        "removeComments": true    
     },
     "include": [
         "test/*.ts",
