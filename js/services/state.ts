@@ -1,4 +1,5 @@
 import * as $ from 'jquery';
+import * as moment from 'moment';
 
 import Collaboration from './collaboration';
 import Model from './model';
@@ -7,7 +8,6 @@ import Utils from './utils';
 import Validation from './validation';
 
 declare var manywho: any;
-declare var moment: any;
 
 const loading = {};
 const components = {};

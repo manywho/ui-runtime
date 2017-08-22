@@ -18,6 +18,19 @@ test('Initialize', (t) => {
     t.pass();
 });
 
+test('Disabled', (t) => {
+    Settings.initialize({
+        formatting: {
+            isEnabled: false
+        }
+    }, null);
+    t.is(Formatting.format('test', 'format', null, flowKey), 'test');
+});
+
+test('Unsupported ContentType', (t) => {
+    t.is(Formatting.format('test', 'format', 'ContentObject', flowKey), 'test');
+});
+
 test('Moment Format, Empty', (t) => {
     t.is(Formatting.toMomentFormat(null), null);
 });
@@ -48,6 +61,18 @@ test('Moment Format', (t) => {
     });
 });
 
+test('DateTime Disabled', (t) => {
+    Settings.initialize({
+        formatting: {
+            isEnabled: false
+        }
+    }, null);
+    
+    const expected = moment();
+
+    t.is(Formatting.dateTime(expected.format(), 'YYYY', flowKey), expected.format());
+});
+
 test('DateTime', (t) => {
     t.is(Formatting.format(moment().format(), 'YYYY', 'ContentDateTime', flowKey), '2017');
 });
@@ -56,12 +81,41 @@ test('DateTime Year', (t) => {
     t.is(Formatting.dateTime(moment().format(), 'YYYY', flowKey), '2017');
 });
 
+test('Override Timezone Offset', (t) => {
+    Settings.initialize({
+        i18n: {
+            overrideTimezoneOffset: true
+        }
+    }, null);
+
+    const now = moment();
+    const expected = moment();
+    expected.local();
+
+    t.is(Formatting.dateTime(now.format(), 'r', flowKey), expected.format('ddd, DD MMM YYYY HH:mm:ss [GMT]'));
+});
+
+test('DateTime Invalid', (t) => {
+    t.is(Formatting.dateTime('not a date', 'YYYY', flowKey), 'not a date');
+});
+
+test('Timezone Offset', (t) => {
+    Settings.initialize({
+        i18n: {
+            overrideTimezoneOffset: true,
+            timezoneOffset: -8
+        }
+    }, null);
+
+    t.is(Formatting.dateTime(moment().format(), 'Z', flowKey), '-08:00');
+});
+
 test('Number', (t) => {
-    t.is(Formatting.format(99, '%', 'ContentNumber', flowKey), '99%');
+    t.is(Formatting.format(99, '000', 'ContentNumber', flowKey), '099');
 });
 
 test('Number Percentage', (t) => {
-    t.is(Formatting.number(99, '%', flowKey), '99%');
+    t.is(Formatting.number(0.99, '%', flowKey), '99%');
 });
 
 test('Number Decimal', (t) => {
@@ -82,4 +136,8 @@ test('Number Exponent', (t) => {
     t.plan(2);
     t.is(Formatting.number(99.9, 'e', flowKey), '9.99e+1');
     t.is(Formatting.number(99.9, 'E', flowKey), '9.99e+1');
+});
+
+test('Number Unformatted', (t) => {    
+    t.is(Formatting.number(99.9, null, flowKey), '99.9');
 });

@@ -25,7 +25,7 @@ test('Global with Default override', (t) => {
 });
 
 test('Flow', (t) => {
-    t.not(Settings.flow('validation.isenabled', flowKey), true);
+    t.is(Settings.flow('validation.isenabled', flowKey), true);
 });
 
 test('Flow All', (t) => {

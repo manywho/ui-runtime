@@ -8,7 +8,7 @@ test('Get Number', (t) => {
 });
 
 test('Get Number NaN', (t) => {
-    t.is(Utils.getNumber('not a number'), 10);
+    t.is(Utils.getNumber('not a number'), 0);
 });
 
 test('Parse Query String', (t) => {
@@ -29,7 +29,25 @@ test('Is Placeholder Objectdata', (t) => {
             }
         }
     ]
-    t.is(Utils.isPlaceholderObjectData(null), true);
+    t.is(Utils.isPlaceholderObjectData(objectData), true);
+});
+
+test('Is Not Placeholder Objectdata 1', (t) => {
+    const objectData = [
+        {
+            properties: {
+                property1: {
+                    contentValue: 'value'
+                }
+            }
+        }
+    ]
+    t.is(Utils.isPlaceholderObjectData(objectData), false);
+});
+
+test('Is Not Placeholder Objectdata 1', (t) => {
+    const objectData = ['item1', 'item2'];
+    t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
 
 test('Is Empty Objectdata 1', (t) => {
@@ -63,7 +81,7 @@ test('Get ObjectData Property', (t) => {
     const expected = {
         developerName: 'test'
     };
-    t.is(Utils.getObjectDataProperty(properties, 'test'), expected);
+    t.deepEqual(Utils.getObjectDataProperty(properties, 'test'), expected);
 });
 
 test('Set ObjectData Property', (t) => {
@@ -80,7 +98,7 @@ test('Set ObjectData Property', (t) => {
 
     Utils.setObjectDataProperty(properties, 'test', 'value');
 
-    t.is(Utils.getObjectDataProperty(properties, 'test'), expected);
+    t.deepEqual(Utils.getObjectDataProperty(properties, 'test'), expected);
 });
 
 test('Is Small Screen', (t) => {
@@ -108,7 +126,7 @@ test('Convert To Array', (t) => {
 
     const expected = ['value1', 'value2'];
 
-    t.is(Utils.convertToArray(source), expected);
+    t.deepEqual(Utils.convertToArray(source), expected);
 });
 
 test('Is Equal 1', (t) => {
@@ -117,15 +135,6 @@ test('Is Equal 1', (t) => {
 
 test('Is Equal 2', (t) => {
     t.is(Utils.isEqual('value', 'value', false), true);
-});
-
-test('Replace Browser Url', (t) => {
-    window.history.replaceState(null, '', `${window.location.origin}?param1=value1&param2=value2`);
-    Utils.parseQueryString({
-        stateToken: 'statetoken'
-    });
-
-    t.is(window.location, null);
 });
 
 test('Get', (t) => {

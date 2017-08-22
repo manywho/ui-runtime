@@ -10,14 +10,7 @@ test.beforeEach(t => {
 
 test('Is Authorized', (t) => {
     Authorization.setAuthenticationToken('token', flowKey);
-
-    const response = {
-        authorizationContext: {
-            directoryId: 'test'
-        }
-    };
-
-    t.is(Authorization.isAuthorized(response, flowKey), true);
+    t.is(Authorization.isAuthorized({}, flowKey), true);
 });
 
 test('Is Not Authorized 1', (t) => {
@@ -40,11 +33,6 @@ test('Is Not Authorized 2', (t) => {
     };
 
     t.is(Authorization.isAuthorized(response, flowKey), false);
-});
-
-test('Is Not Authorized 3', (t) => {
-    Authorization.setAuthenticationToken('token', flowKey);
-    t.is(Authorization.isAuthorized({}, flowKey), false);
 });
 
 test('Invoke Authorization', (t) => {
