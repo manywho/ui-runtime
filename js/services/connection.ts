@@ -43,7 +43,7 @@ export default {
                 }
             })
             .done(Settings.event(event + '.done'))
-            .fail(exports.default.onError)
+            .fail(onError)
             .fail(Settings.event(event + '.fail'));
     },
 
@@ -60,11 +60,11 @@ export default {
                 return xhr;
             },
             beforeSend: xhr => {
-                exports.default.beforeSend.call(this, xhr, tenantId, authenticationToken, event);
+                beforeSend.call(this, xhr, tenantId, authenticationToken, event);
             }
         })
         .done(Settings.event(event + '.done'))
-        .fail(exports.default.onError)
+        .fail(onError)
         .fail(Settings.event(event + '.fail'));
     }
 
