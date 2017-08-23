@@ -1,11 +1,13 @@
 import test from 'ava';
+import * as moment from 'moment';
 import State from '../js/services/state';
+import Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     State.remove(flowKey);
-})
+});
 
 test('Set Component Loading', (t) => {
     const expected = {
@@ -91,6 +93,23 @@ test('Set User Time', (t) => {
     t.not(State.getLocation(flowKey).time, null);
 });
 
+test('Set User Time With Offset', (t) => {
+    t.plan(2);
+
+    Settings.initialize({
+        i18n: {
+            timezoneOffset: -8
+        }
+    }, null);
+
+    State.setUserTime(flowKey);
+
+    t.not(State.getLocation(flowKey).time, null);
+
+    const time = moment(State.getLocation(flowKey).time);
+
+    t.is(time.format('Z'), '-08:00');
+});
 
 test('Input Responses', (t) => {
     const components = {
@@ -104,4 +123,67 @@ test('Input Responses', (t) => {
     State.setComponents(components, flowKey);
     
     t.deepEqual(State.getPageComponentInputResponseRequests(flowKey), [components['dd5b8fd9-1f25-4e57-a53e-135d94faf7a6']]);
+});
+
+test('Set Location', (t) => {    
+    Settings.initialize({
+        trackLocation: true,
+        i18n: {
+            timezoneOffset: null
+        }
+    }, null);
+
+    const expected = {
+        latitude: 1,
+        longitude: 2,
+        accuracy: 3,
+        altitude: 4,
+        altitudeAccuracy: 5,
+        heading: 6,
+        speed: 7,
+        time: moment().format()
+    };
+
+    (window.navigator.geolocation as any) = {
+        getCurrentPosition: function(callback) {
+            callback({ coords: expected });
+        }
+    };
+
+    State.setLocation(flowKey);
+
+    t.deepEqual(State.getLocation(flowKey), expected);
+});
+
+test('Refresh Components', (t) => {
+
+    const id = '73d2bbeb-c45e-44af-bd14-163c83fdbd83';
+    const models = {}
+    models[id] = {
+        objectData: [
+            {
+                id: 'item1',
+                isSelected: true
+            },
+            {
+                id: 'item2',
+                isSelected: false
+            }
+        ],
+        contentValue: 'value'
+    };
+
+    const expected = {}
+    expected[id] = {
+        contentValue: 'value',
+        objectData: [
+            { 
+                id: 'item1',
+                isSelected: true
+            }
+        ]
+    }
+
+    State.refreshComponents(models, false, flowKey);
+    t.deepEqual(State.getComponents(flowKey), expected);
 });
