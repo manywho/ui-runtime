@@ -11,7 +11,7 @@ test.beforeEach(t => {
             isEnabled: true
         }
     }, null);
-})
+});
 
 test('Initialize', (t) => {
     Formatting.initialize(flowKey);
@@ -67,7 +67,7 @@ test('DateTime Disabled', (t) => {
             isEnabled: false
         }
     }, null);
-    
+
     const expected = moment();
 
     t.is(Formatting.dateTime(expected.format(), 'YYYY', flowKey), expected.format());
@@ -92,7 +92,7 @@ test('Override Timezone Offset', (t) => {
     const expected = moment();
     expected.local();
 
-    t.is(Formatting.dateTime(now.format(), 'r', flowKey), expected.format('ddd, DD MMM YYYY HH:mm:ss [GMT]'));
+    t.is(Formatting.dateTime(now.format(), 'G', flowKey), expected.format('L LTS'));
 });
 
 test('DateTime Invalid', (t) => {
@@ -138,6 +138,6 @@ test('Number Exponent', (t) => {
     t.is(Formatting.number(99.9, 'E', flowKey), '9.99e+1');
 });
 
-test('Number Unformatted', (t) => {    
+test('Number Unformatted', (t) => {
     t.is(Formatting.number(99.9, null, flowKey), '99.9');
 });

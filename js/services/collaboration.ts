@@ -1,6 +1,6 @@
 
 
-import Log from './log';
+import * as Log from 'loglevel';
 import Engine from './engine';
 import Model from './model';
 import Settings from './settings';

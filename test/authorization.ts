@@ -6,6 +6,7 @@ const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     Authorization.setAuthenticationToken(null, flowKey);
+    State.setLogin(null, flowKey);
 });
 
 test('Is Authorized', (t) => {
@@ -13,22 +14,10 @@ test('Is Authorized', (t) => {
     t.is(Authorization.isAuthorized({}, flowKey), true);
 });
 
-test('Is Not Authorized 1', (t) => {
+test('Is Not Authorized', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'test'
-        }
-    };
-
-    t.is(Authorization.isAuthorized(response, flowKey), false);
-});
-
-test('Is Not Authorized 2', (t) => {
-    Authorization.setAuthenticationToken('token', flowKey);
-
-    const response = {
-        authorizationContext: {
-            directoryId: null
         }
     };
 
@@ -54,7 +43,7 @@ test('Invoke Authorization', (t) => {
         loginUrl: response.authorizationContext.loginUrl,
         stateId: response.stateId,
         callback: null
-    }
+    };
 
     t.deepEqual(State.getLogin(flowKey), expected);
 });
@@ -62,26 +51,28 @@ test('Invoke Authorization', (t) => {
 test('Invoke Authorization OAuth2', (t) => {
     const response = {
         authorizationContext: {
+            directoryId: 'id',
             authenticationType: 'oauth2',
-            loginUrl: 'loginUrl'
+            loginUrl: 'https://flow.manywho.com'
         }
     };
 
     Authorization.invokeAuthorization(response, flowKey, null);
 
-    t.is(window.location.href, response.authorizationContext.loginUrl);
+    t.is(State.getLogin(flowKey), null);
 });
 
 test('Invoke Authorization SAML', (t) => {
     const response = {
         authorizationContext: {
+            directoryId: 'id',
             authenticationType: 'saml',
-            loginUrl: 'loginUrl'
+            loginUrl: 'https://flow.manywho.com'
         }
     };
 
     Authorization.invokeAuthorization(response, flowKey, null);
 
-    t.is(window.location.href, response.authorizationContext.loginUrl);
+    t.is(State.getLogin(flowKey), null);
 });
 

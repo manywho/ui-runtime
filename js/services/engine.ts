@@ -2,8 +2,6 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 
-import '../lib/jquery.plugins';
-
 import Ajax from './ajax';
 import Authorization from './authorization';
 import Callbacks from './callbacks';
@@ -11,7 +9,7 @@ import Collaboration from './collaboration';
 import Component from './component';
 import Formatting from './formatting';
 import Json from './json';
-import Log from './log';
+import * as Log from 'loglevel';
 import Model from './model';
 import Settings from './settings';
 import Social from './social';

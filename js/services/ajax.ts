@@ -1,7 +1,7 @@
 
 
 import Connection from './connection';
-import Log from './log';
+import * as Log from 'loglevel';
 import Settings from './settings';
 
 declare var manywho: any;

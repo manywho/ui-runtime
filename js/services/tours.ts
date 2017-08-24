@@ -5,7 +5,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 import Component from './component';
-import Log from './log';
+import * as Log from 'loglevel';
 import Settings from './settings';
 import Utils from './utils';
 

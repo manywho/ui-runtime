@@ -2,7 +2,7 @@ import * as numbro from 'numbro';
 import * as moment from 'moment';
 
 import Component from './component';
-import Log from './log';
+import * as Log from 'loglevel';
 import Settings from './settings';
 import Utils from './utils';
 

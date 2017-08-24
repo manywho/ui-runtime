@@ -10,7 +10,7 @@ test.beforeEach(t => {
             isEnabled: true
         }
     }, flowKey);
-})
+});
 
 test('Global', (t) => {
     t.is(Settings.global('isFullWidth', null, null), false);
@@ -41,12 +41,12 @@ test('Theme', (t) => {
 });
 
 test('Is Debug Enabled, True', (t) => {
-    Settings.isDebugEnabled(flowKey, true)
+    Settings.isDebugEnabled(flowKey, true);
     t.is(Settings.isDebugEnabled(flowKey), true);
 });
 
 test('Is Debug Enabled, False', (t) => {
-    Settings.isDebugEnabled(flowKey, false)
+    Settings.isDebugEnabled(flowKey, false);
     t.is(Settings.isDebugEnabled(flowKey), false);
 });
 

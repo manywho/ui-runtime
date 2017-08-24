@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import Component from './component';
 import Engine from './engine';
-import Log from './log';
+import * as Log from 'loglevel';
 import Settings from './settings';
 import State from './state';
 import Utils from './utils';

@@ -13,7 +13,7 @@ test('Set Component Loading', (t) => {
     const expected = {
         loading: 'loading'
     };
-    
+
     State.setComponentLoading('id', 'loading', flowKey);
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
@@ -26,7 +26,7 @@ test('Set Component Error String', (t) => {
             id: 'id'
         }
     };
-    
+
     State.setComponentError('id', 'error message', flowKey);
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
@@ -39,7 +39,7 @@ test('Set Component Error Object', (t) => {
             id: 'id'
         }
     };
-    
+
     State.setComponentError('id', { message: 'error message' }, flowKey);
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
@@ -49,7 +49,7 @@ test('Set Component Error Remove', (t) => {
     const expected = {
         error: null
     };
-    
+
     State.setComponentError('id', { message: 'error message' }, flowKey);
     State.setComponentError('id', null, flowKey);
 
@@ -61,19 +61,19 @@ test('Set Session Data', (t) => {
         id: 'id',
         url: 'url'
     };
-    
+
     State.setSessionData(expected.id, expected.url, flowKey);
-    
+
     t.deepEqual(State.getSessionData(flowKey), expected);
 });
 
 test('Set Login', (t) => {
-    State.setLogin('login', flowKey);            
+    State.setLogin('login', flowKey);
     t.is(State.getLogin(flowKey), 'login');
 });
 
 test('Set Options', (t) => {
-    State.setOptions('options', flowKey);            
+    State.setOptions('options', flowKey);
     t.is(State.getOptions(flowKey), 'options');
 });
 
@@ -84,7 +84,7 @@ test('Set State', (t) => {
         currentMapElementId: 'currentMapElementId'
     };
 
-    State.setState(expected.id, expected.token, expected.currentMapElementId, flowKey);            
+    State.setState(expected.id, expected.token, expected.currentMapElementId, flowKey);
     t.deepEqual(State.getState(flowKey), expected);
 });
 
@@ -106,9 +106,9 @@ test('Set User Time With Offset', (t) => {
 
     t.not(State.getLocation(flowKey).time, null);
 
-    const time = moment(State.getLocation(flowKey).time);
+    const time = moment();
 
-    t.is(time.format('Z'), '-08:00');
+    t.not(State.getLocation(flowKey).time.indexOf('-08:00'), -1);
 });
 
 test('Input Responses', (t) => {
@@ -121,11 +121,11 @@ test('Input Responses', (t) => {
     };
 
     State.setComponents(components, flowKey);
-    
+
     t.deepEqual(State.getPageComponentInputResponseRequests(flowKey), [components['dd5b8fd9-1f25-4e57-a53e-135d94faf7a6']]);
 });
 
-test('Set Location', (t) => {    
+test('Set Location', (t) => {
     Settings.initialize({
         trackLocation: true,
         i18n: {
@@ -158,7 +158,7 @@ test('Set Location', (t) => {
 test('Refresh Components', (t) => {
 
     const id = '73d2bbeb-c45e-44af-bd14-163c83fdbd83';
-    const models = {}
+    const models = {};
     models[id] = {
         objectData: [
             {
@@ -173,16 +173,16 @@ test('Refresh Components', (t) => {
         contentValue: 'value'
     };
 
-    const expected = {}
+    const expected = {};
     expected[id] = {
         contentValue: 'value',
         objectData: [
-            { 
+            {
                 id: 'item1',
                 isSelected: true
             }
         ]
-    }
+    };
 
     State.refreshComponents(models, false, flowKey);
     t.deepEqual(State.getComponents(flowKey), expected);

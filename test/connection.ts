@@ -13,7 +13,7 @@ test.before(t => {
         platform: {
             uri: 'https://flow.manywho.com/'
         }
-    }, 
+    },
     {
         myevent: {
                 beforeSend: (xhr, request) => {
@@ -23,18 +23,18 @@ test.before(t => {
     });
 
     t.pass();
-})
+});
 
-test('Request', async t => {
-    t.plan(5);
+test.cb('Request', t => {
+    t.plan(4);
 
-    const payload = { request: 'test' }
+    const payload = { request: 'test' };
     const url = 'https://flow.manywho.com/testurl';
 
     const expectedHeaders = {
         accept: 'application/json, text/javascript, */*; q=0.01',
         authorization: 'token',
-        "content-type": 'application/json',
+        'content-type': 'application/json',
         manywhostate: 'stateId',
         manywhotenant: 'tenantId'
     };
@@ -44,22 +44,23 @@ test('Request', async t => {
         t.is(req._method, 'POST');
         t.is(req._url, url);
         t.deepEqual(req._headers, expectedHeaders);
+        t.end();
         return res.status(200).body();
-    });    
+    });
 
-    await Connection.request(null, 'myevent', 'testurl', 'POST', 'tenantId', 'stateId', 'token', payload)
-
-    t.pass();
+    Connection.request(null, 'myevent', 'testurl', 'POST', 'tenantId', 'stateId', 'token', payload);
 });
 
-test('Upload', async (t) => {
-    t.plan(4);
+test.cb('Upload', (t) => {
+    t.plan(3);
 
     const url = 'https://flow.manywho.com/fileupload';
     const formData = new FormData();
     formData.append('key', 'value');
 
-    const onProgress = () => {};
+    const onProgress = () => {
+        return;
+    };
 
     const expectedHeaders = {
         authorization: 'token',
@@ -70,10 +71,9 @@ test('Upload', async (t) => {
         t.is(req._method, 'POST');
         t.is(req._url, url);
         t.deepEqual(req._headers, expectedHeaders);
+        t.end();
         return res.status(200).body();
-    });    
+    });
 
-    await Connection.upload(null, 'myevent', 'fileupload', formData, 'tenantId', 'token', onProgress);
-
-    t.pass();
+    Connection.upload(null, 'myevent', 'fileupload', formData, 'tenantId', 'token', onProgress);
 });

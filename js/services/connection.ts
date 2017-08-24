@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import Log from './log';
+import * as Log from 'loglevel';
 import Settings from './settings';
 import Utils from './utils';
 
