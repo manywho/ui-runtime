@@ -51,7 +51,11 @@ test.cb('Login', t => {
         t.is(req._body, JSON.stringify(expected));
         t.is(req._url, url);
         t.is(req._method, 'POST');
-        t.deepEqual(req._headers, expectedStateHeaders);
+        t.deepEqual(req._headers, {
+            accept: 'application/json, text/javascript, */*; q=0.01',
+            'content-type': 'application/json',
+            manywhotenant: tenantId
+        });
         t.end();
         return res.status(200).body();
     });
@@ -126,7 +130,7 @@ test.cb('Invoke', t => {
         t.is(req._body, JSON.stringify(request));
         t.is(req._url, url);
         t.is(req._method, 'POST');
-        t.deepEqual(req._headers, expectedHeaders);
+        t.deepEqual(req._headers, expectedStateHeaders);
         t.end();
         return res.status(200).body();
     });
@@ -157,7 +161,7 @@ test.cb('Get Navigation', t => {
 });
 
 test.cb('Get Flow By Name', t => {
-    t.plan(4);
+    t.plan(3);
 
     const flowName = 'myflow';
     const url = `https://flow.manywho.com/api/run/1/flow/name/${flowName}`;
@@ -182,8 +186,8 @@ test.cb('ObjectData Request', t => {
     const url = `https://flow.manywho.com/api/service/1/data`;
     const expected = {
         listFilter: {
-            limit: 10,
             search: 'search',
+            limit: 10,
             orderByPropertyDeveloperName: 'orderBy',
             orderByDirectionType: 'ASC',
             offset: 20
@@ -200,6 +204,90 @@ test.cb('ObjectData Request', t => {
     });
 
     Ajax.dispatchObjectDataRequest({}, tenantId, stateId, token, expected.listFilter.limit, expected.listFilter.search, expected.listFilter.orderByPropertyDeveloperName, expected.listFilter.orderByDirectionType, 3);
+});
+
+test.cb('FileData Request', t => {
+    t.plan(4);
+
+    const url = `https://flow.manywho.com/api/service/1/file`;
+    const expected = {
+        listFilter: {
+            search: 'search',
+            limit: 10,
+            orderByPropertyDeveloperName: 'orderBy',
+            orderByDirectionType: 'ASC',
+            offset: 20
+        }
+    };
+
+    mock.post(url, (req, res) => {
+        t.is(req._body, JSON.stringify(expected));
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.dispatchFileDataRequest({}, tenantId, stateId, token, expected.listFilter.limit, expected.listFilter.search, expected.listFilter.orderByPropertyDeveloperName, expected.listFilter.orderByDirectionType, 3);
+});
+
+test.cb('Upload File', t => {
+    t.plan(4);
+
+    const url = `https://flow.manywho.com/api/service/1/file/content`;
+    const formData = new FormData();
+    formData.append('key', 'value');
+
+    mock.post(url, (req, res) => {
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.uploadFile(formData, tenantId, token, null);
+});
+
+test.cb('Upload Social File', t => {
+    t.plan(4);
+
+    const streamId = 'streamId';
+    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/file`;
+    const formData = new FormData();
+    formData.append('key', 'value');
+
+    mock.post(url, (req, res) => {
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.uploadSocialFile(formData, streamId, tenantId, token, null);
+});
+
+test.cb('Session Authentication', t => {
+    t.plan(4);
+
+    const url = `https://flow.manywho.com/api/run/1/authentication/${stateId}`;
+
+    const expected = {
+        session: 'session'
+    };
+
+    mock.post(url, (req, res) => {
+        t.is(req._body, JSON.stringify(expected));
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.sessionAuthentication(tenantId, stateId, expected, token);
 });
 
 test.cb('Ping', t => {
@@ -267,4 +355,80 @@ test.cb('Get Social Followers', t => {
     });
 
     Ajax.getSocialFollowers(tenantId, streamId, stateId, token);
+});
+
+test.cb('Get Social Messages', t => {
+    t.plan(3);
+
+    const streamId = 'streamId';
+    const page = 1;
+    const pageSize = 10;
+    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?page=${page}&pageSize=${pageSize}`;
+
+    mock.get(url, (req, res) => {
+        t.is(req._url, url);
+        t.is(req._method, 'GET');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.getSocialMessages(tenantId, streamId, stateId, page, pageSize, token);
+});
+
+test.cb('Send Social Message', t => {
+    t.plan(4);
+
+    const streamId = 'streamId';
+    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/message`;
+
+    const expected = {
+        message: 'hello'
+    };
+
+    mock.post(url, (req, res) => {
+        t.is(req._body, JSON.stringify(expected));
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.sendSocialMessage(tenantId, streamId, stateId, expected, token);
+});
+
+test.cb('Follow', t => {
+    t.plan(3);
+
+    const streamId = 'streamId';
+    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?follow=true`;
+
+    mock.post(url, (req, res) => {
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.follow(tenantId, streamId, stateId, true, token);
+});
+
+test.cb('Get Social Users', t => {
+    t.plan(3);
+
+    const streamId = 'streamId';
+    const name = 'name';
+    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/user?name=${name}`;
+
+    mock.get(url, (req, res) => {
+        t.is(req._url, url);
+        t.is(req._method, 'GET');
+        t.deepEqual(req._headers, expectedStateHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.getSocialUsers(tenantId, streamId, stateId, name, token);
 });
