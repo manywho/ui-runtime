@@ -11,7 +11,7 @@ test.before(t => {
 
     Settings.initialize({
         platform: {
-            uri: 'https://flow.manywho.com/'
+            uri: 'https://flow.manywho.com'
         }
     }, null);
 
@@ -19,7 +19,7 @@ test.before(t => {
 });
 
 test.cb('Initialize', async t => {
-    t.plan(5);
+    t.plan(4);
 
     const expectedHeaders = {
         accept: 'application/json, text/javascript, */*; q=0.01',
@@ -29,17 +29,22 @@ test.cb('Initialize', async t => {
         manywhotenant: 'tenantId'
     };
 
-    mock.post('https://flow.manywho.com/api/run/1', (req, res) => {
-        t.end();
-        return res.status(200).body();
-    });
-
+    const url = 'https://flow.manywho.com/api/run/1';
     const request = {
         flowId: {
             id: 'id',
             versionId: 'versionId'
         }
     };
+
+    mock.post(url, (req, res) => {
+        t.is(req._body, JSON.stringify(request));
+        t.is(req._url, url);
+        t.is(req._method, 'POST');
+        t.deepEqual(req._headers, expectedHeaders);
+        t.end();
+        return res.status(200).body();
+    });
 
     Ajax.initialize(request, 'tenantId', 'token');
 });
