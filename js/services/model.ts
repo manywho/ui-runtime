@@ -679,7 +679,7 @@ export default {
         Engine.render(flowKey);
     },
 
-    getModal: function(flowKey, modal) {
+    getModal: function(flowKey) {
         const lookUpKey = Utils.getLookUpKey(flowKey);
         return flowModel[lookUpKey].modal;
     }
