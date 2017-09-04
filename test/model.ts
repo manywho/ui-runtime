@@ -1,24 +1,39 @@
 import test from 'ava';
-import * as simple from 'simple-mock';
+import * as mockery from 'mockery'
+import * as sinon from 'sinon';
+
+const engine = {
+    default: {
+        render: sinon.stub()
+    }
+};
+
+mockery.enable({ 
+    useCleanCache: true,
+    warnOnUnregistered: false 
+});
+
+mockery.registerMock('./engine', engine);
+
 import Model from '../js/services/model';
-import Engine from '../js/services/engine';
 
 const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     Model.initializeModel(flowKey);
+    engine.default.render.resetHistory();
 });
 
 test.afterEach(t => {
     Model.deleteFlowModel(flowKey);
-    simple.restore();
 });
 
-test('Notifications', (t) => {
-    simple.mock(Engine, 'render').callFn(function () {
-        return;
-    });
+test.after(t => {
+    mockery.deregisterAll();
+    mockery.disable();
+})
 
+test('Notifications', (t) => {
     const notification = { message: 'hello', position: 'center' };
     Model.addNotification(flowKey, notification);
 
@@ -29,7 +44,7 @@ test('Notifications', (t) => {
     Model.removeNotification(flowKey, notification);
 
     t.is(Model.getNotifications(flowKey, 'center').length, 0);
-    t.is((Engine.render as any).callCount, 2);
+    t.is(engine.default.render.callCount, 2);
 });
 
 test('Selected Navigation', (t) => {
@@ -47,13 +62,9 @@ test('Attributes', (t) => {
 });
 
 test('Modal', (t) => {
-    simple.mock(Engine, 'render').callFn(function () {
-        return;
-    });
-
     Model.setModal(flowKey, 'modal');
     t.is(Model.getModal(flowKey), 'modal');
-    t.is((Engine.render as any).callCount, 1);
+    t.is(engine.default.render.callCount, 1);
 });
 
 test('Execution Log', (t) => {

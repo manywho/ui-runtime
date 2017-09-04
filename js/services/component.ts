@@ -212,7 +212,7 @@ export default {
             }
         }
 
-        Engine.move(outcome, flowKey)
+        return Engine.move(outcome, flowKey)
             .then(() => {
                 if (outcome.isOut)
                     Engine.flowOut(outcome, flowKey);
