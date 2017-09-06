@@ -75,20 +75,20 @@ export default {
                 return;
             }
 
-            this.current = JSON.parse(JSON.stringify(configs[id])) as ITour;
-            this.current.steps = (this.current.steps || []).map((step, index) => Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
+            exports.default.current = JSON.parse(JSON.stringify(configs[id])) as ITour;
+            exports.default.current.steps = (exports.default.current.steps || []).map((step, index) => Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
 
-            this.current.currentStep = 0;
+            exports.default.current.currentStep = 0;
 
-            watchForStep(this.current);
-            ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: this.current, stepIndex: 0 }), tourContainer);
-            return this.current;
+            watchForStep(exports.default.current);
+            ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: exports.default.current, stepIndex: 0 }), tourContainer);
+            return exports.default.current;
         }
         else
             Log.error(`A Container matching the selector ${containerSelector} could not be found when attempting to start a Tour`);
     },
 
-    next(tour = this.current) {
+    next(tour = exports.default.current) {
         if (!tour)
             return;
 
@@ -98,20 +98,20 @@ export default {
             tour.currentStep++;
 
         watchForStep(tour);
-        this.render();
+        exports.default.render();
     },
 
-    previous(tour = this.current) {
+    previous(tour = exports.default.current) {
         if (!tour)
             return;
 
         tour.currentStep = Math.max(0, tour.currentStep - 1);
 
         watchForStep(tour);
-        this.render();
+        exports.default.render();
     },
 
-    move(tour = this.current, index) {
+    move(tour = exports.default.current, index) {
         if (!tour)
             return;
 
@@ -123,17 +123,17 @@ export default {
         tour.currentStep = index;
 
         watchForStep(tour);
-        this.render();
+        exports.default.render();
     },
 
-    refresh(tour = this.current) {
+    refresh(tour = exports.default.current) {
         if (!tour)
             return;
 
-        if (!this.getTargetElement(tour.steps[tour.currentStep])) {
+        if (!exports.default.getTargetElement(tour.steps[tour.currentStep])) {
             for (let i = tour.currentStep; i < tour.steps.length; i++) {
-                if (this.getTargetElement(tour.steps[i])) {
-                    this.move(tour, i);
+                if (exports.default.getTargetElement(tour.steps[i])) {
+                    exports.default.move(tour, i);
                     return;
                 }
             }
@@ -141,15 +141,15 @@ export default {
             ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
         }
         else
-            this.render(tour);
+            exports.default.render(tour);
     },
 
-    done(tour = this.current) {
-        this.current = null;
+    done(tour = exports.default.current) {
+        exports.default.current = null;
         ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
     },
 
-    render(tour = this.current) {
+    render(tour = exports.default.current) {
         if (!tour)
             return;
 
