@@ -1,10 +1,19 @@
 import test from 'ava';
 import * as mock from 'xhr-mock';
 import Authorization from '../js/services/authorization';
+import Settings from '../js/services/settings';
 import State from '../js/services/state';
 import Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
+
+test.before(t => {
+    Settings.initialize({
+        platform: {
+            uri: 'https://flow.manywho.com'
+        }
+    }, null);
+});
 
 test.beforeEach(t => {
     Authorization.setAuthenticationToken(null, flowKey);
@@ -86,12 +95,15 @@ test.cb('Authorize By Session', (t) => {
     const url = `https://flow.manywho.com/api/run/1/authentication/${stateId}`;
 
     mock.post(url, (req, res) => {
-        return res.status(200).body();
+        return res.status(200).body('{}');
     });
 
-    const onDone = (callback, response) => {
-        t.pass();
-        t.end();
+    const onDone = {
+        type: 'done',
+        execute: (callback, response) => {
+            t.pass();
+            t.end();
+        }
     };
 
     State.setState(stateId, 'token', 'mapElementId', flowKey);
