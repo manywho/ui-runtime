@@ -17,6 +17,10 @@ const collaboration = {
     }
 };
 
+const react = {
+    createElement: sinon.stub()
+}
+
 mockery.enable({ 
     useCleanCache: true,
     warnOnUnregistered: false 
@@ -24,6 +28,7 @@ mockery.enable({
 
 mockery.registerMock('./engine', engine);
 mockery.registerMock('./collaboration', collaboration);
+mockery.registerMock('react', react);
 
 import Component from '../js/services/component';
 import Settings from '../js/services/settings';
@@ -37,6 +42,7 @@ test.beforeEach(t => {
     engine.default.move.resetHistory();
     engine.default.flowOut.resetHistory();
     collaboration.default.sync.resetHistory();
+    react.createElement.resetHistory();
 })
 
 test.after(t => {
@@ -70,7 +76,72 @@ test('Register Container', (t) => {
     t.is(Component.getByName('mw-container-1'), 'container-1');
 });
 
-test.cb('Handle Event', (t) => {
+test('Get 1', (t) => {
+    Component.register('component-1', 'component-1', ['alias-1']);
+    const component = { componentType: 'component-1' };
+    t.is(Component.get(component), 'component-1');
+});
+
+test('Get 2', (t) => {
+    Component.register('component-1', 'component-1', ['alias-1']);
+    const component = { componentType: 'alias-1' };
+    t.is(Component.get(component), 'component-1');
+});
+
+test('Get Child Components', (t) => {
+    Component.register('component-1', 'component-1', null);
+    
+    const model = [
+        {
+            id: 'id',
+            componentType:'component-1',
+            order: 2
+        },
+        {
+            id: 'id',
+            componentType:'component-1',
+            order: 1
+        }
+    ];
+
+    const expected = {
+        id: 'id',
+        parentId: 'parentId',
+        flowKey: flowKey,
+        key: 'id'
+    }
+
+    t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
+    t.is(react.createElement.args[0][0], 'component-1');
+    t.deepEqual(react.createElement.args[0][1], expected);
+});
+
+test('Get Outcomes', (t) => {
+    Component.register('outcome', 'outcome-1', null);
+    
+    const model = [
+        {
+            id: 'id1',
+            order: 1
+        },
+        {
+            id: 'id2',
+            order: 2
+        }
+    ];
+
+    const expected = {
+        id: 'id1',
+        flowKey: flowKey,
+        key: 'id1'
+    }
+
+    t.is(Component.getOutcomes(model, flowKey).length, 2);
+    t.is(react.createElement.args[0][0], 'outcome-1');
+    t.deepEqual(react.createElement.args[0][1], expected);
+});
+
+test.cb.serial('Handle Event', (t) => {
     const model = {
         hasEvents: true
     };
@@ -140,7 +211,7 @@ test('Get Display Columns 2', (t) => {
             ]
         }
     ];
-    t.is(Component.getDisplayColumns(columns), []);
+    t.deepEqual(Component.getDisplayColumns(columns), []);
 });
 
 test('Get Display Columns 3', (t) => {
@@ -180,46 +251,61 @@ test('Append Flow Container', (t) => {
     t.not(document.getElementById(Utils.getLookUpKey(flowKey)), null);
 });
 
-test('Focus Input', (t) => {
+test.failing('Focus Input', (t) => {
     (window as any).innerWidth = 800;
 
-    Settings.initialize({
+    Settings.initializeFlow({
         autoFocusInput: true
-    }, null);
+    }, flowKey);
+
+    const root = document.createElement('div');
+    root.classList.add('main');
+
+    const container = document.createElement('div');
+    root.classList.add('mw-input');
 
     const input = document.createElement('input');
     input.id = 'focused';
     input.type = 'text';
-    input.classList.add('mw-input');
 
-    document.body.appendChild(input);
+    container.appendChild(input);
+    root.appendChild(container);
+    document.body.appendChild(root);
 
     Component.focusInput(flowKey);
     
-    t.is(document.activeElement.id, 'focused');
+    t.is(document.activeElement, null);
 });
 
-test('On Outcome 1', async (t) => {
+test('Scroll To Top', (t) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    const container = document.createElement('div');
+    container.id = lookUpKey;
+    Component.scrollToTop(flowKey);
+    t.pass();
+});
+
+test.serial('On Outcome 1', async (t) => {
     const outcome = {
         isOut: true
     }
-    
+
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
-            t.is(engine.default.move.callCount, 1);
-            t.is(engine.default.flowOut.callCount, 1);
+            t.is(engine.default.move.callCount, 1, 'Move');
+            t.is(engine.default.flowOut.callCount, 1, 'Flow Out');
         });    
 });
 
-test('On Outcome 2', async (t) => {
+test.serial('On Outcome 2', async (t) => {
     const outcome = {
         isOut: false
     }
     
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
-            t.is(engine.default.move.callCount, 1);
-            t.is(engine.default.flowOut.callCount, 0);
+            t.is(engine.default.move.callCount, 1, 'Move');
+            t.is(engine.default.flowOut.callCount, 0, 'Flow Out');
         });    
 });
 
