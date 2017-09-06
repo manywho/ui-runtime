@@ -1,5 +1,40 @@
 import test from 'ava';
 import * as moment from 'moment';
+import * as mockery from 'mockery'
+import * as sinon from 'sinon';
+
+const validation = {
+    default: {
+        validate: sinon.stub()
+    }
+};
+
+const model = {
+    default: {
+        getComponents: sinon.stub().returns({
+            id: {}
+        }),
+        getComponent: sinon.stub().returns({
+            isRequired: true
+        })
+    }
+};
+
+const collaboration = {
+    default: {
+        push: sinon.stub()
+    }
+};
+
+mockery.enable({ 
+    useCleanCache: true,
+    warnOnUnregistered: false 
+});
+
+mockery.registerMock('./model', model);
+mockery.registerMock('./validation', validation);
+mockery.registerMock('./collaboration', collaboration);
+
 import State from '../js/services/state';
 import Settings from '../js/services/settings';
 
@@ -7,7 +42,16 @@ const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     State.remove(flowKey);
+    validation.default.validate.resetHistory();
+    model.default.getComponents.resetHistory();
+    model.default.getComponent.resetHistory();
+    collaboration.default.push.resetHistory();
 });
+
+test.after(t => {
+    mockery.deregisterAll();
+    mockery.disable();
+})
 
 test('Set Component Loading', (t) => {
     const expected = {
@@ -186,4 +230,66 @@ test('Refresh Components', (t) => {
 
     State.refreshComponents(models, false, flowKey);
     t.deepEqual(State.getComponents(flowKey), expected);
+});
+
+test('Set Component', (t) => {
+    validation.default.validate
+        .onFirstCall()
+        .returns({
+            isValid: false,
+            validationMessage: 'message'
+        });
+
+    validation.default.validate
+        .returns({
+            isValid: true,
+            validationMessage: null
+        });
+
+    const models = {
+        id: {
+            isValid: false
+        }
+    };
+    State.refreshComponents(models, true, flowKey);
+
+    const values = {
+        contentValue: 'value',
+        objectData: []
+    }
+    State.setComponent('id', values, flowKey, true);
+
+    const expected = {
+        contentValue: 'value',
+        isValid: true,
+        objectData: [],
+        validationMessage: null
+    };
+
+    t.deepEqual(State.getComponent('id', flowKey), expected);
+    t.is(collaboration.default.push.callCount, 1);
+
+    validation.default.validate.resetBehavior();
+});
+
+test('Validation', (t) => {
+    validation.default.validate.returns({
+        isValid: false,
+        validationMessage: 'message'
+    });
+
+    const models = {
+        id: {}
+    };
+    State.refreshComponents(models, true, flowKey);
+
+    const expected = {
+        contentValue: null,
+        objectData: undefined,
+        isValid: false,
+        validationMessage: 'message'
+    };
+
+    t.is(State.isAllValid(flowKey), false);
+    t.deepEqual(State.getComponent('id', flowKey), expected);
 });
