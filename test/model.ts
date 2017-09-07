@@ -33,6 +33,122 @@ test.after(t => {
     mockery.disable();
 })
 
+test.serial('Parse Response', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value'
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'container-1',
+                            id: 'container-1',
+                            order: 0,
+                            pageContainerResponses: [
+                                {
+                                    containerType: 'VERTICAL_FLOW',
+                                    developerName: 'container-2',
+                                    id: 'container-2',
+                                    order: 0,
+                                    pageContainerResponses: null
+                                }
+                            ]
+                        }
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-1'
+                        },
+                        {
+                            isEditable: false,
+                            isEnabled: false,
+                            isVisible: false,
+                            pageContainerId: 'container-2'
+                        }
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'container-1',
+                            pageContainerDeveloperName: 'container-1',
+                            isVisible: true
+                        }
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1'
+                        }
+                    ]
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'container-1'
+                    }
+                ],
+                rootFaults: {
+                    fault: 'fault message'
+                }
+            }
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues'
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    const expectedContainer: any = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses[0]);
+    expectedContainer.childCount = 2;
+    t.deepEqual(Model.getContainer('container-1', flowKey), expectedContainer);
+    
+    const expectedComponent = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0]);
+    t.deepEqual(Model.getComponent('component-1', flowKey), expectedComponent);
+    t.deepEqual(Model.getComponentByName('component-1', flowKey), expectedComponent);
+    t.deepEqual(Model.getComponents(flowKey), { 'component-1': expectedComponent });
+    
+    const expectedOutcome = response.mapElementInvokeResponses[0].outcomeResponses[0];
+    t.deepEqual(Model.getOutcome('outcome-1', flowKey), expectedOutcome);
+    t.deepEqual(Model.getOutcomes('root', flowKey), [expectedOutcome]);
+    t.deepEqual(Model.getOutcomes(null, flowKey), [expectedOutcome]);
+    
+    t.is(Model.getLabel(flowKey), 'label');
+    t.is(Model.getInvokeType(flowKey), 'FORWARD');
+    t.is(Model.getWaitMessage(flowKey), 'waitMessage');
+    t.is(Model.getPreCommitStateValues(flowKey), 'preCommitStateValues');
+    t.is(Model.getStateValues(flowKey), 'stateValues');
+
+    t.deepEqual(Model.getChildren('root', flowKey), [expectedContainer]);
+    t.deepEqual(Model.getItem('container-1', flowKey), expectedContainer);
+    t.deepEqual(Model.getItem('component-1', flowKey), expectedComponent);
+    t.deepEqual(Model.getItem('outcome-1', flowKey), expectedOutcome);
+
+    const expectedNotifications = [
+        {
+            message: 'fault message',
+            position: 'center',
+            type: 'danger',
+            timeout: '0',
+            dismissible: true
+        }
+    ];
+    t.deepEqual(Model.getNotifications(flowKey, 'center'), expectedNotifications);
+});
+
 test('Notifications', (t) => {
     const notification = { message: 'hello', position: 'center' };
     Model.addNotification(flowKey, notification);
@@ -72,7 +188,7 @@ test('Execution Log', (t) => {
     t.is(Model.getExecutionLog(flowKey), 'executionlog');
 });
 
-test('Parse Navigation Response', (t) => {
+test.serial('Parse Navigation Response', (t) => {
     const response = {
         culture: 'culture',
         developerName: 'developerName',
@@ -113,6 +229,7 @@ test('Parse Navigation Response', (t) => {
 
     Model.parseNavigationResponse('id', response, flowKey, 'currentMapElementId');
     t.deepEqual(Model.getNavigation('id', flowKey), expected);
+    t.is(Model.getDefaultNavigationId(flowKey), 'id');
 });
 
 test('Set Components', (t) => {
@@ -201,4 +318,46 @@ test('Set History', (t) => {
 
     Model.setHistory(response, flowKey);
     t.deepEqual(Model.getHistory(flowKey), expected);
+});
+
+test('Pop History', (t) => {
+    const response = {
+        mapElementInvokeResponses: [
+            {
+                developerName: 'response',
+                mapElementId: 'id',
+                pageResponse: {
+                    label: 'label',
+                    pageComponentDataResponses: [
+                        {
+                            content: 'content'
+                        }
+                    ]
+                },
+                outcomeResponses: [
+                    {
+                        developerName: 'outcome',
+                        id: 'outcome-id',
+                        label: 'outcome',
+                        order: 1
+                    }
+                ]
+            }
+        ]
+    }
+
+    Model.setHistory(response, flowKey);
+    Model.popHistory('id-1', flowKey);
+
+    t.deepEqual(Model.getHistory(flowKey), []);
+});
+
+test('Set History Selected Outcome', (t) => {
+    const expected = {
+        selectedOutcome: 'outcome'
+    };
+
+    Model.setHistorySelectedOutcome('outcome', 'invokeType', flowKey);
+    const actual = Model.getHistory(flowKey);
+    t.deepEqual(actual[-1], expected);
 });

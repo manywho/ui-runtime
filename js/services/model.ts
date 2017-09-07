@@ -155,11 +155,11 @@ export default {
 
                 exports.default.setAttributes(flowKey, engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.attributes || null);
 
-                this.setContainers(flowKey,
+                exports.default.setContainers(flowKey,
                                     engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageContainerResponses,
                                     engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses);
 
-                this.setComponents(flowKey,
+                exports.default.setComponents(flowKey,
                                     engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentResponses,
                                     engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses);
 
@@ -295,7 +295,7 @@ export default {
 
         }
 
-        let parentStateId = this.getParentStateId(flowKey);
+        let parentStateId = exports.default.getParentStateId(flowKey);
 
         if (parentStateId)
             flowModel[lookUpKey].navigation[id].returnToParent = React.createElement(Component.getByName('returnToParent'), { flowKey: flowKey, parentStateId: parentStateId });
@@ -448,19 +448,19 @@ export default {
 
     getItem: function(id, flowKey) {
 
-        let item = this.getContainer(id, flowKey);
+        let item = exports.default.getContainer(id, flowKey);
         if (item != null)
             return item;
 
-        item = this.getComponent(id, flowKey);
+        item = exports.default.getComponent(id, flowKey);
         if (item != null)
             return item;
 
-        item = this.getOutcome(id, flowKey);
+        item = exports.default.getOutcome(id, flowKey);
         if (item != null)
             return item;
 
-        item = this.getNavigation(id, flowKey);
+        item = exports.default.getNavigation(id, flowKey);
         if (item != null)
             return item;
     },
@@ -473,11 +473,6 @@ export default {
     getWaitMessage: function (flowKey) {
         const lookUpKey = Utils.getLookUpKey(flowKey);
         return flowModel[lookUpKey].waitMessage;
-    },
-
-    setComponentInputResponseRequest: function (componentId, contentValue, objectData) {
-        this.componentInputResponseRequests[componentId].contentValue = contentValue;
-        this.componentInputResponseRequests[componentId].objectData = objectData;
     },
 
     getPreCommitStateValues: function (flowKey) {
@@ -558,11 +553,6 @@ export default {
 
             flowModel[lookUpKey].history[length].selectedOutcome = selectedOutcome;
         }
-    },
-
-    popLastHistory: function (flowKey) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-        flowModel[lookUpKey].history.pop();
     },
 
     popHistory: function (mapElementId, flowKey) {
