@@ -41,7 +41,7 @@ manywho.validation = (function (manywho) {
     const validateRegex = function(value: string, regex: string) {
         if (!manywho.utils.isNullOrWhitespace(regex)) {
             const validationRegex = new RegExp(regex);
-            return validationRegex.test(value);
+            return validationRegex.test(manywho.utils.isNullOrUndefined(value) ? '' : value);
         }
 
         return true;
