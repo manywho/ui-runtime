@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var config = {
@@ -21,7 +22,8 @@ var config = {
             minimize: true,
             sourceMap: true,
             include: /\.min\.js$/,
-        })
+        }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     module: {
         loaders: [
@@ -48,7 +50,9 @@ var config = {
     externals: {
         'react': 'React',
         'react-dom' : 'ReactDOM',
-        'jquery': 'jQuery'
+        'jquery': 'jQuery',
+        'numbro': 'numbro',
+        'moment': 'moment'
     }
 }
 

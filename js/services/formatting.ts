@@ -184,10 +184,10 @@ export default {
                 return (new Number(value)).toExponential();
 
             if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
-                let number = numbro(value);
+                let numbroValue = numbro(value);
                 numbro.culture(culture);
 
-                let formattedNumber = number.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
+                let formattedNumber = numbroValue.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
                 numbro.culture('en-US');
 
                 return formattedNumber;
@@ -220,10 +220,10 @@ export default {
                 });
             }
 
-            let number = numbro(value);
+            let numbroValue = numbro(value);
             numbro.culture(culture);
 
-            let formattedNumber = number.format(format);
+            let formattedNumber = numbroValue.format(format);
             numbro.culture('en-US');
 
             return formattedNumber;

@@ -1,4 +1,6 @@
 var path = require('path');
+var webpack = require('webpack');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var config = {
     entry: {
@@ -37,10 +39,16 @@ var config = {
             }
         ]
     },
+    plugins: [
+        new BundleAnalyzerPlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    ],
     externals: {
         'react': 'React',
         'react-dom' : 'ReactDOM',
-        'jquery': 'jQuery'
+        'jquery': 'jQuery',
+        'numbro': 'numbro',
+        'moment': 'moment'
     }
 }
 
