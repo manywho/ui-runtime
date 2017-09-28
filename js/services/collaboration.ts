@@ -1,4 +1,4 @@
-
+import * as io from 'socket.io-client';
 
 import * as Log from 'loglevel';
 import Engine from './engine';
@@ -7,9 +7,6 @@ import Settings from './settings';
 import Social from './social';
 import State from './state';
 import Utils from './utils';
-
-declare var manywho: any;
-declare var io: any;
 
 let socket = null;
 const rooms = {};
@@ -149,7 +146,7 @@ export default {
         const stateId = Utils.extractStateId(flowKey);
 
         if (!socket && enable) {
-            socket = io.connect(Settings.global('collaboration.uri'), {
+            socket = io(Settings.global('collaboration.uri'), {
                 transports: ['websocket']
             });
 

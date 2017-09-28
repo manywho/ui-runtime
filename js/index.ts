@@ -1,12 +1,6 @@
 
 import 'script-loader!../node_modules/numbro/dist/numbro.min.js';
 import 'script-loader!../node_modules/numbro/dist/languages.min.js';
-import 'script-loader!../node_modules/moment/min/moment.min.js';
-import 'script-loader!../node_modules/moment/locale/en-gb.js';
-import 'script-loader!../node_modules/moment/locale/es.js';
-import 'script-loader!../node_modules/moment/locale/fr.js';
-import 'script-loader!../node_modules/moment/locale/de.js';
-import 'script-loader!../node_modules/moment/locale/it.js';
 import './lib/polyfills';
 
 import Ajax from './services/ajax';

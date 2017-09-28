@@ -52,7 +52,8 @@ var config = {
         'react-dom' : 'ReactDOM',
         'jquery': 'jQuery',
         'numbro': 'numbro',
-        'moment': 'moment'
+        'moment': 'moment',
+        'socket.io-client': 'io'
     }
 }
 
