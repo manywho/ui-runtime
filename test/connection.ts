@@ -1,7 +1,7 @@
 import test from 'ava';
 import * as mock from 'xhr-mock';
 import * as FormData from 'form-data';
-import Connection from '../js/services/connection';
+import * as Connection from '../js/services/connection';
 import Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';

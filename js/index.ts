@@ -8,7 +8,7 @@ import Authorization from './services/authorization';
 import Callbacks from './services/callbacks';
 import Collaboration from './services/collaboration';
 import Component from './services/component';
-import Connection from './services/connection';
+import * as Connection from './services/connection';
 import Engine from './services/engine';
 import Formatting from './services/formatting';
 import Json from './services/json';

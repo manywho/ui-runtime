@@ -1,10 +1,8 @@
 
 
-import Connection from './connection';
+import * as Connection from './connection';
 import * as Log from 'loglevel';
 import Settings from './settings';
-
-declare var manywho: any;
 
 export default {
 

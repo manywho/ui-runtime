@@ -11,7 +11,7 @@
     "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
     "lint": "tslint -c tslint.json js/**/*.ts --fix",
     "precommit": "lint-staged",
-    "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\"",
+    "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\" --timeout=5s",
     "coverage": "nyc check-coverage --lines 100 --functions 100 --branches 90",
     "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
   },
@@ -44,6 +44,8 @@
     "sinon": "^3.2.1",
     "tslint": "^5.5.0",
     "tslint-loader": "^3.5.3",
+    "typedoc": "^0.8.0",
+    "typedoc-webpack-plugin": "^1.1.4",
     "typescript": "^2.4.2",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.6.0",
