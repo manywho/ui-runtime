@@ -1,6 +1,6 @@
 import test from 'ava';
 import * as moment from 'moment';
-import Formatting from '../js/services/formatting';
+import * as Formatting from '../js/services/formatting';
 import Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
