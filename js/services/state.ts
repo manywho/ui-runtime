@@ -5,7 +5,7 @@ import Collaboration from './collaboration';
 import Model from './model';
 import Settings from './settings';
 import Utils from './utils';
-import Validation from './validation';
+import * as Validation from './validation';
 
 declare var manywho: any;
 

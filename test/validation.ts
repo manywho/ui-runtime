@@ -1,6 +1,6 @@
 import test from 'ava';
 import Settings from '../js/services/settings';
-import Validation from '../js/services/validation';
+import * as Validation from '../js/services/validation';
 
 test.beforeEach(t => {
     Settings.initialize({
@@ -10,7 +10,7 @@ test.beforeEach(t => {
     }, null);
 
     t.pass();
-})
+});
 
 test('Validate String', (t) => {
     const expected = {
@@ -268,7 +268,7 @@ test.failing('Validate State Boolean (true)', (t) => {
     const model = {
         contentType: 'ContentBoolean',
         isRequired: true
-    }
+    };
     const state = {
         contentValue: 'true'
     }

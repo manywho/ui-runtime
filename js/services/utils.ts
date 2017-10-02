@@ -2,17 +2,15 @@
 
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import * as $ from 'jquery';
 
-import Callbacks from './callbacks';
+import * as Callbacks from './callbacks';
 import Collaboration from './collaboration';
 import * as Log from 'loglevel';
 import Model from './model';
 import Settings from './settings';
 import Social from './social';
 import State from './state';
-
-declare const manywho: any;
-declare const moment: any;
 
 function extendShallow (mergedObject, objects) {
 

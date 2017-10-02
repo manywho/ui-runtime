@@ -1,20 +1,20 @@
 import test from 'ava';
-import Callbacks from '../js/services/callbacks';
+import * as Callbacks from '../js/services/callbacks';
 
 test('Register', (t) => {
-    Callbacks.register('key1_key2_key3_key4', {})
+    Callbacks.register('key1_key2_key3_key4', {} as Callbacks.ICallback);
     t.pass();
 });
 
 test('Remove', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
-    Callbacks.register(flowKey, {})
+    const flowKey = 'key1_key2_key3_key4';
+    Callbacks.register(flowKey, {} as Callbacks.ICallback);
     Callbacks.remove(flowKey);
     t.pass();
 });
 
 test('Execute', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
+    const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.pass();
 
     Callbacks.register(flowKey, {
@@ -29,7 +29,7 @@ test('Execute', (t) => {
 });
 
 test('Execute filter by name', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
+    const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
@@ -46,7 +46,7 @@ test('Execute filter by name', (t) => {
 });
 
 test('Execute filter by type', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
+    const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
@@ -63,7 +63,7 @@ test('Execute filter by type', (t) => {
 });
 
 test('Execute filter by map element', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
+    const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
@@ -81,7 +81,7 @@ test('Execute filter by map element', (t) => {
 });
 
 test('Execute no args', (t) => {
-    const flowKey = 'key1_key2_key3_key4'
+    const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.pass();
 
     Callbacks.register(flowKey, {

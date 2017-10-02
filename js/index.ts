@@ -5,7 +5,7 @@ import './lib/polyfills';
 
 import Ajax from './services/ajax';
 import Authorization from './services/authorization';
-import Callbacks from './services/callbacks';
+import * as Callbacks from './services/callbacks';
 import Collaboration from './services/collaboration';
 import Component from './services/component';
 import * as Connection from './services/connection';
@@ -20,7 +20,7 @@ import State from './services/state';
 import * as Styling from './services/styling';
 import Tours from './services/tours';
 import Utils from './services/utils';
-import Validation from './services/validation';
+import * as Validation from './services/validation';
 
 const window2 = window as any;
 

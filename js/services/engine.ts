@@ -5,7 +5,7 @@ import * as numbro from 'numbro';
 
 import Ajax from './ajax';
 import Authorization from './authorization';
-import Callbacks from './callbacks';
+import * as Callbacks from './callbacks';
 import Collaboration from './collaboration';
 import Component from './component';
 import * as Formatting from './formatting';
