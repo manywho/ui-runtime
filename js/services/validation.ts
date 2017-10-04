@@ -1,5 +1,5 @@
 import Component from './component';
-import Settings from './settings';
+import * as Settings from './settings';
 import Utils from './utils';
 
 const isNull = function(value: any, contentType: string) {

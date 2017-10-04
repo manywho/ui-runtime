@@ -1,7 +1,7 @@
 import test from 'ava';
 import * as mock from 'xhr-mock';
-import Authorization from '../js/services/authorization';
-import Settings from '../js/services/settings';
+import * as Authorization from '../js/services/authorization';
+import * as Settings from '../js/services/settings';
 import State from '../js/services/state';
 import Utils from '../js/services/utils';
 

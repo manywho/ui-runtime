@@ -4,7 +4,7 @@ import 'script-loader!../node_modules/numbro/dist/languages.min.js';
 import './lib/polyfills';
 
 import Ajax from './services/ajax';
-import Authorization from './services/authorization';
+import * as Authorization from './services/authorization';
 import * as Callbacks from './services/callbacks';
 import Collaboration from './services/collaboration';
 import Component from './services/component';
@@ -14,7 +14,7 @@ import * as Formatting from './services/formatting';
 import Json from './services/json';
 import Log from './services/log';
 import Model from './services/model';
-import Settings from './services/settings';
+import * as Settings from './services/settings';
 import Social from './services/social';
 import State from './services/state';
 import * as Styling from './services/styling';

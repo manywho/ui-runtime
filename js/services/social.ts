@@ -3,7 +3,7 @@
 import Ajax from './ajax';
 import Collaboration from './collaboration';
 import Engine from './engine';
-import Settings from './settings';
+import * as Settings from './settings';
 import State from './state';
 import Utils from './utils';
 

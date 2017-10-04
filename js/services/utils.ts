@@ -8,7 +8,7 @@ import * as Callbacks from './callbacks';
 import Collaboration from './collaboration';
 import * as Log from 'loglevel';
 import Model from './model';
-import Settings from './settings';
+import * as Settings from './settings';
 import Social from './social';
 import State from './state';
 

@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 import * as numbro from 'numbro';
 
 import Ajax from './ajax';
-import Authorization from './authorization';
+import * as Authorization from './authorization';
 import * as Callbacks from './callbacks';
 import Collaboration from './collaboration';
 import Component from './component';
@@ -12,14 +12,13 @@ import * as Formatting from './formatting';
 import Json from './json';
 import * as Log from 'loglevel';
 import Model from './model';
-import Settings from './settings';
+import * as Settings from './settings';
 import Social from './social';
 import State from './state';
 import Tours from './tours';
 import Utils from './utils';
 
 declare var manywho: any;
-declare var numbro: any;
 
 function processObjectDataRequests(components, flowKey) {
 

@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as mockery from 'mockery'
+import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const engine = {
@@ -19,11 +19,11 @@ const collaboration = {
 
 const react = {
     createElement: sinon.stub()
-}
+};
 
-mockery.enable({ 
+mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false 
+    warnOnUnregistered: false
 });
 
 mockery.registerMock('./engine', engine);
@@ -31,7 +31,7 @@ mockery.registerMock('./collaboration', collaboration);
 mockery.registerMock('react', react);
 
 import Component from '../js/services/component';
-import Settings from '../js/services/settings';
+import * as Settings from '../js/services/settings';
 import Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
@@ -43,7 +43,7 @@ test.beforeEach(t => {
     engine.default.flowOut.resetHistory();
     collaboration.default.sync.resetHistory();
     react.createElement.resetHistory();
-})
+});
 
 test.after(t => {
     mockery.deregisterAll();
@@ -90,7 +90,7 @@ test('Get 2', (t) => {
 
 test('Get Child Components', (t) => {
     Component.register('component-1', 'component-1', null);
-    
+
     const model = [
         {
             id: 'id',
@@ -150,7 +150,7 @@ test.cb.serial('Handle Event', (t) => {
         forceUpdate: function() { t.pass(); }
     };
 
-    const callback = function() { 
+    const callback = function() {
         t.is(engine.default.render.callCount, 1, 'Engine Render Count');
         t.is(engine.default.sync.callCount, 1, 'Engine Sync Count');
         t.is(collaboration.default.sync.callCount, 1, 'Collaboration Sync Count');
@@ -247,7 +247,7 @@ test('Append Flow Container', (t) => {
     document.body.appendChild(container);
 
     Component.appendFlowContainer(flowKey);
-    
+
     t.not(document.getElementById(Utils.getLookUpKey(flowKey)), null);
 });
 
@@ -273,7 +273,7 @@ test.failing('Focus Input', (t) => {
     document.body.appendChild(root);
 
     Component.focusInput(flowKey);
-    
+
     t.is(document.activeElement, null);
 });
 
@@ -294,19 +294,19 @@ test.serial('On Outcome 1', async (t) => {
         .then(() => {
             t.is(engine.default.move.callCount, 1, 'Move');
             t.is(engine.default.flowOut.callCount, 1, 'Flow Out');
-        });    
+        });
 });
 
 test.serial('On Outcome 2', async (t) => {
     const outcome = {
         isOut: false
     }
-    
+
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
             t.is(engine.default.move.callCount, 1, 'Move');
             t.is(engine.default.flowOut.callCount, 0, 'Flow Out');
-        });    
+        });
 });
 
 test('On Outcome 3', async (t) => {
@@ -317,8 +317,8 @@ test('On Outcome 3', async (t) => {
     };
 
     const spy = sinon.spy(window, 'open');
-    
-    Component.onOutcome(outcome, null, flowKey)
+
+    Component.onOutcome(outcome, null, flowKey);
 
     t.is(spy.withArgs(outcome.attributes.uri, '_blank').calledOnce, true);
 
@@ -342,8 +342,8 @@ test('On Outcome 3', async (t) => {
     }];
 
     const spy = sinon.spy(window, 'open');
-    
-    Component.onOutcome(outcome, objectData, flowKey)
+
+    Component.onOutcome(outcome, objectData, flowKey);
 
     t.is(spy.withArgs(objectData[0].properties[0].contentValue, '_blank').calledOnce, true);
 

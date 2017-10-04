@@ -1,5 +1,5 @@
 import test from 'ava';
-import Settings from '../js/services/settings';
+import * as Settings from '../js/services/settings';
 import * as Validation from '../js/services/validation';
 
 test.beforeEach(t => {
@@ -207,10 +207,10 @@ test('Validate State String', (t) => {
     const model = {
         contentType: 'ContentString',
         isRequired: true
-    }
+    };
     const state = {
         contentValue: 'test'
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -230,10 +230,10 @@ test('Validate State String with attributes', (t) => {
             validation: '.{5,}',
             validationMessage: 'custom message'
         }
-    }
+    };
     const state = {
         contentValue: 'test'
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -249,10 +249,10 @@ test.failing('Validate State Number', (t) => {
     const model = {
         contentType: 'ContentNumber',
         isRequired: true
-    }
+    };
     const state = {
         contentValue: 10
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -271,7 +271,7 @@ test.failing('Validate State Boolean (true)', (t) => {
     };
     const state = {
         contentValue: 'true'
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -287,10 +287,10 @@ test.failing('Validate State Boolean (false)', (t) => {
     const model = {
         contentType: 'ContentBoolean',
         isRequired: true
-    }
+    };
     const state = {
         contentValue: 'false'
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -306,10 +306,10 @@ test.failing('Validate State Object', (t) => {
     const model = {
         contentType: 'ContentObject',
         isRequired: true
-    }
+    };
     const state = {
         objectData: [{}]
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
 
@@ -325,10 +325,10 @@ test.failing('Validate State List', (t) => {
     const model = {
         contentType: 'ContentList',
         isRequired: true
-    }
+    };
     const state = {
         objectData: [{}]
-    }
+    };
 
     const actual = Validation.validate(model, state, null);
     t.deepEqual(actual, expected);

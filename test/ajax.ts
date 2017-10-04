@@ -2,7 +2,7 @@ import test from 'ava';
 import * as mock from 'xhr-mock';
 import * as FormData from 'form-data';
 import Ajax from '../js/services/ajax';
-import Settings from '../js/services/settings';
+import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 

@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as Log from 'loglevel';
 import Collaboration from './collaboration';
 import Engine from './engine';
-import Settings from './settings';
+import * as Settings from './settings';
 import Utils from './utils';
 
 declare var manywho: any;

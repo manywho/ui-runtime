@@ -2,7 +2,7 @@
 
 import * as Connection from './connection';
 import * as Log from 'loglevel';
-import Settings from './settings';
+import * as Settings from './settings';
 
 export default {
 

@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 import Collaboration from './collaboration';
 import Model from './model';
-import Settings from './settings';
+import * as Settings from './settings';
 import Utils from './utils';
 import * as Validation from './validation';
 

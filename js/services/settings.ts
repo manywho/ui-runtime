@@ -1,8 +1,11 @@
+/**
+ * Store for the various settings that are supported in the UI framework, details on the available settings can be found here: https://github.com/manywho/ui-html5/wiki/Settings
+ */
+
+ /** this comment exists as a typedoc workaround */
 import * as $ from 'jquery';
 
 import Utils from './utils';
-
-declare var manywho: any;
 
 let globals = {
     localization: {
@@ -164,71 +167,104 @@ let events = {
     ping: {}
 };
 
-export default {
-
-    initialize(custom, handlers) {
-        globals = $.extend(true, {}, globals, custom);
-        events = $.extend(true, {}, events, handlers);
-    },
-
-    initializeFlow(settings, flowKey) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-        flows[lookUpKey] = $.extend(true, {}, globals, settings);
-    },
-
-    global(path, flowKey?, defaultValue?) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-        const globalValue = Utils.getValueByPath(globals, path.toLowerCase());
-
-        if (flowKey) {
-            const flowValue = Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
-
-            if (typeof flowValue !== 'undefined')
-                return flowValue;
-        }
-
-        if (typeof globalValue !== 'undefined')
-            return globalValue;
-        else if (typeof defaultValue !== 'undefined')
-            return defaultValue;
-
-        return globalValue;
-    },
-
-    flow(path, flowKey) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-
-        if (Utils.isNullOrWhitespace(path))
-            return flows[lookUpKey];
-        else
-            return Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
-    },
-
-    event(path) {
-        return Utils.getValueByPath(events, path.toLowerCase());
-    },
-
-    theme(path) {
-        return Utils.getValueByPath(themes, path.toLowerCase());
-    },
-
-    isDebugEnabled(flowKey, value?) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-
-        if (typeof value === 'undefined')
-            return Utils.isEqual(this.flow('mode', flowKey), 'Debug', true) || Utils.isEqual(this.flow('mode', flowKey), 'Debug_StepThrough', true);
-        else
-            if (value)
-                flows[lookUpKey].mode = 'Debug';
-            else
-                flows[lookUpKey].mode = '';
-    },
-
-    remove(flowKey) {
-        const lookUpKey = Utils.getLookUpKey(flowKey);
-        flows[lookUpKey] == null;
-        delete flows[lookUpKey];
-    }
-
+/**
+ * Initialize the default settings and provide any custom settings or overrides
+ * @param custom Custom settings to append to or override the default settings
+ * @param handlers Custom event handlers to append to or override the default event handlers
+ */
+export const initialize = (custom?: any, handlers?: any) => {
+    globals = $.extend(true, {}, globals, custom);
+    events = $.extend(true, {}, events, handlers);
 };
 
+/**
+ * Intialize settings for a specific flow and provide and custom settings or overrides
+ * @param settings Custom settings that are specific to this flow execution (based on the flowKey)
+ * @param flowKey
+ */
+export const initializeFlow = (settings: any, flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flows[lookUpKey] = $.extend(true, {}, globals, settings);
+};
+
+/**
+ * Get the value of a specific setting. Checks global settings first, then flow specific settings (if the flowKey parameter is specified)
+ * @param path The nested path of the flow specific setting to retrieve e.g. `formatting.isEnabled`
+ * @param flowKey
+ * @param defaultValue Value to return if no matching setting can be found
+ */
+export const global = (path: string, flowKey?: string, defaultValue?: any) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    const globalValue = Utils.getValueByPath(globals, path.toLowerCase());
+
+    if (flowKey) {
+        const flowValue = Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
+
+        if (typeof flowValue !== 'undefined')
+            return flowValue;
+    }
+
+    if (typeof globalValue !== 'undefined')
+        return globalValue;
+    else if (typeof defaultValue !== 'undefined')
+        return defaultValue;
+
+    return globalValue;
+};
+
+/**
+ *
+ * @param path The nested path of the flow specific setting to retrieve e.g. `formatting.isEnabled`
+ * @param flowKey
+ */
+export const flow = (path: string, flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+
+    if (Utils.isNullOrWhitespace(path))
+        return flows[lookUpKey];
+    else
+        return Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
+};
+
+/**
+ *
+ * @param path The nested path of the event specific setting to retrieve e.g. `invoke.done`
+ */
+export const event = (path: string) => {
+    return Utils.getValueByPath(events, path.toLowerCase());
+};
+
+/**
+ *
+ * @param path The nested path of the theme specific setting to retrieve
+ */
+export const theme = (path: string) => {
+    return Utils.getValueByPath(themes, path.toLowerCase());
+};
+
+/**
+ * Returns true if the execution mode of the flow is set to DEBUG or DEBUG_STEPTHROUGH. Set the value parameter to true to enable debug mode
+ * @param flowKey
+ * @param value True to set the debug mode to "DEBUG"
+ */
+export const isDebugEnabled = (flowKey: string, value?: boolean): boolean => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+
+    if (typeof value === 'undefined')
+        return Utils.isEqual(this.flow('mode', flowKey), 'Debug', true) || Utils.isEqual(this.flow('mode', flowKey), 'Debug_StepThrough', true);
+    else
+        if (value)
+            flows[lookUpKey].mode = 'Debug';
+        else
+            flows[lookUpKey].mode = '';
+};
+
+/**
+ * Removes custom flow settings based on the flowkey
+ * @param flowKey
+ */
+export const remove = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flows[lookUpKey] == null;
+    delete flows[lookUpKey];
+};

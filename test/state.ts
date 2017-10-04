@@ -1,6 +1,6 @@
 import test from 'ava';
 import * as moment from 'moment';
-import * as mockery from 'mockery'
+import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const validation = {
@@ -26,9 +26,9 @@ const collaboration = {
     }
 };
 
-mockery.enable({ 
+mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false 
+    warnOnUnregistered: false
 });
 
 mockery.registerMock('./model', model);
@@ -36,7 +36,7 @@ mockery.registerMock('./validation', validation);
 mockery.registerMock('./collaboration', collaboration);
 
 import State from '../js/services/state';
-import Settings from '../js/services/settings';
+import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -51,7 +51,7 @@ test.beforeEach(t => {
 test.after(t => {
     mockery.deregisterAll();
     mockery.disable();
-})
+});
 
 test('Set Component Loading', (t) => {
     const expected = {
@@ -256,7 +256,7 @@ test('Set Component', (t) => {
     const values = {
         contentValue: 'value',
         objectData: []
-    }
+    };
     State.setComponent('id', values, flowKey, true);
 
     const expected = {

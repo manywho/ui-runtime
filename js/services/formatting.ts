@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 import Component from './component';
 import * as Log from 'loglevel';
-import Settings from './settings';
+import * as Settings from './settings';
 import Utils from './utils';
 
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');

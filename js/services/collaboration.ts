@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import * as Log from 'loglevel';
 import Engine from './engine';
 import Model from './model';
-import Settings from './settings';
+import * as Settings from './settings';
 import Social from './social';
 import State from './state';
 import Utils from './utils';
