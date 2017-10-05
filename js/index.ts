@@ -19,7 +19,7 @@ import Social from './services/social';
 import * as State from './services/state';
 import * as Styling from './services/styling';
 import Tours from './services/tours';
-import Utils from './services/utils';
+import * as Utils from './services/utils';
 import * as Validation from './services/validation';
 
 const window2 = window as any;

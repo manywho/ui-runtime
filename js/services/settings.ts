@@ -5,7 +5,7 @@
  /** this comment exists as a typedoc workaround */
 import * as $ from 'jquery';
 
-import Utils from './utils';
+import * as Utils from './utils';
 
 let globals = {
     localization: {

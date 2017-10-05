@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
-import Utils from './utils';
+import * as Utils from './utils';
 
 /**
  * @private

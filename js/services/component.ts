@@ -4,7 +4,7 @@ import * as Log from 'loglevel';
 import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
-import Utils from './utils';
+import * as Utils from './utils';
 
 const components = {};
 const aliases = {};

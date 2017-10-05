@@ -16,7 +16,7 @@ import * as Settings from './settings';
 import Social from './social';
 import * as State from './state';
 import Tours from './tours';
-import Utils from './utils';
+import * as Utils from './utils';
 
 declare var manywho: any;
 

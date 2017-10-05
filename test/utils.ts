@@ -1,5 +1,5 @@
 import test from 'ava';
-import Utils from '../js/services/utils';
+import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -103,7 +103,7 @@ test('Set ObjectData Property', (t) => {
 
 test('Is Small Screen', (t) => {
     window.resizeTo(100, 100);
-    
+
     const div = document.createElement('div');
     div.id = Utils.getLookUpKey(flowKey);
 
@@ -155,7 +155,7 @@ test('Get All', (t) => {
         item2: {
             id: 'id'
         }
-    }
+    };
 
     const expected = [
         {
@@ -164,7 +164,7 @@ test('Get All', (t) => {
         {
             id: 'id'
         }
-    ]
+    ];
 
     t.deepEqual(Utils.getAll(map, 'id', 'id'), expected);
 });

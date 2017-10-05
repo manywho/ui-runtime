@@ -6,7 +6,7 @@ import Model from './model';
 import * as Settings from './settings';
 import Social from './social';
 import * as State from './state';
-import Utils from './utils';
+import * as Utils from './utils';
 
 let socket = null;
 const rooms = {};

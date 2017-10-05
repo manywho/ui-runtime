@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import * as Component from './component';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
-import Utils from './utils';
+import * as Utils from './utils';
 
 declare var manywho: any;
 

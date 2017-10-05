@@ -7,7 +7,7 @@ import Engine from './engine';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as State from './state';
-import Utils from './utils';
+import * as Utils from './utils';
 
 declare const manywho: any;
 

@@ -1,6 +1,6 @@
 import * as Component from './component';
 import * as Settings from './settings';
-import Utils from './utils';
+import * as Utils from './utils';
 
 const isNull = function(value: any, contentType: string) {
     switch (contentType) {

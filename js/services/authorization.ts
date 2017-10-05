@@ -2,7 +2,7 @@ import * as Ajax from './ajax';
 import * as Callbacks from './callbacks';
 import * as Json from './json';
 import * as State from './state';
-import Utils from './utils';
+import * as Utils from './utils';
 
 /**
  * @hidden

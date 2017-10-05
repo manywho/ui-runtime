@@ -32,7 +32,7 @@ mockery.registerMock('react', react);
 
 import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';
-import Utils from '../js/services/utils';
+import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
 

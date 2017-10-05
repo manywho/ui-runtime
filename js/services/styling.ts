@@ -1,5 +1,5 @@
 import Model from './model';
-import Utils from './utils';
+import * as Utils from './utils';
 
 const components = {};
 const containers = {};

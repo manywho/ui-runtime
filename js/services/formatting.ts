@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import * as Component from './component';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
-import Utils from './utils';
+import * as Utils from './utils';
 
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
 const dateTimeFormatMappings: any = [

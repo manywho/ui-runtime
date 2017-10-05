@@ -5,7 +5,7 @@ import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
 import * as State from './state';
-import Utils from './utils';
+import * as Utils from './utils';
 
 declare var manywho: any;
 
