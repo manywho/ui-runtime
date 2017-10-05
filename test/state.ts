@@ -35,7 +35,7 @@ mockery.registerMock('./model', model);
 mockery.registerMock('./validation', validation);
 mockery.registerMock('./collaboration', collaboration);
 
-import State from '../js/services/state';
+import * as State from '../js/services/state';
 import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
@@ -160,7 +160,7 @@ test('Input Responses', (t) => {
         'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6': {
             pageComponentId: 'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6',
             contentValue: 'value',
-            objectData: 'objectData'
+            objectData: []
         }
     };
 

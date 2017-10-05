@@ -6,7 +6,7 @@ import * as Component from './component';
 import Engine from './engine';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
-import State from './state';
+import * as State from './state';
 import Utils from './utils';
 
 declare const manywho: any;

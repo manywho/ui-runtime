@@ -5,7 +5,7 @@ import Engine from './engine';
 import Model from './model';
 import * as Settings from './settings';
 import Social from './social';
-import State from './state';
+import * as State from './state';
 import Utils from './utils';
 
 let socket = null;

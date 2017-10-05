@@ -4,7 +4,7 @@ import Ajax from './ajax';
 import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
-import State from './state';
+import * as State from './state';
 import Utils from './utils';
 
 declare var manywho: any;

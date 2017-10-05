@@ -2,7 +2,7 @@ import test from 'ava';
 import * as mock from 'xhr-mock';
 import * as Authorization from '../js/services/authorization';
 import * as Settings from '../js/services/settings';
-import State from '../js/services/state';
+import * as State from '../js/services/state';
 import Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';

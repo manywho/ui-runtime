@@ -14,7 +14,7 @@ import * as Log from 'loglevel';
 import Model from './model';
 import * as Settings from './settings';
 import Social from './social';
-import State from './state';
+import * as State from './state';
 import Tours from './tours';
 import Utils from './utils';
 

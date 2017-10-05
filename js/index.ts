@@ -16,7 +16,7 @@ import Log from './services/log';
 import Model from './services/model';
 import * as Settings from './services/settings';
 import Social from './services/social';
-import State from './services/state';
+import * as State from './services/state';
 import * as Styling from './services/styling';
 import Tours from './services/tours';
 import Utils from './services/utils';

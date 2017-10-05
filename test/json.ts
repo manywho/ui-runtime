@@ -7,7 +7,7 @@ test('Flow Inputs (object)', (t) => {
             contentType: 'contentType',
             developerName: 'developerName'
         }
-    }
+    };
 
     const expected: any = [
         {
@@ -251,8 +251,7 @@ test('Navigate Request, optional', (t) => {
     const navigationId = 'navigationId';
     const navigationElementId = 'navigationElementId';
     const mapElementId = 'mapElementId';
-      
-    
+
 
     const expected: any = {
         'stateId': stateData.id,
