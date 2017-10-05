@@ -55,7 +55,7 @@ test('Validate String, regex invalid', (t) => {
 test('Validate Boolean', (t) => {
     const expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     const actual = Validation.validateBoolean(true, '', false, null);
 
@@ -75,7 +75,7 @@ test('Validate Boolean, required', (t) => {
 test('Validate Number', (t) => {
     const expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     const actual = Validation.validateNumber(10, null, null, false, null);
 
@@ -85,7 +85,7 @@ test('Validate Number', (t) => {
 test('Validate Number, required', (t) => {
     const expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     const actual = Validation.validateNumber(10, null, null, true, null);
 
@@ -115,7 +115,7 @@ test('Validate Number, NaN', (t) => {
 test('Validate Number, regex valid', (t) => {
     let expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     let actual = Validation.validateNumber(10, '.{2,}', null, false, null);
 
@@ -135,7 +135,7 @@ test('Validate Number, regex invalid', (t) => {
 test('Validate Object', (t) => {
     const expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     const actual = Validation.validateObject({}, null, false, null);
 
@@ -155,7 +155,7 @@ test('Validate Object, required', (t) => {
 test('Validate List', (t) => {
     const expected = {
         isValid: true,
-        validationMessage: true
+        validationMessage: null
     };
     const actual = Validation.validateList([{}], null, false, null);
 

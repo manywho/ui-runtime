@@ -27,15 +27,15 @@ const isNull = function(value: any, contentType: string) {
     }
 };
 
-const getResponse = function(message: string, messageKey: string, flowKey: string) {
+const getResponse = function(message: string, messageKey: string, flowKey: string): IValidationResult {
     return { isValid: false, validationMessage: message || Settings.global(messageKey, flowKey) };
 };
 
-const getRequiredResponse = function(message: string, flowKey: string) {
+const getRequiredResponse = function(message: string, flowKey: string): IValidationResult {
     return getResponse(message, 'localization.validation.required', flowKey);
 };
 
-const getInvalidResponse = function(message: string, flowKey: string) {
+const getInvalidResponse = function(message: string, flowKey: string): IValidationResult {
     return getResponse(message, 'localization.validation.invalid', flowKey);
 };
 
@@ -48,6 +48,11 @@ const validateRegex = function(value: string, regex: string) {
     return true;
 };
 
+export interface IValidationResult {
+    isValid: boolean,
+    validationMessage: string
+}
+
 /**
  * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be taken from the models `validation` attribute, and a custom message
  * from the `validationMessage` attribute
@@ -55,7 +60,7 @@ const validateRegex = function(value: string, regex: string) {
  * @param state The matching local state for the model that will be validated
  * @param flowKey
  */
-export const validate = (model: any, state: any, flowKey: string) => {
+export const validate = (model: any, state: any, flowKey: string): IValidationResult => {
     if (!Settings.global('validation.isenabled', flowKey, false))
         return { isValid: true, validationMessage: null };
 
@@ -107,7 +112,7 @@ export const validate = (model: any, state: any, flowKey: string) => {
  * @param isRequired Set to true to return an invalid response if the the value is null or empty
  * @param flowKey
  */
-export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string) => {
+export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
     if (isRequired && isNull(value, Component.contentTypes.string))
         return getRequiredResponse(message, flowKey);
 
@@ -125,7 +130,7 @@ export const validateString = (value: string, regex: string | null, message: str
  * @param isRequired Set to true to return an invalid response if the the value is null or empty
  * @param flowKey
  */
-export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string) => {
+export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
     if (isRequired && isNull(value, Component.contentTypes.number))
         return getRequiredResponse(message, flowKey);
 
@@ -135,7 +140,7 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
     if (!validateRegex(value.toString(), regex))
         return getInvalidResponse(message, flowKey);
 
-    return { isValid: true, validationMessage: true };
+    return { isValid: true, validationMessage: null };
 };
 
 /**
@@ -145,11 +150,11 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
  * @param isRequired Set to true to return an invalid response if the the value false
  * @param flowKey
  */
-export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string) => {
+export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
     if (isRequired && isNull(value, Component.contentTypes.boolean))
         return getRequiredResponse(message, flowKey);
 
-    return { isValid: true, validationMessage: true };
+    return { isValid: true, validationMessage: null };
 };
 
 /**
@@ -159,11 +164,11 @@ export const validateBoolean = (value: boolean, message: string, isRequired: boo
  * @param isRequired Set to true to return an invalid response if the the value is null or empty
  * @param flowKey
  */
-export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string) => {
+export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
     if (isRequired && isNull(value, Component.contentTypes.object))
         return getRequiredResponse(message, flowKey);
 
-    return { isValid: true, validationMessage: true };
+    return { isValid: true, validationMessage: null };
 };
 
 /**
@@ -173,9 +178,9 @@ export const validateObject = (value: object, message: string, isRequired: boole
  * @param isRequired Set to true to return an invalid response if the the value is null or empty
  * @param flowKey
  */
-export const validateList = (value: Array<object>, message: string, isRequired: boolean, flowKey: string) => {
+export const validateList = (value: Array<object>, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
     if (isRequired && isNull(value, Component.contentTypes.list))
         return getRequiredResponse(message, flowKey);
 
-    return { isValid: true, validationMessage: true };
+    return { isValid: true, validationMessage: null };
 };
