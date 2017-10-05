@@ -2,7 +2,7 @@
 
 import * as Ajax from './ajax';
 import * as Collaboration from './collaboration';
-import Engine from './engine';
+import * as Engine from './engine';
 import * as Settings from './settings';
 import * as State from './state';
 import * as Utils from './utils';

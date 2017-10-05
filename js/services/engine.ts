@@ -46,12 +46,12 @@ function processObjectDataRequests(components, flowKey) {
 
                 if (component.fileDataRequest) {
 
-                    return exports.default.fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
+                    return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
 
                 }
                 else {
 
-                    return exports.default.objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
+                    return objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
 
                 }
 
@@ -575,415 +575,457 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
         });
 
 }
+/**
+ * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not authenticated and the flow requires authentication a login
+ * dialog will be displayed or the user will be redirected to an OAUTH2 or SAML url.
+ * The flow will then be rendered into the DOm
+ */
+export const initialize = (tenantId: string, flowId: string, flowVersionId: string, container: string, stateId: string, authenticationToken: string, options: any, isInitializing: string | boolean) => {
 
-export default {
+    options = options || {};
+    isInitializing = (isInitializing) ? ((isInitializing as string).toLowerCase() === 'true') : false;
 
-    initialize: function(tenantId, flowId, flowVersionId, container, stateId, authenticationToken, options, isInitializing) {
+    if (authenticationToken) authenticationToken = decodeURI(authenticationToken);
 
-        options = options || {};
-        isInitializing = (isInitializing) ? (isInitializing.toLowerCase() === 'true') : false;
+    if (!tenantId && (!stateId || (!flowId && !flowVersionId))) {
 
-        if (authenticationToken) authenticationToken = decodeURI(authenticationToken);
+        Log.error('tenantId & stateId, or tenatntId & flowId & flowVersionId must be specified');
+        return;
 
-        if (!tenantId && (!stateId || (!flowId && !flowVersionId))) {
+    }
 
-            Log.error('tenantId & stateId, or tenatntId & flowId & flowVersionId must be specified');
-            return;
+    if (options.theme && manywho.theming)
+        manywho.theming.apply(options.theme);
 
+    let storedConfig = sessionStorage.getItem('oauth-' + stateId);
+    let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
+    if (!config) {
+
+        config = { tenantId: tenantId, flowId: flowId, flowVersionId: flowVersionId, container: container, options: options };
+
+    }
+
+    if (window.navigator.language) {
+        let language = window.navigator.language.split('-');
+        if (language.length === 2)
+            // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
+            numbro.culture(language[0] + '-' + language[1].toUpperCase());
+    }
+
+
+    if (stateId && !isInitializing) {
+
+        join(config.tenantId, config.flowId, config.flowVersionId, config.container, stateId, authenticationToken, config.options);
+
+    }
+    else {
+
+        return initializeWithAuthorization.call(this,
+        {
+            execute: initializeWithAuthorization.bind(this),
+            args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
+            name: 'initialize',
+            type: 'done'
+        },
+        config.tenantId,
+        config.flowId,
+        config.flowVersionId,
+        config.container,
+        config.options,
+        authenticationToken);
+
+    }
+
+};
+
+/**
+ * Invoke with a `FORWARD` down a specified outcome
+ */
+export const move = (outcome: any, flowKey: string)  => {
+
+    if (outcome
+        && Utils.isEqual(outcome.pageActionBindingType, 'SAVE', true)
+        && Settings.global('validation.isEnabled', flowKey)) {
+
+        let isValid = State.isAllValid(flowKey);
+        if (!isValid) {
+            render(flowKey);
+            let deferred = $.Deferred();
+            deferred.fail(null);
+            return deferred;
         }
+    }
 
-        if (options.theme && manywho.theming)
-            manywho.theming.apply(options.theme);
+    if (outcome && !outcome.isOut) {
+        State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.executing') }, flowKey);
+        render(flowKey);
+    }
 
-        let storedConfig = sessionStorage.getItem('oauth-' + stateId);
-        let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
-        if (!config) {
+    const invokeRequest = Json.generateInvokeRequest(
+        State.getState(flowKey),
+        'FORWARD',
+        outcome.id,
+        null,
+        State.getPageComponentInputResponseRequests(flowKey),
+        Model.getDefaultNavigationId(flowKey),
+        null,
+        Settings.flow('annotations', flowKey),
+        State.getLocation(flowKey),
+        Settings.flow('mode', flowKey)
+    );
 
-            config = { tenantId: tenantId, flowId: flowId, flowVersionId: flowVersionId, container: container, options: options };
+    return moveWithAuthorization.call(this,
+        {
+            execute: moveWithAuthorization,
+            context: this,
+            args: [invokeRequest, flowKey],
+            name: 'invoke',
+            type: 'done'
+        },
+        invokeRequest,
+        flowKey);
 
-        }
+};
 
-        if (window.navigator.language) {
-            let language = window.navigator.language.split('-');
-            if (language.length === 2)
-                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-                numbro.culture(language[0] + '-' + language[1].toUpperCase());
-        }
+/**
+ * Flow out to another flow, remove this flow from the DOM then re-render the new flow
+ */
+export const flowOut = (outcome: any, flowKey: string) => {
 
+    const tenantId = Utils.extractTenantId(flowKey);
+    const authenticationToken = State.getAuthenticationToken(flowKey);
 
-        if (stateId && !isInitializing) {
+    return Ajax.flowOut(Utils.extractStateId(flowKey), tenantId, outcome.id, authenticationToken)
+            .then(response => {
 
-            this.join(config.tenantId, config.flowId, config.flowVersionId, config.container, stateId, authenticationToken, config.options);
+                const options = State.getOptions(flowKey);
+                const subFlowKey = Utils.getFlowKey(tenantId, null, null, response.stateId, Utils.extractElement(flowKey));
 
-        }
-        else {
+                Collaboration.flowOut(flowKey, response.stateId, subFlowKey);
 
-            return initializeWithAuthorization.call(this,
-            {
-                execute: initializeWithAuthorization.bind(this),
-                args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
-                name: 'initialize',
-                type: 'done'
-            },
-            config.tenantId,
-            config.flowId,
-            config.flowVersionId,
-            config.container,
-            config.options,
-            authenticationToken);
+                Utils.removeFlow(flowKey);
 
-        }
+                join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
 
-    },
+            });
 
-    move: function(outcome, flowKey) {
+};
 
-        if (outcome
-            && Utils.isEqual(outcome.pageActionBindingType, 'SAVE', true)
-            && Settings.global('validation.isEnabled', flowKey)) {
+/**
+ * Re-join the parent state and remove this flow from the DOM
+ */
+export const returnToParent = (flowKey: string, parentStateId: string) => {
 
-            let isValid = State.isAllValid(flowKey);
-            if (!isValid) {
-                exports.default.render(flowKey);
-                let deferred = $.Deferred();
-                deferred.fail(null);
-                return deferred;
+    const tenantId = Utils.extractTenantId(flowKey);
+    const authenticationToken = State.getAuthenticationToken(flowKey);
+
+    const options = State.getOptions(flowKey);
+
+    State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
+    render(flowKey);
+
+    Collaboration.returnToParent(flowKey, parentStateId);
+
+    Utils.removeFlow(flowKey);
+
+    return join(tenantId, null, null, 'main', parentStateId, authenticationToken, options);
+
+};
+
+/**
+ * Invoke a `SYNC` with the platform to get the latest version of the state then re-render
+ */
+export const sync = (flowKey: string) => {
+
+    let invokeRequest = Json.generateInvokeRequest(
+        State.getState(flowKey),
+        'SYNC',
+        null,
+        null,
+        State.getPageComponentInputResponseRequests(flowKey),
+        null,
+        null,
+        Settings.flow('annotations', flowKey),
+        State.getLocation(flowKey),
+        Settings.flow('mode', flowKey)
+    );
+
+    State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.syncing') }, flowKey);
+    render(flowKey);
+
+    return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey))
+        .then(response => {
+
+            if (Utils.isEqual(response.invokeType, 'wait', true)) {
+
+                // The engine is currently busy (processing a parallel request on this state), try again
+                setTimeout(function () { sync(flowKey); }, 100);
+
             }
-        }
+            else {
 
-        if (outcome && !outcome.isOut) {
-            State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.executing') }, flowKey);
-            this.render(flowKey);
-        }
+                parseResponse(response, Model.parseEngineSyncResponse, true, flowKey);
+                return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
 
-        let invokeRequest = Json.generateInvokeRequest(
-            State.getState(flowKey),
-            'FORWARD',
-            outcome.id,
-            null,
-            State.getPageComponentInputResponseRequests(flowKey),
-            Model.getDefaultNavigationId(flowKey),
-            null,
-            Settings.flow('annotations', flowKey),
-            State.getLocation(flowKey),
-            Settings.flow('mode', flowKey)
-        );
+            }
 
-        return moveWithAuthorization.call(this,
-            {
-                execute: moveWithAuthorization,
-                context: this,
-                args: [invokeRequest, flowKey],
-                name: 'invoke',
-                type: 'done'
-            },
-            invokeRequest,
-            flowKey);
+        })
+        .always(function() {
+            State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
+        })
+        .always(function() {
+            render(flowKey);
+        });
 
-    },
+};
 
-    flowOut: function(outcome, flowKey) {
+/**
+ * Move the state to a specific map element as defined by a navigation item specified in the flow
+ */
+export const navigate = (navigationId: string, navigationElementId: string, mapElementId: string, flowKey: string): JQueryDeferred<any> => {
 
-        let tenantId = Utils.extractTenantId(flowKey);
-        let authenticationToken = State.getAuthenticationToken(flowKey);
+    State.setComponentLoading('main', { message: Settings.global('localization.navigating') }, flowKey);
+    render(flowKey);
 
-        return Ajax.flowOut(Utils.extractStateId(flowKey), tenantId, outcome.id, authenticationToken)
-                .then(function(response) {
+    let invokeRequest = Json.generateNavigateRequest(
+        State.getState(flowKey),
+        navigationId,
+        navigationElementId,
+        mapElementId,
+        State.getPageComponentInputResponseRequests(flowKey),
+        Settings.flow('annotations', flowKey),
+        State.getLocation(flowKey)
+    );
 
-                    let options = State.getOptions(flowKey);
+    return moveWithAuthorization.call(this,
+        {
+            execute: moveWithAuthorization,
+            context: this,
+            args: [invokeRequest, flowKey],
+            name: 'invoke',
+            type: 'done'
+        },
+        invokeRequest,
+        flowKey);
 
-                    let subFlowKey = Utils.getFlowKey(tenantId, null, null, response.stateId, Utils.extractElement(flowKey));
+};
 
-                    Collaboration.flowOut(flowKey, response.stateId, subFlowKey);
+/**
+ * Join an existing state and render it into a new container
+ */
+export const join = (tenantId: string, flowId: string, flowVersionId: string, container: string, stateId: string, authenticationToken: string, options: any): JQueryDeferred<any> => {
 
-                    Utils.removeFlow(flowKey);
+    let flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container);
 
-                    exports.default.join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
+    if (options && options.authentication != null && options.authentication.sessionId != null) {
 
-                });
+        State.setSessionData(options.authentication.sessionId, options.authentication.sessionUrl, flowKey);
 
-    },
+    }
 
-    returnToParent: function(flowKey, parentStateId) {
+    if (options && options.callbacks != null && options.callbacks.length > 0) {
 
-        let tenantId = Utils.extractTenantId(flowKey);
-        let authenticationToken = State.getAuthenticationToken(flowKey);
+        options.callbacks.forEach(function (callback) {
+            Callbacks.register(flowKey, callback);
+        });
 
-        let options = State.getOptions(flowKey);
+    }
 
-        State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
-        this.render(flowKey);
+    Model.initializeModel(flowKey);
+    Settings.initializeFlow(options, flowKey);
 
-        Collaboration.returnToParent(flowKey, parentStateId);
+    State.setAuthenticationToken(authenticationToken, flowKey);
+    State.setState(stateId, null, null, flowKey);
+    State.setOptions(options, flowKey);
 
-        Utils.removeFlow(flowKey);
+    Component.appendFlowContainer(flowKey);
 
-        exports.default.join(tenantId, null, null, 'main', parentStateId, authenticationToken, options);
+    sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
+        tenantId: tenantId,
+        flowId: flowId,
+        flowVersionId: flowVersionId,
+        container: container,
+        options: options
+    }));
 
-    },
+    return joinWithAuthorization.call(this,
+        {
+            execute: joinWithAuthorization.bind(this),
+            args: [flowKey],
+            name: 'invoke',
+            type: 'done'
+        },
+        flowKey);
 
-    sync: function(flowKey) {
+};
 
-        let invokeRequest = Json.generateInvokeRequest(
-            State.getState(flowKey),
-            'SYNC',
-            null,
-            null,
-            State.getPageComponentInputResponseRequests(flowKey),
-            null,
-            null,
-            Settings.flow('annotations', flowKey),
-            State.getLocation(flowKey),
-            Settings.flow('mode', flowKey)
-        );
-        let self = this;
+/**
+ * Set the components loading status, execute the objectdata request, update the components local state with the response then re-render
+ * @param id The id of the component this objectdata request is being requested by
+ * @param limit Number of results to return
+ * @param search Search string to apply to the list filter
+ * @param orderBy Property name to order results by
+ * @param orderByDirection ASC or DESC
+ * @param page Page offset for the list filter
+ */
+export const objectDataRequest = (id: string, request: any, flowKey: string, limit: number, search?: string, orderBy?: string, orderByDirection?: string, page?: number) => {
 
-        State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.syncing') }, flowKey);
-        this.render(flowKey);
+    State.setComponentLoading(id, { message: Settings.global('localization.loading') }, flowKey);
+    render(flowKey);
 
-        return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey))
+    return Ajax.dispatchObjectDataRequest(request, Utils.extractTenantId(flowKey), Utils.extractStateId(flowKey), State.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
+        .then(response => {
+
+            const component = Model.getComponent(id, flowKey);
+            component.objectData = response.objectData;
+            component.objectDataRequest.hasMoreResults = response.hasMoreResults;
+            State.setComponentError(id, null, flowKey);
+
+        })
+        .fail((xhr, status, error) => {
+
+            State.setComponentError(id, error, flowKey);
+
+        })
+        .always(() => {
+
+            State.setComponentLoading(id, null, flowKey);
+            render(flowKey);
+
+        });
+
+};
+
+/**
+ * Set the components loading status, execute a file data request, update the components local state with the response then re-render
+ * @param id The id of the component this filedata request is being requested by
+ * @param limit Number of results to return
+ * @param search Search string to apply to the list filter
+ * @param orderBy Property name to order results by
+ * @param orderByDirection ASC or DESC
+ * @param page Page offset for the list filter
+ */
+export const fileDataRequest = (id: string, request: any, flowKey: string, limit: number, search?: string, orderBy?: string, orderByDirection?: string, page?: number) => {
+
+    State.setComponentLoading(id, { message: Settings.global('localization.loading') }, flowKey);
+    render(flowKey);
+
+    return Ajax.dispatchFileDataRequest(request, Utils.extractTenantId(flowKey), Utils.extractStateId(flowKey), State.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
+        .then(response => {
+
+            const component = Model.getComponent(id, flowKey);
+            component.objectData = response.objectData;
+            component.fileDataRequest.hasMoreResults = response.hasMoreResults;
+
+        })
+        .fail((xhr, status, error) => {
+
+            State.setComponentError(id, error, flowKey);
+
+        })
+        .always(() => {
+
+            State.setComponentLoading(id, null, flowKey);
+            render(flowKey);
+
+        });
+
+};
+
+/**
+ * Toggle the debug setting and re-render
+ */
+export const toggleDebug = (flowKey: string) => {
+
+    Settings.isDebugEnabled(flowKey, !Settings.isDebugEnabled(flowKey));
+    render(flowKey);
+
+};
+
+/**
+ * Parse the platform response using the `responseParser` and update the local state. If the response status is WAIT or STATUS then kickoff an `Engine.ping`
+ */
+export const parseResponse = (response: any, responseParser: (model: any, response: any, flowKey: string) => void, validate: boolean, flowKey: string) => {
+
+    responseParser.call(Model, response, flowKey);
+
+    State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
+    State.refreshComponents(Model.getComponents(flowKey), validate, flowKey);
+
+    if (Settings.flow('replaceUrl', flowKey)) {
+        Utils.replaceBrowserUrl(response);
+    }
+
+    if (Utils.isEqual(response.invokeType, 'wait', true) ||
+        Utils.isEqual(response.invokeType, 'status', true)) {
+
+        ping(flowKey);
+    }
+
+};
+
+/**
+ * Call `Ajax.ping` on a success re-join the flow with `Engine.join` otherwise set a timeout and call `ping` again in 10 seconds
+ */
+export const ping = (flowKey: string) => {
+
+    if (Utils.isEqual(Model.getInvokeType(flowKey), 'wait', true) ||
+        Utils.isEqual(Model.getInvokeType(flowKey), 'status', true)) {
+
+        let state = State.getState(flowKey);
+
+        Ajax.ping(Utils.extractTenantId(flowKey), state.id, state.token, State.getAuthenticationToken(flowKey))
             .then(function (response) {
 
-                if (Utils.isEqual(response.invokeType, 'wait', true)) {
+                if (response) {
+                    let options = State.getOptions(flowKey);
 
-                    // The engine is currently busy (processing a parallel request on this state), try again
-                    setTimeout(function () { self.sync(flowKey); }, 100);
+                    join(Utils.extractTenantId(flowKey),
+                                Utils.extractFlowId(flowKey),
+                                Utils.extractFlowVersionId(flowKey),
+                                Utils.extractElement(flowKey),
+                                state.id,
+                                State.getAuthenticationToken(flowKey),
+                                options);
 
                 }
                 else {
 
-                    self.parseResponse(response, Model.parseEngineSyncResponse, true, flowKey);
-                    return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+                    setTimeout(function () { ping(flowKey); }, 10000);
 
                 }
 
-            })
-            .always(function() {
-                State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
-            })
-            .always(function() {
-                exports.default.render(flowKey);
             });
-
-    },
-
-    navigate: function(navigationId, navigationElementId, mapElementId, flowKey) {
-
-        State.setComponentLoading('main', { message: Settings.global('localization.navigating') }, flowKey);
-        this.render(flowKey);
-
-        let invokeRequest = Json.generateNavigateRequest(
-            State.getState(flowKey),
-            navigationId,
-            navigationElementId,
-            mapElementId,
-            State.getPageComponentInputResponseRequests(flowKey),
-            Settings.flow('annotations', flowKey),
-            State.getLocation(flowKey)
-        );
-
-        moveWithAuthorization.call(this,
-            {
-                execute: moveWithAuthorization,
-                context: this,
-                args: [invokeRequest, flowKey],
-                name: 'invoke',
-                type: 'done'
-            },
-            invokeRequest,
-            flowKey);
-
-    },
-
-    join: function (tenantId, flowId, flowVersionId, container, stateId, authenticationToken, options) {
-
-        let flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container);
-
-        if (options && options.authentication != null && options.authentication.sessionId != null) {
-
-            State.setSessionData(options.authentication.sessionId, options.authentication.sessionUrl, flowKey);
-
-        }
-
-        if (options && options.callbacks != null && options.callbacks.length > 0) {
-
-            options.callbacks.forEach(function (callback) {
-                Callbacks.register(flowKey, callback);
-            });
-
-        }
-
-        Model.initializeModel(flowKey);
-        Settings.initializeFlow(options, flowKey);
-
-        State.setAuthenticationToken(authenticationToken, flowKey);
-        State.setState(stateId, null, null, flowKey);
-        State.setOptions(options, flowKey);
-
-        Component.appendFlowContainer(flowKey);
-
-        sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
-            tenantId: tenantId,
-            flowId: flowId,
-            flowVersionId: flowVersionId,
-            container: container,
-            options: options
-        }));
-
-        return joinWithAuthorization.call(this,
-            {
-                execute: joinWithAuthorization.bind(this),
-                args: [flowKey],
-                name: 'invoke',
-                type: 'done'
-            },
-            flowKey);
-
-    },
-
-    objectDataRequest: function(id, request, flowKey, limit, search, orderBy, orderByDirection, page) {
-
-        let self = this;
-
-        State.setComponentLoading(id, { message: Settings.global('localization.loading') }, flowKey);
-        self.render(flowKey);
-
-        return Ajax.dispatchObjectDataRequest(request, Utils.extractTenantId(flowKey), Utils.extractStateId(flowKey), State.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
-            .then(function (response) {
-
-                let component = Model.getComponent(id, flowKey);
-                component.objectData = response.objectData;
-                component.objectDataRequest.hasMoreResults = response.hasMoreResults;
-                State.setComponentError(id, null, flowKey);
-
-            })
-            .fail(function (xhr, status, error) {
-
-                State.setComponentError(id, error, flowKey);
-
-            })
-            .always(function () {
-
-                State.setComponentLoading(id, null, flowKey);
-                self.render(flowKey);
-
-            });
-
-    },
-
-    fileDataRequest: function (id, request, flowKey, limit, search, orderBy, orderByDirection, page) {
-
-        let self = this;
-
-        State.setComponentLoading(id, { message: Settings.global('localization.loading') }, flowKey);
-        self.render(flowKey);
-
-        return Ajax.dispatchFileDataRequest(request, Utils.extractTenantId(flowKey), Utils.extractStateId(flowKey), State.getAuthenticationToken(flowKey), limit, search, orderBy, orderByDirection, page)
-            .then(function (response) {
-
-                let component = Model.getComponent(id, flowKey);
-                component.objectData = response.objectData;
-                component.fileDataRequest.hasMoreResults = response.hasMoreResults;
-
-            })
-            .fail(function (xhr, status, error) {
-
-                State.setComponentError(id, error, flowKey);
-
-            })
-            .always(function () {
-
-                State.setComponentLoading(id, null, flowKey);
-                self.render(flowKey);
-
-            });
-
-    },
-
-    toggleDebug: function(flowKey) {
-
-        Settings.isDebugEnabled(flowKey, !Settings.isDebugEnabled(flowKey));
-        this.render(flowKey);
-
-    },
-
-    parseResponse: function(response, responseParser, validate, flowKey) {
-
-        responseParser.call(Model, response, flowKey);
-
-        State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-        State.refreshComponents(Model.getComponents(flowKey), validate, flowKey);
-
-        if (Settings.flow('replaceUrl', flowKey)) {
-            Utils.replaceBrowserUrl(response);
-        }
-
-        if (Utils.isEqual(response.invokeType, 'wait', true) ||
-            Utils.isEqual(response.invokeType, 'status', true)) {
-
-            exports.default.ping(flowKey);
-        }
-
-    },
-
-    ping: function (flowKey) {
-
-        if (Utils.isEqual(Model.getInvokeType(flowKey), 'wait', true) ||
-            Utils.isEqual(Model.getInvokeType(flowKey), 'status', true)) {
-
-            let state = State.getState(flowKey);
-            let self = this;
-
-            Ajax.ping(Utils.extractTenantId(flowKey), state.id, state.token, State.getAuthenticationToken(flowKey))
-                .then(function (response) {
-
-                    if (response) {
-                        let options = State.getOptions(flowKey);
-
-                        self.join(Utils.extractTenantId(flowKey),
-                                    Utils.extractFlowId(flowKey),
-                                    Utils.extractFlowVersionId(flowKey),
-                                    Utils.extractElement(flowKey),
-                                    state.id,
-                                    State.getAuthenticationToken(flowKey),
-                                    options);
-
-                    }
-                    else {
-
-                        setTimeout(function () { self.ping(flowKey); }, 10000);
-
-                    }
-
-                });
-
-        }
-
-    },
-
-    render: function (flowKey) {
-
-        let lookUpKey = Utils.getLookUpKey(flowKey);
-
-        let container = document.getElementById(lookUpKey);
-
-        if (Utils.isEqual(Utils.extractElement(flowKey), 'modal-standalone', true)) {
-
-            container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
-
-        }
-
-        let login = State.getLogin(flowKey);
-
-        if (login) {
-
-            ReactDOM.render(React.createElement(Component.getByName('mw-login'), { flowKey: flowKey, api: 'run', callback: login.callback, stateId: login.stateId, directoryName: login.directoryName, loginUrl: login.loginUrl}), container);
-
-        } else {
-
-            ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), {flowKey: flowKey, container: container}), container);
-
-        }
 
     }
+
+};
+
+/**
+ * Re-render the flow by calling `ReactDOM.render`
+ */
+export const render = (flowKey: string) => {
+
+    let lookUpKey = Utils.getLookUpKey(flowKey);
+
+    let container = document.getElementById(lookUpKey);
+
+    if (Utils.isEqual(Utils.extractElement(flowKey), 'modal-standalone', true)) {
+
+        container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
+
+    }
+
+    let login = State.getLogin(flowKey);
+
+    if (login) {
+
+        ReactDOM.render(React.createElement(Component.getByName('mw-login'), { flowKey: flowKey, api: 'run', callback: login.callback, stateId: login.stateId, directoryName: login.directoryName, loginUrl: login.loginUrl}), container);
+
+    } else {
+
+        ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), {flowKey: flowKey, container: container}), container);
+
+    }
+
 };

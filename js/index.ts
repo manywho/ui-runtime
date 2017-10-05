@@ -9,7 +9,7 @@ import * as Callbacks from './services/callbacks';
 import * as Collaboration from './services/collaboration';
 import * as Component from './services/component';
 import * as Connection from './services/connection';
-import Engine from './services/engine';
+import * as Engine from './services/engine';
 import * as Formatting from './services/formatting';
 import * as Json from './services/json';
 import Log from './services/log';

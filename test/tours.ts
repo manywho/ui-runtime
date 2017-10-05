@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as mockery from 'mockery'
+import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const reactDOM = {
@@ -18,9 +18,9 @@ const log = {
     warning: sinon.stub()
 };
 
-mockery.enable({ 
+mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false 
+    warnOnUnregistered: false
 });
 
 mockery.registerMock('react', react);
@@ -28,7 +28,7 @@ mockery.registerMock('react-dom', reactDOM);
 mockery.registerMock('loglevel', log);
 
 import Tours from '../js/services/tours';
-import Component from '../js/services/component';
+import * as Component from '../js/services/component';
 
 const id = 'test-tour';
 const flowKey = 'key1_key2_key3_key4';

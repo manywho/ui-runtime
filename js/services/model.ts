@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import * as Component from './component';
-import Engine from './engine';
+import * as Engine from './engine';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as State from './state';

@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client';
 
 import * as Log from 'loglevel';
-import Engine from './engine';
+import * as Engine from './engine';
 import Model from './model';
 import * as Settings from './settings';
 import Social from './social';
