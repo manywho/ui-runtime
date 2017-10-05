@@ -1,4 +1,4 @@
-import Component from './component';
+import * as Component from './component';
 import * as Settings from './settings';
 import Utils from './utils';
 

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import Component from './component';
+import * as Component from './component';
 import Engine from './engine';
 import * as Log from 'loglevel';
 import * as Settings from './settings';

@@ -30,7 +30,7 @@ mockery.registerMock('./engine', engine);
 mockery.registerMock('./collaboration', collaboration);
 mockery.registerMock('react', react);
 
-import Component from '../js/services/component';
+import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';
 import Utils from '../js/services/utils';
 
@@ -51,55 +51,77 @@ test.after(t => {
 });
 
 test('Register', (t) => {
-    Component.register('component-1', 'component-1', ['alias-1']);
-    t.is(Component.getByName('component-1'), 'component-1');
-    t.is(Component.getByName('alias-1'), 'component-1');
+    const component = () => null;
+
+    Component.register('component-1', component, ['alias-1']);
+
+    t.deepEqual(Component.getByName('component-1'), component);
+    t.deepEqual(Component.getByName('alias-1'), component);
 });
 
 test('Register Items', (t) => {
-    Component.register('mw-items-container', 'mw-items-container', null);
-    Component.registerItems('items-1', 'items-1');
-    t.is(Component.getByName('items-1'), 'mw-items-container');
-    t.is(Component.getByName('mw-items-1'), 'items-1');
+    const itemsContainer = () => null;
+    const items = () => null;
+
+    Component.register('mw-items-container', itemsContainer, null);
+    Component.registerItems('items-1', items);
+
+    t.deepEqual(Component.getByName('items-1'), itemsContainer);
+    t.deepEqual(Component.getByName('mw-items-1'), items);
 });
 
 test('Register Alias', (t) => {
-    Component.register('component-2', 'component-2', null);
+    const component = () => null;
+
+    Component.register('component-2', component, null);
     Component.registerAlias('alias-2', 'component-2');
-    t.is(Component.getByName('alias-2'), 'component-2');
+
+    t.deepEqual(Component.getByName('alias-2'), component);
 });
 
 test('Register Container', (t) => {
-    Component.register('mw-container', 'mw-container', null);
-    Component.registerContainer('container-1', 'container-1');
-    t.is(Component.getByName('container-1'), 'mw-container');
-    t.is(Component.getByName('mw-container-1'), 'container-1');
+    const mwContainer = () => null;
+    const container = () => null;
+
+    Component.register('mw-container', mwContainer, null);
+    Component.registerContainer('container-1', container);
+
+    t.deepEqual(Component.getByName('container-1'), mwContainer);
+    t.deepEqual(Component.getByName('mw-container-1'), container);
 });
 
 test('Get 1', (t) => {
-    Component.register('component-1', 'component-1', ['alias-1']);
-    const component = { componentType: 'component-1' };
-    t.is(Component.get(component), 'component-1');
+    const component = () => null;
+
+    Component.register('component-1', component, ['alias-1']);
+
+    const model = { componentType: 'component-1' };
+    t.deepEqual(Component.get(model), component);
 });
 
 test('Get 2', (t) => {
-    Component.register('component-1', 'component-1', ['alias-1']);
-    const component = { componentType: 'alias-1' };
-    t.is(Component.get(component), 'component-1');
+    const component = () => null;
+
+    Component.register('component-1', component, ['alias-1']);
+
+    const model = { componentType: 'alias-1' };
+    t.is(Component.get(model), component);
 });
 
 test('Get Child Components', (t) => {
-    Component.register('component-1', 'component-1', null);
+    const component = () => null;
+
+    Component.register('component-1', component, null);
 
     const model = [
         {
             id: 'id',
-            componentType:'component-1',
+            componentType: 'component-1',
             order: 2
         },
         {
             id: 'id',
-            componentType:'component-1',
+            componentType: 'component-1',
             order: 1
         }
     ];
@@ -109,16 +131,18 @@ test('Get Child Components', (t) => {
         parentId: 'parentId',
         flowKey: flowKey,
         key: 'id'
-    }
+    };
 
     t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
-    t.is(react.createElement.args[0][0], 'component-1');
+    t.deepEqual(react.createElement.args[0][0], component);
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
 test('Get Outcomes', (t) => {
-    Component.register('outcome', 'outcome-1', null);
-    
+    const outcome = () => null;
+
+    Component.register('outcome', outcome, null);
+
     const model = [
         {
             id: 'id1',
@@ -134,10 +158,10 @@ test('Get Outcomes', (t) => {
         id: 'id1',
         flowKey: flowKey,
         key: 'id1'
-    }
+    };
 
     t.is(Component.getOutcomes(model, flowKey).length, 2);
-    t.is(react.createElement.args[0][0], 'outcome-1');
+    t.deepEqual(react.createElement.args[0][0], outcome);
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
@@ -146,9 +170,7 @@ test.cb.serial('Handle Event', (t) => {
         hasEvents: true
     };
 
-    const component = {
-        forceUpdate: function() { t.pass(); }
-    };
+    const component = () => null;
 
     const callback = function() {
         t.is(engine.default.render.callCount, 1, 'Engine Render Count');
@@ -191,7 +213,7 @@ test('Get Selected Rows 2', (t) => {
             externalId: 'id2',
             isSelected: true
         }
-    ]
+    ];
 
     t.deepEqual(Component.getSelectedRows(model, ids), expected);
 });
@@ -288,7 +310,7 @@ test('Scroll To Top', (t) => {
 test.serial('On Outcome 1', async (t) => {
     const outcome = {
         isOut: true
-    }
+    };
 
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
@@ -300,7 +322,7 @@ test.serial('On Outcome 1', async (t) => {
 test.serial('On Outcome 2', async (t) => {
     const outcome = {
         isOut: false
-    }
+    };
 
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {

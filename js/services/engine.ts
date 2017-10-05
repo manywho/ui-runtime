@@ -7,7 +7,7 @@ import Ajax from './ajax';
 import * as Authorization from './authorization';
 import * as Callbacks from './callbacks';
 import Collaboration from './collaboration';
-import Component from './component';
+import * as Component from './component';
 import * as Formatting from './formatting';
 import Json from './json';
 import * as Log from 'loglevel';
