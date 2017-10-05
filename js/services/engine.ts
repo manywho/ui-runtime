@@ -6,7 +6,7 @@ import * as numbro from 'numbro';
 import Ajax from './ajax';
 import * as Authorization from './authorization';
 import * as Callbacks from './callbacks';
-import Collaboration from './collaboration';
+import * as Collaboration from './collaboration';
 import * as Component from './component';
 import * as Formatting from './formatting';
 import Json from './json';
@@ -288,8 +288,10 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
-            Collaboration.initialize(Settings.flow('collaboration.isEnabled', flowKey), flowKey);
-            Collaboration.join('Another user', flowKey);
+            if (Settings.flow('collaboration.isEnabled', flowKey)) {
+                Collaboration.initialize(flowKey);
+                Collaboration.join('Another user', flowKey);
+            }
 
             State.setLocation(flowKey);
 
@@ -381,11 +383,9 @@ function joinWithAuthorization(callback, flowKey) {
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
-            if (!Collaboration.isInitialized(flowKey)) {
-
-                Collaboration.initialize(Settings.flow('collaboration.isEnabled', flowKey), flowKey);
+            if (!Collaboration.isInitialized(flowKey) && Settings.flow('collaboration.isEnabled', flowKey)) {
+                Collaboration.initialize(flowKey);
                 Collaboration.join('Another user', flowKey);
-
             }
 
             State.setLocation(flowKey);

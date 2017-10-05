@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as moment from 'moment';
 
-import Collaboration from './collaboration';
+import * as Collaboration from './collaboration';
 import Model from './model';
 import * as Settings from './settings';
 import Utils from './utils';

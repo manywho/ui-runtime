@@ -6,7 +6,7 @@ import './lib/polyfills';
 import Ajax from './services/ajax';
 import * as Authorization from './services/authorization';
 import * as Callbacks from './services/callbacks';
-import Collaboration from './services/collaboration';
+import * as Collaboration from './services/collaboration';
 import * as Component from './services/component';
 import * as Connection from './services/connection';
 import Engine from './services/engine';

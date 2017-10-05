@@ -140,107 +140,145 @@ function onSyncFeed(data) {
     Social.refreshMessages(rooms[data.stateId].flowKey);
 }
 
-export default {
+/**
+ * Open a websocket connection to the collaboration server endpoint, as defined in the `collaboration.uri` setting
+ * @param flowKey
+ */
+export const initialize = (flowKey: string) => {
+    const stateId = Utils.extractStateId(flowKey);
 
-    initialize(enable, flowKey) {
-        const stateId = Utils.extractStateId(flowKey);
+    if (!socket) {
+        socket = io(Settings.global('collaboration.uri'), {
+            transports: ['websocket']
+        });
 
-        if (!socket && enable) {
-            socket = io(Settings.global('collaboration.uri'), {
-                transports: ['websocket']
-            });
+        socket.on('disconnect', onDisconnect);
+        socket.on('joined', onJoined);
+        socket.on('left', onLeft);
+        socket.on('change', onChange);
+        socket.on('move', onMove);
+        socket.on('flowOut', onFlowOut);
+        socket.on('returnToParent', onReturnToParent);
+        socket.on('sync', onSync);
+        socket.on('getValues', onGetValues);
+        socket.on('setValues', onSetValues);
+        socket.on('syncFeed', onSyncFeed);
 
-            socket.on('disconnect', onDisconnect);
-            socket.on('joined', onJoined);
-            socket.on('left', onLeft);
-            socket.on('change', onChange);
-            socket.on('move', onMove);
-            socket.on('flowOut', onFlowOut);
-            socket.on('returnToParent', onReturnToParent);
-            socket.on('sync', onSync);
-            socket.on('getValues', onGetValues);
-            socket.on('setValues', onSetValues);
-            socket.on('syncFeed', onSyncFeed);
-
-            window.addEventListener('beforeunload', event => {
-                onDisconnect();
-            });
-        }
-
-        if (!rooms[stateId] && enable) {
-            rooms[stateId] = {
-                isEnabled: true,
-                flowKey: flowKey
-            };
-        }
-    },
-
-    isInitialized(flowKey) {
-        return rooms.hasOwnProperty(Utils.extractStateId(flowKey));
-    },
-
-    enable(flowKey) {
-        rooms[Utils.extractStateId(flowKey)].isEnabled = true;
-
-        if (!socket)
-            this.initialize(true, flowKey);
-    },
-
-    disable(flowKey) {
-        rooms[Utils.extractStateId(flowKey)].isEnabled = false;
-    },
-
-    join(user, flowKey) {
-        const stateId = Utils.extractStateId(flowKey);
-
-        if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
-            rooms[stateId].user = user;
-            emit(flowKey, 'join', { user: user });
-
-            if (!socket.connected)
-                socket.on('connect', this.getValues.bind(null, flowKey));
-            else
-                exports.default.getValues(flowKey);
-        }
-    },
-
-    leave(user, flowKey) {
-        const stateId = Utils.extractStateId(flowKey);
-        socket.emit('left', { user: user, stateId: stateId });
-    },
-
-    push(id, values, flowKey) {
-        emit(flowKey, 'change', { component: id, values: values });
-    },
-
-    sync(flowKey) {
-        emit(flowKey, 'sync');
-    },
-
-    move(flowKey) {
-        emit(flowKey, 'move');
-    },
-
-    flowOut(flowKey, stateId, subFlowKey) {
-        emit(flowKey, 'flowOut', { subStateId: stateId, parentFlowKey: flowKey, subFlowKey: subFlowKey });
-    },
-
-    returnToParent(flowKey, parentStateId) {
-        emit(flowKey, 'returnToParent', { subFlowKey: flowKey, parentStateId: parentStateId, stateId: Utils.extractStateId(flowKey) });
-    },
-
-    getValues(flowKey) {
-        socket.emit('getValues', { stateId: Utils.extractStateId(flowKey), id: socket.id });
-    },
-
-    syncFeed(flowKey) {
-        emit(flowKey, 'syncFeed');
-    },
-
-    remove(flowKey) {
-        const stateId = Utils.extractStateId(flowKey);
-        rooms[stateId] == null;
-        delete rooms[stateId];
+        window.addEventListener('beforeunload', event => {
+            onDisconnect();
+        });
     }
 
+    if (!rooms[stateId]) {
+        rooms[stateId] = {
+            isEnabled: true,
+            flowKey: flowKey
+        };
+    }
+};
+
+export const isInitialized = (flowKey: string): boolean => {
+    return rooms.hasOwnProperty(Utils.extractStateId(flowKey));
+};
+
+/**
+ * Set `isEnabled` to true for this state, if we have initialized a socket yet then `initialize` will also be called
+ * @param flowKey
+ */
+export const enable = (flowKey: string) => {
+    rooms[Utils.extractStateId(flowKey)].isEnabled = true;
+
+    if (!socket)
+        initialize(flowKey);
+};
+
+/**
+ * Set `isEnabled` to false for this state
+ */
+export const disable = (flowKey: string) => {
+    rooms[Utils.extractStateId(flowKey)].isEnabled = false;
+};
+
+/**
+ * Emit a `join` event to the collaboration server, then call `getValues`
+ */
+export const join = (user, flowKey) => {
+    const stateId = Utils.extractStateId(flowKey);
+
+    if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
+        rooms[stateId].user = user;
+        emit(flowKey, 'join', { user: user });
+
+        if (!socket.connected)
+            socket.on('connect', this.getValues.bind(null, flowKey));
+        else
+            getValues(flowKey);
+    }
+};
+
+/**
+ * Emit a `left` event to the collaboration server
+ */
+export const leave = (user: any, flowKey: string) => {
+    const stateId = Utils.extractStateId(flowKey);
+    socket.emit('left', { user: user, stateId: stateId });
+};
+
+/**
+ * Emit a `change` event to the collaboration server
+ */
+export const push = (id: string, values, flowKey: string) => {
+    emit(flowKey, 'change', { component: id, values: values });
+};
+
+/**
+ * Emit a `sync` event to the collaboration server
+ */
+export const sync = (flowKey: string) => {
+    emit(flowKey, 'sync');
+};
+
+/**
+ * Emit a `move` event to the collaboration server
+ */
+export const move = (flowKey: string) => {
+    emit(flowKey, 'move');
+};
+
+/**
+ * Emit a `flowOut` event to the collaboration server
+ */
+export const flowOut = (flowKey: string, stateId: string, subFlowKey: string) => {
+    emit(flowKey, 'flowOut', { subStateId: stateId, parentFlowKey: flowKey, subFlowKey: subFlowKey });
+};
+
+/**
+ * Emit a `returnToParent` event to the collaboration server
+ */
+export const returnToParent = (flowKey: string, parentStateId: string) => {
+    emit(flowKey, 'returnToParent', { subFlowKey: flowKey, parentStateId: parentStateId, stateId: Utils.extractStateId(flowKey) });
+};
+
+/**
+ * Emit a `getValues` event to the collaboration server
+ */
+export const getValues = (flowKey: string) => {
+    socket.emit('getValues', { stateId: Utils.extractStateId(flowKey), id: socket.id });
+};
+
+/**
+ * Emit a `syncFeed` event to the collaboration server
+ */
+export const syncFeed = (flowKey: string) => {
+    emit(flowKey, 'syncFeed');
+};
+
+/**
+ * Remove all local data about the collaboration state
+ * @param flowKey
+ */
+export const remove = (flowKey: string) => {
+    const stateId = Utils.extractStateId(flowKey);
+    rooms[stateId] == null;
+    delete rooms[stateId];
 };

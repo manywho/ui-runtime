@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 
 import * as Callbacks from './callbacks';
-import Collaboration from './collaboration';
+import * as Collaboration from './collaboration';
 import * as Log from 'loglevel';
 import Model from './model';
 import * as Settings from './settings';

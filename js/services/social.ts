@@ -1,7 +1,7 @@
 
 
 import Ajax from './ajax';
-import Collaboration from './collaboration';
+import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
 import State from './state';

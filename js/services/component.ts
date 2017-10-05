@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Log from 'loglevel';
 
-import Collaboration from './collaboration';
+import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
 import Utils from './utils';
