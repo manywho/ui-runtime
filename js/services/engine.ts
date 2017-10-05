@@ -9,7 +9,7 @@ import * as Callbacks from './callbacks';
 import * as Collaboration from './collaboration';
 import * as Component from './component';
 import * as Formatting from './formatting';
-import Json from './json';
+import * as Json from './json';
 import * as Log from 'loglevel';
 import Model from './model';
 import * as Settings from './settings';

@@ -1,6 +1,6 @@
 import Ajax from './ajax';
 import * as Callbacks from './callbacks';
-import Json from './json';
+import * as Json from './json';
 import State from './state';
 import Utils from './utils';
 

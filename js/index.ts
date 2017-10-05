@@ -11,7 +11,7 @@ import * as Component from './services/component';
 import * as Connection from './services/connection';
 import Engine from './services/engine';
 import * as Formatting from './services/formatting';
-import Json from './services/json';
+import * as Json from './services/json';
 import Log from './services/log';
 import Model from './services/model';
 import * as Settings from './services/settings';

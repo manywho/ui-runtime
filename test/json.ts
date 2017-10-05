@@ -1,5 +1,5 @@
 import test from 'ava';
-import Json from '../js/services/json';
+import * as Json from '../js/services/json';
 
 test('Flow Inputs (object)', (t) => {
     const inputs = {
@@ -87,7 +87,7 @@ test('Intialization Request', (t) => {
 
     const stateId = 'stateId';
     const annotations = 'annotations';
-    const inputs = 'inputs';
+    const inputs = ['inputs'];
     const playerUrl = 'playerUrl';
     const joinUrl = 'joinUrl';
     const mode = 'mode';
@@ -143,7 +143,7 @@ test('Invoke Request', (t) => {
     const invokeType = 'invokeType';
     const annotations = 'annotations';
     const location = 'location';
-    const pageComponentInputResponses = 'pageComponentInputResponses';
+    const pageComponentInputResponses = ['pageComponentInputResponses'];
     const selectedOutcomeId = 'selectedOutcomeId';
     const mode = 'mode';
     const selectedMapElementId = 'selectedMapElementId';
@@ -215,7 +215,7 @@ test('Navigate Request', (t) => {
     const navigationId = 'navigationId';
     const navigationElementId = 'navigationElementId';
     const mapElementId = 'mapElementId';
-    const pageComponentInputResponses = 'pageComponentInputResponses';
+    const pageComponentInputResponses = ['pageComponentInputResponses'];
     const annotations = 'annotations';
     const location = 'location';
 
