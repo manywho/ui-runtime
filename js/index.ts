@@ -3,7 +3,7 @@ import 'script-loader!../node_modules/numbro/dist/numbro.min.js';
 import 'script-loader!../node_modules/numbro/dist/languages.min.js';
 import './lib/polyfills';
 
-import Ajax from './services/ajax';
+import * as Ajax from './services/ajax';
 import * as Authorization from './services/authorization';
 import * as Callbacks from './services/callbacks';
 import * as Collaboration from './services/collaboration';

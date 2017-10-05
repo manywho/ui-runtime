@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 import * as numbro from 'numbro';
 
-import Ajax from './ajax';
+import * as Ajax from './ajax';
 import * as Authorization from './authorization';
 import * as Callbacks from './callbacks';
 import * as Collaboration from './collaboration';

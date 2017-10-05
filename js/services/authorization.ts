@@ -1,4 +1,4 @@
-import Ajax from './ajax';
+import * as Ajax from './ajax';
 import * as Callbacks from './callbacks';
 import * as Json from './json';
 import * as State from './state';

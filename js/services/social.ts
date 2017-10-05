@@ -1,6 +1,6 @@
 
 
-import Ajax from './ajax';
+import * as Ajax from './ajax';
 import * as Collaboration from './collaboration';
 import Engine from './engine';
 import * as Settings from './settings';
