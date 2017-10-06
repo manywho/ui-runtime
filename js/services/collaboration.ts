@@ -2,7 +2,7 @@ import * as io from 'socket.io-client';
 
 import * as Log from 'loglevel';
 import * as Engine from './engine';
-import Model from './model';
+import * as Model from './model';
 import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
@@ -41,7 +41,7 @@ function onJoined(data) {
             message: data.user + ' has joined. Users currently in Flow: ' + data.users,
             position: 'right',
             type: 'success',
-            timeout: '2000',
+            timeout: 2000,
             dismissible: false
         });
     }
@@ -55,7 +55,7 @@ function onLeft(data) {
             message: data.user + ' has left. Users in Flow: ' + data.users,
             position: 'right',
             type: 'danger',
-            timeout: '2000',
+            timeout: 2000,
             dismissible: false
         });
     }

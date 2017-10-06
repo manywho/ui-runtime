@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import * as moment from 'moment';
 
 import * as Collaboration from './collaboration';
-import Model from './model';
+import * as Model from './model';
 import * as Settings from './settings';
 import * as Utils from './utils';
 import * as Validation from './validation';

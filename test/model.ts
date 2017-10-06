@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as mockery from 'mockery'
+import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const engine = {
@@ -8,14 +8,14 @@ const engine = {
     }
 };
 
-mockery.enable({ 
+mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false 
+    warnOnUnregistered: false
 });
 
 mockery.registerMock('./engine', engine);
 
-import Model from '../js/services/model';
+import * as Model from '../js/services/model';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -31,7 +31,7 @@ test.afterEach(t => {
 test.after(t => {
     mockery.deregisterAll();
     mockery.disable();
-})
+});
 
 test.serial('Parse Response', (t) => {
     const response = {
@@ -115,17 +115,17 @@ test.serial('Parse Response', (t) => {
     const expectedContainer: any = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses[0]);
     expectedContainer.childCount = 2;
     t.deepEqual(Model.getContainer('container-1', flowKey), expectedContainer);
-    
+
     const expectedComponent = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0]);
     t.deepEqual(Model.getComponent('component-1', flowKey), expectedComponent);
     t.deepEqual(Model.getComponentByName('component-1', flowKey), expectedComponent);
     t.deepEqual(Model.getComponents(flowKey), { 'component-1': expectedComponent });
-    
+
     const expectedOutcome = response.mapElementInvokeResponses[0].outcomeResponses[0];
     t.deepEqual(Model.getOutcome('outcome-1', flowKey), expectedOutcome);
     t.deepEqual(Model.getOutcomes('root', flowKey), [expectedOutcome]);
     t.deepEqual(Model.getOutcomes(null, flowKey), [expectedOutcome]);
-    
+
     t.is(Model.getLabel(flowKey), 'label');
     t.is(Model.getInvokeType(flowKey), 'FORWARD');
     t.is(Model.getWaitMessage(flowKey), 'waitMessage');
@@ -142,7 +142,7 @@ test.serial('Parse Response', (t) => {
             message: 'fault message',
             position: 'center',
             type: 'danger',
-            timeout: '0',
+            timeout: 0,
             dismissible: true
         }
     ];
@@ -150,7 +150,13 @@ test.serial('Parse Response', (t) => {
 });
 
 test('Notifications', (t) => {
-    const notification = { message: 'hello', position: 'center' };
+    const notification = {
+        message: 'fault message',
+        position: 'center',
+        type: 'danger',
+        timeout: 0,
+        dismissible: true
+    };
     Model.addNotification(flowKey, notification);
 
     t.is(Model.getNotifications(flowKey, 'right').length, 0);
@@ -237,7 +243,7 @@ test('Set Components', (t) => {
         {
             id: 'container-id'
         }
-    ]
+    ];
 
     Model.setContainers(flowKey, containers, null, null);
 
@@ -270,7 +276,7 @@ test('Set Components', (t) => {
         pageContainerId: 'container-id',
         contentType: 'CONTENTSTRING',
         contentValue: 'value'
-    }
+    };
 
     t.deepEqual(Model.getComponent('id', flowKey), expected);
 });
@@ -299,7 +305,7 @@ test('Set History', (t) => {
                 ]
             }
         ]
-    }
+    };
 
     const expected = [{
         name: response.mapElementInvokeResponses[0].developerName,
@@ -344,7 +350,7 @@ test('Pop History', (t) => {
                 ]
             }
         ]
-    }
+    };
 
     Model.setHistory(response, flowKey);
     Model.popHistory('id-1', flowKey);

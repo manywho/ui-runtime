@@ -13,7 +13,7 @@ import * as Engine from './services/engine';
 import * as Formatting from './services/formatting';
 import * as Json from './services/json';
 import Log from './services/log';
-import Model from './services/model';
+import * as Model from './services/model';
 import * as Settings from './services/settings';
 import * as Social from './services/social';
 import * as State from './services/state';

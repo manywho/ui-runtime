@@ -11,7 +11,7 @@ import * as Component from './component';
 import * as Formatting from './formatting';
 import * as Json from './json';
 import * as Log from 'loglevel';
-import Model from './model';
+import * as Model from './model';
 import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
@@ -136,7 +136,7 @@ function notifyError(flowKey, response) {
             message: Settings.global('errorMessage', flowKey),
             position: 'center',
             type: 'danger',
-            timeout: '0',
+            timeout: 0,
             dismissible: true
         });
 
@@ -146,7 +146,7 @@ function notifyError(flowKey, response) {
             message: response.responseText,
             position: 'center',
             type: 'danger',
-            timeout: '0',
+            timeout: 0,
             dismissible: true
         });
 

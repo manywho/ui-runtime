@@ -1,4 +1,4 @@
-import Model from './model';
+import * as Model from './model';
 import * as Utils from './utils';
 
 const components = {};

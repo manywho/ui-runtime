@@ -7,7 +7,7 @@ import * as $ from 'jquery';
 import * as Callbacks from './callbacks';
 import * as Collaboration from './collaboration';
 import * as Log from 'loglevel';
-import Model from './model';
+import * as Model from './model';
 import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
