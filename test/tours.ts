@@ -27,7 +27,7 @@ mockery.registerMock('react', react);
 mockery.registerMock('react-dom', reactDOM);
 mockery.registerMock('loglevel', log);
 
-import Tours from '../js/services/tours';
+import * as Tours from '../js/services/tours';
 import * as Component from '../js/services/component';
 
 const id = 'test-tour';
@@ -37,6 +37,7 @@ test.before(t => {
     Tours.addTours([
         {
             id: id,
+            currentStep: 0,
             steps: [
                 {
                     target: '.tour-target-1',
@@ -66,11 +67,10 @@ test.before(t => {
         },
         {
             id: 'tour2',
-            steps: null
+            currentStep: 0,
+            steps: []
         }
     ]);
-
-    Tours.getTargetElement = sinon.stub().returns(null);
 
     const container = document.createElement('div');
     container.classList.add('container');
@@ -118,7 +118,7 @@ test('Start 4', (t) => {
 
 test.cb('Next 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
-    
+
     setTimeout(() => {
         Tours.next(tour);
 
@@ -132,7 +132,7 @@ test.cb('Next 1', (t) => {
 });
 
 test('Next 2', (t) => {
-    Tours.next(null);    
+    Tours.next(null);
     t.false(reactDOM.default.render.called);
 });
 
@@ -141,14 +141,14 @@ test('Next 3', (t) => {
     Tours.next(tour);
     Tours.next(tour);
     Tours.next(tour);
-    
+
     t.is(Tours.current, null);
     t.true(reactDOM.default.unmountComponentAtNode.calledOnce);
 });
 
 test.cb('Previous 1', (t) => {
     Tours.start(null, '.container', flowKey);
-    
+
     setTimeout(() => {
         Tours.next();
 
@@ -167,7 +167,7 @@ test.cb('Previous 1', (t) => {
 });
 
 test('Previous 2', (t) => {
-    Tours.previous(null);    
+    Tours.previous(null);
     t.false(reactDOM.default.render.called);
 });
 
@@ -203,13 +203,9 @@ test('Refresh 1', (t) => {
 });
 
 test('Refresh 2', (t) => {
-    Tours.getTargetElement = sinon.stub().returns({});
-
-    Tours.start(null, '.container', flowKey);
+    Tours.start(null, '.container', flowKey, sinon.stub().returns({}));
     Tours.refresh();
     t.true(reactDOM.default.render.called);
-
-    Tours.getTargetElement = sinon.stub().returns(null);
 });
 
 test('Refresh 3', (t) => {
@@ -217,19 +213,13 @@ test('Refresh 3', (t) => {
     stub.onSecondCall().returns(null);
     stub.onThirdCall().returns({});
 
-    Tours.getTargetElement = stub;
-
-    Tours.start(null, '.container', flowKey);
+    Tours.start(null, '.container', flowKey, stub);
     Tours.refresh();
     t.is(Tours.current.currentStep, 1);
-
-    Tours.getTargetElement = sinon.stub().returns(null);
 });
 
 test('Refresh 4', (t) => {
     Tours.start(null, '.container', flowKey);
     Tours.refresh();
     t.true(reactDOM.default.unmountComponentAtNode.called);
-
-    Tours.getTargetElement = sinon.stub().returns(null);
 });

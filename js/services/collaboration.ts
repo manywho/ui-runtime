@@ -4,7 +4,7 @@ import * as Log from 'loglevel';
 import * as Engine from './engine';
 import Model from './model';
 import * as Settings from './settings';
-import Social from './social';
+import * as Social from './social';
 import * as State from './state';
 import * as Utils from './utils';
 

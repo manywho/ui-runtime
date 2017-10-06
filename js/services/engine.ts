@@ -13,9 +13,9 @@ import * as Json from './json';
 import * as Log from 'loglevel';
 import Model from './model';
 import * as Settings from './settings';
-import Social from './social';
+import * as Social from './social';
 import * as State from './state';
-import Tours from './tours';
+import * as Tours from './tours';
 import * as Utils from './utils';
 
 declare var manywho: any;

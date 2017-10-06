@@ -9,7 +9,7 @@ import * as Collaboration from './collaboration';
 import * as Log from 'loglevel';
 import Model from './model';
 import * as Settings from './settings';
-import Social from './social';
+import * as Social from './social';
 import * as State from './state';
 
 function extendShallow (mergedObject, objects) {

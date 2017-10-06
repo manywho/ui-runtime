@@ -15,10 +15,10 @@ import * as Json from './services/json';
 import Log from './services/log';
 import Model from './services/model';
 import * as Settings from './services/settings';
-import Social from './services/social';
+import * as Social from './services/social';
 import * as State from './services/state';
 import * as Styling from './services/styling';
-import Tours from './services/tours';
+import * as Tours from './services/tours';
 import * as Utils from './services/utils';
 import * as Validation from './services/validation';
 

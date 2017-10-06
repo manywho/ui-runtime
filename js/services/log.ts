@@ -1,5 +1,5 @@
 /**
- * Re-exports logvel with noConflict
+ * Re-exports loglevel with noConflict
  */
 
  /** this comment exists as a typedoc workaround */
