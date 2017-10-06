@@ -1,7 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 var config = {
     entry: {
@@ -24,17 +23,7 @@ var config = {
             sourceMap: true,
             include: /\.min\.js$/,
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new TypedocWebpackPlugin({
-            mode: 'modules',
-            module: 'commonjs',
-            target: 'es2015',
-            ignoreCompilerErrors: true,
-            exclude: '**/{test,node_modules}/**/*.*',
-            excludeExternals: true,
-            excludePrivate: true,
-            excludeNotExported: true
-        }, './js/services')
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     module: {
         loaders: [
