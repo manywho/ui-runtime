@@ -2,46 +2,20 @@
 
 Core JavaScript services used by the [ManyWho](https://manywho.com) UI framework to do the heavy lifting.
 
-## Usage
+## Running
 
-### Building
-
-To build the ui core you will need to have [nodejs](http://nodejs.org/), [gulp](http://gulpjs.com/) and [typings](https://github.com/typings/typings) installed.
-
-Then install dependencies:
+First install dependencies with `npm install` then
 
 ```
-npm install
-typings install
-```
-
-Then run the dev build:
-
-```
-gulp dev-ts
-```
-
-Or dist build:
-
-```
-gulp dist-ts
-```
-
-### Running
-
-You can run:
-
-```
-gulp watch
+webpack
 ``` 
 
-Which will re-run the `dev-ts` task whenever a change to the JavaScript files is made.
+Which will start the webpack dev server and re-compile the typescript on changes.
 
 By default the compiled assets will be output to the `build` folder, you can override this using the `--build` arg:
 
 ```
-gulp dev-ts --build="custom-folder"
-gulp watch --build="custom-folder"
+webpack --build="custom-folder"
 ```
 
 ## Contributing
