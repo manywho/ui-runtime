@@ -55,7 +55,9 @@ test.after(t => {
 
 test('Set Component Loading', (t) => {
     const expected = {
-        loading: 'loading'
+        loading: {
+            message: 'loading'
+        }
     };
 
     State.setComponentLoading('id', 'loading', flowKey);
@@ -66,8 +68,7 @@ test('Set Component Loading', (t) => {
 test('Set Component Error String', (t) => {
     const expected = {
         error: {
-            message: 'error message',
-            id: 'id'
+            message: 'error message'
         }
     };
 

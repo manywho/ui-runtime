@@ -62,23 +62,12 @@
 			<div class="tsd-panel tsd-typography">
 				<h1 id="manywho-ui-core">ManyWho UI Core</h1>
 				<p>Core JavaScript services used by the <a href="https://manywho.com">ManyWho</a> UI framework to do the heavy lifting.</p>
-				<h2 id="usage">Usage</h2>
-				<h3 id="building">Building</h3>
-				<p>To build the ui core you will need to have <a href="http://nodejs.org/">nodejs</a>, <a href="http://gulpjs.com/">gulp</a> and <a href="https://github.com/typings/typings">typings</a> installed.</p>
-				<p>Then install dependencies:</p>
-				<pre><code>npm <span class="hljs-keyword">install</span>
-typings <span class="hljs-keyword">install</span>
-</code></pre><p>Then run the dev build:</p>
-				<pre><code><span class="hljs-attribute">gulp dev-ts</span>
-</code></pre><p>Or dist build:</p>
-				<pre><code><span class="hljs-attribute">gulp dist-ts</span>
-</code></pre><h3 id="running">Running</h3>
-				<p>You can run:</p>
-				<pre><code><span class="hljs-attribute">gulp watch</span>
-</code></pre><p>Which will re-run the <code>dev-ts</code> task whenever a change to the JavaScript files is made.</p>
+				<h2 id="running">Running</h2>
+				<p>First install dependencies with <code>npm install</code> then</p>
+				<pre><code><span class="hljs-attribute">webpack</span>
+</code></pre><p>Which will start the webpack dev server and re-compile the typescript on changes.</p>
 				<p>By default the compiled assets will be output to the <code>build</code> folder, you can override this using the <code>--build</code> arg:</p>
-				<pre><code>gulp dev-ts <span class="hljs-params">--build=</span><span class="hljs-string">"custom-folder"</span>
-gulp watch <span class="hljs-params">--build=</span><span class="hljs-string">"custom-folder"</span>
+				<pre><code><span class="hljs-attribute">webpack --build</span>=<span class="hljs-string">"custom-folder"</span>
 </code></pre><h2 id="contributing">Contributing</h2>
 				<p>Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to
 				<a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for our contribution requirements.</p>

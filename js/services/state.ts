@@ -92,32 +92,45 @@ export const setUserTime = (flowKey: string) => {
         location[lookUpKey] = { time: now.format() };
 };
 
-export const getComponent = (id: string, flowKey: string) => {
+export const getComponent = (id: string, flowKey: string): IComponentValue => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return (components[lookUpKey] || {})[id];
 };
 
-export const getComponents = (flowKey: string) => {
+export const getComponents = (flowKey: string): Array<IComponentValue> => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return components[lookUpKey];
 };
 
+export interface IComponentValue {
+    objectData?: Array<any>,
+    contentValue?: string | number | boolean,
+    loading?: {
+        message: string
+    },
+    error?: {
+        message: string
+    }
+    isValid?: boolean,
+    validationMessage?: string
+}
+
 /**
  * @param push Set to true to call `Collaboration.push` after updating the component
  */
-export const setComponent = (id: string, values: any, flowKey: string, push: boolean) => {
+export const setComponent = (id: string, value: IComponentValue, flowKey: string, push: boolean) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], values);
+    components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], value);
 
-    if (values != null)
-        components[lookUpKey][id].objectData = values.objectData;
+    if (value != null)
+        components[lookUpKey][id].objectData = value.objectData;
 
-    if (typeof values.isValid === 'undefined' && components[lookUpKey][id].isValid === false) {
+    if (typeof value.isValid === 'undefined' && components[lookUpKey][id].isValid === false) {
         const model = Model.getComponent(id, flowKey);
 
         if (model.isRequired &&
-            (!Utils.isNullOrEmpty(values.contentValue)  || (values.objectData && values.objectData.length > 0))) {
+            (!Utils.isNullOrEmpty(value.contentValue as string)  || (value.objectData && value.objectData.length > 0))) {
 
             components[lookUpKey][id].isValid = true;
             components[lookUpKey][id].validationMessage = null;
@@ -125,12 +138,12 @@ export const setComponent = (id: string, values: any, flowKey: string, push: boo
     }
 
     if (push)
-        Collaboration.push(id, values, flowKey);
+        Collaboration.push(id, value, flowKey);
 };
 
-export const setComponents = (value: any, flowKey: string) => {
+export const setComponents = (components: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
-    components[lookUpKey] = value;
+    components[lookUpKey] = components;
 };
 
 export interface IPageComponentInputResponseRequest {
@@ -187,7 +200,7 @@ export const isAllValid = (flowKey: string): boolean => {
             const validationResult: Validation.IValidationResult = isValid(id, flowKey);
 
             if (validationResult.isValid === false) {
-                setComponent(id, result, flowKey, true);
+                setComponent(id, validationResult as IComponentValue, flowKey, true);
                 result = false;
             }
         }
