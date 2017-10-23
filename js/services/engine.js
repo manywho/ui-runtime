@@ -625,7 +625,8 @@ manywho.engine = (function (manywho) {
                     execute: initializeWithAuthorization.bind(this),
                     args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
                     name: 'initialize',
-                    type: 'done'
+                    type: 'done',
+                    context: this
                 },
                 config.tenantId,
                 config.flowId,
@@ -848,7 +849,8 @@ manywho.engine = (function (manywho) {
                     execute: joinWithAuthorization.bind(this),
                     args: [flowKey],
                     name: 'invoke',
-                    type: 'done'
+                    type: 'done',
+                    context: this
                 },
                 flowKey);
 
