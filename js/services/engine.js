@@ -575,6 +575,19 @@ manywho.engine = (function (manywho) {
 
     }
 
+    function onRequestFailed(id, xhr, error, flowKey) {        
+        if (manywho.utils.isNullOrWhitespace(error) && !manywho.utils.isNullOrWhitespace(xhr.responseText)) {
+            try {
+                manywho.state.setComponentError(id, JSON.parse(xhr.responseText), flowKey);
+            }
+            catch (ex) {
+                manywho.state.setComponentError(id, xhr.responseText, flowKey);
+            }
+        }
+        else
+            manywho.state.setComponentError(id, error, flowKey);
+    }
+
     return {
 
         initialize: function(tenantId, flowId, flowVersionId, container, stateId, authenticationToken, options, isInitializing) {
@@ -872,10 +885,10 @@ manywho.engine = (function (manywho) {
                     manywho.state.setComponentError(id, null, flowKey);
 
                 })
-               .fail(function (xhr, status, error) {
-
-                   manywho.state.setComponentError(id, error, flowKey);
-
+               .fail(function (xhr, status, error) { 
+                   
+                    onRequestFailed(id, xhr, error, flowKey)
+                    
                })
                .always(function () {
 
@@ -902,8 +915,8 @@ manywho.engine = (function (manywho) {
 
                 })
                .fail(function (xhr, status, error) {
-
-                   manywho.state.setComponentError(id, error, flowKey);
+                    
+                    onRequestFailed(id, xhr, error, flowKey)
 
                })
                .always(function () {
