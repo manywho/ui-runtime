@@ -52,7 +52,7 @@ manywho.settings = (function (manywho, $) {
             url: 'https://cdn.tinymce.com/4/tinymce.min.js',
             fontSize: '14px',
             plugins: [
-                'advlist autolink link lists link image charmap print hr anchor spellchecker',
+                'advlist autolink link lists link image charmap print hr anchor',
                 'searchreplace visualblocks fullscreen wordcount code insertdatetime',
                 'media table directionality emoticons contextmenu paste textcolor'
             ],
