@@ -184,23 +184,43 @@ manywho.component = (function (manywho) {
         },
 
         getDisplayColumns: function (columns) {
+            
+            const displayColumns = 
+                columns.length === 0 ? null
+                : columns.map(columnData => {
 
-            var displayColumns = null;
+                        if (columnData.hasOwnProperty('properties')) {
+                            // Normalise column data into UI object models
+                            return columnData.properties.reduce((newColumn, property) => {
 
-            if (columns) {
+                                let value = null;
 
-                displayColumns = columns.filter(function (column) {
-                    if (column.properties) {
-                        var property = manywho.utils.getObjectDataProperty(column.properties, 'isDisplayValue');
-                        return property ? manywho.utils.isEqual(property.contentValue, 'true', true) : false;
-                    }
-                    else
-                        return column.isDisplayValue;
-                });
+                                switch(property.contentType) {
 
-            }
+                                    case 'ContentString':
+                                        value = property.contentValue;
+                                        break;
 
-            if (!displayColumns || displayColumns.length == 0) {
+                                    case 'ContentBoolean': 
+                                        value = property.contentValue === 'True';
+                                        break;
+
+                                    case 'ContentNumber':
+                                        value = Number(property.contentValue);
+                                        break;
+                                }
+
+                                newColumn[property.developerName[0].toLowerCase() + property.developerName.slice(1)] = value;
+
+                                return newColumn;
+                            }, {});
+                        }
+
+                        return columnData;
+                    })
+                    .filter(column => column.isDisplayValue);
+
+            if (!displayColumns || displayColumns.length === 0) {
 
                 manywho.log.error('No display columns found');
 
