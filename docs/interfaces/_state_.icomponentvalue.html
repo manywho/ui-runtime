@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ITourStep | @manywho/ui-core</title>
+	<title>IComponentValue | @manywho/ui-core</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tours_.html">&quot;tours&quot;</a>
+					<a href="../modules/_state_.html">&quot;state&quot;</a>
 				</li>
 				<li>
-					<a href="_tours_.itourstep.html">ITourStep</a>
+					<a href="_state_.icomponentvalue.html">IComponentValue</a>
 				</li>
 			</ul>
-			<h1>Interface ITourStep</h1>
+			<h1>Interface IComponentValue</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ITourStep</span>
+						<span class="target">IComponentValue</span>
 					</li>
 				</ul>
 			</section>
@@ -80,15 +80,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#align" class="tsd-kind-icon">align</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#content" class="tsd-kind-icon">content</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#offset" class="tsd-kind-icon">offset</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#order" class="tsd-kind-icon">order</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#placement" class="tsd-kind-icon">placement</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#showback" class="tsd-kind-icon">show<wbr>Back</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#shownext" class="tsd-kind-icon">show<wbr>Next</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#target" class="tsd-kind-icon">target</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tours_.itourstep.html#title" class="tsd-kind-icon">title</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#contentvalue" class="tsd-kind-icon">content<wbr>Value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#loading" class="tsd-kind-icon">loading</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#objectdata" class="tsd-kind-icon">object<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_state_.icomponentvalue.html#validationmessage" class="tsd-kind-icon">validation<wbr>Message</a></li>
 							</ul>
 						</section>
 					</div>
@@ -97,92 +94,72 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="align" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> align</h3>
-					<div class="tsd-signature tsd-kind-icon">align<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="contentvalue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> content<wbr>Value</h3>
+					<div class="tsd-signature tsd-kind-icon">content<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L64">tours.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L107">state.ts:107</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="content" class="tsd-anchor"></a>
-					<h3>content</h3>
-					<div class="tsd-signature tsd-kind-icon">content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="error" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> error</h3>
+					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L59">tours.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L111">state.ts:111</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isvalid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Valid</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L114">state.ts:114</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="offset" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> offset</h3>
-					<div class="tsd-signature tsd-kind-icon">offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="loading" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> loading</h3>
+					<div class="tsd-signature tsd-kind-icon">loading<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L63">tours.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L108">state.ts:108</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="objectdata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> object<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">object<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L106">state.ts:106</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="order" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> order</h3>
-					<div class="tsd-signature tsd-kind-icon">order<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="validationmessage" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> validation<wbr>Message</h3>
+					<div class="tsd-signature tsd-kind-icon">validation<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L65">tours.ts:65</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="placement" class="tsd-anchor"></a>
-					<h3>placement</h3>
-					<div class="tsd-signature tsd-kind-icon">placement<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L60">tours.ts:60</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="showback" class="tsd-anchor"></a>
-					<h3>show<wbr>Back</h3>
-					<div class="tsd-signature tsd-kind-icon">show<wbr>Back<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L62">tours.ts:62</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="shownext" class="tsd-anchor"></a>
-					<h3>show<wbr>Next</h3>
-					<div class="tsd-signature tsd-kind-icon">show<wbr>Next<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L61">tours.ts:61</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="target" class="tsd-anchor"></a>
-					<h3>target</h3>
-					<div class="tsd-signature tsd-kind-icon">target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L57">tours.ts:57</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="title" class="tsd-anchor"></a>
-					<h3>title</h3>
-					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/tours.ts#L58">tours.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/state.ts#L115">state.ts:115</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -233,13 +210,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_social_.html">"social"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_state_.html">"state"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_styling_.html">"styling"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_tours_.html">"tours"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -252,80 +229,107 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_tours_.itour.html" class="tsd-kind-icon">ITour</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_tours_.itourprops.html" class="tsd-kind-icon">ITour<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_tours_.itourstate.html" class="tsd-kind-icon">ITour<wbr>State</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_tours_.itourstep.html" class="tsd-kind-icon">ITour<wbr>Step</a>
+						<a href="_state_.icomponentvalue.html" class="tsd-kind-icon">IComponent<wbr>Value</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#align" class="tsd-kind-icon">align</a>
+								<a href="_state_.icomponentvalue.html#contentvalue" class="tsd-kind-icon">content<wbr>Value</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#content" class="tsd-kind-icon">content</a>
+								<a href="_state_.icomponentvalue.html#error" class="tsd-kind-icon">error</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#offset" class="tsd-kind-icon">offset</a>
+								<a href="_state_.icomponentvalue.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#order" class="tsd-kind-icon">order</a>
+								<a href="_state_.icomponentvalue.html#loading" class="tsd-kind-icon">loading</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#placement" class="tsd-kind-icon">placement</a>
+								<a href="_state_.icomponentvalue.html#objectdata" class="tsd-kind-icon">object<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#showback" class="tsd-kind-icon">show<wbr>Back</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#shownext" class="tsd-kind-icon">show<wbr>Next</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#target" class="tsd-kind-icon">target</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tours_.itourstep.html#title" class="tsd-kind-icon">title</a>
+								<a href="_state_.icomponentvalue.html#validationmessage" class="tsd-kind-icon">validation<wbr>Message</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#current" class="tsd-kind-icon">current</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_state_.ipagecomponentinputresponserequest.html" class="tsd-kind-icon">IPage<wbr>Component<wbr>Input<wbr>Response<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#addtours" class="tsd-kind-icon">add<wbr>Tours</a>
+						<a href="../modules/_state_.html#getauthenticationtoken" class="tsd-kind-icon">get<wbr>Authentication<wbr>Token</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#done" class="tsd-kind-icon">done</a>
+						<a href="../modules/_state_.html#getcomponent" class="tsd-kind-icon">get<wbr>Component</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#gettargetelement" class="tsd-kind-icon">get<wbr>Target<wbr>Element</a>
+						<a href="../modules/_state_.html#getcomponents" class="tsd-kind-icon">get<wbr>Components</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#move" class="tsd-kind-icon">move</a>
+						<a href="../modules/_state_.html#getlocation" class="tsd-kind-icon">get<wbr>Location</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#next" class="tsd-kind-icon">next</a>
+						<a href="../modules/_state_.html#getlogin" class="tsd-kind-icon">get<wbr>Login</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#previous" class="tsd-kind-icon">previous</a>
+						<a href="../modules/_state_.html#getoptions" class="tsd-kind-icon">get<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#refresh" class="tsd-kind-icon">refresh</a>
+						<a href="../modules/_state_.html#getpagecomponentinputresponserequests" class="tsd-kind-icon">get<wbr>Page<wbr>Component<wbr>Input<wbr>Response<wbr>Requests</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#render" class="tsd-kind-icon">render</a>
+						<a href="../modules/_state_.html#getsessiondata" class="tsd-kind-icon">get<wbr>Session<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_tours_.html#start" class="tsd-kind-icon">start</a>
+						<a href="../modules/_state_.html#getstate" class="tsd-kind-icon">get<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#isallvalid" class="tsd-kind-icon">is<wbr>All<wbr>Valid</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#refreshcomponents" class="tsd-kind-icon">refresh<wbr>Components</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#remove" class="tsd-kind-icon">remove</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setauthenticationtoken" class="tsd-kind-icon">set<wbr>Authentication<wbr>Token</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setcomponent" class="tsd-kind-icon">set<wbr>Component</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setcomponenterror" class="tsd-kind-icon">set<wbr>Component<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setcomponentloading" class="tsd-kind-icon">set<wbr>Component<wbr>Loading</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setcomponents" class="tsd-kind-icon">set<wbr>Components</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setlocation" class="tsd-kind-icon">set<wbr>Location</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setlogin" class="tsd-kind-icon">set<wbr>Login</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setoptions" class="tsd-kind-icon">set<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setsessiondata" class="tsd-kind-icon">set<wbr>Session<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setstate" class="tsd-kind-icon">set<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_state_.html#setusertime" class="tsd-kind-icon">set<wbr>User<wbr>Time</a>
 					</li>
 				</ul>
 			</nav>
