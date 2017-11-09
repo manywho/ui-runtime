@@ -3,9 +3,7 @@ import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const engine = {
-    default: {
-        render: sinon.stub()
-    }
+    render: sinon.stub()
 };
 
 mockery.enable({
@@ -21,7 +19,7 @@ const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     Model.initializeModel(flowKey);
-    engine.default.render.resetHistory();
+    engine.render.resetHistory();
 });
 
 test.afterEach(t => {
@@ -142,14 +140,17 @@ test.serial('Parse Response', (t) => {
             message: 'fault message',
             position: 'center',
             type: 'danger',
-            timeout: 0,
+            timeout: '0',
             dismissible: true
         }
     ];
     t.deepEqual(Model.getNotifications(flowKey, 'center'), expectedNotifications);
 });
 
-test('Notifications', (t) => {
+test.serial('Notifications', (t) => {
+    (Model.getNotifications(flowKey, 'center') || []).forEach(notification => Model.removeNotification(flowKey, notification));
+    engine.render.resetHistory();
+
     const notification = {
         message: 'fault message',
         position: 'center',
@@ -166,7 +167,7 @@ test('Notifications', (t) => {
     Model.removeNotification(flowKey, notification);
 
     t.is(Model.getNotifications(flowKey, 'center').length, 0);
-    t.is(engine.default.render.callCount, 2);
+    t.is(engine.render.callCount, 2);
 });
 
 test('Selected Navigation', (t) => {
@@ -186,7 +187,7 @@ test('Attributes', (t) => {
 test('Modal', (t) => {
     Model.setModal(flowKey, 'modal');
     t.is(Model.getModal(flowKey), 'modal');
-    t.is(engine.default.render.callCount, 1);
+    t.is(engine.render.callCount, 1);
 });
 
 test('Execution Log', (t) => {

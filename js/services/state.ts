@@ -141,9 +141,9 @@ export const setComponent = (id: string, value: IComponentValue, flowKey: string
         Collaboration.push(id, value, flowKey);
 };
 
-export const setComponents = (components: any, flowKey: string) => {
+export const setComponents = (value: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
-    components[lookUpKey] = components;
+    components[lookUpKey] = value;
 };
 
 export interface IPageComponentInputResponseRequest {

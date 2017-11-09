@@ -1,4 +1,20 @@
 import test from 'ava';
+import * as mockery from 'mockery';
+import * as sinon from 'sinon';
+
+const reactDOM = {
+    default: {
+        unmountComponentAtNode: sinon.stub()
+    }
+};
+
+mockery.enable({
+    useCleanCache: true,
+    warnOnUnregistered: false
+});
+
+mockery.registerMock('react-dom', reactDOM);
+
 import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
@@ -28,7 +44,7 @@ test('Is Placeholder Objectdata', (t) => {
                 }
             }
         }
-    ]
+    ];
     t.is(Utils.isPlaceholderObjectData(objectData), true);
 });
 
@@ -41,7 +57,7 @@ test('Is Not Placeholder Objectdata 1', (t) => {
                 }
             }
         }
-    ]
+    ];
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
 
@@ -53,12 +69,12 @@ test('Is Not Placeholder Objectdata 1', (t) => {
 test('Is Empty Objectdata 1', (t) => {
     const model = {
         objectData: {}
-    }
+    };
     t.is(Utils.isEmptyObjectData(model), false);
 });
 
 test('Is Empty Objectdata 2', (t) => {
-    const model = {}
+    const model = {};
     t.is(Utils.isEmptyObjectData(model), true);
 });
 
@@ -68,7 +84,7 @@ test('Is Empty Objectdata 3', (t) => {
         objectData: [
             {}
         ]
-    }
+    };
     t.is(Utils.isEmptyObjectData(model), true);
 });
 
@@ -211,3 +227,76 @@ test('Guid', (t) => {
     t.is(Utils.guid().length, 36);
 });
 
+test.cb('Debounce', (t) => {
+
+    const callback = () => {
+        t.end();
+    };
+
+    const debounced = Utils.debounce(callback, 200, false);
+
+    debounced();
+    debounced();
+});
+
+test('Remove Flow From DOM', t => {
+    const container = document.createElement('div');
+    container.id = 'manywho';
+
+    const child = document.createElement('div');
+    child.id = Utils.getLookUpKey(flowKey);
+    container.appendChild(child);
+
+    document.body.appendChild(container);
+
+    Utils.removeFlowFromDOM(flowKey);
+
+    t.true(reactDOM.default.unmountComponentAtNode.calledWith(child));
+    t.true(container.children.length === 0);
+});
+
+test('Extend Objectdata', t => {
+
+    const mergedObjectData = [
+        {
+            developerName: 'property1',
+            contentValue: 'value1'
+        },
+        {
+            developerName: 'property2',
+            contentValue: 'value2'
+        },
+        {
+            developerName: 'property3',
+            objectData: 'objectData1'
+        }
+    ];
+
+    const objectData = [
+        {
+            developerName: 'property2',
+            contentValue: 'value3'
+        },
+        {
+            developerName: 'property3',
+            objectData: 'objectData2'
+        }
+    ];
+
+    const expected = [
+        {
+            developerName: 'property1',
+            contentValue: 'value1'
+        },
+        {
+            developerName: 'property2',
+            contentValue: 'value3'
+        },
+        {
+            developerName: 'property3',
+            objectData: 'objectData2'
+        }
+    ];
+
+    t.deepEqual(Utils.extendObjectData(mergedObjectData, objectData), expected);
+});

@@ -121,7 +121,7 @@ function hideContainer(container, containers, components, outcomes) {
 }
 
 export interface INotification {
-    timeout: number,
+    timeout: number | string,
     message: string,
     type: string,
     dismissible: boolean,

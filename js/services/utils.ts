@@ -131,7 +131,6 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
 };
 
 export const extendObjectData = (mergedObjectData: Array<any>, objectData: Array<any>): Array<any>  => {
-
     if (objectData) {
         if (!mergedObjectData) {
             mergedObjectData = [];

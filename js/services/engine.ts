@@ -76,18 +76,12 @@ function isAuthorized(response, flowKey) {
 }
 
 function onAuthorizationFailed(response, flowKey, callback) {
-
-    if (State.getSessionData(flowKey) != null) {
-
-        Authorization.authorizeBySession(response.authorizationContext.loginUrl, flowKey, callback);
-
-    } else {
-
-        // Authorization failed, retry
-        Authorization.invokeAuthorization(response, flowKey, callback);
-
-    }
-
+    if (flowKey)
+        if (State.getSessionData(flowKey) != null)
+            Authorization.authorizeBySession(response.authorizationContext.loginUrl, flowKey, callback);
+        else
+            // Authorization failed, retry
+            Authorization.invokeAuthorization(response, flowKey, callback);
 }
 
 function loadNavigation(flowKey, stateToken, navigationId, currentMapElementId?) {
@@ -129,29 +123,23 @@ function loadExecutionLog(flowKey, authenticationToken) {
 }
 
 function notifyError(flowKey, response) {
-
-    if (response && !response.responseText && (response.status === 0 || response.status === 500 || response.status === 504)) {
-
-        Model.addNotification(flowKey, {
-            message: Settings.global('errorMessage', flowKey),
-            position: 'center',
-            type: 'danger',
-            timeout: 0,
-            dismissible: true
-        });
-
-    } else if (response) {
-
-        Model.addNotification(flowKey, {
-            message: response.responseText,
-            position: 'center',
-            type: 'danger',
-            timeout: 0,
-            dismissible: true
-        });
-
-    }
-
+    if (flowKey)
+        if (response && !response.responseText && (response.status === 0 || response.status === 500 || response.status === 504))
+            Model.addNotification(flowKey, {
+                message: Settings.global('errorMessage', flowKey),
+                position: 'center',
+                type: 'danger',
+                timeout: 0,
+                dismissible: true
+            });
+        else if (response)
+            Model.addNotification(flowKey, {
+                message: response.responseText,
+                position: 'center',
+                type: 'danger',
+                timeout: 0,
+                dismissible: true
+            });
 }
 
 function onInitializeFailed(response) {
@@ -165,8 +153,7 @@ function onInitializeFailed(response) {
 
     container.insertBefore(alert, container.children[0]);
 
-    return response;
-
+    return null;
 }
 
 function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken) {
@@ -201,7 +188,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
     return Ajax.initialize(initializationRequest, tenantId, authenticationToken)
         .then(function (response) {
 
-            sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
+            window.sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
                 tenantId: tenantId,
                 flowId: flowId,
                 flowVersionId: flowVersionId,
@@ -252,7 +239,8 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return isAuthorized(response, flowKey);
 
-        }, onInitializeFailed)
+        })
+        .fail(onInitializeFailed)
         .then(function (response) {
 
             if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
@@ -275,14 +263,11 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey));
 
-        }, function (response) {
-
-            onAuthorizationFailed(response, flowKey, callback);
-
         })
+        .fail(response => onAuthorizationFailed(response, flowKey, callback))
         .then(function (response) {
 
-            sessionStorage.removeItem('oauth-' + response.stateId);
+            window.sessionStorage.removeItem('oauth-' + response.stateId);
 
             self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
 
@@ -313,15 +298,14 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return Utils.whenAll(deferreds);
 
-        }, function(response) {
-
-            notifyError(flowKey, response);
-
         })
+        .fail(response => notifyError(flowKey, response))
         .always(function () {
 
-            self.render(flowKey);
-            processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+            if (flowKey) {
+                self.render(flowKey);
+                processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+            }
 
         })
         .then(function() {
@@ -338,15 +322,15 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         })
         .always(function() {
 
-            State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
-            self.render(flowKey);
+            if (flowKey) {
+                State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
+                self.render(flowKey);
+            }
 
-            })
-            .then(function() {
-
+        })
+        .then(function() {
             return flowKey;
-
-            });
+        });
 
 }
 
@@ -376,7 +360,7 @@ function joinWithAuthorization(callback, flowKey) {
         .then(function (response) {
 
             isAuthenticated = true;
-            sessionStorage.removeItem('oauth-' + response.stateId);
+            window.sessionStorage.removeItem('oauth-' + response.stateId);
 
             Model.initializeModel(flowKey);
             self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
@@ -572,6 +556,9 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
                     scroller.scrollTop = 0;
             }
 
+        })
+        .then(() => {
+            return flowKey;
         });
 
 }
@@ -597,7 +584,7 @@ export const initialize = (tenantId: string, flowId: string, flowVersionId: stri
     if (options.theme && manywho.theming)
         manywho.theming.apply(options.theme);
 
-    let storedConfig = sessionStorage.getItem('oauth-' + stateId);
+    let storedConfig = window.sessionStorage.getItem('oauth-' + stateId);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
 
@@ -840,7 +827,7 @@ export const join = (tenantId: string, flowId: string, flowVersionId: string, co
 
     Component.appendFlowContainer(flowKey);
 
-    sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
+    window.sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
         tenantId: tenantId,
         flowId: flowId,
         flowVersionId: flowVersionId,
@@ -921,13 +908,16 @@ export const fileDataRequest = (id: string, request: any, flowKey: string, limit
         .fail((xhr, status, error) => {
 
             State.setComponentError(id, error, flowKey);
+            return error;
 
         })
-        .always(() => {
+        .always(error => {
 
             State.setComponentLoading(id, null, flowKey);
             render(flowKey);
 
+            if (error)
+                return error;
         });
 
 };
@@ -974,7 +964,7 @@ export const ping = (flowKey: string) => {
 
         let state = State.getState(flowKey);
 
-        Ajax.ping(Utils.extractTenantId(flowKey), state.id, state.token, State.getAuthenticationToken(flowKey))
+        return Ajax.ping(Utils.extractTenantId(flowKey), state.id, state.token, State.getAuthenticationToken(flowKey))
             .then(function (response) {
 
                 if (response) {

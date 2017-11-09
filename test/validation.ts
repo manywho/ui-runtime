@@ -240,7 +240,7 @@ test('Validate State String with attributes', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test.failing('Validate State Number', (t) => {
+test('Validate State Number', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null
@@ -259,7 +259,7 @@ test.failing('Validate State Number', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test.failing('Validate State Boolean (true)', (t) => {
+test('Validate State Boolean (true)', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null

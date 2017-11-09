@@ -4,26 +4,20 @@ import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const validation = {
-    default: {
-        validate: sinon.stub()
-    }
+    validate: sinon.stub()
 };
 
 const model = {
-    default: {
-        getComponents: sinon.stub().returns({
-            id: {}
-        }),
-        getComponent: sinon.stub().returns({
-            isRequired: true
-        })
-    }
+    getComponents: sinon.stub().returns({
+        id: {}
+    }),
+    getComponent: sinon.stub().returns({
+        isRequired: true
+    })
 };
 
 const collaboration = {
-    default: {
-        push: sinon.stub()
-    }
+    push: sinon.stub()
 };
 
 mockery.enable({
@@ -42,10 +36,10 @@ const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
     State.remove(flowKey);
-    validation.default.validate.resetHistory();
-    model.default.getComponents.resetHistory();
-    model.default.getComponent.resetHistory();
-    collaboration.default.push.resetHistory();
+    validation.validate.resetHistory();
+    model.getComponents.resetHistory();
+    model.getComponent.resetHistory();
+    collaboration.push.resetHistory();
 });
 
 test.after(t => {
@@ -60,7 +54,7 @@ test('Set Component Loading', (t) => {
         }
     };
 
-    State.setComponentLoading('id', 'loading', flowKey);
+    State.setComponentLoading('id', expected.loading, flowKey);
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
 });
@@ -68,6 +62,7 @@ test('Set Component Loading', (t) => {
 test('Set Component Error String', (t) => {
     const expected = {
         error: {
+            id: 'id',
             message: 'error message'
         }
     };
@@ -156,7 +151,7 @@ test('Set User Time With Offset', (t) => {
     t.not(State.getLocation(flowKey).time.indexOf('-08:00'), -1);
 });
 
-test('Input Responses', (t) => {
+test.serial('Input Responses', (t) => {
     const components = {
         'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6': {
             pageComponentId: 'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6',
@@ -234,14 +229,14 @@ test('Refresh Components', (t) => {
 });
 
 test('Set Component', (t) => {
-    validation.default.validate
+    validation.validate
         .onFirstCall()
         .returns({
             isValid: false,
             validationMessage: 'message'
         });
 
-    validation.default.validate
+    validation.validate
         .returns({
             isValid: true,
             validationMessage: null
@@ -268,13 +263,13 @@ test('Set Component', (t) => {
     };
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
-    t.is(collaboration.default.push.callCount, 1);
+    t.is(collaboration.push.callCount, 1);
 
-    validation.default.validate.resetBehavior();
+    validation.validate.resetBehavior();
 });
 
 test('Validation', (t) => {
-    validation.default.validate.returns({
+    validation.validate.returns({
         isValid: false,
         validationMessage: 'message'
     });

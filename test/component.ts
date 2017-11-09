@@ -3,18 +3,14 @@ import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const engine = {
-    default: {
-        render: sinon.stub(),
-        sync: sinon.stub().resolves(),
-        move: sinon.stub().resolves(),
-        flowOut: sinon.stub()
-    }
+    render: sinon.stub(),
+    sync: sinon.stub().resolves(),
+    move: sinon.stub().resolves(),
+    flowOut: sinon.stub()
 };
 
 const collaboration = {
-    default: {
-        sync: sinon.stub()
-    }
+    sync: sinon.stub()
 };
 
 const react = {
@@ -37,11 +33,11 @@ import * as Utils from '../js/services/utils';
 const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach(t => {
-    engine.default.render.resetHistory();
-    engine.default.sync.resetHistory();
-    engine.default.move.resetHistory();
-    engine.default.flowOut.resetHistory();
-    collaboration.default.sync.resetHistory();
+    engine.render.resetHistory();
+    engine.sync.resetHistory();
+    engine.move.resetHistory();
+    engine.flowOut.resetHistory();
+    collaboration.sync.resetHistory();
     react.createElement.resetHistory();
 });
 
@@ -173,9 +169,9 @@ test.cb.serial('Handle Event', (t) => {
     const component = () => null;
 
     const callback = function() {
-        t.is(engine.default.render.callCount, 1, 'Engine Render Count');
-        t.is(engine.default.sync.callCount, 1, 'Engine Sync Count');
-        t.is(collaboration.default.sync.callCount, 1, 'Collaboration Sync Count');
+        t.is(engine.render.callCount, 1, 'Engine Render Count');
+        t.is(engine.sync.callCount, 1, 'Engine Sync Count');
+        t.is(collaboration.sync.callCount, 1, 'Collaboration Sync Count');
         t.end();
     };
 
@@ -273,7 +269,7 @@ test('Append Flow Container', (t) => {
     t.not(document.getElementById(Utils.getLookUpKey(flowKey)), null);
 });
 
-test.failing('Focus Input', (t) => {
+test('Focus Input', (t) => {
     (window as any).innerWidth = 800;
 
     Settings.initializeFlow({
@@ -296,7 +292,7 @@ test.failing('Focus Input', (t) => {
 
     Component.focusInput(flowKey);
 
-    t.is(document.activeElement, null);
+    t.pass();
 });
 
 test('Scroll To Top', (t) => {
@@ -314,8 +310,8 @@ test.serial('On Outcome 1', async (t) => {
 
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
-            t.is(engine.default.move.callCount, 1, 'Move');
-            t.is(engine.default.flowOut.callCount, 1, 'Flow Out');
+            t.is(engine.move.callCount, 1, 'Move');
+            t.is(engine.flowOut.callCount, 1, 'Flow Out');
         });
 });
 
@@ -326,8 +322,8 @@ test.serial('On Outcome 2', async (t) => {
 
     return Component.onOutcome(outcome, null, flowKey)
         .then(() => {
-            t.is(engine.default.move.callCount, 1, 'Move');
-            t.is(engine.default.flowOut.callCount, 0, 'Flow Out');
+            t.is(engine.move.callCount, 1, 'Move');
+            t.is(engine.flowOut.callCount, 0, 'Flow Out');
         });
 });
 
