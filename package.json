@@ -13,7 +13,7 @@
     "lint": "tslint -c tslint.json js/**/*.ts --fix",
     "precommit": "lint-staged",
     "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\" --timeout=5s",
-    "coverage": "nyc check-coverage --lines 100 --functions 100 --branches 90",
+    "coverage": "nyc check-coverage --lines 80 --functions 80 --branches 80",
     "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
   },
   "lint-staged": {
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
+    "license-webpack-plugin": "^1.1.1",
     "loglevel": "^1.4.1",
     "moment": "^2.18.1",
     "numbro": "^1.11.0",

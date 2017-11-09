@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 
 var config = {
     entry: {
@@ -41,7 +42,12 @@ var config = {
     },
     plugins: [
         new BundleAnalyzerPlugin(),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new LicenseWebpackPlugin({
+            pattern: /.*/,
+            unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
+            abortOnUnacceptableLicense: true
+        })
     ],
     externals: {
         'react': 'React',
