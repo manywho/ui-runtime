@@ -4,7 +4,8 @@ import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const validation = {
-    validate: sinon.stub()
+    validate: sinon.stub(),
+    shouldValidate: sinon.stub().returns(true)
 };
 
 const model = {
@@ -224,7 +225,7 @@ test('Refresh Components', (t) => {
         ]
     };
 
-    State.refreshComponents(models, false, flowKey);
+    State.refreshComponents(models, 'wait', flowKey);
     t.deepEqual(State.getComponents(flowKey), expected);
 });
 
@@ -247,7 +248,7 @@ test('Set Component', (t) => {
             isValid: false
         }
     };
-    State.refreshComponents(models, true, flowKey);
+    State.refreshComponents(models, 'move', flowKey);
 
     const values = {
         contentValue: 'value',
@@ -277,7 +278,7 @@ test('Validation', (t) => {
     const models = {
         id: {}
     };
-    State.refreshComponents(models, true, flowKey);
+    State.refreshComponents(models, 'move', flowKey);
 
     const expected = {
         contentValue: null,

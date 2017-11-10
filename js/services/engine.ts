@@ -17,6 +17,7 @@ import * as Social from './social';
 import * as State from './state';
 import * as Tours from './tours';
 import * as Utils from './utils';
+import * as Validation from './validation';
 
 declare var manywho: any;
 
@@ -269,7 +270,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             window.sessionStorage.removeItem('oauth-' + response.stateId);
 
-            self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
+            parseResponse(response, Model.parseEngineResponse, 'initialize', flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -363,7 +364,7 @@ function joinWithAuthorization(callback, flowKey) {
             window.sessionStorage.removeItem('oauth-' + response.stateId);
 
             Model.initializeModel(flowKey);
-            self.parseResponse(response, Model.parseEngineResponse, false, flowKey);
+            parseResponse(response, Model.parseEngineResponse, 'join', flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
@@ -459,7 +460,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             moveResponse = response;
 
-            self.parseResponse(response, Model.parseEngineResponse, true, flowKey);
+            parseResponse(response, Model.parseEngineResponse, 'move', flowKey);
 
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
             State.setLocation(flowKey);
@@ -612,7 +613,8 @@ export const initialize = (tenantId: string, flowId: string, flowVersionId: stri
             execute: initializeWithAuthorization.bind(this),
             args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
             name: 'initialize',
-            type: 'done'
+            type: 'done',
+            context: this
         },
         config.tenantId,
         config.flowId,
@@ -637,6 +639,12 @@ export const move = (outcome: any, flowKey: string)  => {
         let isValid = State.isAllValid(flowKey);
         if (!isValid) {
             render(flowKey);
+
+            requestAnimationFrame(() => {
+                Validation.scrollToInvalidElement(flowKey);
+                Validation.addNotification(flowKey);
+            });
+
             let deferred = $.Deferred();
             deferred.fail(null);
             return deferred;
@@ -751,7 +759,7 @@ export const sync = (flowKey: string) => {
             }
             else {
 
-                parseResponse(response, Model.parseEngineSyncResponse, true, flowKey);
+                parseResponse(response, Model.parseEngineSyncResponse, 'sync', flowKey);
                 return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
 
             }
@@ -840,7 +848,8 @@ export const join = (tenantId: string, flowId: string, flowVersionId: string, co
             execute: joinWithAuthorization.bind(this),
             args: [flowKey],
             name: 'invoke',
-            type: 'done'
+            type: 'done',
+            context: this
         },
         flowKey);
 
@@ -935,12 +944,12 @@ export const toggleDebug = (flowKey: string) => {
 /**
  * Parse the platform response using the `responseParser` and update the local state. If the response status is WAIT or STATUS then kickoff an `Engine.ping`
  */
-export const parseResponse = (response: any, responseParser: (model: any, response: any, flowKey: string) => void, validate: boolean, flowKey: string) => {
+export const parseResponse = (response: any, responseParser: (model: any, response: any, flowKey: string) => void, invokeType: string, flowKey: string) => {
 
     responseParser.call(Model, response, flowKey);
 
     State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-    State.refreshComponents(Model.getComponents(flowKey), validate, flowKey);
+    State.refreshComponents(Model.getComponents(flowKey), invokeType, flowKey);
 
     if (Settings.flow('replaceUrl', flowKey)) {
         Utils.replaceBrowserUrl(response);

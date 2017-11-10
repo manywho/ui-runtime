@@ -162,7 +162,7 @@ test('Validate List', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test.failing('Validate List, required', (t) => {
+test('Validate List, required', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required'
@@ -278,10 +278,10 @@ test('Validate State Boolean (true)', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test.failing('Validate State Boolean (false)', (t) => {
+test('Validate State Boolean (false)', (t) => {
     const expected = {
-        isValid: true,
-        validationMessage: null
+        isValid: false,
+        validationMessage: 'This field is required'
     };
 
     const model = {

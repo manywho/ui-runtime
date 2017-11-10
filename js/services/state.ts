@@ -20,7 +20,7 @@ const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 /**
  * Reset the local state of each component defined in the models. Optionally perform validation on each model
  */
-export const refreshComponents = (models: any, validate: boolean, flowKey: string) => {
+export const refreshComponents = (models: any, invokeType: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     components[lookUpKey] = {};
@@ -38,7 +38,7 @@ export const refreshComponents = (models: any, validate: boolean, flowKey: strin
             objectData: selectedObjectData || null
         };
 
-        if (validate)
+        if (Validation.shouldValidate(invokeType, flowKey))
             components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], isValid(id, flowKey));
     }
 };

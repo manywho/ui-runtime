@@ -1,14 +1,13 @@
 import * as Component from './component';
+import * as Model from './model';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
-const isNull = function(value: any, contentType: string) {
+const isValueDefined = function(value: any, contentType: string) {
     switch (contentType) {
         case Component.contentTypes.object:
-            return value !== null;
-
         case Component.contentTypes.list:
-            return value.length > 0;
+            return value == null || value.length === 0 || value.filter(item => item.isSelected).length === 0;
 
         case Component.contentTypes.boolean:
             if (typeof value === 'string') {
@@ -42,7 +41,7 @@ const getInvalidResponse = function(message: string, flowKey: string): IValidati
 const validateRegex = function(value: string, regex: string) {
     if (!Utils.isNullOrWhitespace(regex)) {
         const validationRegex = new RegExp(regex);
-        return validationRegex.test(value);
+        return validationRegex.test(Utils.isNullOrUndefined(value) ? '' : value);
     }
 
     return true;
@@ -52,6 +51,15 @@ export interface IValidationResult {
     isValid: boolean,
     validationMessage: string
 }
+
+/**
+ * Check if the `validation.when` setting contains the `when` parameter, thus validation should be performed
+ * @param invokeType When to validate: INITIALIZE, JOIN, MOVE, SYNC
+ * @param flowKey
+ */
+export const shouldValidate = (invokeType: string, flowKey: string) => {
+    return Settings.global('validation.when', flowKey).indexOf(invokeType.toLowerCase()) !== -1;
+};
 
 /**
  * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be taken from the models `validation` attribute, and a custom message
@@ -113,7 +121,7 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
  * @param flowKey
  */
 export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isNull(value, Component.contentTypes.string))
+    if (isRequired && isValueDefined(value, Component.contentTypes.string))
         return getRequiredResponse(message, flowKey);
 
     if (!validateRegex(value, regex))
@@ -131,13 +139,13 @@ export const validateString = (value: string, regex: string | null, message: str
  * @param flowKey
  */
 export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isNull(value, Component.contentTypes.number))
+    if (isRequired && isValueDefined(value, Component.contentTypes.number))
         return getRequiredResponse(message, flowKey);
 
     if (isNaN(value) && !Utils.isNullOrWhitespace(value))
         return getInvalidResponse(message, flowKey);
 
-    if (!validateRegex(value.toString(), regex))
+    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex))
         return getInvalidResponse(message, flowKey);
 
     return { isValid: true, validationMessage: null };
@@ -151,7 +159,7 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
  * @param flowKey
  */
 export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isNull(value, Component.contentTypes.boolean))
+    if (isRequired && isValueDefined(value, Component.contentTypes.boolean))
         return getRequiredResponse(message, flowKey);
 
     return { isValid: true, validationMessage: null };
@@ -165,7 +173,7 @@ export const validateBoolean = (value: boolean, message: string, isRequired: boo
  * @param flowKey
  */
 export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isNull(value, Component.contentTypes.object))
+    if (isRequired && isValueDefined(value, Component.contentTypes.object))
         return getRequiredResponse(message, flowKey);
 
     return { isValid: true, validationMessage: null };
@@ -179,8 +187,36 @@ export const validateObject = (value: object, message: string, isRequired: boole
  * @param flowKey
  */
 export const validateList = (value: Array<object>, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isNull(value, Component.contentTypes.list))
+    if (isRequired && isValueDefined(value, Component.contentTypes.list))
         return getRequiredResponse(message, flowKey);
 
     return { isValid: true, validationMessage: null };
+};
+
+/**
+ * Scroll to the first invalid element based on the selector in the `validation.scroll.selector` setting. Defaults to `.has-error`
+ * @param flowKey
+ */
+export const scrollToInvalidElement = (flowKey: string): void => {
+    if (Settings.global('validation.scroll.isEnabled', flowKey, false)) {
+        const invalidElement = document.querySelector(Settings.global('validation.scroll.selector', flowKey, '.has-error'));
+
+        if (invalidElement)
+            invalidElement.scrollIntoView();
+    }
+};
+
+/**
+ * Add an invalid notification populated with the message from the `localization.validation.notification` setting
+ * @param flowKey
+ */
+export const addNotification = (flowKey: string): void => {
+    if (Settings.global('validation.notification.isEnabled', flowKey, false))
+        Model.addNotification(flowKey, {
+            message: Settings.global('localization.validation.notification', flowKey),
+            position: 'center',
+            type: 'danger',
+            timeout: '0',
+            dismissible: true
+        });
 };

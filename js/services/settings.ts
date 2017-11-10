@@ -21,7 +21,8 @@ let globals = {
         status: null,
         validation: {
             required: 'This field is required',
-            invalid: 'This value is invalid'
+            invalid: 'This value is invalid',
+            notification: 'Page contains invalid values'
         },
         searchFirst: 'Perform a search to display results here'
     },
@@ -54,7 +55,7 @@ let globals = {
         url: 'https://cdn.tinymce.com/4/tinymce.min.js',
         fontSize: '14px',
         plugins: [
-            'advlist autolink link lists link image charmap print hr anchor spellchecker',
+            'advlist autolink link lists link image charmap print hr anchor',
             'searchreplace visualblocks fullscreen wordcount code insertdatetime',
             'media table directionality emoticons contextmenu paste textcolor'
         ],
@@ -114,7 +115,15 @@ let globals = {
         }
     },
     validation: {
-        isEnabled: false
+        isEnabled: false,
+        scroll: {
+            isEnabled: false,
+            selector: '.has-error'
+        },
+        notification: {
+            isEnabled: true
+        },
+        when: ['move']
     },
     location: {
         isTrackingEnabled: false

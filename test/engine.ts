@@ -437,10 +437,10 @@ test.serial('Parse Response', t => {
 
     const ping = sinon.stub(Engine, 'ping');
 
-    Engine.parseResponse(response, parser, true, flowKey);
+    Engine.parseResponse(response, parser, response.invokeType, flowKey);
 
     t.true(state.setState.calledWith(response.stateId, response.stateToken, response.currentMapElementId));
-    t.true(state.refreshComponents.calledWith([], true, flowKey));
+    t.true(state.refreshComponents.calledWith([], response.invokeType, flowKey));
     t.true(ping.calledOnce);
 });
 
