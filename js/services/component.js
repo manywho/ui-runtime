@@ -184,29 +184,29 @@ manywho.component = (function (manywho) {
         },
 
         getDisplayColumns: function (columns) {
-
+            
             var displayColumns = null;
-
-            if (columns) {
-
-                displayColumns = columns.filter(function (column) {
-                    if (column.properties) {
-                        var property = manywho.utils.getObjectDataProperty(column.properties, 'isDisplayValue');
-                        return property ? manywho.utils.isEqual(property.contentValue, 'true', true) : false;
-                    }
-                    else
-                        return column.isDisplayValue;
-                });
-
-            }
-
-            if (!displayColumns || displayColumns.length == 0) {
-
-                manywho.log.error('No display columns found');
-
-            }
-
-            return displayColumns;
+            
+                if (columns) {
+    
+                    displayColumns = columns.filter(function (column) {
+                        if (column.properties) {
+                            var property = manywho.utils.getObjectDataProperty(column.properties, 'isDisplayValue');
+                            return property ? manywho.utils.isEqual(property.contentValue, 'true', true) : false;
+                        }
+                        else
+                            return column.isDisplayValue;
+                    });
+    
+                }
+    
+                if (!displayColumns || displayColumns.length == 0) {
+    
+                    manywho.log.error('No display columns found');
+    
+                }
+    
+                return displayColumns;
 
         },
 
