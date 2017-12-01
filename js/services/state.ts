@@ -43,6 +43,9 @@ export const refreshComponents = (models: any, invokeType: string, flowKey: stri
     }
 };
 
+/**
+ * Return the users current location. Updated with `setLocation`
+ */
 export const getLocation = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return location[lookUpKey];
@@ -92,11 +95,20 @@ export const setUserTime = (flowKey: string) => {
         location[lookUpKey] = { time: now.format() };
 };
 
+/**
+ * Get the state of a specific component
+ * @param id Id of the component
+ * @param flowKey 
+ */
 export const getComponent = (id: string, flowKey: string): IComponentValue => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return (components[lookUpKey] || {})[id];
 };
 
+/**
+ * Get the state of every component
+ * @param flowKey 
+ */
 export const getComponents = (flowKey: string): Array<IComponentValue> => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return components[lookUpKey];
@@ -116,6 +128,7 @@ export interface IComponentValue {
 }
 
 /**
+ * Update the state of a single component. If clientside validation is enabled the new state will be validated first
  * @param push Set to true to call `Collaboration.push` after updating the component
  */
 export const setComponent = (id: string, value: IComponentValue, flowKey: string, push: boolean) => {
@@ -141,9 +154,14 @@ export const setComponent = (id: string, value: IComponentValue, flowKey: string
         Collaboration.push(id, value, flowKey);
 };
 
-export const setComponents = (value: any, flowKey: string) => {
+/**
+ * Overwrite the existing state of every component
+ * @param values The state of each component
+ * @param flowKey 
+ */
+export const setComponents = (values: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
-    components[lookUpKey] = value;
+    components[lookUpKey] = values;
 };
 
 export interface IPageComponentInputResponseRequest {
@@ -208,6 +226,12 @@ export const isAllValid = (flowKey: string): boolean => {
     return result;
 };
 
+/**
+ * Update the id, token, and map element id of the current state
+ * @param id The state id
+ * @param mapElementId Id of the map element the state is currently on
+ * @param flowKey 
+ */
 export const setState = (id: string, token: string, mapElementId: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
@@ -218,51 +242,84 @@ export const setState = (id: string, token: string, mapElementId: string, flowKe
     };
 };
 
+/**
+ * @ignore
+ */
 export const getState = (flowKey: string): any => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return state[lookUpKey];
 };
 
+/**
+ * @ignore
+ */
 export const setOptions = (flowOptions: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     options[lookUpKey] = flowOptions;
 };
 
+/**
+ * @ignore
+ */
 export const getOptions = (flowKey: string): any => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return options[lookUpKey];
 };
 
+/**
+ * @ignore
+ */
 export const setLogin = (loginData: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     login[lookUpKey] = loginData;
 };
 
+/**
+ * @ignore
+ */
 export const getLogin = (flowKey: string): any => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return login[lookUpKey];
 };
 
+/**
+ * Update the active authentication token for the current user
+ */
 export const setAuthenticationToken = (token: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     authenticationToken[lookUpKey] = token;
 };
 
+/**
+ * Get the authentication token for the current user
+ */
 export const getAuthenticationToken = (flowKey: string): string => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return authenticationToken[lookUpKey];
 };
 
+/**
+ * @ignore
+ */
 export const getSessionData = (flowKey: string): any => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return sessionId[lookUpKey];
 };
 
+/**
+ * @ignore
+ */
 export const setSessionData = (id: string, url: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     sessionId[lookUpKey] = { id, url };
 };
 
+/**
+ * Set the `loading` property of the component's state to `data`
+ * @param componentId 
+ * @param data 
+ * @param flowKey 
+ */
 export const setComponentLoading = (componentId: string, data: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 

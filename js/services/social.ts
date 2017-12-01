@@ -39,11 +39,17 @@ export const initialize = (flowKey: string, streamId: string) => {
         });
 };
 
+/**
+ * Get the currently active stream
+ */
 export const getStream = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return streams[lookUpKey];
 };
 
+/**
+ * Refresh the current page of messages via `Ajax.getSocialMessages` then display them in the feed
+ */
 export const refreshMessages = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 

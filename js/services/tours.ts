@@ -65,8 +65,15 @@ export interface ITourStep {
     order?: number
 }
 
+/**
+ * The currently active Tour
+ */
 export let current: ITour;
 
+/**
+ * Register tours that can be started later
+ * @param tours
+ */
 export const addTours = (tours: Array<ITour>) => {
     tours.forEach(tour => {
         configs[tour.id] = tour;
@@ -119,6 +126,10 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
         Log.error(`A Container matching the selector ${containerSelector} could not be found when attempting to start a Tour`);
 };
 
+/**
+ * Increment the `currentStep` of the tour. If the `currentStep` before the incrementing is the last step then call `done`
+ * @param tour The tour to progress, defaults to `current`
+ */
 export const next = (tour: ITour = current) => {
     if (!tour)
         return;
@@ -132,6 +143,10 @@ export const next = (tour: ITour = current) => {
     render();
 };
 
+/**
+ * Decrement the `currentStep` of the tour
+ * @param tour The tour to progress, defaults to `current`
+ */
 export const previous = (tour: ITour = current) => {
     if (!tour)
         return;
@@ -144,6 +159,7 @@ export const previous = (tour: ITour = current) => {
 
 /**
  * Move the `currentStep` of the tour to the provided `index` and re-render
+ * @param tour The tour to move, defaults to `current`
  */
 export const move = (tour: ITour = current, index) => {
     if (!tour)
@@ -162,6 +178,7 @@ export const move = (tour: ITour = current, index) => {
 
 /**
  * Either re-render the current step, or move through the tour until a matching target node is found, or if no target nodes can be found unmount the `.mw-tours` node
+ * @param tour The tour to move, defaults to `current`
  */
 export const refresh = (tour: ITour = current) => {
     if (!tour)
@@ -183,12 +200,17 @@ export const refresh = (tour: ITour = current) => {
 
 /**
  * Reset `current` to null and unmount the `.mw-tours` node
+ * @param tour The tour to move, defaults to `current`
  */
 export const done = (tour: ITour = current) => {
     current = null;
     ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
 };
 
+/**
+ * Re-render the tour in the `.mw-tours` container
+ * @param tour The tour to move, defaults to `current`
+ */
 export const render = (tour: ITour = current) => {
     if (!tour)
         return;

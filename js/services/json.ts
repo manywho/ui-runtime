@@ -2,7 +2,9 @@
  * A collection of helpers for generating request bodies for the various ajax requests
  */
 
- /** */
+ /**
+  * @ignore
+  */
 export const generateFlowInputs = (inputsData: any) => {
     if (inputsData && !Array.isArray(inputsData))
         inputsData = [inputsData];
@@ -38,6 +40,9 @@ export interface IFlowId {
     versionid?: string
 }
 
+/**
+  * @ignore
+  */
 export const generateInitializationRequest = (flowId: IFlowId, stateId?: string, annotations?, inputs?: Array<any>, playerUrl?: string, joinUrl?: string, mode?: string, reportingMode?: string) => {
     return {
         'flowId': {
@@ -54,6 +59,9 @@ export const generateInitializationRequest = (flowId: IFlowId, stateId?: string,
     };
 };
 
+/**
+  * @ignore
+  */
 export const generateInvokeRequest = (stateData: any, invokeType: string, selectedOutcomeId?: string, selectedMapElementId?: string, pageComponentInputResponses?: Array<any>, navigationElementId?: string, selectedNavigationElementId?: string, annotations?, location?: any, mode?: string) => {
     return {
         'stateId': stateData.id,
@@ -75,6 +83,9 @@ export const generateInvokeRequest = (stateData: any, invokeType: string, select
     };
 };
 
+/**
+  * @ignore
+  */
 export const generateNavigateRequest = (stateData: any, navigationId: string, navigationElementId: string, mapElementId: string, pageComponentInputResponses?: Array<any>, annotations?: any, location?: any) => {
     return {
         'stateId': stateData.id,
@@ -95,6 +106,9 @@ export const generateNavigateRequest = (stateData: any, navigationId: string, na
     };
 };
 
+/**
+  * @ignore
+  */
 export const generateSessionRequest = (sessionId: string, sessionUrl: string, loginUrl: string, username?: string, password?: string, token?: string) => {
     return {
         'sessionToken': sessionId,

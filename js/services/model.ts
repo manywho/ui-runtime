@@ -128,6 +128,12 @@ export interface INotification {
     position: string
 }
 
+/**
+ * Parse the engine response into the model for this state from a `FORWARD` invoke request. This will setup the model
+ * for things like: components, containers, outcomes, faults, votes, etc
+ * @param engineInvokeResponse 
+ * @param flowKey 
+ */
 export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -230,6 +236,11 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
         });
 };
 
+/**
+ * Parse the engine response into the model for this state from a `SYNC` invoke request
+ * @param response Response from `Ajax.invoke`
+ * @param flowKey 
+ */
 export const parseEngineSyncResponse = (response, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -257,6 +268,13 @@ export const parseEngineSyncResponse = (response, flowKey: string) => {
     }
 };
 
+/**
+ * Parse the navigation response from `Ajax.getNavigation` into the model for this state
+ * @param id Id of the navigation configuration in the flow
+ * @param response Navigation response returned by `Ajax.getNavigation`
+ * @param flowKey 
+ * @param currentMapElementId 
+ */
 export const parseNavigationResponse = (id: string, response, flowKey: string, currentMapElementId: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -303,11 +321,17 @@ export const parseNavigationResponse = (id: string, response, flowKey: string, c
         flowModel[lookUpKey].navigation[id].returnToParent = React.createElement(Component.getByName('returnToParent'), { flowKey: flowKey, parentStateId: parentStateId });
 };
 
+/**
+ * Get the label of the current page
+ */
 export const getLabel = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].label;
 };
 
+/**
+ * Get an ordered array of all the child models of a container
+ */
 export const getChildren = (containerId: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -331,16 +355,25 @@ export const getChildren = (containerId: string, flowKey: string) => {
     return children;
 };
 
+/**
+ * Get a container by id
+ */
 export const getContainer = (containerId: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].containers[containerId];
 };
 
+/**
+ * Get a component by id
+ */
 export const getComponent = (componentId: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].components[componentId];
 };
 
+/**
+ * Get a component by name
+ */
 export const getComponentByName = (name: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -356,11 +389,17 @@ export const getComponentByName = (name: string, flowKey: string) => {
     return null;
 };
 
+/**
+ * Get all the components
+ */
 export const getComponents = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].components;
 };
 
+/**
+ * Get an outcome by id
+ */
 export const getOutcome = (id: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -370,6 +409,7 @@ export const getOutcome = (id: string, flowKey: string) => {
 };
 
 /**
+ * Get all the outcomes for a container / component
  * @param id Id of the component or container that the outcomes are associated with
  */
 export const getOutcomes = (id: string, flowKey: string): Array<any> => {
@@ -389,6 +429,11 @@ export const getOutcomes = (id: string, flowKey: string): Array<any> => {
     });
 };
 
+/**
+ * Get currently active notifications for a given position
+ * @param flowKey 
+ * @param position `center`, `left`, `right` 
+ */
 export const getNotifications = (flowKey: string, position: string): Array<INotification> => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -399,6 +444,9 @@ export const getNotifications = (flowKey: string, position: string): Array<INoti
     return [];
 };
 
+/**
+ * Remove a notification
+ */
 export const removeNotification = (flowKey: string, notification: INotification) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -412,6 +460,9 @@ export const removeNotification = (flowKey: string, notification: INotification)
     }
 };
 
+/**
+ * Add a new notification
+ */
 export const addNotification = (flowKey: string, notification: INotification) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -425,16 +476,25 @@ export const addNotification = (flowKey: string, notification: INotification) =>
     }
 };
 
+/**
+ * @ignore
+ */
 export const getSelectedNavigation = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].selectedNavigation;
 };
 
+/**
+ * @ignore
+ */
 export const setSelectedNavigation = (navigationId: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     flowModel[lookUpKey].selectedNavigation = navigationId;
 };
 
+/**
+ * Get the model for a configured navigation by id
+ */
 export const getNavigation = (navigationId: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -443,6 +503,9 @@ export const getNavigation = (navigationId: string, flowKey: string) => {
         return flowModel[lookUpKey].navigation[navigationId];
 };
 
+/**
+ * Get the first navigation model configured for this flow
+ */
 export const getDefaultNavigationId = (flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -473,31 +536,49 @@ export const getItem = (id: string, flowKey: string) => {
         return item;
 };
 
+/**
+ * @ignore
+ */
 export const getInvokeType = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].invokeType;
 };
 
+/**
+ * @ignore
+ */
 export const getWaitMessage = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].waitMessage;
 };
 
+/**
+ * @ignore
+ */
 export const getPreCommitStateValues = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].preCommitStateValues;
 };
 
+/**
+ * @ignore
+ */
 export const getStateValues = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].stateValues;
 };
 
+/**
+ * @ignore
+ */
 export const getExecutionLog = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].executionLog;
 };
 
+/**
+ * @ignore
+ */
 export const setExecutionLog = (flowKey: string, executionLog) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     flowModel[lookUpKey].executionLog = executionLog;
@@ -592,6 +673,9 @@ export const popHistory = (mapElementId: string, flowKey: string) => {
     }
 };
 
+/**
+ * Check if an item has the property `containerType`
+ */
 export const isContainer = (item) => {
     return !Utils.isNullOrWhitespace(item.containerType);
 };
@@ -607,11 +691,17 @@ export const initializeModel = (flowKey: string) => {
         flowModel[lookUpKey] = {};
 };
 
+/**
+ * @ignore
+ */
 export const getAttributes = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].attributes;
 };
 
+/**
+ * @ignore
+ */
 export const getParentStateId = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].parentStateId;
@@ -628,11 +718,17 @@ export const deleteFlowModel = (flowKey: string) => {
     delete flowModel[lookUpKey];
 };
 
+/**
+ * @ignore
+ */
 export const getRootFaults = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].rootFaults || [];
 };
 
+/**
+ * Set this flow models `containers` property by iterating through the `containers` array merge with the matching container data in `data` 
+ */
 export const setContainers = (flowKey: string, containers: Array<any>, data: any, propertyName?: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -654,6 +750,9 @@ export const setContainers = (flowKey: string, containers: Array<any>, data: any
     }
 };
 
+/**
+ * Set this flow models `components` property by iterating through the `components` array merge with the matching container data in `data` 
+ */
 export const setComponents = (flowKey: string, components: Array<any>, data: any) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -684,17 +783,26 @@ export const setComponents = (flowKey: string, components: Array<any>, data: any
     }
 };
 
+/**
+ * @ignore
+ */
 export const setAttributes = (flowKey: string, attributes: any) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     flowModel[lookUpKey].attributes = attributes;
 };
 
+/**
+ * @ignore
+ */
 export const setModal = (flowKey: string, modal) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     flowModel[lookUpKey].modal = modal;
     Engine.render(flowKey);
 };
 
+/**
+ * @ignore
+ */
 export const getModal = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].modal;

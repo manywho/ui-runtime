@@ -222,7 +222,7 @@ export const global = (path: string, flowKey?: string, defaultValue?: any) => {
 };
 
 /**
- *
+ * Get a flow specific setting
  * @param path The nested path of the flow specific setting to retrieve e.g. `formatting.isEnabled`
  * @param flowKey
  */
@@ -236,7 +236,7 @@ export const flow = (path: string, flowKey: string) => {
 };
 
 /**
- *
+ * Get an event specific setting
  * @param path The nested path of the event specific setting to retrieve e.g. `invoke.done`
  */
 export const event = (path: string) => {
@@ -244,7 +244,7 @@ export const event = (path: string) => {
 };
 
 /**
- *
+ * Get a theme specific setting
  * @param path The nested path of the theme specific setting to retrieve
  */
 export const theme = (path: string) => {

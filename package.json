@@ -10,14 +10,16 @@
   "scripts": {
     "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
     "dist": "webpack -p --config webpack.prod.config.js && webpack -p --config webpack.npm.config.js && node bundle",
-    "lint": "tslint -c tslint.json js/**/*.ts --fix",
+    "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
+    "lint-docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
     "precommit": "lint-staged",
     "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\" --timeout=5s",
     "coverage": "nyc check-coverage --lines 80 --functions 80 --branches 80",
     "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
   },
   "lint-staged": {
-    "*.ts": "lint"
+    "*.ts": "lint",
+    "js/services/*.ts": "lint-docs"
   },
   "main": "publish/js/ui-core.js",
   "files": [
@@ -61,7 +63,8 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "socket.io": "^2.0.3",
-    "socket.io-client": "^2.0.3"
+    "socket.io-client": "^2.0.3",
+    "webpack-dashboard": "^1.0.2"
   },
   "ava": {
     "require": [

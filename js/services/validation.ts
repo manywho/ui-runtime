@@ -113,7 +113,7 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
 };
 
 /**
- *
+ * Validate a string against a regex and / or null check if required
  * @param value The string to validate
  * @param regex Regex to validate the string with.
  * @param message Custom validation message to be returned in an invalid response
@@ -131,7 +131,7 @@ export const validateString = (value: string, regex: string | null, message: str
 };
 
 /**
- *
+ * Validate a number against a regex and / or null check if required
  * @param value The number to validate
  * @param regex Regex to validate the number with. `toString()` will be called on the number first
  * @param message Custom validation message to be returned in an invalid response
@@ -152,7 +152,7 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
 };
 
 /**
- *
+ * Validate a boolean
  * @param value The boolean to validate
  * @param message Custom validation message to be returned in an invalid response
  * @param isRequired Set to true to return an invalid response if the the value false

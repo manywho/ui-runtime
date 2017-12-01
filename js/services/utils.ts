@@ -53,7 +53,9 @@ function extendArray (mergedArray, array) {
     return mergedArray;
 }
 
-
+/**
+ * Return `value` parsed as a number or zero
+ */
 export const getNumber = (value) => {
     let float = 0;
 
@@ -111,6 +113,9 @@ export const parseQueryString = (queryString: string): any => {
     return params;
 };
 
+/**
+ * @hidden
+ */
 export const extend = (mergedObject, objects, isDeep?: boolean) => {
     if (!mergedObject)
         return {};
@@ -130,6 +135,9 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
     return mergedObject;
 };
 
+/**
+ * @hidden
+ */
 export const extendObjectData = (mergedObjectData: Array<any>, objectData: Array<any>): Array<any>  => {
     if (objectData) {
         if (!mergedObjectData) {
@@ -157,6 +165,9 @@ export const extendObjectData = (mergedObjectData: Array<any>, objectData: Array
     return mergedObjectData;
 };
 
+/**
+ * Check if a string is `null` or only contains whitespace
+ */
 export const isNullOrWhitespace = (value: string): boolean => {
     if (isNullOrUndefined(value))
         return true;
@@ -164,14 +175,23 @@ export const isNullOrWhitespace = (value: string): boolean => {
     return value.replace(/\s/g, '').length < 1;
 };
 
+/**
+ * Check if a value is `null` or `undefined`
+ */
 export const isNullOrUndefined = (value: any): boolean => {
     return typeof value === 'undefined' || value === null;
 };
 
+/**
+ * Check if a string is `null` or ""
+ */
 export const isNullOrEmpty = (value: string): boolean => {
     return isNullOrUndefined(value) || value === '';
 };
 
+/**
+ * Check equality for two strings
+ */
 export const isEqual = (value1: string, value2: string, ignoreCase: boolean): boolean => {
     if (!value1 && !value2)
         return true;
@@ -201,11 +221,17 @@ export const convertToArray = (obj): Array<any> => {
     return items;
 };
 
+/**
+ * Check if an array contains item where the `key` property is equal to `id`
+ */
 export const contains = (collection: Array<any>, id: string, key: string) => {
     const selectedItem = collection.filter(item => item[key] === id);
     return (selectedItem && selectedItem.length > 0);
 };
 
+/**
+ * Get an item from an array where the `key` property of the item is equal to `id`
+ */
 export const get = (collection: Array<any>, id: string, key: string) => {
     const selectedItem = collection.filter(item => item[key] === id);
 
@@ -215,6 +241,9 @@ export const get = (collection: Array<any>, id: string, key: string) => {
     return null;
 };
 
+/**
+ * @hidden
+ */
 export const getAll = (map: any, id: string, key: string) => {
     const items = [];
 
@@ -226,42 +255,69 @@ export const getAll = (map: any, id: string, key: string) => {
     return items;
 };
 
+/**
+ * Construct a new flow key
+ */
 export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, stateId: string, element: string) {
     const args = Array.prototype.slice.call(arguments);
     return args.join('_');
 };
 
+/**
+ * Get a key in the format of `tenantid_stateid` derived from the `flowKey`
+ */
 export const getLookUpKey = (flowKey: string) => {
     if (flowKey)
         return [flowKey.split('_')[0], flowKey.split('_')[3]].join('_');
 };
 
+/**
+ * Get the `element` from a flow key
+ */
 export const extractElement = (flowKey: string) => {
     return flowKey.split('_')[4];
 };
 
+/**
+ * Get the `tenant id` from a flow key
+ */
 export const extractTenantId = (flowKey: string) => {
     return flowKey.split('_')[0];
 };
 
+/**
+ * Get the `flow id` from a flow key
+ */
 export const extractFlowId = (flowKey: string) => {
     return flowKey.split('_')[1];
 };
 
+/**
+ * Get the `flow version id` from a flow key
+ */
 export const extractFlowVersionId = (flowKey: string) => {
     return flowKey.split('_')[2];
 };
 
+/**
+ * Get the `state id` from a flow key
+ */
 export const extractStateId = (flowKey: string) => {
     return flowKey.split('_')[3];
 };
 
+/**
+ * @hidden
+ */
 export const removeLoadingIndicator = (id: string) => {
     const element = document.getElementById(id);
     if (element)
         element.parentNode.removeChild(element);
 };
 
+/**
+ * Check if the flow is running in an embedded scenario by checking if the `documentElement` has the `manywho` class applied
+ */
 export const isEmbedded = (): boolean => {
     return !document.documentElement.classList.contains('manywho');
 };
@@ -304,6 +360,9 @@ export const getValueByPath = (obj: any, path: string): any => {
     }
 };
 
+/**
+ * Unmount the flow from the DOM then remove the containing element
+ */
 export const removeFlowFromDOM = (flowKey) => {
     const lookUpKey = getLookUpKey(flowKey);
     const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
@@ -324,12 +383,18 @@ export const getObjectDataProperty = (properties: Array<any>, propertyName: stri
     return properties.find(property => isEqual(property.developerName, propertyName, true));
 };
 
+/**
+ * Set the `contentValue` of a property that matches the `propertyName`
+ */
 export const setObjectDataProperty = (properties: Array<any>, propertyName: string, value: string | number | boolean) => {
     const property = properties.find(property => isEqual(property.developerName, propertyName, true));
     if (property)
         property.contentValue = value;
 };
 
+/**
+ * Check if the models objectdata is empty
+ */
 export const isEmptyObjectData = (model): boolean => {
     if (model.objectDataRequest && model.objectData && model.objectData.length === 1)
         return isPlaceholderObjectData(model.objectData);
@@ -377,6 +442,9 @@ export const debounce = (func: Function, wait: number, immediate: boolean) => {
     };
 };
 
+/**
+ * Remove all traces of the flow from the model, settings, state, social, callbacks and DOM. Then inform collaboration the user has left.
+ */
 export const removeFlow = (flowKey: string) => {
     Model.deleteFlowModel(flowKey);
     removeFlowFromDOM(flowKey);

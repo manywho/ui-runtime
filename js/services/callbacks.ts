@@ -13,7 +13,7 @@ export interface ICallback {
 const callbacks = {};
 
 /**
- *
+ * Register a callback to be executed later
  * @param flowKey
  * @param options
  */

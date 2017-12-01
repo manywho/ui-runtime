@@ -177,6 +177,9 @@ export const initialize = (flowKey: string) => {
     }
 };
 
+/**
+ * Has `initialize` been called for this state
+ */
 export const isInitialized = (flowKey: string): boolean => {
     return rooms.hasOwnProperty(Utils.extractStateId(flowKey));
 };

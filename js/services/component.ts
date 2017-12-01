@@ -18,8 +18,14 @@ function getComponentType(item) {
     return null;
 }
 
+/**
+ * @hidden
+ */
 export const mixins = {};
 
+/**
+ * Enum of the supported content types
+ */
 export const contentTypes = {
     string: 'CONTENTSTRING',
     number: 'CONTENTNUMBER',

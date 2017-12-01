@@ -31,6 +31,22 @@ var config = {
                 }
             },
             {
+                test: /\.ts$/,
+                include: [
+                    path.resolve(__dirname, 'js/services'),
+                ],
+                enforce: 'pre',
+                loader: 'tslint-loader',
+                options: {
+                    emitErrors: true,
+                    failOnHint: true,
+                    fix: true,
+                    typeCheck: true,
+                    configFile: 'tslint.docs.json',
+                    tsConfigFile: 'tsconfig.list.json'
+                }
+            },
+            {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader',
                 exclude: [/node_modules/, /dist_test/],
