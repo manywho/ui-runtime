@@ -75,6 +75,9 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#addnotification" class="tsd-kind-icon">add<wbr>Notification</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#scrolltoinvalidelement" class="tsd-kind-icon">scroll<wbr>ToInvalid<wbr>Element</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#shouldvalidate" class="tsd-kind-icon">should<wbr>Validate</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#validate" class="tsd-kind-icon">validate</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#validateboolean" class="tsd-kind-icon">validate<wbr>Boolean</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_validation_.html#validatelist" class="tsd-kind-icon">validate<wbr>List</a></li>
@@ -89,6 +92,110 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="addnotification" class="tsd-anchor"></a>
+					<h3>add<wbr>Notification</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Notification<span class="tsd-signature-symbol">(</span>flowKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in validation.ts:213</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add an invalid notification populated with the message from the <code>localization.validation.notification</code> setting</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>flowKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="scrolltoinvalidelement" class="tsd-anchor"></a>
+					<h3>scroll<wbr>ToInvalid<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">scroll<wbr>ToInvalid<wbr>Element<span class="tsd-signature-symbol">(</span>flowKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in validation.ts:200</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Scroll to the first invalid element based on the selector in the <code>validation.scroll.selector</code> setting. Defaults to <code>.has-error</code></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>flowKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="shouldvalidate" class="tsd-anchor"></a>
+					<h3>should<wbr>Validate</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">should<wbr>Validate<span class="tsd-signature-symbol">(</span>invokeType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, flowKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in validation.ts:60</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the <code>validation.when</code> setting contains the <code>when</code> parameter, thus validation should be performed</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>invokeType: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>When to validate: INITIALIZE, JOIN, MOVE, SYNC</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>flowKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="validate" class="tsd-anchor"></a>
 					<h3>validate</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
@@ -98,7 +205,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L63">validation.ts:63</a></li>
+									<li>Defined in validation.ts:71</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -147,9 +254,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L153">validation.ts:153</a></li>
+									<li>Defined in validation.ts:161</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Validate a boolean</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -198,7 +310,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L181">validation.ts:181</a></li>
+									<li>Defined in validation.ts:189</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -254,9 +366,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L133">validation.ts:133</a></li>
+									<li>Defined in validation.ts:141</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Validate a number against a regex and / or null check if required</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -313,7 +430,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L167">validation.ts:167</a></li>
+									<li>Defined in validation.ts:175</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -369,9 +486,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/validation.ts#L115">validation.ts:115</a></li>
+									<li>Defined in validation.ts:123</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Validate a string against a regex and / or null check if required</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -486,6 +608,15 @@
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_validation_.ivalidationresult.html" class="tsd-kind-icon">IValidation<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_validation_.html#addnotification" class="tsd-kind-icon">add<wbr>Notification</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_validation_.html#scrolltoinvalidelement" class="tsd-kind-icon">scroll<wbr>ToInvalid<wbr>Element</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_validation_.html#shouldvalidate" class="tsd-kind-icon">should<wbr>Validate</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_validation_.html#validate" class="tsd-kind-icon">validate</a>

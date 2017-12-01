@@ -72,15 +72,12 @@
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#converttoarray" class="tsd-kind-icon">convert<wbr>ToArray</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#debounce" class="tsd-kind-icon">debounce</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extend" class="tsd-kind-icon">extend</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extendobjectdata" class="tsd-kind-icon">extend<wbr>Object<wbr>Data</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extractelement" class="tsd-kind-icon">extract<wbr>Element</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extractflowid" class="tsd-kind-icon">extract<wbr>Flow<wbr>Id</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extractflowversionid" class="tsd-kind-icon">extract<wbr>Flow<wbr>Version<wbr>Id</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extractstateid" class="tsd-kind-icon">extract<wbr>State<wbr>Id</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#extracttenantid" class="tsd-kind-icon">extract<wbr>Tenant<wbr>Id</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#getall" class="tsd-kind-icon">get<wbr>All</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#getflowkey" class="tsd-kind-icon">get<wbr>Flow<wbr>Key</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#getlookupkey" class="tsd-kind-icon">get<wbr>Look<wbr>UpKey</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#getnumber" class="tsd-kind-icon">get<wbr>Number</a></li>
@@ -98,7 +95,6 @@
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#parsequerystring" class="tsd-kind-icon">parse<wbr>Query<wbr>String</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#removeflow" class="tsd-kind-icon">remove<wbr>Flow</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#removeflowfromdom" class="tsd-kind-icon">remove<wbr>Flow<wbr>FromDOM</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#removeloadingindicator" class="tsd-kind-icon">remove<wbr>Loading<wbr>Indicator</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#replacebrowserurl" class="tsd-kind-icon">replace<wbr>Browser<wbr>Url</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#setobjectdataproperty" class="tsd-kind-icon">set<wbr>Object<wbr>Data<wbr>Property</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_utils_.html#whenall" class="tsd-kind-icon">when<wbr>All</a></li>
@@ -119,9 +115,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L204">utils.ts:204</a></li>
+									<li>Defined in utils.ts:227</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if an array contains item where the <code>key</code> property is equal to <code>id</code></p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -148,7 +149,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L191">utils.ts:191</a></li>
+									<li>Defined in utils.ts:211</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -176,7 +177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L360">utils.ts:360</a></li>
+									<li>Defined in utils.ts:425</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,61 +202,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="extend" class="tsd-anchor"></a>
-					<h3>extend</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">extend<span class="tsd-signature-symbol">(</span>mergedObject<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, objects<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, isDeep<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L114">utils.ts:114</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>mergedObject: <span class="tsd-signature-type">any</span></h5>
-								</li>
-								<li>
-									<h5>objects: <span class="tsd-signature-type">any</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isDeep: <span class="tsd-signature-type">boolean</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="extendobjectdata" class="tsd-anchor"></a>
-					<h3>extend<wbr>Object<wbr>Data</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">extend<wbr>Object<wbr>Data<span class="tsd-signature-symbol">(</span>mergedObjectData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, objectData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L133">utils.ts:133</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>mergedObjectData: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-								<li>
-									<h5>objectData: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="extractelement" class="tsd-anchor"></a>
 					<h3>extract<wbr>Element</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
@@ -265,9 +211,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L239">utils.ts:239</a></li>
+									<li>Defined in utils.ts:277</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the <code>element</code> from a flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -288,9 +239,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L247">utils.ts:247</a></li>
+									<li>Defined in utils.ts:291</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the <code>flow id</code> from a flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -311,9 +267,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L251">utils.ts:251</a></li>
+									<li>Defined in utils.ts:298</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the <code>flow version id</code> from a flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -334,9 +295,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L255">utils.ts:255</a></li>
+									<li>Defined in utils.ts:305</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the <code>state id</code> from a flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -357,9 +323,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L243">utils.ts:243</a></li>
+									<li>Defined in utils.ts:284</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the <code>tenant id</code> from a flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -380,9 +351,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L209">utils.ts:209</a></li>
+									<li>Defined in utils.ts:235</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get an item from an array where the <code>key</code> property of the item is equal to <code>id</code></p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -400,35 +376,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="getall" class="tsd-anchor"></a>
-					<h3>get<wbr>All</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>All<span class="tsd-signature-symbol">(</span>map<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L218">utils.ts:218</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>map: <span class="tsd-signature-type">any</span></h5>
-								</li>
-								<li>
-									<h5>id: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>key: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="getflowkey" class="tsd-anchor"></a>
 					<h3>get<wbr>Flow<wbr>Key</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
@@ -438,9 +385,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L229">utils.ts:229</a></li>
+									<li>Defined in utils.ts:261</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a new flow key</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -473,9 +425,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L234">utils.ts:234</a></li>
+									<li>Defined in utils.ts:269</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a key in the format of <code>tenantid_stateid</code> derived from the <code>flowKey</code></p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -496,9 +453,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L57">utils.ts:57</a></li>
+									<li>Defined in utils.ts:59</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return <code>value</code> parsed as a number or zero</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -519,7 +481,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L323">utils.ts:323</a></li>
+									<li>Defined in utils.ts:382</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -550,7 +512,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L280">utils.ts:280</a></li>
+									<li>Defined in utils.ts:336</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -581,7 +543,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L397">utils.ts:397</a></li>
+									<li>Defined in utils.ts:465</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -603,9 +565,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L265">utils.ts:265</a></li>
+									<li>Defined in utils.ts:321</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the flow is running in an embedded scenario by checking if the <code>documentElement</code> has the <code>manywho</code> class applied</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
@@ -620,9 +587,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L333">utils.ts:333</a></li>
+									<li>Defined in utils.ts:398</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the models objectdata is empty</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -643,9 +615,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L175">utils.ts:175</a></li>
+									<li>Defined in utils.ts:195</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check equality for two strings</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -672,9 +649,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L171">utils.ts:171</a></li>
+									<li>Defined in utils.ts:188</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if a string is <code>null</code> or &quot;&quot;</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -695,9 +677,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L167">utils.ts:167</a></li>
+									<li>Defined in utils.ts:181</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if a value is <code>null</code> or <code>undefined</code></p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -718,9 +705,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L160">utils.ts:160</a></li>
+									<li>Defined in utils.ts:171</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if a string is <code>null</code> or only contains whitespace</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -741,7 +733,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L345">utils.ts:345</a></li>
+									<li>Defined in utils.ts:410</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -769,7 +761,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L272">utils.ts:272</a></li>
+									<li>Defined in utils.ts:328</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -797,7 +789,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L98">utils.ts:98</a></li>
+									<li>Defined in utils.ts:100</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -825,9 +817,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L380">utils.ts:380</a></li>
+									<li>Defined in utils.ts:448</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove all traces of the flow from the model, settings, state, social, callbacks and DOM. Then inform collaboration the user has left.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -848,36 +845,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L307">utils.ts:307</a></li>
+									<li>Defined in utils.ts:366</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unmount the flow from the DOM then remove the containing element</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>flowKey: <span class="tsd-signature-type">any</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="removeloadingindicator" class="tsd-anchor"></a>
-					<h3>remove<wbr>Loading<wbr>Indicator</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Loading<wbr>Indicator<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L259">utils.ts:259</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>id: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -894,7 +873,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L73">utils.ts:73</a></li>
+									<li>Defined in utils.ts:75</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -922,9 +901,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L327">utils.ts:327</a></li>
+									<li>Defined in utils.ts:389</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the <code>contentValue</code> of a property that matches the <code>propertyName</code></p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -951,7 +935,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/b8e0e34/js/services/utils.ts#L413">utils.ts:413</a></li>
+									<li>Defined in utils.ts:481</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1045,12 +1029,6 @@
 						<a href="_utils_.html#debounce" class="tsd-kind-icon">debounce</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_utils_.html#extend" class="tsd-kind-icon">extend</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_utils_.html#extendobjectdata" class="tsd-kind-icon">extend<wbr>Object<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_utils_.html#extractelement" class="tsd-kind-icon">extract<wbr>Element</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
@@ -1067,9 +1045,6 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_utils_.html#get" class="tsd-kind-icon">get</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_utils_.html#getall" class="tsd-kind-icon">get<wbr>All</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_utils_.html#getflowkey" class="tsd-kind-icon">get<wbr>Flow<wbr>Key</a>
@@ -1121,9 +1096,6 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_utils_.html#removeflowfromdom" class="tsd-kind-icon">remove<wbr>Flow<wbr>FromDOM</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_utils_.html#removeloadingindicator" class="tsd-kind-icon">remove<wbr>Loading<wbr>Indicator</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_utils_.html#replacebrowserurl" class="tsd-kind-icon">replace<wbr>Browser<wbr>Url</a>
