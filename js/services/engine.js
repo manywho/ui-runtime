@@ -145,7 +145,7 @@ manywho.engine = (function (manywho) {
 
         var alert = document.createElement('div');
         alert.className = 'alert alert-danger initialize-error';
-        alert.innerText = response.statusText;
+        alert.innerText = response.responseText || response.statusText;
 
         container.insertBefore(alert, container.children[0]);
 
