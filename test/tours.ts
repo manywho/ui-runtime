@@ -1,26 +1,26 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const reactDOM = {
     default: {
         render: sinon.stub(),
-        unmountComponentAtNode: sinon.stub()
-    }
+        unmountComponentAtNode: sinon.stub(),
+    },
 };
 
 const react = {
-    createElement: sinon.stub()
+    createElement: sinon.stub(),
 };
 
 const log = {
     error: sinon.stub(),
-    warning: sinon.stub()
+    warning: sinon.stub(),
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('react', react);
@@ -33,10 +33,10 @@ import * as Component from '../js/services/component';
 const id = 'test-tour';
 const flowKey = 'key1_key2_key3_key4';
 
-test.before(t => {
+test.before((t) => {
     Tours.addTours([
         {
-            id: id,
+            id,
             currentStep: 0,
             steps: [
                 {
@@ -45,7 +45,7 @@ test.before(t => {
                     content: 'step 1 content',
                     placement: 'left',
                     showBack: true,
-                    showNext: true
+                    showNext: true,
                 },
                 {
                     target: '.tour-target-2',
@@ -53,7 +53,7 @@ test.before(t => {
                     content: 'step 2 content',
                     placement: 'left',
                     showBack: true,
-                    showNext: true
+                    showNext: true,
                 },
                 {
                     target: '.tour-target-3',
@@ -61,15 +61,15 @@ test.before(t => {
                     content: 'step 3 content',
                     placement: 'left',
                     showBack: true,
-                    showNext: true
-                }
-            ]
+                    showNext: true,
+                },
+            ],
         },
         {
             id: 'tour2',
             currentStep: 0,
-            steps: []
-        }
+            steps: [],
+        },
     ]);
 
     const container = document.createElement('div');
@@ -78,14 +78,14 @@ test.before(t => {
     document.body.appendChild(container);
 });
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     react.createElement.resetHistory();
     reactDOM.default.render.resetHistory();
     log.error.resetHistory();
     log.warning.resetHistory();
 });
 
-test.after(t => {
+test.after((t) => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -94,11 +94,14 @@ test.cb('Start 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     t.is(tour.currentStep, 0);
 
-    setTimeout(() => {
-        t.is(reactDOM.default.render.callCount, 1);
-        t.is(react.createElement.callCount, 1);
-        t.end();
-    }, 600);
+    setTimeout(
+        () => {
+            t.is(reactDOM.default.render.callCount, 1);
+            t.is(react.createElement.callCount, 1);
+            t.end();
+        },
+        600,
+    );
 });
 
 test('Start 2', (t) => {
@@ -119,16 +122,22 @@ test('Start 4', (t) => {
 test.cb('Next 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
 
-    setTimeout(() => {
-        Tours.next(tour);
+    setTimeout(
+        () => {
+            Tours.next(tour);
 
-        setTimeout(() => {
-            t.is(reactDOM.default.render.callCount, 3, 'Render');
-            t.is(react.createElement.callCount, 3, 'Create Element');
-            t.is(tour.currentStep, 1, 'Current Step');
-            t.end();
-        }, 600);
-    }, 600);
+            setTimeout(
+                () => {
+                    t.is(reactDOM.default.render.callCount, 3, 'Render');
+                    t.is(react.createElement.callCount, 3, 'Create Element');
+                    t.is(tour.currentStep, 1, 'Current Step');
+                    t.end();
+                },
+                600,
+            );
+        },
+        600,
+    );
 });
 
 test('Next 2', (t) => {
@@ -149,21 +158,29 @@ test('Next 3', (t) => {
 test.cb('Previous 1', (t) => {
     Tours.start(null, '.container', flowKey);
 
-    setTimeout(() => {
-        Tours.next();
+    setTimeout(
+        () => {
+            Tours.next();
 
-        setTimeout(() => {
-            Tours.previous();
+            setTimeout(
+                () => {
+                    Tours.previous();
 
-            setTimeout(() => {
-                t.is(reactDOM.default.render.callCount, 4, 'Render');
-                t.is(react.createElement.callCount, 4, 'Creat Element');
-                t.is(Tours.current.currentStep, 0, 'Current Step');
-                t.end();
-            }, 600);
-        }, 600);
-
-    }, 600);
+                    setTimeout(
+                        () => {
+                            t.is(reactDOM.default.render.callCount, 4, 'Render');
+                            t.is(react.createElement.callCount, 4, 'Creat Element');
+                            t.is(Tours.current.currentStep, 0, 'Current Step');
+                            t.end();
+                        },
+                        600,
+                    );
+                },
+                600,
+            );
+        },
+        600,
+    );
 });
 
 test('Previous 2', (t) => {

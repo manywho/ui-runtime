@@ -1,29 +1,29 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as moment from 'moment';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const validation = {
     validate: sinon.stub(),
-    shouldValidate: sinon.stub().returns(true)
+    shouldValidate: sinon.stub().returns(true),
 };
 
 const model = {
     getComponents: sinon.stub().returns({
-        id: {}
+        id: {},
     }),
     getComponent: sinon.stub().returns({
-        isRequired: true
-    })
+        isRequired: true,
+    }),
 };
 
 const collaboration = {
-    push: sinon.stub()
+    push: sinon.stub(),
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('./model', model);
@@ -35,7 +35,7 @@ import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     State.remove(flowKey);
     validation.validate.resetHistory();
     model.getComponents.resetHistory();
@@ -43,7 +43,7 @@ test.beforeEach(t => {
     collaboration.push.resetHistory();
 });
 
-test.after(t => {
+test.after((t) => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -51,8 +51,8 @@ test.after(t => {
 test('Set Component Loading', (t) => {
     const expected = {
         loading: {
-            message: 'loading'
-        }
+            message: 'loading',
+        },
     };
 
     State.setComponentLoading('id', expected.loading, flowKey);
@@ -64,8 +64,8 @@ test('Set Component Error String', (t) => {
     const expected = {
         error: {
             id: 'id',
-            message: 'error message'
-        }
+            message: 'error message',
+        },
     };
 
     State.setComponentError('id', 'error message', flowKey);
@@ -77,8 +77,8 @@ test('Set Component Error Object', (t) => {
     const expected = {
         error: {
             message: 'error message',
-            id: 'id'
-        }
+            id: 'id',
+        },
     };
 
     State.setComponentError('id', { message: 'error message' }, flowKey);
@@ -88,7 +88,7 @@ test('Set Component Error Object', (t) => {
 
 test('Set Component Error Remove', (t) => {
     const expected = {
-        error: null
+        error: null,
     };
 
     State.setComponentError('id', { message: 'error message' }, flowKey);
@@ -100,7 +100,7 @@ test('Set Component Error Remove', (t) => {
 test('Set Session Data', (t) => {
     const expected = {
         id: 'id',
-        url: 'url'
+        url: 'url',
     };
 
     State.setSessionData(expected.id, expected.url, flowKey);
@@ -122,7 +122,7 @@ test('Set State', (t) => {
     const expected = {
         id: 'id',
         token: 'token',
-        currentMapElementId: 'currentMapElementId'
+        currentMapElementId: 'currentMapElementId',
     };
 
     State.setState(expected.id, expected.token, expected.currentMapElementId, flowKey);
@@ -137,11 +137,14 @@ test('Set User Time', (t) => {
 test('Set User Time With Offset', (t) => {
     t.plan(2);
 
-    Settings.initialize({
-        i18n: {
-            timezoneOffset: -8
-        }
-    }, null);
+    Settings.initialize(
+        {
+            i18n: {
+                timezoneOffset: -8,
+            },
+        },
+        null,
+    );
 
     State.setUserTime(flowKey);
 
@@ -157,8 +160,8 @@ test.serial('Input Responses', (t) => {
         'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6': {
             pageComponentId: 'dd5b8fd9-1f25-4e57-a53e-135d94faf7a6',
             contentValue: 'value',
-            objectData: []
-        }
+            objectData: [],
+        },
     };
 
     State.setComponents(components, flowKey);
@@ -167,12 +170,15 @@ test.serial('Input Responses', (t) => {
 });
 
 test('Set Location', (t) => {
-    Settings.initialize({
-        trackLocation: true,
-        i18n: {
-            timezoneOffset: null
-        }
-    }, null);
+    Settings.initialize(
+        {
+            trackLocation: true,
+            i18n: {
+                timezoneOffset: null,
+            },
+        },
+        null,
+    );
 
     const expected = {
         latitude: 1,
@@ -182,13 +188,13 @@ test('Set Location', (t) => {
         altitudeAccuracy: 5,
         heading: 6,
         speed: 7,
-        time: moment().format()
+        time: moment().format(),
     };
 
     (window.navigator.geolocation as any) = {
-        getCurrentPosition: function(callback) {
+        getCurrentPosition: (callback) => {
             callback({ coords: expected });
-        }
+        },
     };
 
     State.setLocation(flowKey);
@@ -204,14 +210,14 @@ test('Refresh Components', (t) => {
         objectData: [
             {
                 id: 'item1',
-                isSelected: true
+                isSelected: true,
             },
             {
                 id: 'item2',
-                isSelected: false
-            }
+                isSelected: false,
+            },
         ],
-        contentValue: 'value'
+        contentValue: 'value',
     };
 
     const expected = {};
@@ -220,9 +226,9 @@ test('Refresh Components', (t) => {
         objectData: [
             {
                 id: 'item1',
-                isSelected: true
-            }
-        ]
+                isSelected: true,
+            },
+        ],
     };
 
     State.refreshComponents(models, 'wait', flowKey);
@@ -234,25 +240,25 @@ test('Set Component', (t) => {
         .onFirstCall()
         .returns({
             isValid: false,
-            validationMessage: 'message'
+            validationMessage: 'message',
         });
 
     validation.validate
         .returns({
             isValid: true,
-            validationMessage: null
+            validationMessage: null,
         });
 
     const models = {
         id: {
-            isValid: false
-        }
+            isValid: false,
+        },
     };
     State.refreshComponents(models, 'move', flowKey);
 
     const values = {
         contentValue: 'value',
-        objectData: []
+        objectData: [],
     };
     State.setComponent('id', values, flowKey, true);
 
@@ -260,7 +266,7 @@ test('Set Component', (t) => {
         contentValue: 'value',
         isValid: true,
         objectData: [],
-        validationMessage: null
+        validationMessage: null,
     };
 
     t.deepEqual(State.getComponent('id', flowKey), expected);
@@ -272,11 +278,11 @@ test('Set Component', (t) => {
 test('Validation', (t) => {
     validation.validate.returns({
         isValid: false,
-        validationMessage: 'message'
+        validationMessage: 'message',
     });
 
     const models = {
-        id: {}
+        id: {},
     };
     State.refreshComponents(models, 'move', flowKey);
 
@@ -284,7 +290,7 @@ test('Validation', (t) => {
         contentValue: null,
         objectData: undefined,
         isValid: false,
-        validationMessage: 'message'
+        validationMessage: 'message',
     };
 
     t.is(State.isAllValid(flowKey), false);

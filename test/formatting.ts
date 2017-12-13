@@ -1,16 +1,19 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as moment from 'moment';
 import * as Formatting from '../js/services/formatting';
 import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(t => {
-    Settings.initialize({
-        formatting: {
-            isEnabled: true
-        }
-    }, null);
+test.beforeEach((t) => {
+    Settings.initialize(
+        {
+            formatting: {
+                isEnabled: true,
+            },
+        }, 
+        null,
+    );
 });
 
 test('Initialize', (t) => {
@@ -19,11 +22,14 @@ test('Initialize', (t) => {
 });
 
 test('Disabled', (t) => {
-    Settings.initialize({
-        formatting: {
-            isEnabled: false
-        }
-    }, null);
+    Settings.initialize(
+        {
+            formatting: {
+                isEnabled: false,
+            },
+        }, 
+        null,
+    );
     t.is(Formatting.format('test', 'format', null, flowKey), 'test');
 });
 
@@ -56,17 +62,20 @@ test('Moment Format', (t) => {
 
     t.plan(mappings.length);
 
-    mappings.forEach(mapping => {
+    mappings.forEach((mapping) => {
         t.is(Formatting.toMomentFormat(mapping.format), mapping.moment);
     });
 });
 
 test('DateTime Disabled', (t) => {
-    Settings.initialize({
-        formatting: {
-            isEnabled: false
-        }
-    }, null);
+    Settings.initialize(
+        {
+            formatting: {
+                isEnabled: false,
+            },
+        }, 
+        null,
+    );
 
     const expected = moment();
 
@@ -82,11 +91,14 @@ test('DateTime Year', (t) => {
 });
 
 test('Override Timezone Offset', (t) => {
-    Settings.initialize({
-        i18n: {
-            overrideTimezoneOffset: true
-        }
-    }, null);
+    Settings.initialize(
+        {
+            i18n: {
+                overrideTimezoneOffset: true,
+            },
+        },
+        null,
+    );
 
     const now = moment();
     const expected = moment();
@@ -100,12 +112,15 @@ test('DateTime Invalid', (t) => {
 });
 
 test('Timezone Offset', (t) => {
-    Settings.initialize({
-        i18n: {
-            overrideTimezoneOffset: true,
-            timezoneOffset: -8
-        }
-    }, null);
+    Settings.initialize(
+        {
+            i18n: {
+                overrideTimezoneOffset: true,
+                timezoneOffset: -8,
+            },
+        },
+        null,
+    );
 
     t.is(Formatting.dateTime(moment().format(), 'Z', flowKey), '-08:00');
 });

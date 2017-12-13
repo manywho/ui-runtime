@@ -10,7 +10,7 @@ const containers = {};
  * @param id Id of the target component, container or outcome
  * @param type Adds a default class of this type prefixed with `mw-` .e.g `mw-input` for an input type
  */
-export const getClasses = (parentId: string, id: string, type: string, flowKey: string): Array<string> => {
+export const getClasses = (parentId: string, id: string, type: string, flowKey: string): string[] => {
     const parent = Model.getContainer(parentId, flowKey);
     const model = Model.getItem(id, flowKey);
     let classes = [];
@@ -55,7 +55,7 @@ export const getClasses = (parentId: string, id: string, type: string, flowKey: 
  * @param containerType Type name of the container as it appears in the metadata e.g. `VERTICAL_FLOW`
  * @param classes Class names to include with this container type
  */
-export const registerContainer = (containerType: string, classes: string | Array<string> | Function) => {
+export const registerContainer = (containerType: string, classes: string | string[] | Function) => {
     containers[containerType.toLowerCase()] = classes;
 };
 
@@ -64,6 +64,6 @@ export const registerContainer = (containerType: string, classes: string | Array
  * @param componentType Type name of the component as it appears in the metadata e.g. `input`
  * @param classes Class names to include with this component type
  */
-export const registerComponent = (componentType: string, classes: string | Array<string> | Function) => {
+export const registerComponent = (componentType: string, classes: string | string[] | Function) => {
     components[componentType.toLowerCase()] = classes;
 };

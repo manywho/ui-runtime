@@ -1,16 +1,16 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const reactDOM = {
     default: {
-        unmountComponentAtNode: sinon.stub()
-    }
+        unmountComponentAtNode: sinon.stub(),
+    },
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('react-dom', reactDOM);
@@ -30,7 +30,7 @@ test('Get Number NaN', (t) => {
 test('Parse Query String', (t) => {
     const expected = {
         param1: 'value',
-        param2: 'value'
+        param2: 'value',
     };
     t.deepEqual(Utils.parseQueryString('param1=value&param2=value'), expected);
 });
@@ -40,10 +40,10 @@ test('Is Placeholder Objectdata', (t) => {
         {
             properties: {
                 property1: {
-                    contentValue: null
-                }
-            }
-        }
+                    contentValue: null,
+                },
+            },
+        },
     ];
     t.is(Utils.isPlaceholderObjectData(objectData), true);
 });
@@ -53,10 +53,10 @@ test('Is Not Placeholder Objectdata 1', (t) => {
         {
             properties: {
                 property1: {
-                    contentValue: 'value'
-                }
-            }
-        }
+                    contentValue: 'value',
+                },
+            },
+        },
     ];
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
@@ -68,7 +68,7 @@ test('Is Not Placeholder Objectdata 1', (t) => {
 
 test('Is Empty Objectdata 1', (t) => {
     const model = {
-        objectData: {}
+        objectData: {},
     };
     t.is(Utils.isEmptyObjectData(model), false);
 });
@@ -82,8 +82,8 @@ test('Is Empty Objectdata 3', (t) => {
     const model = {
         objectDataRequest: {},
         objectData: [
-            {}
-        ]
+            {},
+        ],
     };
     t.is(Utils.isEmptyObjectData(model), true);
 });
@@ -91,11 +91,11 @@ test('Is Empty Objectdata 3', (t) => {
 test('Get ObjectData Property', (t) => {
     const properties = [
         {
-            developerName: 'test'
-        }
+            developerName: 'test',
+        },
     ];
     const expected = {
-        developerName: 'test'
+        developerName: 'test',
     };
     t.deepEqual(Utils.getObjectDataProperty(properties, 'test'), expected);
 });
@@ -104,12 +104,12 @@ test('Set ObjectData Property', (t) => {
     const properties = [
         {
             developerName: 'test',
-            contentValue: null
-        }
+            contentValue: null,
+        },
     ];
     const expected = {
         developerName: 'test',
-        contentValue: 'value'
+        contentValue: 'value',
     };
 
     Utils.setObjectDataProperty(properties, 'test', 'value');
@@ -155,7 +155,7 @@ test('Is Equal 2', (t) => {
 
 test('Get', (t) => {
     const expected: any = {
-        key: 'key'
+        key: 'key',
     };
 
     const collection = [expected];
@@ -166,20 +166,20 @@ test('Get', (t) => {
 test('Get All', (t) => {
     const map: any = {
         item1: {
-            id: 'id'
+            id: 'id',
         },
         item2: {
-            id: 'id'
-        }
+            id: 'id',
+        },
     };
 
     const expected = [
         {
-            id: 'id'
+            id: 'id',
         },
         {
-            id: 'id'
-        }
+            id: 'id',
+        },
     ];
 
     t.deepEqual(Utils.getAll(map, 'id', 'id'), expected);
@@ -187,7 +187,7 @@ test('Get All', (t) => {
 
 test('Contains', (t) => {
     const expected: any = {
-        key: 'key'
+        key: 'key',
     };
 
     const collection = [expected];
@@ -208,16 +208,16 @@ test('Remove Loading Indicator', (t) => {
 
 test('Extend', (t) => {
     const source = {
-        prop1: 'value'
+        prop1: 'value',
     };
 
     const target = {
-        prop2: 'value'
+        prop2: 'value',
     };
 
     const expected = {
         prop1: 'value',
-        prop2: 'value'
+        prop2: 'value',
     };
 
     t.deepEqual(Utils.extend(source, target, false), expected);
@@ -239,7 +239,7 @@ test.cb('Debounce', (t) => {
     debounced();
 });
 
-test('Remove Flow From DOM', t => {
+test('Remove Flow From DOM', (t) => {
     const container = document.createElement('div');
     container.id = 'manywho';
 
@@ -255,47 +255,47 @@ test('Remove Flow From DOM', t => {
     t.true(container.children.length === 0);
 });
 
-test('Extend Objectdata', t => {
+test('Extend Objectdata', (t) => {
 
     const mergedObjectData = [
         {
             developerName: 'property1',
-            contentValue: 'value1'
+            contentValue: 'value1',
         },
         {
             developerName: 'property2',
-            contentValue: 'value2'
+            contentValue: 'value2',
         },
         {
             developerName: 'property3',
-            objectData: 'objectData1'
-        }
+            objectData: 'objectData1',
+        },
     ];
 
     const objectData = [
         {
             developerName: 'property2',
-            contentValue: 'value3'
+            contentValue: 'value3',
         },
         {
             developerName: 'property3',
-            objectData: 'objectData2'
-        }
+            objectData: 'objectData2',
+        },
     ];
 
     const expected = [
         {
             developerName: 'property1',
-            contentValue: 'value1'
+            contentValue: 'value1',
         },
         {
             developerName: 'property2',
-            contentValue: 'value3'
+            contentValue: 'value3',
         },
         {
             developerName: 'property3',
-            objectData: 'objectData2'
-        }
+            objectData: 'objectData2',
+        },
     ];
 
     t.deepEqual(Utils.extendObjectData(mergedObjectData, objectData), expected);

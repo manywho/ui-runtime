@@ -1,24 +1,24 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as Json from '../js/services/json';
 
 test('Flow Inputs (object)', (t) => {
     const inputs = {
         value: {
             contentType: 'contentType',
-            developerName: 'developerName'
-        }
+            developerName: 'developerName',
+        },
     };
 
     const expected: any = [
         {
             contentType: 'contentType',
-            developerName: 'developerName'
-        }
+            developerName: 'developerName',
+        },
     ];
 
     const actual = Json.generateFlowInputs(inputs);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Flow Inputs', (t) => {
@@ -29,60 +29,60 @@ test('Flow Inputs', (t) => {
         {
             object: {
                 objectData: ['item'],
-                typeElementDeveloperName: 'typeElementDeveloperName'
-            }
+                typeElementDeveloperName: 'typeElementDeveloperName',
+            },
         },
         {
             list: {
                 objectData: ['item', 'item'],
-                typeElementDeveloperName: 'typeElementDeveloperName'
-            }
+                typeElementDeveloperName: 'typeElementDeveloperName',
+            },
         },
         {
             value: {
                 contentType: 'contentType',
-                developerName: 'developerName'
-            }
-        }
+                developerName: 'developerName',
+            },
+        },
     ];
 
     const expected: any = [
         {
-            'contentType': 'ContentString',
-            'contentValue': 'value',
-            'developerName': 'simple',
-            'objectData': null,
-            'typeElementDeveloperName': null
+            contentType: 'ContentString',
+            contentValue: 'value',
+            developerName: 'simple',
+            objectData: null,
+            typeElementDeveloperName: null,
         },
         {
-            'contentType': 'ContentObject',
-            'contentValue': null,
-            'developerName': 'object',
-            'objectData': ['item'],
-            'typeElementDeveloperName': 'typeElementDeveloperName'
+            contentType: 'ContentObject',
+            contentValue: null,
+            developerName: 'object',
+            objectData: ['item'],
+            typeElementDeveloperName: 'typeElementDeveloperName',
         },
         {
-            'contentType': 'ContentList',
-            'contentValue': null,
-            'developerName': 'list',
-            'objectData': ['item', 'item'],
-            'typeElementDeveloperName': 'typeElementDeveloperName'
+            contentType: 'ContentList',
+            contentValue: null,
+            developerName: 'list',
+            objectData: ['item', 'item'],
+            typeElementDeveloperName: 'typeElementDeveloperName',
         },
         {
             contentType: 'contentType',
-            developerName: 'developerName'
-        }
+            developerName: 'developerName',
+        },
     ];
 
     const actual = Json.generateFlowInputs(inputs);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Intialization Request', (t) => {
     const flowId: any = {
         id: 'id',
-        versionId: 'versionId'
+        versionId: 'versionId',
     };
 
     const stateId = 'stateId';
@@ -94,20 +94,20 @@ test('Intialization Request', (t) => {
     const reportingMode = 'reportingMode';
 
     const expected: any = {
-        'flowId': flowId,
-        'stateId': stateId,
-        'annotations': annotations,
-        'inputs': inputs,
-        'playerUrl': playerUrl,
-        'joinPlayerUrl': joinUrl,
-        'mode': mode,
-        'reportingMode': reportingMode
+        flowId,
+        stateId,
+        annotations,
+        inputs,
+        playerUrl,
+        mode,
+        reportingMode,
+        joinPlayerUrl: joinUrl,
     };
 
-    const actual = Json.generateInitializationRequest(flowId, stateId, annotations, inputs, playerUrl, joinUrl
-    , mode, reportingMode);
+    const actual = Json.generateInitializationRequest(flowId, stateId, annotations, inputs, playerUrl, joinUrl,
+                                                      mode, reportingMode);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Intialization Request, optional', (t) => {
@@ -116,29 +116,29 @@ test('Intialization Request, optional', (t) => {
     };
 
     const expected: any = {
-        'flowId': {
+        flowId: {
             id: 'id',
-            versionId: null
+            versionId: null,
         },
-        'stateId': null,
-        'annotations': null,
-        'inputs': null,
-        'playerUrl': null,
-        'joinPlayerUrl': null,
-        'mode': '',
-        'reportingMode': ''
+        stateId: null,
+        annotations: null,
+        inputs: null,
+        playerUrl: null,
+        joinPlayerUrl: null,
+        mode: '',
+        reportingMode: '',
     };
 
     const actual = Json.generateInitializationRequest(flowId);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Invoke Request', (t) => {
     const stateData = {
         id: 'id',
         token: 'token',
-        currentMapElementId: 'currentMapElementId'
+        currentMapElementId: 'currentMapElementId',
     };
     const invokeType = 'invokeType';
     const annotations = 'annotations';
@@ -151,66 +151,77 @@ test('Invoke Request', (t) => {
     const selectedNavigationElementId = 'selectedNavigationElementId';
 
     const expected: any = {
-        'stateId': stateData.id,
-        'stateToken': stateData.token,
-        'currentMapElementId': stateData.currentMapElementId,
-        'invokeType': invokeType,
-        'annotations': annotations || null,
-        'geoLocation': location || null,
-        'mapElementInvokeRequest': {
-            'pageRequest': {
-                'pageComponentInputResponses': pageComponentInputResponses || null
+        invokeType,
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        annotations: annotations || null,
+        geoLocation: location || null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: pageComponentInputResponses || null,
             },
-            'selectedOutcomeId': selectedOutcomeId || null
+            selectedOutcomeId: selectedOutcomeId || null,
         },
-        'mode': mode || '',
-        'selectedMapElementId': selectedMapElementId || null,
-        'navigationElementId': navigationElementId || null,
-        'selectedNavigationElementId': selectedNavigationElementId || null
+        mode: mode || '',
+        selectedMapElementId: selectedMapElementId || null,
+        navigationElementId: navigationElementId || null,
+        selectedNavigationElementId: selectedNavigationElementId || null,
     };
 
-    const actual = Json.generateInvokeRequest(stateData, invokeType, selectedOutcomeId, selectedMapElementId, pageComponentInputResponses, navigationElementId, selectedNavigationElementId, annotations, location, mode);
+    const actual = Json.generateInvokeRequest(
+        stateData, 
+        invokeType, 
+        selectedOutcomeId, 
+        selectedMapElementId, 
+        pageComponentInputResponses, 
+        navigationElementId, 
+        selectedNavigationElementId,
+        annotations, 
+        location, 
+        mode,
+    );
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Invoke Request, optional', (t) => {
     const stateData = {
         id: 'id',
         token: 'token',
-        currentMapElementId: 'currentMapElementId'
+        currentMapElementId: 'currentMapElementId',
     };
     const invokeType = 'invokeType';
 
     const expected: any = {
-        'stateId': stateData.id,
-        'stateToken': stateData.token,
-        'currentMapElementId': stateData.currentMapElementId,
-        'invokeType': invokeType,
-        'annotations': null,
-        'geoLocation': null,
-        'mapElementInvokeRequest': {
-            'pageRequest': {
-                'pageComponentInputResponses': null
+        invokeType,
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        annotations: null,
+        geoLocation: null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: null,
             },
-            'selectedOutcomeId': null
+            selectedOutcomeId: null,
         },
-        'mode': '',
-        'selectedMapElementId': null,
-        'navigationElementId': null,
-        'selectedNavigationElementId': null
+        mode: '',
+        selectedMapElementId: null,
+        navigationElementId: null,
+        selectedNavigationElementId: null,
     };
 
     const actual = Json.generateInvokeRequest(stateData, invokeType);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Navigate Request', (t) => {
     const stateData = {
         id: 'id',
         token: 'token',
-        currentMapElementId: 'currentMapElementId'
+        currentMapElementId: 'currentMapElementId',
     };
     const navigationId = 'navigationId';
     const navigationElementId = 'navigationElementId';
@@ -220,60 +231,67 @@ test('Navigate Request', (t) => {
     const location = 'location';
 
     const expected: any = {
-        'stateId': stateData.id,
-        'stateToken': stateData.token,
-        'currentMapElementId': stateData.currentMapElementId,
-        'invokeType': 'NAVIGATE',
-        'navigationElementId': navigationId,
-        'selectedMapElementId': mapElementId,
-        'selectedNavigationItemId': navigationElementId,
-        'annotations': annotations || null,
-        'geoLocation': location || null,
-        'mapElementInvokeRequest': {
-            'pageRequest': {
-                'pageComponentInputResponses': pageComponentInputResponses || null
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        invokeType: 'NAVIGATE',
+        navigationElementId: navigationId,
+        selectedMapElementId: mapElementId,
+        selectedNavigationItemId: navigationElementId,
+        annotations: annotations || null,
+        geoLocation: location || null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: pageComponentInputResponses || null,
             },
-            'selectedOutcomeId': null
-        }
+            selectedOutcomeId: null,
+        },
     };
 
-    const actual = Json.generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses, annotations, location);
+    const actual = Json.generateNavigateRequest(
+        stateData, 
+        navigationId, 
+        navigationElementId, 
+        mapElementId,
+        pageComponentInputResponses, 
+        annotations, 
+        location,
+    );
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Navigate Request, optional', (t) => {
     const stateData = {
         id: 'id',
         token: 'token',
-        currentMapElementId: 'currentMapElementId'
+        currentMapElementId: 'currentMapElementId',
     };
     const navigationId = 'navigationId';
     const navigationElementId = 'navigationElementId';
     const mapElementId = 'mapElementId';
 
-
     const expected: any = {
-        'stateId': stateData.id,
-        'stateToken': stateData.token,
-        'currentMapElementId': stateData.currentMapElementId,
-        'invokeType': 'NAVIGATE',
-        'navigationElementId': navigationId,
-        'selectedMapElementId': mapElementId,
-        'selectedNavigationItemId': navigationElementId,
-        'annotations': null,
-        'geoLocation': null,
-        'mapElementInvokeRequest': {
-            'pageRequest': {
-                'pageComponentInputResponses': null
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        invokeType: 'NAVIGATE',
+        navigationElementId: navigationId,
+        selectedMapElementId: mapElementId,
+        selectedNavigationItemId: navigationElementId,
+        annotations: null,
+        geoLocation: null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: null,
             },
-            'selectedOutcomeId': null
-        }
+            selectedOutcomeId: null,
+        },
     };
 
     const actual = Json.generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Session Request', (t) => {
@@ -285,17 +303,17 @@ test('Session Request', (t) => {
     const token = 'token';
 
     const expected: any = {
-        'sessionToken': sessionId,
-        'sessionUrl': sessionUrl,
-        'loginUrl': loginUrl,
-        'username': username,
-        'password': password,
-        'token': token
+        sessionUrl,
+        loginUrl,
+        username,
+        password,
+        token,
+        sessionToken: sessionId,
     };
 
     const actual = Json.generateSessionRequest(sessionId, sessionUrl, loginUrl, username, password, token);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });
 
 test('Session Request, optional', (t) => {
@@ -304,15 +322,15 @@ test('Session Request, optional', (t) => {
     const loginUrl = 'loginUrl';
 
     const expected: any = {
-        'sessionToken': sessionId,
-        'sessionUrl': sessionUrl,
-        'loginUrl': loginUrl,
-        'username': null,
-        'password': null,
-        'token': null
+        loginUrl,
+        sessionUrl,
+        sessionToken: sessionId,
+        username: null,
+        password: null,
+        token: null,
     };
 
     const actual = Json.generateSessionRequest(sessionId, sessionUrl, loginUrl);
 
-    t.is(JSON.stringify(actual), JSON.stringify(expected));
+    t.deepEqual(actual, expected);
 });

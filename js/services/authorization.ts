@@ -26,7 +26,8 @@ export const isAuthorized = (response: any, flowKey: string): boolean => {
  * Redirect to a provided OAuth2 or SAML url, or display the login dialog component
  * @param response Response from `Ajax.join` or `Ajax.invoke`
  * @param flowKey
- * @param onAuthenticated Callback after the running user has successfully authenticated using the Login dialog. This does not get called when authenticated with OAuth2 or SAML.
+ * @param onAuthenticated Callback after the running user has successfully authenticated using the Login dialog.
+ * This does not get called when authenticated with OAuth2 or SAML.
  */
 export const invokeAuthorization = (response: any, flowKey, onAuthenticated: Callbacks.ICallback) => {
     if (response.authorizationContext != null && response.authorizationContext.directoryId != null) {
@@ -47,8 +48,8 @@ export const invokeAuthorization = (response: any, flowKey, onAuthenticated: Cal
             directoryName: response.authorizationContext.directoryName,
             loginUrl: response.authorizationContext.loginUrl,
             stateId: response.stateId,
-            callback: onAuthenticated
-        }, flowKey);
+            callback: onAuthenticated,
+        },             flowKey);
     }
 };
 
@@ -65,7 +66,7 @@ export const authorizeBySession = (loginUrl: string, flowKey: string, onAuthenti
     Callbacks.register(flowKey, onAuthenticated);
 
     Ajax.sessionAuthentication(Utils.extractTenantId(flowKey), state.id, requestData, null)
-        .then(function (response) {
+        .then((response) => {
             State.setAuthenticationToken(response, flowKey);
             Callbacks.execute(flowKey, 'done', null, null, [response]);
         });

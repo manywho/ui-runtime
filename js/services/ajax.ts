@@ -17,7 +17,19 @@ import * as Settings from './settings';
  * @param orderByDirection ASC or DESC
  * @param page Page offset for the list filter
  */
-export const dispatchDataRequest = (url: string, event: string, request: any, tenantId: string, stateId: string, authenticationToken: string, limit: number, search: string, orderBy: string, orderByDirection: string, page: number): JQueryXHR => {
+export const dispatchDataRequest = (
+        url: string,
+        event: string,
+        request: any,
+        tenantId: string,
+        stateId: string,
+        authenticationToken: string,
+        limit: number,
+        search: string,
+        orderBy: string,
+        orderByDirection: string,
+        page: number,
+    ): JQueryXHR => {
 
     request.listFilter = request.listFilter || {};
     request.listFilter.search = search || null;
@@ -41,17 +53,25 @@ export const dispatchDataRequest = (url: string, event: string, request: any, te
 /**
  * POST to `/api/run/1/authentication/stateId`
  */
-export const login = (loginUrl: string, username: string, password: string, sessionId: string, sessionUrl: string, stateId: string, tenantId: string): JQueryXHR => {
+export const login = (
+    loginUrl: string, 
+    username: string, 
+    password: string, 
+    sessionId: string, 
+    sessionUrl: string, 
+    stateId: string, 
+    tenantId: string,
+): JQueryXHR => {
 
     Log.info('Logging into Flow State: \n    Id: ' + stateId);
 
     const request = {
-        username: username,
-        password: password,
+        loginUrl,
+        sessionUrl,
+        username,
+        password,
         token: null,
         sessionToken: sessionId,
-        sessionUrl: sessionUrl,
-        loginUrl: loginUrl
     };
 
     return Connection.request(null, 'login', '/api/run/1/authentication/' + stateId, 'POST', tenantId, null, null, request);
@@ -61,7 +81,7 @@ export const login = (loginUrl: string, username: string, password: string, sess
  * POST to `/api/run/1` to initialize a state
  */
 export const initialize = (engineInitializationRequest: any, tenantId: string, authenticationToken: string): JQueryXHR => {
-    Log.info('Initializing Flow: \n    Id: ' + engineInitializationRequest.flowId.id + '\n    Version Id: ' + engineInitializationRequest.flowId.versionId);
+    Log.info(`Initializing Flow: \n Id: ${engineInitializationRequest.flowId.id} \n Version Id: '${engineInitializationRequest.flowId.versionId}`);
     return Connection.request(null, 'initialization', '/api/run/1', 'POST', tenantId, null, authenticationToken, engineInitializationRequest);
 };
 
@@ -69,7 +89,16 @@ export const initialize = (engineInitializationRequest: any, tenantId: string, a
  * POST to `/api/run/1/state/out/stateId/selectedOutcomeId` to flow out
  */
 export const flowOut = (stateId: string, tenantId: string, selectedOutcomeId: string, authenticationToken: string): JQueryXHR => {
-    return Connection.request(null, 'flowOut', '/api/run/1/state/out/' + stateId + '/' + selectedOutcomeId, 'POST', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null, 
+        'flowOut',
+        '/api/run/1/state/out/' + stateId + '/' + selectedOutcomeId, 
+        'POST',
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        null,
+    );
 };
 
 /**
@@ -85,14 +114,29 @@ export const join = (stateId: string, tenantId: string, authenticationToken: str
  */
 export const invoke = (engineInvokeRequest: any, tenantId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Invoking State: ' + engineInvokeRequest.stateId);
-    return Connection.request(null, 'invoke', '/api/run/1/state/' + engineInvokeRequest.stateId, 'POST', tenantId, engineInvokeRequest.stateId, authenticationToken, engineInvokeRequest);
+    return Connection.request(
+        null, 
+        'invoke', 
+        '/api/run/1/state/' + engineInvokeRequest.stateId, 
+        'POST', 
+        tenantId, 
+        engineInvokeRequest.stateId, 
+        authenticationToken, 
+        engineInvokeRequest,
+    );
 };
 
 /**
  * POST to `/api/run/1/navigation/stateId`
  */
-export const getNavigation = (stateId: string, stateToken: string, navigationElementId: string, tenantId: string, authenticationToken?: string): JQueryXHR => {
-    const request = { 'stateId': stateId, 'stateToken': stateToken, 'navigationElementId': navigationElementId };
+export const getNavigation = (
+    stateId: string, 
+    stateToken: string, 
+    navigationElementId: string, 
+    tenantId: string, 
+    authenticationToken?: string,
+): JQueryXHR => {
+    const request = { stateId, stateToken, navigationElementId };
     return Connection.request(null, 'navigation', '/api/run/1/navigation/' + stateId, 'POST', tenantId, stateId, authenticationToken, request);
 };
 
@@ -111,9 +155,31 @@ export const getFlowByName = (name: string, tenantId: string, authenticationToke
  * @param orderByDirection ASC or DESC
  * @param page Page offset for the list filter
  */
-export const dispatchObjectDataRequest = (request: any, tenantId: string, stateId: string, authenticationToken: string, limit: number, search: string, orderBy: string, orderByDirection: string, page: number): JQueryXHR => {
+export const dispatchObjectDataRequest = (
+    request: any, 
+    tenantId: string, 
+    stateId: string, 
+    authenticationToken: string, 
+    limit: number, 
+    search: string, 
+    orderBy: string, 
+    orderByDirection: string, 
+    page: number,
+): JQueryXHR => {
     Log.info('Dispatching object data request');
-    return dispatchDataRequest('/api/service/1/data', 'objectData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+    return dispatchDataRequest(
+        '/api/service/1/data', 
+        'objectData', 
+        request,
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        limit, 
+        search, 
+        orderBy, 
+        orderByDirection, 
+        page,
+    );
 };
 
 /**
@@ -124,16 +190,43 @@ export const dispatchObjectDataRequest = (request: any, tenantId: string, stateI
  * @param orderByDirection ASC or DESC
  * @param page Page offset for the list filter
  */
-export const dispatchFileDataRequest = (request: any, tenantId: string, stateId: string, authenticationToken: string, limit: number, search: string, orderBy: string, orderByDirection: string, page: number): JQueryXHR => {
+export const dispatchFileDataRequest = (
+    request: any,
+    tenantId: string, 
+    stateId: string,
+    authenticationToken: string,
+    limit: number, 
+    search: string, 
+    orderBy: string, 
+    orderByDirection: string, 
+    page: number,
+): JQueryXHR => {
     Log.info('Dispatching object data request');
-    return dispatchDataRequest('/api/service/1/file', 'fileData', request, tenantId, stateId, authenticationToken, limit, search, orderBy, orderByDirection, page);
+    return dispatchDataRequest(
+        '/api/service/1/file', 
+        'fileData', 
+        request, 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        limit, 
+        search, 
+        orderBy, 
+        orderByDirection, 
+        page,
+    );
 };
 
 /**
  * POST to `/api/service/1/file/content` to upload a file to a 3rd party service
  * @param onProgress Callback to recieve progress event info
  */
-export const uploadFile = (formData: FormData, tenantId: string, authenticationToken: string, onProgress: EventListenerOrEventListenerObject): JQueryXHR => {
+export const uploadFile = (
+    formData: FormData, 
+    tenantId: string,
+    authenticationToken: string,
+    onProgress: EventListenerOrEventListenerObject,
+): JQueryXHR => {
     return Connection.upload(null, 'fileData', '/api/service/1/file/content', formData, tenantId, authenticationToken, onProgress);
 };
 
@@ -141,7 +234,13 @@ export const uploadFile = (formData: FormData, tenantId: string, authenticationT
  * POST to `/api/social/1/stream/streamId/file` to upload a file to a 3rd party social stream
  * @param onProgress Callback to recieve progress event info
  */
-export const uploadSocialFile = (formData: FormData, streamId: string, tenantId: string, authenticationToken: string, onProgress: EventListenerOrEventListenerObject): JQueryXHR => {
+export const uploadSocialFile = (
+    formData: FormData, 
+    streamId: string, 
+    tenantId: string, 
+    authenticationToken: string, 
+    onProgress: EventListenerOrEventListenerObject,
+): JQueryXHR => {
     return Connection.upload(null, 'fileData', '/api/social/1/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
 };
 
@@ -150,7 +249,16 @@ export const uploadSocialFile = (formData: FormData, streamId: string, tenantId:
  */
 export const sessionAuthentication = (tenantId: string, stateId: string, request: any, authenticationToken: string): JQueryXHR => {
     Log.info('Authenticating using session ID');
-    return Connection.request(null, 'sessionAuthentication', '/api/run/1/authentication/' + stateId, 'POST', tenantId, stateId, authenticationToken, request);
+    return Connection.request(
+        null, 
+        'sessionAuthentication', 
+        '/api/run/1/authentication/' + stateId, 
+        'POST', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        request,
+    );
 };
 
 /**
@@ -158,7 +266,16 @@ export const sessionAuthentication = (tenantId: string, stateId: string, request
  */
 export const ping = (tenantId: string, stateId: string, stateToken: string, authenticationToken: string): JQueryXHR => {
     Log.info('Pinging for changes');
-    return Connection.request(null, 'ping', '/api/run/1/state/' + stateId + '/ping/' + stateToken, 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null, 
+        'ping', 
+        '/api/run/1/state/' + stateId + '/ping/' + stateToken, 
+        'GET', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        null,
+    );
 };
 
 /**
@@ -188,9 +305,25 @@ export const getSocialFollowers = (tenantId: string, streamId: string, stateId: 
 /**
  * GET at `/api/social/1/stream/streamId?page=page&pageSize=pageSize`
  */
-export const getSocialMessages = (tenantId: string, streamId: string, stateId: string, page: number, pageSize: number, authenticationToken: string): JQueryXHR => {
+export const getSocialMessages = (
+    tenantId: string,
+    streamId: string, 
+    stateId: string, 
+    page: number, 
+    pageSize: number, 
+    authenticationToken: string,
+): JQueryXHR => {
     Log.info('Getting Social Messages');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize, 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null, 
+        'social', 
+        '/api/social/1/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize, 
+        'GET', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        null,
+    );
 };
 
 /**
@@ -198,7 +331,16 @@ export const getSocialMessages = (tenantId: string, streamId: string, stateId: s
  */
 export const sendSocialMessage = (tenantId: string, streamId: string, stateId: string, request: any, authenticationToken: string): JQueryXHR => {
     Log.info('Sending Social Message');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/message', 'POST', tenantId, stateId, authenticationToken, request);
+    return Connection.request(
+        null, 
+        'social', 
+        '/api/social/1/stream/' + streamId + '/message', 
+        'POST', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        request,
+    );
 };
 
 /**
@@ -206,7 +348,16 @@ export const sendSocialMessage = (tenantId: string, streamId: string, stateId: s
  */
 export const follow = (tenantId: string, streamId: string, stateId: string, isFollowing: boolean, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '?follow=' + isFollowing.toString(), 'POST', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null, 
+        'social', 
+        '/api/social/1/stream/' + streamId + '?follow=' + isFollowing.toString(), 
+        'POST', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        null,
+    );
 };
 
 /**
@@ -214,5 +365,14 @@ export const follow = (tenantId: string, streamId: string, stateId: string, isFo
  */
 export const getSocialUsers = (tenantId: string, streamId: string, stateId: string, name: string, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/user?name=' + name, 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null, 
+        'social', 
+        '/api/social/1/stream/' + streamId + '/user?name=' + name, 
+        'GET', 
+        tenantId, 
+        stateId, 
+        authenticationToken, 
+        null,
+    );
 };

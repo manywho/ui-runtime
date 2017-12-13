@@ -1,13 +1,13 @@
 import * as Utils from './utils';
 
 export interface ICallback {
-    type: string,
-    execute: Function,
-    name?: string,
-    mapElement?: string,
-    args?: Array<any>,
-    flowKey?: string,
-    repeat?: boolean
+    type: string;
+    execute: Function;
+    name?: string;
+    mapElement?: string;
+    args?: any[];
+    flowKey?: string;
+    repeat?: boolean;
 }
 
 const callbacks = {};
@@ -31,16 +31,18 @@ export const register = (flowKey: string, options: ICallback) => {
 /**
  * Execute a previously registered callback if a type & name are provided they will be checked against the registered callbacks first (in that order)
  * @param flowKey
- * @param type The type of context that callbacks are being executed in. Generally this is either the InvokeType in the invoke response from Boomi Flow e.g. FORWARD, WAIT, DONE, etc
+ * @param type The type of context that callbacks are being executed in. Generally this is either the InvokeType in the invoke response 
+ * from Boomi Flow e.g. FORWARD, WAIT, DONE, etc
  * @param name The name of the callback to execute
- * @param mapElementId The Map Element Id of the callback to execute. During normal flow execution this will be populated by the currentMapElementId from the invoke response
+ * @param mapElementId The Map Element Id of the callback to execute. During normal flow execution this will be populated by the 
+ * currentMapElementId from the invoke response
  * @param args Arguments to pass to the callback. During normal flow execution this will be the invoke response itself
  */
-export const execute = (flowKey: string, type: string, name: string, mapElementId: string, args: Array<any>) => {
+export const execute = (flowKey: string, type: string, name: string, mapElementId: string, args: any[]) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     if (callbacks[lookUpKey])
-        callbacks[lookUpKey].filter(function (item) {
+        callbacks[lookUpKey].filter((item) => {
 
             if (type && !Utils.isEqual(item.type, type, true))
                 return false;
@@ -53,7 +55,7 @@ export const execute = (flowKey: string, type: string, name: string, mapElementI
 
             return true;
         })
-        .forEach(function (item) {
+        .forEach((item) => {
 
             item.execute.apply(undefined, [item].concat(item.args || [], args));
 

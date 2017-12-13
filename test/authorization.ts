@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mock from 'xhr-mock';
 import * as Authorization from '../js/services/authorization';
 import * as Settings from '../js/services/settings';
@@ -7,15 +7,18 @@ import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.before(t => {
-    Settings.initialize({
-        platform: {
-            uri: 'https://flow.manywho.com'
-        }
-    }, null);
+test.before((t) => {
+    Settings.initialize(
+        {
+            platform: {
+                uri: 'https://flow.manywho.com',
+            },
+        },
+        null,
+    );
 });
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     Authorization.setAuthenticationToken(null, flowKey);
     State.setLogin(null, flowKey);
 });
@@ -28,8 +31,8 @@ test('Is Authorized', (t) => {
 test('Is Not Authorized', (t) => {
     const response = {
         authorizationContext: {
-            directoryId: 'test'
-        }
+            directoryId: 'test',
+        },
     };
 
     t.is(Authorization.isAuthorized(response, flowKey), false);
@@ -40,9 +43,9 @@ test('Invoke Authorization', (t) => {
         authorizationContext: {
             directoryId: 'id',
             directoryName: 'name',
-            loginUrl: 'loginUrl'
+            loginUrl: 'loginUrl',
         },
-        stateId: 'stateId'
+        stateId: 'stateId',
     };
 
     Authorization.invokeAuthorization(response, flowKey, null);
@@ -53,7 +56,7 @@ test('Invoke Authorization', (t) => {
         directoryName: response.authorizationContext.directoryName,
         loginUrl: response.authorizationContext.loginUrl,
         stateId: response.stateId,
-        callback: null
+        callback: null,
     };
 
     t.deepEqual(State.getLogin(flowKey), expected);
@@ -64,8 +67,8 @@ test('Invoke Authorization OAuth2', (t) => {
         authorizationContext: {
             directoryId: 'id',
             authenticationType: 'oauth2',
-            loginUrl: 'https://flow.manywho.com'
-        }
+            loginUrl: 'https://flow.manywho.com',
+        },
     };
 
     Authorization.invokeAuthorization(response, flowKey, null);
@@ -78,8 +81,8 @@ test('Invoke Authorization SAML', (t) => {
         authorizationContext: {
             directoryId: 'id',
             authenticationType: 'saml',
-            loginUrl: 'https://flow.manywho.com'
-        }
+            loginUrl: 'https://flow.manywho.com',
+        },
     };
 
     Authorization.invokeAuthorization(response, flowKey, null);
@@ -103,7 +106,7 @@ test.cb('Authorize By Session', (t) => {
         execute: (callback, response) => {
             t.pass();
             t.end();
-        }
+        },
     };
 
     State.setState(stateId, 'token', 'mapElementId', flowKey);

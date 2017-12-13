@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
@@ -6,20 +6,20 @@ const engine = {
     render: sinon.stub(),
     sync: sinon.stub().resolves(),
     move: sinon.stub().resolves(),
-    flowOut: sinon.stub()
+    flowOut: sinon.stub(),
 };
 
 const collaboration = {
-    sync: sinon.stub()
+    sync: sinon.stub(),
 };
 
 const react = {
-    createElement: sinon.stub()
+    createElement: sinon.stub(),
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('./engine', engine);
@@ -32,7 +32,7 @@ import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     engine.render.resetHistory();
     engine.sync.resetHistory();
     engine.move.resetHistory();
@@ -41,7 +41,7 @@ test.beforeEach(t => {
     react.createElement.resetHistory();
 });
 
-test.after(t => {
+test.after((t) => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -113,20 +113,20 @@ test('Get Child Components', (t) => {
         {
             id: 'id',
             componentType: 'component-1',
-            order: 2
+            order: 2,
         },
         {
             id: 'id',
             componentType: 'component-1',
-            order: 1
-        }
+            order: 1,
+        },
     ];
 
     const expected = {
+        flowKey,
         id: 'id',
         parentId: 'parentId',
-        flowKey: flowKey,
-        key: 'id'
+        key: 'id',
     };
 
     t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
@@ -142,18 +142,18 @@ test('Get Outcomes', (t) => {
     const model = [
         {
             id: 'id1',
-            order: 1
+            order: 1,
         },
         {
             id: 'id2',
-            order: 2
-        }
+            order: 2,
+        },
     ];
 
     const expected = {
+        flowKey,
         id: 'id1',
-        flowKey: flowKey,
-        key: 'id1'
+        key: 'id1',
     };
 
     t.is(Component.getOutcomes(model, flowKey).length, 2);
@@ -163,12 +163,12 @@ test('Get Outcomes', (t) => {
 
 test.cb.serial('Handle Event', (t) => {
     const model = {
-        hasEvents: true
+        hasEvents: true,
     };
 
     const component = () => null;
 
-    const callback = function() {
+    const callback = () => {
         t.is(engine.render.callCount, 1, 'Engine Render Count');
         t.is(engine.sync.callCount, 1, 'Engine Sync Count');
         t.is(collaboration.sync.callCount, 1, 'Collaboration Sync Count');
@@ -190,12 +190,12 @@ test('Get Selected Rows 2', (t) => {
     const model = {
         objectData: [
             {
-                externalId: 'id1'
+                externalId: 'id1',
             },
             {
-                externalId: 'id2'
-            }
-        ]
+                externalId: 'id2',
+            },
+        ],
     };
 
     const ids = ['id1', 'id2'];
@@ -203,12 +203,12 @@ test('Get Selected Rows 2', (t) => {
     const expected = [
         {
             externalId: 'id1',
-            isSelected: true
+            isSelected: true,
         },
         {
             externalId: 'id2',
-            isSelected: true
-        }
+            isSelected: true,
+        },
     ];
 
     t.deepEqual(Component.getSelectedRows(model, ids), expected);
@@ -224,10 +224,10 @@ test('Get Display Columns 2', (t) => {
             properties: [
                 {
                     developerName: 'isDisplayValue',
-                    contentValue: 'false'
-                }
-            ]
-        }
+                    contentValue: 'false',
+                },
+            ],
+        },
     ];
     t.deepEqual(Component.getDisplayColumns(columns), []);
 });
@@ -238,10 +238,10 @@ test('Get Display Columns 3', (t) => {
             properties: [
                 {
                     developerName: 'isDisplayValue',
-                    contentValue: 'true'
-                }
-            ]
-        }
+                    contentValue: 'true',
+                },
+            ],
+        },
     ];
     t.not(Component.getDisplayColumns(columns), null);
     t.is(Component.getDisplayColumns(columns).length, 1);
@@ -250,8 +250,8 @@ test('Get Display Columns 3', (t) => {
 test('Get Display Columns 4', (t) => {
     const columns = [
         {
-            isDisplayValue: true
-        }
+            isDisplayValue: true,
+        },
     ];
     t.not(Component.getDisplayColumns(columns), null);
     t.is(Component.getDisplayColumns(columns).length, 1);
@@ -272,9 +272,12 @@ test('Append Flow Container', (t) => {
 test('Focus Input', (t) => {
     (window as any).innerWidth = 800;
 
-    Settings.initializeFlow({
-        autoFocusInput: true
-    }, flowKey);
+    Settings.initializeFlow(
+        {
+            autoFocusInput: true,
+        },
+        flowKey,
+    );
 
     const root = document.createElement('div');
     root.classList.add('main');
@@ -305,7 +308,7 @@ test('Scroll To Top', (t) => {
 
 test.serial('On Outcome 1', async (t) => {
     const outcome = {
-        isOut: true
+        isOut: true,
     };
 
     return Component.onOutcome(outcome, null, flowKey)
@@ -317,7 +320,7 @@ test.serial('On Outcome 1', async (t) => {
 
 test.serial('On Outcome 2', async (t) => {
     const outcome = {
-        isOut: false
+        isOut: false,
     };
 
     return Component.onOutcome(outcome, null, flowKey)
@@ -330,8 +333,8 @@ test.serial('On Outcome 2', async (t) => {
 test('On Outcome 3', async (t) => {
     const outcome = {
         attributes: {
-            uri: 'https://manywho.com'
-        }
+            uri: 'https://manywho.com',
+        },
     };
 
     const spy = sinon.spy(window, 'open');
@@ -346,17 +349,17 @@ test('On Outcome 3', async (t) => {
 test('On Outcome 3', async (t) => {
     const outcome = {
         attributes: {
-            uriTypeElementPropertyId: 'id'
-        }
+            uriTypeElementPropertyId: 'id',
+        },
     };
 
     const objectData = [{
         properties: [
             {
                 typeElementPropertyId: 'id',
-                contentValue: 'https://manywho.com'
-            }
-        ]
+                contentValue: 'https://manywho.com',
+            },
+        ],
     }];
 
     const spy = sinon.spy(window, 'open');

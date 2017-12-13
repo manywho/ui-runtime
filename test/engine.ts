@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as sinon from 'sinon';
 import * as mockery from 'mockery';
 import * as $ from 'jquery';
@@ -6,14 +6,14 @@ import * as $ from 'jquery';
 const flowKey = 'key1_key2_key3_key4__main';
 
 const react = {
-    createElement: sinon.stub()
+    createElement: sinon.stub(),
 };
 
 const reactDOM = {
     default: {
         render: sinon.stub(),
-        unmountComponentAtNode: sinon.stub()
-    }
+        unmountComponentAtNode: sinon.stub(),
+    },
 };
 
 const ajax = {
@@ -24,7 +24,7 @@ const ajax = {
     dispatchFileDataRequest: sinon.stub(),
     flowOut: sinon.stub(),
     getNavigation: sinon.stub(),
-    join: sinon.stub()
+    join: sinon.stub(),
 };
 
 const state = {
@@ -40,7 +40,7 @@ const state = {
     getLocation: sinon.stub(),
     setLocation: sinon.stub(),
     getLogin: sinon.stub().returns('login'),
-    setOptions: sinon.stub()
+    setOptions: sinon.stub(),
 };
 
 const model = {
@@ -54,22 +54,22 @@ const model = {
     setSelectedNavigation: sinon.stub(),
     getDefaultNavigationId: sinon.stub(),
     getOutcome: sinon.stub(),
-    parseNavigationResponse: sinon.stub()
+    parseNavigationResponse: sinon.stub(),
 };
 
 const social = {
-    initialize: sinon.stub()
+    initialize: sinon.stub(),
 };
 
 (window as any).sessionStorage = {
     getItem: sinon.stub(),
     setItem: sinon.stub(),
-    removeItem: sinon.stub()
+    removeItem: sinon.stub(),
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('react', react);
@@ -83,21 +83,24 @@ import * as Settings from '../js/services/settings';
 import * as Engine from '../js/services/engine';
 import * as Utils from '../js/services/utils';
 import * as Component from '../js/services/component';
-import * as Model from '../js/services/state';
+import * as Model from '../js/services/model';
 import * as State from '../js/services/state';
 import * as Collaboration from '../js/services/collaboration';
 
-test.before(t => {
-    Settings.initialize({
-        platform: {
-            uri: 'https://flow.manywho.com'
-        }
-    }, null);
+test.before((t) => {
+    Settings.initialize(
+        {
+            platform: {
+                uri: 'https://flow.manywho.com',
+            },
+        },
+        null,
+    );
 
     (window as any).sessionStorage = {
         getItem: sinon.stub(),
         setItem: sinon.stub(),
-        removeItem: sinon.stub()
+        removeItem: sinon.stub(),
     };
 
     sinon.stub(Engine, 'render');
@@ -105,13 +108,13 @@ test.before(t => {
     sinon.stub(Utils, 'removeFlow');
 });
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     const container = document.createElement('div');
     container.id = 'manywho';
     document.body.appendChild(container);
 });
 
-test.afterEach(t => {
+test.afterEach((t) => {
     reactDOM.default.render.resetHistory();
     reactDOM.default.unmountComponentAtNode.resetHistory();
     react.createElement.resetHistory();
@@ -124,14 +127,14 @@ test.afterEach(t => {
     state.setState.resetHistory();
     model.parseEngineResponse.resetHistory();
 
-    (Object as any).values(state).forEach(value => {
+    (Object as any).values(state).forEach((value) => {
         value.resetHistory && value.resetHistory();
     });
 
     document.body.removeChild(document.getElementById('manywho'));
 });
 
-test.serial('Initialize', t => {
+test.serial('Initialize', (t) => {
     const initializeResponse = {
         stateId: 'key4',
         stateToken: 'stateToken',
@@ -139,9 +142,9 @@ test.serial('Initialize', t => {
         currentStreamId: 'currentStreamId',
         navigationElementReferences: [
             {
-                id: 'navigationId'
-            }
-        ]
+                id: 'navigationId',
+            },
+        ],
     };
 
     ajax.initialize.callsFake(() => {
@@ -157,9 +160,9 @@ test.serial('Initialize', t => {
         currentStreamId: 'currentStreamId',
         navigationElementReferences: [
             {
-                id: 'navigationId'
-            }
-        ]
+                id: 'navigationId',
+            },
+        ],
     };
 
     ajax.invoke.callsFake(() => {
@@ -181,28 +184,33 @@ test.serial('Initialize', t => {
                 isVisible: true,
                 locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
                 navigationItemDeveloperName: 'Home',
-                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641'
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
             }],
             navigationItemResponses: [{
                 developerName: 'Home',
                 id: 'c5086605-f34e-4d06-ba9e-83144e990641',
                 label: 'Home',
                 navigationItems: null,
-                order: 0
-            }]
+                order: 0,
+            }],
         });
         return deferred;
     });
 
     const options = {
-        navigationElementId: 'navigationId'
+        navigationElementId: 'navigationId',
     };
 
     return Engine.initialize('key1', 'key2', 'key3', null, null, 'authenticationToken', options, 'true')
-        .always(flowKey => {
+        .always((flowKey) => {
             t.not(flowKey, null);
             t.true(model.initializeModel.calledWith(flowKey));
-            t.true(state.setState.calledWith(initializeResponse.stateId, initializeResponse.stateToken, initializeResponse.currentMapElementId, flowKey));
+            t.true(state.setState.calledWith(
+                flowKey,
+                initializeResponse.stateId, 
+                initializeResponse.stateToken, 
+                initializeResponse.currentMapElementId, 
+            ));
             t.true(state.setAuthenticationToken.calledWith('authenticationToken', flowKey));
             t.true(model.setSelectedNavigation.calledTwice);
             t.true(model.setSelectedNavigation.firstCall.calledWith(initializeResponse.navigationElementReferences[0].id, flowKey));
@@ -217,17 +225,17 @@ test.serial('Initialize', t => {
         });
 });
 
-test.cb.serial('Initialize Failed', t => {
+test.cb.serial('Initialize Failed', (t) => {
     ajax.initialize.callsFake(() => {
         const deferred = $.Deferred();
         deferred.reject({
-            statusText: 'error'
+            statusText: 'error',
         });
         return deferred;
     });
 
     const options = {
-        navigationElementId: 'navigationId'
+        navigationElementId: 'navigationId',
     };
 
     Engine.initialize('tenantId', 'flowId', 'flowVersionId', null, null, null, options, null)
@@ -237,7 +245,7 @@ test.cb.serial('Initialize Failed', t => {
         });
 });
 
-test.serial('Move', t => {
+test.serial('Move', (t) => {
     const invokeResponse = {
         stateId: 'key4',
         stateToken: 'stateToken',
@@ -245,14 +253,14 @@ test.serial('Move', t => {
         currentStreamId: 'currentStreamId',
         navigationElementReferences: [
             {
-                id: 'navigationId'
-            }
+                id: 'navigationId',
+            },
         ],
         mapElementInvokeResponses: [
             {
-                outcomeResponses: null
-            }
-        ]
+                outcomeResponses: null,
+            },
+        ],
     };
 
     ajax.invoke.callsFake(() => {
@@ -274,15 +282,15 @@ test.serial('Move', t => {
                 isVisible: true,
                 locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
                 navigationItemDeveloperName: 'Home',
-                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641'
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
             }],
             navigationItemResponses: [{
                 developerName: 'Home',
                 id: 'c5086605-f34e-4d06-ba9e-83144e990641',
                 label: 'Home',
                 navigationItems: null,
-                order: 0
-            }]
+                order: 0,
+            }],
         });
         return deferred;
     });
@@ -291,17 +299,22 @@ test.serial('Move', t => {
     model.getOutcome.returns({ id: 'outcome' });
 
     const options = {
-        navigationElementId: 'navigationId'
+        navigationElementId: 'navigationId',
     };
 
     const outcome = {
-        id: 'outcome'
+        id: 'outcome',
     };
 
     return Engine.move(outcome, flowKey)
-        .always(flowKey => {
+        .always((flowKey) => {
             t.not(flowKey, null);
-            t.true(state.setState.firstCall.calledWith(invokeResponse.stateId, invokeResponse.stateToken, invokeResponse.currentMapElementId, flowKey));
+            t.true(state.setState.firstCall.calledWith(
+                flowKey,
+                invokeResponse.stateId, 
+                invokeResponse.stateToken, 
+                invokeResponse.currentMapElementId, 
+            ));
             t.true(state.setComponentLoading.calledTwice);
             t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
             t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
@@ -311,7 +324,7 @@ test.serial('Move', t => {
         });
 });
 
-test.serial('Join', t => {
+test.serial('Join', (t) => {
     (Engine.join as sinon.SinonStub).restore();
 
     const invokeResponse = {
@@ -321,14 +334,14 @@ test.serial('Join', t => {
         currentStreamId: 'currentStreamId',
         navigationElementReferences: [
             {
-                id: 'navigationId'
-            }
+                id: 'navigationId',
+            },
         ],
         mapElementInvokeResponses: [
             {
-                outcomeResponses: null
-            }
-        ]
+                outcomeResponses: null,
+            },
+        ],
     };
 
     ajax.join.callsFake(() => {
@@ -350,15 +363,15 @@ test.serial('Join', t => {
                 isVisible: true,
                 locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
                 navigationItemDeveloperName: 'Home',
-                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641'
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
             }],
             navigationItemResponses: [{
                 developerName: 'Home',
                 id: 'c5086605-f34e-4d06-ba9e-83144e990641',
                 label: 'Home',
                 navigationItems: null,
-                order: 0
-            }]
+                order: 0,
+            }],
         });
         return deferred;
     });
@@ -367,22 +380,21 @@ test.serial('Join', t => {
     model.getOutcome.returns({ id: 'outcome' });
 
     const options = {
-        navigationElementId: 'navigationId'
+        navigationElementId: 'navigationId',
     };
 
     const outcome = {
-        id: 'outcome'
+        id: 'outcome',
     };
 
     return Engine.join('Key1', 'Key2', 'Key3', 'main', 'key4', 'authenticationToken', options)
-        .always(flowKey => {
+        .always((flowKey) => {
             t.not(flowKey, null);
-
             sinon.stub(Engine, 'join');
         });
 });
 
-test.serial('Render', t => {
+test.serial('Render', (t) => {
     const container = document.createElement('div');
     container.id = Utils.getLookUpKey(flowKey);
     document.querySelector('#manywho').appendChild(container);
@@ -398,7 +410,7 @@ test.serial('Render', t => {
     sinon.stub(Engine, 'render');
 });
 
-test.serial('Render Login', t => {
+test.serial('Render Login', (t) => {
     const container = document.createElement('div');
     container.id = Utils.getLookUpKey(flowKey);
     document.querySelector('#manywho').appendChild(container);
@@ -414,7 +426,7 @@ test.serial('Render Login', t => {
     sinon.stub(Engine, 'render');
 });
 
-test.serial('Ping', t => {
+test.serial('Ping', (t) => {
     model.getInvokeType.returns('WAIT');
 
     return Engine.ping(flowKey)
@@ -423,12 +435,12 @@ test.serial('Ping', t => {
         });
 });
 
-test.serial('Parse Response', t => {
+test.serial('Parse Response', (t) => {
     const response = {
         stateId: 'stateId',
         stateToken: 'stateToken',
         currentMapElementId: 'currentMapElementId',
-        invokeType: 'WAIT'
+        invokeType: 'WAIT',
     };
 
     const parser = (data, flowKey) => {
@@ -444,7 +456,7 @@ test.serial('Parse Response', t => {
     t.true(ping.calledOnce);
 });
 
-test.serial('Toggle Debug', t => {
+test.serial('Toggle Debug', (t) => {
     Settings.initializeFlow({}, flowKey);
 
     Engine.toggleDebug(flowKey);
@@ -456,19 +468,19 @@ test.serial('Toggle Debug', t => {
     t.true((Engine.render as sinon.SinonStub).calledTwice);
 });
 
-test.serial('FileDataRequest Success', t => {
+test.serial('FileDataRequest Success', (t) => {
     ajax.dispatchFileDataRequest.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.resolve({
             objectData: 'objectData',
-            hasMoreResults: true
+            hasMoreResults: true,
         });
         return deferred;
     });
 
     model.getComponent.returns({
         objectData: null,
-        fileDataRequest: {}
+        fileDataRequest: {},
     });
 
     return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
@@ -480,7 +492,7 @@ test.serial('FileDataRequest Success', t => {
         });
 });
 
-test.serial('FileDataRequest Fail', async t => {
+test.serial('FileDataRequest Fail', async (t) => {
     ajax.dispatchFileDataRequest.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.reject('xhr', 'status', 'error');
@@ -489,7 +501,7 @@ test.serial('FileDataRequest Fail', async t => {
 
     model.getComponent.returns({
         objectData: null,
-        fileDataRequest: {}
+        fileDataRequest: {},
     });
 
     await t.throws(Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
@@ -500,19 +512,19 @@ test.serial('FileDataRequest Fail', async t => {
     t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
 });
 
-test.serial('ObjectDataRequest Success', t => {
+test.serial('ObjectDataRequest Success', (t) => {
     ajax.dispatchObjectDataRequest.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.resolve({
             objectData: 'objectData',
-            hasMoreResults: true
+            hasMoreResults: true,
         });
         return deferred;
     });
 
     model.getComponent.returns({
         objectData: null,
-        objectDataRequest: {}
+        objectDataRequest: {},
     });
 
     return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
@@ -524,7 +536,7 @@ test.serial('ObjectDataRequest Success', t => {
         });
 });
 
-test.serial('ObjectDataRequest Fail', async t => {
+test.serial('ObjectDataRequest Fail', async (t) => {
     ajax.dispatchObjectDataRequest.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.reject('xhr', 'status', 'error');
@@ -533,7 +545,7 @@ test.serial('ObjectDataRequest Fail', async t => {
 
     model.getComponent.returns({
         objectData: null,
-        objectDataRequest: {}
+        objectDataRequest: {},
     });
 
     await t.throws(Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
@@ -544,11 +556,11 @@ test.serial('ObjectDataRequest Fail', async t => {
     t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
 });
 
-test.serial('Sync', t => {
+test.serial('Sync', (t) => {
     ajax.invoke.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.resolve({
-            invokeType: 'FORWARD'
+            invokeType: 'FORWARD',
         });
         return deferred;
     });
@@ -556,23 +568,23 @@ test.serial('Sync', t => {
     model.getComponents.returns([
         {
             attributes: {
-                isExecuteRequestOnRenderDisabled: true
-            }
+                isExecuteRequestOnRenderDisabled: true,
+            },
         },
         {
             attributes: {
-                paginationSize: 10
+                paginationSize: 10,
             },
             objectDataRequest: {},
-            isVisible: true
+            isVisible: true,
         },
         {
             attributes: {
-                paginationSize: 10
+                paginationSize: 10,
             },
             fileDataRequest: {},
-            isVisible: true
-        }
+            isVisible: true,
+        },
     ]);
 
     const objectDataRequest = sinon.stub(Engine, 'objectDataRequest').resolves(null);
@@ -592,7 +604,7 @@ test.serial('Sync', t => {
         });
 });
 
-test.serial('Return To Parent', t => {
+test.serial('Return To Parent', (t) => {
     sinon.stub(Collaboration, 'returnToParent');
 
     Engine.returnToParent(flowKey, 'parentStateId');
@@ -603,13 +615,13 @@ test.serial('Return To Parent', t => {
     t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, 'main', 'parentStateId', 'authenticationToken', 'options'));
 });
 
-test.serial('Flow Out', t => {
+test.serial('Flow Out', (t) => {
     sinon.stub(Collaboration, 'flowOut');
 
     ajax.flowOut.callsFake(() => {
         const deferred =  $.Deferred();
         deferred.resolve({
-            stateId: 'stateId'
+            stateId: 'stateId',
         });
         return deferred;
     });

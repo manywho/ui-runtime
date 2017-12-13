@@ -45,7 +45,7 @@ const dateTimeFormatMappings: any = [
     { key: 'yyyy', value: 'YYYY' },
     { key: 'z', value: 'ZZ' },
     { key: 'zz', value: 'ZZ' },
-    { key: 'zzz', value: 'ZZ' }
+    { key: 'zzz', value: 'ZZ' },
 ];
 
 let culture = 'en-US';
@@ -82,11 +82,11 @@ export const format = (value: string | number, format: string, contentType: stri
         return value;
 
     switch (contentType.toUpperCase()) {
-        case Component.contentTypes.datetime:
-            return dateTime(value as string, format, flowKey);
+    case Component.contentTypes.datetime:
+        return dateTime(value as string, format, flowKey);
 
-        case Component.contentTypes.number:
-            return number(value, format, flowKey);
+    case Component.contentTypes.number:
+        return number(value, format, flowKey);
     }
 
     return value;
@@ -133,7 +133,7 @@ export const toMomentFormat = (format: string): string => {
         if (parts) {
             let parsedFormat = format;
 
-            parts.forEach(part => {
+            parts.forEach((part) => {
                 const mapping = dateTimeFormatMappings.find(item => item.key === part);
                 parsedFormat = mapping ? parsedFormat.replace(part, mapping.value) : parsedFormat;
             });
@@ -166,12 +166,12 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
 
     try {
         const momentFormat = Utils.isNullOrWhitespace(format) ? null : toMomentFormat(format);
-        const formats: Array<string | moment.MomentBuiltinFormat> = [moment.ISO_8601];
+        const formats: (string|moment.MomentBuiltinFormat)[] = [moment.ISO_8601];
 
         if (momentFormat)
             formats.unshift(momentFormat);
 
-        let parsedDateTime = moment.utc(dateTime, formats);
+        const parsedDateTime = moment.utc(dateTime, formats);
 
         if (!parsedDateTime.isValid())
             return dateTime;
@@ -194,7 +194,8 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
 /**
  * Format a number and return it as a string
  * @param value Number to format
- * @param format Format string, supported formats include e, E (scientifix); c, C (currency); and symbols as documented here: http://numbrojs.com/format.html
+ * @param format Format string, supported formats include e, E (scientifix); c, C (currency); and symbols as 
+ * documented here: http://numbrojs.com/format.html
  * @param flowKey
  */
 export const number = (value: number | string, format: string, flowKey: string): string => {
@@ -206,13 +207,13 @@ export const number = (value: number | string, format: string, flowKey: string):
 
     try {
         if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
-            return (new Number(value)).toExponential();
+            return (Number(value)).toExponential();
 
         if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
-            let numbroValue = numbro(value);
+            const numbroValue = numbro(value);
             numbro.culture(culture);
 
-            let formattedNumber = numbroValue.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
+            const formattedNumber = numbroValue.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
             numbro.culture('en-US');
 
             return formattedNumber;
@@ -229,26 +230,26 @@ export const number = (value: number | string, format: string, flowKey: string):
 
             decimalsFormat.split('').forEach((part, index) => {
                 switch (part.toUpperCase()) {
-                    case '#':
-                        if (index < decimals.length)
-                            format += 0;
-                        break;
+                case '#':
+                    if (index < decimals.length)
+                        format += 0;
+                    break;
 
-                    case '0':
-                        format += '0';
-                        break;
+                case '0':
+                    format += '0';
+                    break;
 
-                    default:
-                        format += part;
-                        break;
+                default:
+                    format += part;
+                    break;
                 }
             });
         }
 
-        let numbroValue = numbro(value);
+        const numbroValue = numbro(value);
         numbro.culture(culture);
 
-        let formattedNumber = numbroValue.format(format);
+        const formattedNumber = numbroValue.format(format);
         numbro.culture('en-US');
 
         return formattedNumber;

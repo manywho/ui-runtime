@@ -1,5 +1,6 @@
 /**
- * Store for the various settings that are supported in the UI framework, details on the available settings can be found here: https://github.com/manywho/ui-html5/wiki/Settings
+ * Store for the various settings that are supported in the UI framework, details on the available 
+ * settings can be found here: https://github.com/manywho/ui-html5/wiki/Settings
  */
 
  /** this comment exists as a typedoc workaround */
@@ -22,34 +23,34 @@ let globals = {
         validation: {
             required: 'This field is required',
             invalid: 'This value is invalid',
-            notification: 'Page contains invalid values'
+            notification: 'Page contains invalid values',
         },
-        searchFirst: 'Perform a search to display results here'
+        searchFirst: 'Perform a search to display results here',
     },
     i18n: {
         overrideTimezoneOffset: false,
         timezoneOffset: null,
-        culture: null
+        culture: null,
     },
     paging: {
         table: 10,
         files: 10,
         select: 250,
-        tiles: 20
+        tiles: 20,
     },
     collaboration: {
-        uri: 'https://realtime.manywho.com'
+        uri: 'https://realtime.manywho.com',
     },
     platform: {
-        uri: ''
+        uri: '',
     },
     navigation: {
         isFixed: true,
-        isWizard: false
+        isWizard: false,
     },
     files: {
         downloadUriPropertyId: '6611067a-7c86-4696-8845-3cdc79c73289',
-        downloadUriPropertyName: 'Download Uri'
+        downloadUriPropertyName: 'Download Uri',
     },
     richText: {
         url: 'https://cdn.tinymce.com/4/tinymce.min.js',
@@ -57,9 +58,10 @@ let globals = {
         plugins: [
             'advlist autolink link lists link image charmap print hr anchor',
             'searchreplace visualblocks fullscreen wordcount code insertdatetime',
-            'media table directionality emoticons contextmenu paste textcolor'
+            'media table directionality emoticons contextmenu paste textcolor',
         ],
-        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link mwimage'
+        toolbar: `undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify 
+                | bullist numlist outdent indent | link mwimage`,
     },
     errorMessage: 'Whoops, something went wrong inside ManyWho - if this keeps happening, contact us at support@manywho.com',
     outcomes: {
@@ -67,22 +69,22 @@ let globals = {
         isFixed: false,
     },
     shortcuts: {
-        progressOnEnter: true
+        progressOnEnter: true,
     },
     isFullWidth: false,
     collapsible: {
         default: {
             enabled: false,
             collapsed: false,
-            group: null
-        }
+            group: null,
+        },
     },
     history: false,
     containerSelector: '#manywho',
     syncOnUnload: true,
     toggle: {
         shape: 'round',
-        background: null
+        background: null,
     },
     charts: {
         backgroundColors: ['#42a5f5', '#66bb6a', '#ef5350', '#ab47bc', '#ffa726', '#78909c', '#5c6bc0'],
@@ -93,44 +95,52 @@ let globals = {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
+                            beginAtZero: true,
+                        },
+                    }],
+                },
+            },
         },
         line: {
             options: {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
+                            beginAtZero: true,
+                        },
+                    }],
+                },
+            },
         },
         polarArea: {
-            backgroundColors: ['rgba(66, 165, 245, 0.4)', 'rgba(102, 187, 106, 0.4)', 'rgba(239, 83, 80, 0.4)', 'rgba(171, 71, 188, 0.4)', 'rgba(255, 167, 38, 0.4)', 'rgba(120, 144, 156, 0.4)', 'rgba(92, 107, 192, 0.4)']
-        }
+            backgroundColors: [
+                'rgba(66, 165, 245, 0.4)',
+                'rgba(102, 187, 106, 0.4)',
+                'rgba(239, 83, 80, 0.4)',
+                'rgba(171, 71, 188, 0.4)',
+                'rgba(255, 167, 38, 0.4)',
+                'rgba(120, 144, 156, 0.4)',
+                'rgba(92, 107, 192, 0.4)',
+            ],
+        },
     },
     validation: {
         isEnabled: false,
         scroll: {
             isEnabled: false,
-            selector: '.has-error'
+            selector: '.has-error',
         },
         notification: {
-            isEnabled: true
+            isEnabled: true,
         },
-        when: ['move']
+        when: ['move'],
     },
     location: {
-        isTrackingEnabled: false
+        isTrackingEnabled: false,
     },
     formatting: {
         isEnabled: false,
-        currency: '0.00'
+        currency: '0.00',
     },
     tours: {
         defaults: {
@@ -143,20 +153,20 @@ let globals = {
             offset: null,
             align: 'center',
             order: null,
-            querySelector: false
+            querySelector: false,
         },
         autoStart: false,
-        container: '.mw-bs'
+        container: '.mw-bs',
     },
     components: {
-        static: []
-    }
+        static: [],
+    },
 };
 
-let flows = {};
+const flows = {};
 
-let themes = {
-    url: '/css/themes'
+const themes = {
+    url: '/css/themes',
 };
 
 let events = {
@@ -173,7 +183,7 @@ let events = {
     getFlowByName: {},
     sessionAuthentication: {},
     social: {},
-    ping: {}
+    ping: {},
 };
 
 /**
@@ -215,7 +225,8 @@ export const global = (path: string, flowKey?: string, defaultValue?: any) => {
 
     if (typeof globalValue !== 'undefined')
         return globalValue;
-    else if (typeof defaultValue !== 'undefined')
+
+    if (typeof defaultValue !== 'undefined')
         return defaultValue;
 
     return globalValue;
@@ -231,8 +242,8 @@ export const flow = (path: string, flowKey: string) => {
 
     if (Utils.isNullOrWhitespace(path))
         return flows[lookUpKey];
-    else
-        return Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
+    
+    return Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
 };
 
 /**
@@ -261,11 +272,11 @@ export const isDebugEnabled = (flowKey: string, value?: boolean): boolean => {
 
     if (typeof value === 'undefined')
         return Utils.isEqual(this.flow('mode', flowKey), 'Debug', true) || Utils.isEqual(this.flow('mode', flowKey), 'Debug_StepThrough', true);
+    
+    if (value)
+        flows[lookUpKey].mode = 'Debug';
     else
-        if (value)
-            flows[lookUpKey].mode = 'Debug';
-        else
-            flows[lookUpKey].mode = '';
+        flows[lookUpKey].mode = '';
 };
 
 /**

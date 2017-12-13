@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as Callbacks from '../js/services/callbacks';
 
 test('Register', (t) => {
@@ -18,11 +18,11 @@ test('Execute', (t) => {
     const execute = (response, t) => t.pass();
 
     Callbacks.register(flowKey, {
+        execute,
         type: 'done',
         name: 'name',
         args: [t],
         repeat: false,
-        execute: execute
     });
 
     Callbacks.execute(flowKey, 'done', 'name', null, null);
@@ -33,11 +33,11 @@ test('Execute filter by name', (t) => {
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
+        execute,
         type: 'done',
         name: 'name',
         args: [t],
         repeat: false,
-        execute: execute
     });
 
     Callbacks.execute(flowKey, 'done', 'fail', null, null);
@@ -50,11 +50,11 @@ test('Execute filter by type', (t) => {
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
+        execute,
         type: 'done',
         name: 'name',
         args: [t],
         repeat: false,
-        execute: execute
     });
 
     Callbacks.execute(flowKey, 'move', 'name', null, null);
@@ -67,12 +67,12 @@ test('Execute filter by map element', (t) => {
     const execute = (response, t) => t.fail();
 
     Callbacks.register(flowKey, {
+        execute,
         type: 'move',
         mapElement: 'mapElement',
         name: 'name',
         args: [t],
         repeat: false,
-        execute: execute
     });
 
     Callbacks.execute(flowKey, 'move', 'name', 'fail', null);
@@ -85,10 +85,10 @@ test('Execute no args', (t) => {
     const execute = (response, t) => t.pass();
 
     Callbacks.register(flowKey, {
+        execute,
         type: 'done',
         name: 'name',
         repeat: false,
-        execute: execute
     });
 
     Callbacks.execute(flowKey, 'done', 'name', null, [t]);

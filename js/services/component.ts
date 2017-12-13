@@ -12,7 +12,7 @@ const aliases = {};
 function getComponentType(item) {
     if ('containerType' in item)
         return item.containerType;
-    else if ('componentType' in item)
+    if ('componentType' in item)
         return item.componentType;
 
     return null;
@@ -34,7 +34,7 @@ export const contentTypes = {
     datetime: 'CONTENTDATETIME',
     content: 'CONTENTCONTENT',
     object: 'CONTENTOBJECT',
-    list: 'CONTENTLIST'
+    list: 'CONTENTLIST',
 };
 
 /**
@@ -43,11 +43,11 @@ export const contentTypes = {
  * @param component
  * @param alias Extra names that can also be used to fetch the component later
  */
-export const register = (name: string, component: React.Component | React.SFC, alias?: Array<string>) => {
+export const register = (name: string, component: React.Component | React.SFC, alias?: string[]) => {
     components[name.toLowerCase()] = component;
 
     if (alias)
-        alias.forEach(aliasName => {
+        alias.forEach((aliasName) => {
             aliases[aliasName.toLowerCase()] = name.toLowerCase();
         });
 };
@@ -116,10 +116,10 @@ export const getByName = (name: string) => {
  * @param id
  * @param flowKey
  */
-export const getChildComponents = (children: Array<any>, id: string, flowKey: string) => {
+export const getChildComponents = (children: any[], id: string, flowKey: string) => {
     return children
         .sort((a, b) => a.order - b.order)
-        .map(item => React.createElement(this.get(item), { id: item.id, parentId: id, flowKey: flowKey, key: item.id }));
+        .map(item => React.createElement(this.get(item), { flowKey, id: item.id, parentId: id, key: item.id }));
 };
 
 /**
@@ -127,10 +127,10 @@ export const getChildComponents = (children: Array<any>, id: string, flowKey: st
  * @param outcomes
  * @param flowKey
  */
-export const getOutcomes = (outcomes: Array<any>, flowKey: string): Array<any> => {
+export const getOutcomes = (outcomes: any[], flowKey: string): any[] => {
     return outcomes
         .sort((a, b) => a.order - b.order)
-        .map(item => React.createElement(components['outcome'], { id: item.id, flowKey: flowKey, key: item.id }));
+        .map(item => React.createElement(components['outcome'], { flowKey, id: item.id, key: item.id }));
 };
 
 /**
@@ -160,20 +160,20 @@ export const handleEvent = (component: React.Component | React.SFC, model: any, 
  * @param model
  * @param selectedIds The external ids of the selected items
  */
-export const getSelectedRows = (model: any, selectedIds: Array<string>): Array<any> => {
+export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
     let selectedObjectData = [];
 
     if (selectedIds) {
-        selectedIds.forEach(selectedId => {
+        selectedIds.forEach((selectedId) => {
 
             if (!Utils.isNullOrWhitespace(selectedId))
                 selectedObjectData = selectedObjectData.concat(
                     model.objectData.filter(item => Utils.isEqual(item.externalId, selectedId, true))
-                                    .map(item => {
+                                    .map((item) => {
                                         const clone = JSON.parse(JSON.stringify(item));
                                         clone.isSelected = true;
                                         return clone;
-                                    })
+                                    }),
                 );
         });
     }
@@ -182,20 +182,21 @@ export const getSelectedRows = (model: any, selectedIds: Array<string>): Array<a
 };
 
 /**
- * Get the columns that have `isDisplayValue` set to true, or contain a property with a developer name of `isDisplayValue` and a content value of `true`
+ * Get the columns that have `isDisplayValue` set to true, or contain a property with a developer name of `isDisplayValue` 
+ * and a content value of `true`
  * @param columns
  */
-export const getDisplayColumns = (columns: Array<any>): Array<any> => {
+export const getDisplayColumns = (columns: any[]): any[] => {
     let displayColumns = null;
 
     if (columns)
-        displayColumns = columns.filter(column => {
+        displayColumns = columns.filter((column) => {
             if (column.properties) {
                 const property = Utils.getObjectDataProperty(column.properties, 'isDisplayValue');
                 return property ? Utils.isEqual(property.contentValue, 'true', true) : false;
             }
-            else
-                return column.isDisplayValue;
+            
+            return column.isDisplayValue;
         });
 
     if (!displayColumns || displayColumns.length === 0)
@@ -214,7 +215,8 @@ export const appendFlowContainer = (flowKey: string) => {
     let container = document.getElementById(lookUpKey);
     const containerType = Utils.extractElement(flowKey);
 
-    // Added this fix because embedded Flows and normal Flows should not be positioned absolute on their main container, that should only happen for modal containers
+    // Added this fix because embedded Flows and normal Flows should not be positioned absolute on their main container, 
+    // that should only happen for modal containers
 
     let containerClasses = 'mw-bs flow-container';
 
@@ -240,9 +242,13 @@ export const appendFlowContainer = (flowKey: string) => {
  * @param flowKey
  */
 export const focusInput = (flowKey: string) => {
-    // Focus the first input or textarea control on larger screen devices, this should help stop a keyboard from becoming visible on mobile devices when the flow first renders
+    // Focus the first input or textarea control on larger screen devices, this should help stop a keyboard from 
+    // becoming visible on mobile devices when the flow first renders
     if (Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
-        const input = document.querySelector('.main .mw-input input, .main .mw-content input, .main .mw-textarea textarea, .modal-container .mw-input input, .modal-container .mw-content input, .modal-container .mw-textarea textarea') as HTMLInputElement;
+        const input = document.querySelector(`.main .mw-input input, .main .mw-content input, 
+            .main .mw-textarea textarea, .modal-container .mw-input input, .modal-container 
+            .mw-content input, .modal-container .mw-textarea textarea`) as HTMLInputElement;
+            
         if (input) {
             input.focus();
 
@@ -264,13 +270,14 @@ export const scrollToTop = (flowKey: string) => {
 };
 
 /**
- * Calls `Engine.move` then `Engine.flowOut` if the `outcome.isOut` is true. Will open a new window insttead if the `uri` or `uriTypeElementPropertyId` attributes are defined
+ * Calls `Engine.move` then `Engine.flowOut` if the `outcome.isOut` is true. Will open a new window instead if the `uri` 
+ * or `uriTypeElementPropertyId` attributes are defined
  * @param outcome
  * @param objectData
  * @param flowKey
  * @returns Deffered result from `Engine.move`
  */
-export const onOutcome = (outcome: any, objectData: Array<any>, flowKey: string): JQueryDeferred<any> => {
+export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQueryDeferred<any> => {
     if (outcome.attributes) {
         if (outcome.attributes.uri) {
             window.open(outcome.attributes.uri, '_blank');
@@ -278,7 +285,9 @@ export const onOutcome = (outcome: any, objectData: Array<any>, flowKey: string)
         }
 
         if (outcome.attributes.uriTypeElementPropertyId && objectData) {
-            const property = objectData[0].properties.find(prop => Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true));
+            const property = objectData[0].properties.find((prop) => {
+                return Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true);
+            });
 
             if (property) {
                 window.open(property.contentValue, '_blank');

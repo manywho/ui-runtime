@@ -20,19 +20,19 @@ export const initialize = (flowKey: string, streamId: string) => {
     const authenticationToken = State.getAuthenticationToken(flowKey);
 
     streams[lookUpKey] = {
-        id: streamId
+        id: streamId,
     };
 
     return Ajax.getSocialMe(tenantId, streamId, stateId, authenticationToken)
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].me = response;
             return Ajax.getSocialFollowers(tenantId, streamId, stateId, authenticationToken);
         })
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].followers = response;
             return Ajax.getSocialMessages(tenantId, streamId, stateId, 1, 10, authenticationToken);
         })
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].messages = response;
             State.setComponentLoading('feed', null, flowKey);
             Engine.render(flowKey);
@@ -62,7 +62,7 @@ export const refreshMessages = (flowKey: string) => {
     const streamId = streams[lookUpKey].id;
 
     return Ajax.getSocialMessages(tenantId, streamId, stateId, 1, 10, authenticationToken)
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].messages = response;
             State.setComponentLoading('feed', null, flowKey);
             Engine.render(flowKey);
@@ -85,7 +85,7 @@ export const getMessages = (flowKey: string) => {
     const streamId = streams[lookUpKey].id;
 
     return Ajax.getSocialMessages(tenantId, streamId, stateId, streams[lookUpKey].messages.nextPage, 10, authenticationToken)
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].messages.messages = streams[lookUpKey].messages.messages.concat(response.messages);
             streams[lookUpKey].messages.nextPage = response.nextPage;
 
@@ -123,7 +123,7 @@ export const sendMessage = (flowKey: string, message: string, repliedTo: string,
     if (repliedTo)
         request.repliedTo = repliedTo;
 
-    request.messageText = request.messageText.replace(/@\[[A-za-z0-9 ]*\]/ig, match => {
+    request.messageText = request.messageText.replace(/@\[[A-za-z0-9 ]*\]/ig, (match) => {
         return match.substring(2, match.length - 1);
     });
 
@@ -131,7 +131,7 @@ export const sendMessage = (flowKey: string, message: string, repliedTo: string,
     Engine.render(flowKey);
 
     return Ajax.sendSocialMessage(tenantId, stream.id, stateId, request, authenticationToken)
-        .then(response => {
+        .then((response) => {
 
             if (repliedTo) {
                 const repliedToMessage = stream.messages.messages.find(message => message.id === repliedTo);
@@ -165,11 +165,11 @@ export const toggleFollow = (flowKey: string) => {
     Engine.render(flowKey);
 
     return Ajax.follow(tenantId, stream.id, stateId, !stream.me.isFollower, authenticationToken)
-        .then(response => {
+        .then((response) => {
             stream.me.isFollower = !stream.me.isFollower;
             return Ajax.getSocialFollowers(tenantId, stream.id, stateId, authenticationToken);
         })
-        .then(response => {
+        .then((response) => {
             streams[lookUpKey].followers = response;
             State.setComponentLoading('feed', null, flowKey);
             Engine.render(flowKey);

@@ -35,7 +35,7 @@ export const refreshComponents = (models: any, invokeType: string, flowKey: stri
 
         components[lookUpKey][id] = {
             contentValue: models[id].contentValue || null,
-            objectData: selectedObjectData || null
+            objectData: selectedObjectData || null,
         };
 
         if (Validation.shouldValidate(invokeType, flowKey))
@@ -60,7 +60,7 @@ export const setLocation = (flowKey: string) => {
 
         const lookUpKey = Utils.getLookUpKey(flowKey);
 
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition((position) => {
 
             if (position != null && position.coords != null) {
                 location[lookUpKey] = {
@@ -70,12 +70,12 @@ export const setLocation = (flowKey: string) => {
                     altitude: Utils.getNumber(position.coords.altitude),
                     altitudeAccuracy: Utils.getNumber(position.coords.altitudeAccuracy),
                     heading: Utils.getNumber(position.coords.heading),
-                    speed: Utils.getNumber(position.coords.speed)
+                    speed: Utils.getNumber(position.coords.speed),
                 };
 
                 setUserTime(flowKey);
             }
-        }, null, { timeout: 60000 });
+        },                                       null, { timeout: 60000 });
     }
 };
 
@@ -109,22 +109,22 @@ export const getComponent = (id: string, flowKey: string): IComponentValue => {
  * Get the state of every component
  * @param flowKey 
  */
-export const getComponents = (flowKey: string): Array<IComponentValue> => {
+export const getComponents = (flowKey: string): IComponentValue[] => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return components[lookUpKey];
 };
 
 export interface IComponentValue {
-    objectData?: Array<any>,
-    contentValue?: string | number | boolean,
+    objectData?: any[];
+    contentValue?: string | number | boolean;
     loading?: {
-        message: string
-    },
+        message: string,
+    };
     error?: {
-        message: string
-    }
-    isValid?: boolean,
-    validationMessage?: string
+        message: string,
+    };
+    isValid?: boolean;
+    validationMessage?: string;
 }
 
 /**
@@ -165,15 +165,15 @@ export const setComponents = (values: any, flowKey: string) => {
 };
 
 export interface IPageComponentInputResponseRequest {
-    pageComponentId: string,
-    contentValue: string | number | boolean,
-    objectData: Array<any>
+    pageComponentId: string;
+    contentValue: string | number | boolean;
+    objectData: any[];
 }
 
 /**
  * Transform the current components local state into an array of IPageComponentInputResponseRequest
  */
-export const getPageComponentInputResponseRequests = (flowKey: string): Array<IPageComponentInputResponseRequest> => {
+export const getPageComponentInputResponseRequests = (flowKey: string): IPageComponentInputResponseRequest[] => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     let pageComponentInputResponseRequests = null;
 
@@ -187,7 +187,7 @@ export const getPageComponentInputResponseRequests = (flowKey: string): Array<IP
                 pageComponentInputResponseRequests.push({
                     pageComponentId: id,
                     contentValue: components[lookUpKey][id].contentValue,
-                    objectData: components[lookUpKey][id].objectData
+                    objectData: components[lookUpKey][id].objectData,
                 });
         }
     }
@@ -217,7 +217,7 @@ export const isAllValid = (flowKey: string): boolean => {
         for (const id in components) {
             const validationResult: Validation.IValidationResult = isValid(id, flowKey);
 
-            if (validationResult.isValid === false) {
+            if (!validationResult.isValid) {
                 setComponent(id, validationResult as IComponentValue, flowKey, true);
                 result = false;
             }
@@ -236,9 +236,9 @@ export const setState = (id: string, token: string, mapElementId: string, flowKe
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     state[lookUpKey] = {
-        id: id,
-        token: token,
-        currentMapElementId: mapElementId
+        id,
+        token,
+        currentMapElementId: mapElementId,
     };
 };
 
@@ -330,7 +330,8 @@ export const setComponentLoading = (componentId: string, data: any, flowKey: str
 };
 
 /**
- *  Set the `error` property on a component to an object with `message` and `id` properties. If the `error` argument is a string it will populate the `message` property
+ * Set the `error` property on a component to an object with `message` and `id` properties. 
+ * If the `error` argument is a string it will populate the `message` property
  */
 export const setComponentError = (componentId: string, error: any | string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -345,7 +346,7 @@ export const setComponentError = (componentId: string, error: any | string, flow
     else if (typeof error === 'string')
         components[lookUpKey][componentId].error = {
             message: error,
-            id: componentId
+            id: componentId,
         };
     else if (!error)
         components[lookUpKey][componentId].error = null;

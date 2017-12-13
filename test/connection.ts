@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mock from 'xhr-mock';
 import * as FormData from 'form-data';
 import * as Connection from '../js/services/connection';
@@ -6,26 +6,28 @@ import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.before(t => {
+test.before((t) => {
     mock.setup();
 
-    Settings.initialize({
-        platform: {
-            uri: 'https://flow.manywho.com/'
-        }
-    },
-    {
-        myevent: {
+    Settings.initialize(
+        {
+            platform: {
+                uri: 'https://flow.manywho.com/',
+            },
+        },
+        {
+            myevent: {
                 beforeSend: (xhr, request) => {
-                t.not(request, null);
-            }
-        }
-    });
+                    t.not(request, null);
+                },
+            },
+        },
+    );
 
     t.pass();
 });
 
-test.cb('Request', t => {
+test.cb('Request', (t) => {
     t.plan(4);
 
     const payload = { request: 'test' };
@@ -36,7 +38,7 @@ test.cb('Request', t => {
         authorization: 'token',
         'content-type': 'application/json',
         manywhostate: 'stateId',
-        manywhotenant: 'tenantId'
+        manywhotenant: 'tenantId',
     };
 
     mock.post(url, (req, res) => {
@@ -64,7 +66,7 @@ test.cb.failing('Upload', (t) => {
 
     const expectedHeaders = {
         authorization: 'token',
-        manywhotenant: 'tenantId'
+        manywhotenant: 'tenantId',
     };
 
     mock.post(url, (req, res) => {

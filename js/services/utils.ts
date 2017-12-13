@@ -1,7 +1,7 @@
 
 
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import reactDom from 'react-dom';
 import * as $ from 'jquery';
 
 import * as Callbacks from './callbacks';
@@ -12,9 +12,9 @@ import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
 
-function extendShallow (mergedObject, objects) {
+function extendShallow(mergedObject, objects) {
 
-    objects.forEach(object => {
+    objects.forEach((object) => {
         for (const key in object) {
             if (object.hasOwnProperty(key))
                 mergedObject[key] = object[key];
@@ -24,7 +24,7 @@ function extendShallow (mergedObject, objects) {
     return mergedObject;
 }
 
-function extendDeep (mergedObject, object) {
+function extendDeep(mergedObject, object) {
 
     for (const key in object) {
 
@@ -44,9 +44,9 @@ function extendDeep (mergedObject, object) {
     return mergedObject;
 }
 
-function extendArray (mergedArray, array) {
+function extendArray(mergedArray, array) {
 
-    array.forEach(child => {
+    array.forEach((child) => {
         mergedArray.push(child);
     });
 
@@ -99,13 +99,16 @@ export const replaceBrowserUrl = (response: any) => {
  */
 export const parseQueryString = (queryString: string): any => {
     const params = {};
-    let queries, temp, i, l;
+    let queries;
+    let temp;
+    let i;
+    let l;
 
     // Split into key/value pairs
     queries = queryString.split('&');
 
     // Convert the array of strings into an object
-    for (i = 0, l = queries.length; i < l; i++) {
+    for (i = 0, l = queries.length; i < l; i += 1) {
         temp = queries[i].split('=');
         params[temp[0]] = temp[1];
     }
@@ -127,7 +130,7 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
         if (!isDeep)
             mergedObject = extendShallow(mergedObject, objects);
         else
-            objects.forEach(object => {
+            objects.forEach((object) => {
                 mergedObject = extendDeep(mergedObject, object);
             });
     }
@@ -138,7 +141,7 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
 /**
  * @hidden
  */
-export const extendObjectData = (mergedObjectData: Array<any>, objectData: Array<any>): Array<any>  => {
+export const extendObjectData = (mergedObjectData: any[], objectData: any[]): any[]  => {
     if (objectData) {
         if (!mergedObjectData) {
             mergedObjectData = [];
@@ -146,11 +149,11 @@ export const extendObjectData = (mergedObjectData: Array<any>, objectData: Array
             return;
         }
 
-        objectData.forEach(objectProperty => {
+        objectData.forEach((objectProperty) => {
 
             if (mergedObjectData && mergedObjectData.length > 0) {
 
-                mergedObjectData.forEach(property => {
+                mergedObjectData.forEach((property) => {
 
                     if (isEqual(property.developerName, objectProperty.developerName, true))
                         if (objectProperty.contentValue != null)
@@ -208,7 +211,7 @@ export const isEqual = (value1: string, value2: string, ignoreCase: boolean): bo
 /**
  * Returns an array with an entry for each property value of the passed in object
  */
-export const convertToArray = (obj): Array<any> => {
+export const convertToArray = (obj): any[] => {
     let items = null;
 
     if (obj) {
@@ -224,7 +227,7 @@ export const convertToArray = (obj): Array<any> => {
 /**
  * Check if an array contains item where the `key` property is equal to `id`
  */
-export const contains = (collection: Array<any>, id: string, key: string) => {
+export const contains = (collection: any[], id: string, key: string) => {
     const selectedItem = collection.filter(item => item[key] === id);
     return (selectedItem && selectedItem.length > 0);
 };
@@ -232,7 +235,7 @@ export const contains = (collection: Array<any>, id: string, key: string) => {
 /**
  * Get an item from an array where the `key` property of the item is equal to `id`
  */
-export const get = (collection: Array<any>, id: string, key: string) => {
+export const get = (collection: any[], id: string, key: string) => {
     const selectedItem = collection.filter(item => item[key] === id);
 
     if (selectedItem && selectedItem.length > 0)
@@ -338,12 +341,12 @@ export const getValueByPath = (obj: any, path: string): any => {
         return obj;
 
     try {
-        let parts = path.split('.');
+        const parts = path.split('.');
 
-        for (let i = 0; i < parts.length; i++) {
+        for (let i = 0; i < parts.length; i += 1) {
             let foundKey = null;
 
-            for (let key in obj) {
+            for (const key in obj) {
                 if (key.toLowerCase() === parts[i].toLowerCase())
                     foundKey = key;
             }
@@ -367,10 +370,10 @@ export const removeFlowFromDOM = (flowKey) => {
     const lookUpKey = getLookUpKey(flowKey);
     const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
-    for (let i = 0, len = rootElement.children.length; i < len; i++) {
+    for (let i = 0, len = rootElement.children.length; i < len; i += 1) {
 
         if (rootElement.children[i].id === lookUpKey) {
-            ReactDOM.unmountComponentAtNode(rootElement.children[i]);
+            reactDom.unmountComponentAtNode(rootElement.children[i]);
             rootElement.removeChild(rootElement.children[i]);
         }
     }
@@ -379,14 +382,14 @@ export const removeFlowFromDOM = (flowKey) => {
 /**
  * Returns the property where its `developerName` is equal to the `propertyName` argument
  */
-export const getObjectDataProperty = (properties: Array<any>, propertyName: string): any => {
+export const getObjectDataProperty = (properties: any[], propertyName: string): any => {
     return properties.find(property => isEqual(property.developerName, propertyName, true));
 };
 
 /**
  * Set the `contentValue` of a property that matches the `propertyName`
  */
-export const setObjectDataProperty = (properties: Array<any>, propertyName: string, value: string | number | boolean) => {
+export const setObjectDataProperty = (properties: any[], propertyName: string, value: string | number | boolean) => {
     const property = properties.find(property => isEqual(property.developerName, propertyName, true));
     if (property)
         property.contentValue = value;
@@ -407,7 +410,7 @@ export const isEmptyObjectData = (model): boolean => {
 /**
  * Returns true if the objectdata is a single item and all of its properties content values are null or whitespace
  */
-export const isPlaceholderObjectData = (objectData: Array<any>): boolean => {
+export const isPlaceholderObjectData = (objectData: any[]): boolean => {
     if (objectData.length === 1) {
         for (const prop in objectData[0].properties) {
             if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue))
@@ -424,19 +427,20 @@ export const isPlaceholderObjectData = (objectData: Array<any>): boolean => {
  */
 export const debounce = (func: Function, wait: number, immediate: boolean) => {
     let timeout;
-    return function() {
-        const context = this,
-            args = arguments;
-        const later = function() {
+    return function () {
+        // tslint:disable-next-line:no-var-self
+        const context = this;
+        const args = arguments;
+        const later = function () {
             timeout = null;
-            if ( !immediate ) {
+            if (!immediate) {
                 func.apply(context, args);
             }
         };
         const callNow = immediate && !timeout;
         clearTimeout(timeout);
         timeout = setTimeout(later, wait || 200);
-        if ( callNow ) {
+        if (callNow) {
             func.apply(context, args);
         }
     };
@@ -468,7 +472,7 @@ export const guid = (): string => {
     if (typeof performance !== 'undefined' && typeof performance.now === 'function')
         now += performance.now();
 
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         const r = (now + Math.random() * 16) % 16 | 0;
         now = Math.floor(now / 16);
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -478,14 +482,15 @@ export const guid = (): string => {
 /**
  * Stolen from: https://github.com/soundcloud/jquery-whenall
  */
-export const whenAll = (deferreds: Array<JQueryDeferred<any>>): JQueryDeferred<any> => {
+export const whenAll = (deferreds: JQueryDeferred<any[]>[]): JQueryDeferred<any> => {
     if (deferreds && deferreds.length) {
-        let deferred = $.Deferred(),
-            toResolve = deferreds.length,
-            someFailed = false,
-            fail,
-            always;
+        const deferred = $.Deferred();
+        let toResolve = deferreds.length;
+        let someFailed = false;
+        let fail;
+        let always;
         always = function () {
+            // tslint:disable-next-line:no-increment-decrement
             if (!--toResolve) {
                 deferred[someFailed ? 'reject' : 'resolve']();
             }
@@ -493,11 +498,12 @@ export const whenAll = (deferreds: Array<JQueryDeferred<any>>): JQueryDeferred<a
         fail = function () {
             someFailed = true;
         };
-        deferreds.forEach(function (d) {
+        deferreds.forEach((d) => {
             d.fail(fail).always(always);
         });
         return deferred;
-    } else {
+    } 
+    else {
         return $.Deferred().resolve();
     }
 };

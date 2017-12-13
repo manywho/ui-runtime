@@ -1,14 +1,14 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
 const engine = {
-    render: sinon.stub()
+    render: sinon.stub(),
 };
 
 mockery.enable({
     useCleanCache: true,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
 });
 
 mockery.registerMock('./engine', engine);
@@ -17,16 +17,16 @@ import * as Model from '../js/services/model';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
     Model.initializeModel(flowKey);
     engine.render.resetHistory();
 });
 
-test.afterEach(t => {
+test.afterEach((t) => {
     Model.deleteFlowModel(flowKey);
 });
 
-test.after(t => {
+test.after((t) => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -42,7 +42,7 @@ test.serial('Parse Response', (t) => {
                 pageResponse: {
                     label: 'label',
                     attributes: {
-                        key: 'value'
+                        key: 'value',
                     },
                     pageContainerResponses: [
                         {
@@ -56,24 +56,24 @@ test.serial('Parse Response', (t) => {
                                     developerName: 'container-2',
                                     id: 'container-2',
                                     order: 0,
-                                    pageContainerResponses: null
-                                }
-                            ]
-                        }
+                                    pageContainerResponses: null,
+                                },
+                            ],
+                        },
                     ],
                     pageContainerDataResponses: [
                         {
                             isEditable: true,
                             isEnabled: true,
                             isVisible: true,
-                            pageContainerId: 'container-1'
+                            pageContainerId: 'container-1',
                         },
                         {
                             isEditable: false,
                             isEnabled: false,
                             isVisible: false,
-                            pageContainerId: 'container-2'
-                        }
+                            pageContainerId: 'container-2',
+                        },
                     ],
                     pageComponentResponses: [
                         {
@@ -83,38 +83,46 @@ test.serial('Parse Response', (t) => {
                             id: 'component-1',
                             pageContainerId: 'container-1',
                             pageContainerDeveloperName: 'container-1',
-                            isVisible: true
-                        }
+                            isVisible: true,
+                        },
                     ],
                     pageComponentDataResponses: [
                         {
                             contentValue: 'value',
-                            pageComponentId: 'component-1'
-                        }
-                    ]
+                            pageComponentId: 'component-1',
+                        },
+                    ],
                 },
                 outcomeResponses: [
                     {
                         id: 'outcome-1',
-                        pageContainerId: 'container-1'
-                    }
+                        pageContainerId: 'container-1',
+                    },
                 ],
                 rootFaults: {
-                    fault: 'fault message'
-                }
-            }
+                    fault: 'fault message',
+                },
+            },
         ],
         preCommitStateValues: 'preCommitStateValues',
-        stateValues: 'stateValues'
+        stateValues: 'stateValues',
     };
 
     Model.parseEngineResponse(response, flowKey);
 
-    const expectedContainer: any = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses[0]);
+    const expectedContainer: any = Object.assign(
+        {},
+        response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0], 
+        response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses[0],
+    );
     expectedContainer.childCount = 2;
     t.deepEqual(Model.getContainer('container-1', flowKey), expectedContainer);
 
-    const expectedComponent = Object.assign({}, response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0], response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0]);
+    const expectedComponent = Object.assign(
+        {}, 
+        response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0], 
+        response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0],
+    );
     t.deepEqual(Model.getComponent('component-1', flowKey), expectedComponent);
     t.deepEqual(Model.getComponentByName('component-1', flowKey), expectedComponent);
     t.deepEqual(Model.getComponents(flowKey), { 'component-1': expectedComponent });
@@ -141,8 +149,8 @@ test.serial('Parse Response', (t) => {
             position: 'center',
             type: 'danger',
             timeout: '0',
-            dismissible: true
-        }
+            dismissible: true,
+        },
     ];
     t.deepEqual(Model.getNotifications(flowKey, 'center'), expectedNotifications);
 });
@@ -156,7 +164,7 @@ test.serial('Notifications', (t) => {
         position: 'center',
         type: 'danger',
         timeout: 0,
-        dismissible: true
+        dismissible: true,
     };
     Model.addNotification(flowKey, notification);
 
@@ -206,15 +214,15 @@ test.serial('Parse Navigation Response', (t) => {
         navigationItemResponses: [
             {
                 id: 'item1',
-                locationMapElementId: 'currentMapElementId'
-            }
+                locationMapElementId: 'currentMapElementId',
+            },
         ],
         navigationItemDataResponses: [
             {
                 navigationItemId: 'item1',
-                isCurrent: false
-            }
-        ]
+                isCurrent: false,
+            },
+        ],
     };
 
     const expected = {
@@ -229,9 +237,9 @@ test.serial('Parse Navigation Response', (t) => {
                 id: 'item1',
                 isCurrent: true,
                 locationMapElementId: 'currentMapElementId',
-                navigationItemId: 'item1'
-            }
-        }
+                navigationItemId: 'item1',
+            },
+        },
     };
 
     Model.parseNavigationResponse('id', response, flowKey, 'currentMapElementId');
@@ -242,8 +250,8 @@ test.serial('Parse Navigation Response', (t) => {
 test('Set Components', (t) => {
     const containers = [
         {
-            id: 'container-id'
-        }
+            id: 'container-id',
+        },
     ];
 
     Model.setContainers(flowKey, containers, null, null);
@@ -251,32 +259,32 @@ test('Set Components', (t) => {
     const components = [
         {
             attributes: {
-                key: 'value'
+                key: 'value',
             },
             id: 'id',
             pageContainerId: 'container-id',
-            contentType: null
-        }
+            contentType: null,
+        },
     ];
 
     const componentsData = [
         {
             pageComponentId: 'id',
-            contentValue: 'value'
-        }
+            contentValue: 'value',
+        },
     ];
 
     Model.setComponents(flowKey, components, componentsData);
 
     const expected = {
         attributes: {
-            key: 'value'
+            key: 'value',
         },
         id: 'id',
         pageComponentId: 'id',
         pageContainerId: 'container-id',
         contentType: 'CONTENTSTRING',
-        contentValue: 'value'
+        contentValue: 'value',
     };
 
     t.deepEqual(Model.getComponent('id', flowKey), expected);
@@ -292,20 +300,20 @@ test('Set History', (t) => {
                     label: 'label',
                     pageComponentDataResponses: [
                         {
-                            content: 'content'
-                        }
-                    ]
+                            content: 'content',
+                        },
+                    ],
                 },
                 outcomeResponses: [
                     {
                         developerName: 'outcome',
                         id: 'outcome-id',
                         label: 'outcome',
-                        order: 1
-                    }
-                ]
-            }
-        ]
+                        order: 1,
+                    },
+                ],
+            },
+        ],
     };
 
     const expected = [{
@@ -318,9 +326,9 @@ test('Set History', (t) => {
                 name: 'outcome',
                 id: 'outcome-id',
                 label: 'outcome',
-                order: 1
-            }
-        ]
+                order: 1,
+            },
+        ],
     }];
 
     Model.setHistory(response, flowKey);
@@ -337,20 +345,20 @@ test('Pop History', (t) => {
                     label: 'label',
                     pageComponentDataResponses: [
                         {
-                            content: 'content'
-                        }
-                    ]
+                            content: 'content',
+                        },
+                    ],
                 },
                 outcomeResponses: [
                     {
                         developerName: 'outcome',
                         id: 'outcome-id',
                         label: 'outcome',
-                        order: 1
-                    }
-                ]
-            }
-        ]
+                        order: 1,
+                    },
+                ],
+            },
+        ],
     };
 
     Model.setHistory(response, flowKey);
@@ -361,7 +369,7 @@ test('Pop History', (t) => {
 
 test('Set History Selected Outcome', (t) => {
     const expected = {
-        selectedOutcome: 'outcome'
+        selectedOutcome: 'outcome',
     };
 
     Model.setHistorySelectedOutcome('outcome', 'invokeType', flowKey);

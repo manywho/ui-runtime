@@ -35,29 +35,36 @@ function beforeSend(xhr: XMLHttpRequest, tenantId: string, authenticationToken: 
  * @param data Body of the request data
  * @returns JQuery deferred from the $.ajax request
  */
-export const request = (context, event: string, url: string, type: string, tenantId: string, stateId: string, authenticationToken: string, data: object) => {
+export const request = (context,
+                        event: string, 
+                        url: string, 
+                        type: string, 
+                        tenantId: string, 
+                        stateId: string,
+                        authenticationToken: string, 
+                        data: object) => {
     let json = null;
 
     if (data != null)
         json = JSON.stringify(data);
 
     return $.ajax({
-            url: Settings.global('platform.uri') + url,
-            type: type,
-            dataType: 'json',
-            contentType: 'application/json',
-            processData: true,
-            data: json,
-            beforeSend: xhr => {
-                beforeSend.call(this, xhr, tenantId, authenticationToken, event, data);
+        type,
+        url: Settings.global('platform.uri') + url,
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: true,
+        data: json,
+        beforeSend: (xhr) => {
+            beforeSend.call(this, xhr, tenantId, authenticationToken, event, data);
 
-                if (Utils.isNullOrWhitespace(stateId) === false)
-                    xhr.setRequestHeader('ManyWhoState', stateId);
-            }
-        })
-        .done(Settings.event(event + '.done'))
-        .fail(onError)
-        .fail(Settings.event(event + '.fail'));
+            if (!Utils.isNullOrWhitespace(stateId))
+                xhr.setRequestHeader('ManyWhoState', stateId);
+        },
+    })
+    .done(Settings.event(event + '.done'))
+    .fail(onError)
+    .fail(Settings.event(event + '.fail'));
 };
 
 /**
@@ -71,7 +78,13 @@ export const request = (context, event: string, url: string, type: string, tenan
  * @param onProgress Callback to recieve progress event info
  * @returns JQuery deferred from the $.ajax request
  */
-export const upload = (context, event: string, url: string, formData: FormData, tenantId: string, authenticationToken: string, onProgress: EventListenerOrEventListenerObject ) => {
+export const upload = (context, 
+                       event: string, 
+                       url: string, 
+                       formData: FormData, 
+                       tenantId: string, 
+                       authenticationToken: string,
+                       onProgress: EventListenerOrEventListenerObject) => {
     return $.ajax({
         url: Settings.global('platform.uri') + url,
         type: 'POST',
@@ -83,9 +96,9 @@ export const upload = (context, event: string, url: string, formData: FormData, 
             xhr.upload.addEventListener('progress', onProgress, false);
             return xhr;
         },
-        beforeSend: xhr => {
+        beforeSend: (xhr) => {
             beforeSend.call(this, xhr, tenantId, authenticationToken, event);
-        }
+        },
     })
     .done(Settings.event(event + '.done'))
     .fail(onError)

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import reactDom from 'react-dom';
 
 import * as Component from './component';
 import * as Log from 'loglevel';
@@ -30,7 +30,7 @@ const watchForStep = function (tour: ITour) {
 
     const step = tour.steps[tour.currentStep];
 
-    if (step.showNext === false && tour.currentStep < tour.steps.length - 1)
+    if (!step.showNext && tour.currentStep < tour.steps.length - 1)
         domWatcher = setInterval(() => onInterval(tour, step, tour.steps[tour.currentStep + 1], !step.showNext && !step.showBack), 500);
 
     if (tour.currentStep === tour.steps.length - 1)
@@ -38,31 +38,31 @@ const watchForStep = function (tour: ITour) {
 };
 
 export interface ITourState {
-    foundTarget: boolean,
-    style: React.CSSProperties
+    foundTarget: boolean;
+    style: React.CSSProperties;
 }
 
 export interface ITourProps {
-    tour: ITour,
-    stepIndex: number
+    tour: ITour;
+    stepIndex: number;
 }
 
 export interface ITour {
-    id: string,
-    steps: Array<ITourStep>,
-    currentStep: number
+    id: string;
+    steps: ITourStep[];
+    currentStep: number;
 }
 
 export interface ITourStep {
-    target: string,
-    title: string,
-    content: string,
-    placement: string,
-    showNext: boolean,
-    showBack: boolean,
-    offset?: number,
-    align?: string,
-    order?: number
+    target: string;
+    title: string;
+    content: string;
+    placement: string;
+    showNext: boolean;
+    showBack: boolean;
+    offset?: number;
+    align?: string;
+    order?: number;
 }
 
 /**
@@ -74,8 +74,8 @@ export let current: ITour;
  * Register tours that can be started later
  * @param tours
  */
-export const addTours = (tours: Array<ITour>) => {
-    tours.forEach(tour => {
+export const addTours = (tours: ITour[]) => {
+    tours.forEach((tour) => {
         configs[tour.id] = tour;
     });
 };
@@ -111,7 +111,8 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
         }
 
         current = JSON.parse(JSON.stringify(configs[id])) as ITour;
-        current.steps = (current.steps || []).map((step, index) => Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
+        current.steps = (current.steps || []).map((step, index) => 
+            Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
 
         current.currentStep = 0;
 
@@ -119,7 +120,7 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
             getTargetElement = getElement;
 
         watchForStep(current);
-        ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
+        reactDom.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
         return current;
     }
     else
@@ -137,7 +138,7 @@ export const next = (tour: ITour = current) => {
     if (tour.currentStep + 1 >= tour.steps.length)
         done(tour);
     else
-        tour.currentStep++;
+        tour.currentStep += 1;
 
     watchForStep(tour);
     render();
@@ -177,7 +178,8 @@ export const move = (tour: ITour = current, index) => {
 };
 
 /**
- * Either re-render the current step, or move through the tour until a matching target node is found, or if no target nodes can be found unmount the `.mw-tours` node
+ * Either re-render the current step, or move through the tour until a matching target node is found, 
+ * or if no target nodes can be found unmount the `.mw-tours` node
  * @param tour The tour to move, defaults to `current`
  */
 export const refresh = (tour: ITour = current) => {
@@ -185,14 +187,14 @@ export const refresh = (tour: ITour = current) => {
         return;
 
     if (!getTargetElement(tour.steps[tour.currentStep])) {
-        for (let i = tour.currentStep; i < tour.steps.length; i++) {
+        for (let i = tour.currentStep; i < tour.steps.length; i += 1) {
             if (getTargetElement(tour.steps[i])) {
                 move(tour, i);
                 return;
             }
         }
 
-        ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
+        reactDom.unmountComponentAtNode(document.querySelector('.mw-tours'));
     }
     else
         render(tour);
@@ -204,7 +206,7 @@ export const refresh = (tour: ITour = current) => {
  */
 export const done = (tour: ITour = current) => {
     current = null;
-    ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
+    reactDom.unmountComponentAtNode(document.querySelector('.mw-tours'));
 };
 
 /**
@@ -215,7 +217,7 @@ export const render = (tour: ITour = current) => {
     if (!tour)
         return;
 
-    ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
+    reactDom.render(React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
 };
 
 /**

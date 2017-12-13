@@ -29,7 +29,10 @@ function emit(flowKey, kind, data?) {
 
 function onDisconnect() {
     for (const stateId in rooms) {
-        socket.emit('left', { user: rooms[stateId].user, stateId: stateId });
+        socket.emit('left', { 
+            stateId,
+            user: rooms[stateId].user,
+        });
     }
 }
 
@@ -42,7 +45,7 @@ function onJoined(data) {
             position: 'right',
             type: 'success',
             timeout: 2000,
-            dismissible: false
+            dismissible: false,
         });
     }
 }
@@ -56,7 +59,7 @@ function onLeft(data) {
             position: 'right',
             type: 'danger',
             timeout: 2000,
-            dismissible: false
+            dismissible: false,
         });
     }
 }
@@ -114,7 +117,13 @@ function onReturnToParent(data) {
     Utils.removeFlow(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId, null, null, element, data.parentStateId, State.getAuthenticationToken(data.subFlowKey), Settings.flow(null, data.subFlowKey));
+    Engine.join(tenantId,
+                null, 
+                null, 
+                element, 
+                data.parentStateId, 
+                State.getAuthenticationToken(data.subFlowKey), 
+                Settings.flow(null, data.subFlowKey));
 }
 
 function onSync(data) {
@@ -126,7 +135,7 @@ function onGetValues(data) {
     const stateId = data.subStateId || data.stateId;
 
     Log.info('get values from: ' + data.owner + ' in ' + stateId);
-    socket.emit('setValues', { stateId: stateId, id: data.id, components: State.getComponents(rooms[stateId].flowKey) });
+    socket.emit('setValues', { stateId, id: data.id, components: State.getComponents(rooms[stateId].flowKey) });
 }
 
 function onSetValues(data) {
@@ -149,7 +158,7 @@ export const initialize = (flowKey: string) => {
 
     if (!socket) {
         socket = io(Settings.global('collaboration.uri'), {
-            transports: ['websocket']
+            transports: ['websocket'],
         });
 
         socket.on('disconnect', onDisconnect);
@@ -164,15 +173,15 @@ export const initialize = (flowKey: string) => {
         socket.on('setValues', onSetValues);
         socket.on('syncFeed', onSyncFeed);
 
-        window.addEventListener('beforeunload', event => {
+        window.addEventListener('beforeunload', (event) => {
             onDisconnect();
         });
     }
 
     if (!rooms[stateId]) {
         rooms[stateId] = {
+            flowKey,
             isEnabled: true,
-            flowKey: flowKey
         };
     }
 };
@@ -210,7 +219,7 @@ export const join = (user, flowKey) => {
 
     if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
         rooms[stateId].user = user;
-        emit(flowKey, 'join', { user: user });
+        emit(flowKey, 'join', { user });
 
         if (!socket.connected)
             socket.on('connect', this.getValues.bind(null, flowKey));
@@ -224,14 +233,14 @@ export const join = (user, flowKey) => {
  */
 export const leave = (user: any, flowKey: string) => {
     const stateId = Utils.extractStateId(flowKey);
-    socket.emit('left', { user: user, stateId: stateId });
+    socket.emit('left', { user, stateId });
 };
 
 /**
  * Emit a `change` event to the collaboration server
  */
 export const push = (id: string, values, flowKey: string) => {
-    emit(flowKey, 'change', { component: id, values: values });
+    emit(flowKey, 'change', { values, component: id });
 };
 
 /**
@@ -252,14 +261,14 @@ export const move = (flowKey: string) => {
  * Emit a `flowOut` event to the collaboration server
  */
 export const flowOut = (flowKey: string, stateId: string, subFlowKey: string) => {
-    emit(flowKey, 'flowOut', { subStateId: stateId, parentFlowKey: flowKey, subFlowKey: subFlowKey });
+    emit(flowKey, 'flowOut', { subFlowKey, subStateId: stateId, parentFlowKey: flowKey });
 };
 
 /**
  * Emit a `returnToParent` event to the collaboration server
  */
 export const returnToParent = (flowKey: string, parentStateId: string) => {
-    emit(flowKey, 'returnToParent', { subFlowKey: flowKey, parentStateId: parentStateId, stateId: Utils.extractStateId(flowKey) });
+    emit(flowKey, 'returnToParent', { parentStateId, subFlowKey: flowKey, stateId: Utils.extractStateId(flowKey) });
 };
 
 /**

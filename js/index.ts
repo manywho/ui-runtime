@@ -13,7 +13,7 @@ import * as Connection from './services/connection';
 import * as Engine from './services/engine';
 import * as Formatting from './services/formatting';
 import * as Json from './services/json';
-import Log from './services/log';
+import log from './services/log';
 import * as Model from './services/model';
 import * as Settings from './services/settings';
 import * as Social from './services/social';
@@ -35,7 +35,7 @@ if (window && window2.manywho) {
     window2.manywho.engine = Engine;
     window2.manywho.formatting = Formatting;
     window2.manywho.json = Json;
-    window2.manywho.log = Log;
+    window2.manywho.log = log;
     window2.manywho.model = Model;
     window2.manywho.settings = Settings;
     window2.manywho.social = Social;
@@ -46,7 +46,7 @@ if (window && window2.manywho) {
     window2.manywho.validation = Validation;
 }
 
-export {
+const ui = {
     Ajax,
     Authorization,
     Callbacks,
@@ -56,7 +56,6 @@ export {
     Engine,
     Formatting,
     Json,
-    Log,
     Model,
     Settings,
     Social,
@@ -64,5 +63,8 @@ export {
     Styling,
     Tours,
     Utils,
-    Validation
+    Validation,
+    Log: log,
 };
+
+export default ui;
