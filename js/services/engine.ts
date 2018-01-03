@@ -1,5 +1,5 @@
 import * as React from 'react';
-import reactDom from 'react-dom';
+import * as reactDom from 'react-dom';
 import * as $ from 'jquery';
 import * as numbro from 'numbro';
 
@@ -20,6 +20,7 @@ import * as Utils from './utils';
 import * as Validation from './validation';
 
 declare var manywho: any;
+declare var window: any;
 
 function processObjectDataRequests(components, flowKey) {
 
@@ -592,7 +593,7 @@ export const initialize = (
         const language = window.navigator.language.split('-');
         if (language.length === 2)
             // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-            numbro.culture(language[0] + '-' + language[1].toUpperCase());
+            window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
     }
 
 
@@ -1073,15 +1074,14 @@ export const render = (flowKey: string) => {
     const login = State.getLogin(flowKey);
 
     if (login)
-        reactDom.render(React.createElement(Component.getByName('mw-login'), { 
+        window.ReactDOM.render(React.createElement(Component.getByName('mw-login'), { 
             flowKey, 
             api: 'run',
             callback: login.callback,
             stateId: login.stateId,
             directoryName: login.directoryName, 
             loginUrl: login.loginUrl,
-        }),
-                        container);
+        }),                    container);
     else
-    reactDom.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
+        window.ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
 };

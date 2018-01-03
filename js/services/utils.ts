@@ -12,6 +12,8 @@ import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
 
+declare var window: any;
+
 function extendShallow(mergedObject, objects) {
 
     objects.forEach((object) => {
@@ -373,7 +375,7 @@ export const removeFlowFromDOM = (flowKey) => {
     for (let i = 0, len = rootElement.children.length; i < len; i += 1) {
 
         if (rootElement.children[i].id === lookUpKey) {
-            reactDom.unmountComponentAtNode(rootElement.children[i]);
+            window.ReactDOM.unmountComponentAtNode(rootElement.children[i]);
             rootElement.removeChild(rootElement.children[i]);
         }
     }

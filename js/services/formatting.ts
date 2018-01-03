@@ -6,6 +6,8 @@ import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
+declare var window: any;
+
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
 const dateTimeFormatMappings: any = [
     { key: 'd', value: 'D' },
@@ -61,7 +63,7 @@ export const initialize = (flowKey) => {
     else if (window.navigator && window.navigator.language && window.navigator.language.indexOf('-') !== -1) {
         const parts = window.navigator.language.split('-');
         const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
-        if (numbro.cultures()[userCulture])
+        if (window.numbro.cultures()[userCulture])
             culture = userCulture;
         else
             culture = 'en-US';
