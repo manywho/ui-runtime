@@ -17,7 +17,7 @@ export const generateFlowInputs = (inputsData: any) => {
                     contentType: input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
                     contentValue: null,
                     developerName: property,
-                    objectData: input[property].objectData,
+                    objectData: Array.isArray(input[property].objectData) ? input[property].objectData : [input[property].objectData],
                     typeElementDeveloperName: input[property].typeElementDeveloperName,
                 };
             else if (input[property].contentType && input[property].developerName)
