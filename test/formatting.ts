@@ -83,11 +83,13 @@ test('DateTime Disabled', (t) => {
 });
 
 test('DateTime', (t) => {
-    t.is(Formatting.format(moment().format(), 'YYYY', 'ContentDateTime', flowKey), '2017');
+    const year = new Date().getFullYear();
+    t.is(Formatting.format(moment().format(), 'YYYY', 'ContentDateTime', flowKey), year.toString());
 });
 
 test('DateTime Year', (t) => {
-    t.is(Formatting.dateTime(moment().format(), 'YYYY', flowKey), '2017');
+    const year = new Date().getFullYear();
+    t.is(Formatting.dateTime(moment().format(), 'YYYY', flowKey), year.toString());
 });
 
 test('Override Timezone Offset', (t) => {
