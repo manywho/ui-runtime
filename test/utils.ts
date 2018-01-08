@@ -2,18 +2,12 @@ import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-const reactDOM = {
-    default: {
-        unmountComponentAtNode: sinon.stub(),
-    },
-};
+declare var window: any;
 
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
 });
-
-mockery.registerMock('react-dom', reactDOM);
 
 import * as Utils from '../js/services/utils';
 
@@ -251,7 +245,7 @@ test('Remove Flow From DOM', (t) => {
 
     Utils.removeFlowFromDOM(flowKey);
 
-    t.true(reactDOM.default.unmountComponentAtNode.calledWith(child));
+    t.true(window.ReactDOM.unmountComponentAtNode.calledWith(child));
     t.true(container.children.length === 0);
 });
 
