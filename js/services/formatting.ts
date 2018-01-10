@@ -6,6 +6,8 @@ import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
+declare var window: any;
+
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
 const dateTimeFormatMappings: any = [
     { key: 'd', value: 'D' },
@@ -61,7 +63,7 @@ export const initialize = (flowKey) => {
     else if (window.navigator && window.navigator.language && window.navigator.language.indexOf('-') !== -1) {
         const parts = window.navigator.language.split('-');
         const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
-        if (numbro.cultures()[userCulture])
+        if (window.numbro.cultures()[userCulture])
             culture = userCulture;
         else
             culture = 'en-US';
@@ -211,10 +213,10 @@ export const number = (value: number | string, format: string, flowKey: string):
 
         if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
             const numbroValue = numbro(value);
-            numbro.culture(culture);
+            window.numbro.culture(culture);
 
             const formattedNumber = numbroValue.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
-            numbro.culture('en-US');
+            window.numbro.culture('en-US');
 
             return formattedNumber;
         }
@@ -247,10 +249,10 @@ export const number = (value: number | string, format: string, flowKey: string):
         }
 
         const numbroValue = numbro(value);
-        numbro.culture(culture);
+        window.numbro.culture(culture);
 
         const formattedNumber = numbroValue.format(format);
-        numbro.culture('en-US');
+        window.numbro.culture('en-US');
 
         return formattedNumber;
     }
