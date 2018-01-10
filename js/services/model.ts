@@ -265,7 +265,7 @@ export const parseEngineSyncResponse = (response, flowKey: string) => {
         });
 
         response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses.forEach((item) => {
-            flowModel[lookUpKey].components[item.pageComponentId] = Utils.extend(flowModel[lookUpKey].components[item.pageComponentId], item, true);
+            flowModel[lookUpKey].components[item.pageComponentId] = Utils.extend(flowModel[lookUpKey].components[item.pageComponentId], item, false);
         });
 
         hideContainers(lookUpKey);
