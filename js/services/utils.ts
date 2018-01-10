@@ -1,7 +1,7 @@
 
 
 import * as React from 'react';
-import reactDom from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 
 import * as Callbacks from './callbacks';
@@ -11,8 +11,6 @@ import * as Model from './model';
 import * as Settings from './settings';
 import * as Social from './social';
 import * as State from './state';
-
-declare var window: any;
 
 function extendShallow(mergedObject, objects) {
 
@@ -375,7 +373,7 @@ export const removeFlowFromDOM = (flowKey) => {
     for (let i = 0, len = rootElement.children.length; i < len; i += 1) {
 
         if (rootElement.children[i].id === lookUpKey) {
-            window.ReactDOM.unmountComponentAtNode(rootElement.children[i]);
+            ReactDOM.unmountComponentAtNode(rootElement.children[i]);
             rootElement.removeChild(rootElement.children[i]);
         }
     }
