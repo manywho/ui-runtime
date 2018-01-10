@@ -62,7 +62,7 @@ var config = {
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
-            abortOnUnacceptableLicense: true
+            abortOnUnacceptableLicense: true,
         })
     ],
     externals: {
