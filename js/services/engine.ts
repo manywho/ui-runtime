@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as reactDom from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 import * as numbro from 'numbro';
 
@@ -1074,14 +1074,14 @@ export const render = (flowKey: string) => {
     const login = State.getLogin(flowKey);
 
     if (login)
-        window.ReactDOM.render(React.createElement(Component.getByName('mw-login'), { 
+        ReactDOM.render(React.createElement(Component.getByName('mw-login'), { 
             flowKey, 
             api: 'run',
             callback: login.callback,
             stateId: login.stateId,
             directoryName: login.directoryName, 
             loginUrl: login.loginUrl,
-        }),                    container);
+        }),             container);
     else
-        window.ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
+        ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
 };
