@@ -691,16 +691,18 @@ manywho.engine = (function (manywho) {
                 manywho.settings.flow('mode', flowKey)
             );
 
-            return moveWithAuthorization.call(this,
+            return moveWithAuthorization.call(
+                this,
                 {
-                    execute: moveWithAuthorization,
+                    execute: joinWithAuthorization,
                     context: this,
-                    args: [invokeRequest, flowKey],
+                    args: [flowKey],
                     name: 'invoke',
-                    type: 'done'
+                    type: 'done',
                 },
                 invokeRequest,
-                flowKey);
+                flowKey,
+            );
 
         },
 
