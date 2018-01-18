@@ -43,7 +43,7 @@ var config = {
                     fix: true,
                     typeCheck: true,
                     configFile: 'tslint.docs.json',
-                    tsConfigFile: 'tsconfig.list.json'
+                    tsConfigFile: 'tsconfig.lint.json'
                 }
             },
             {
