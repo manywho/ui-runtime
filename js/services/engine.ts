@@ -670,9 +670,9 @@ export const move = (outcome: any, flowKey: string)  => {
     return moveWithAuthorization.call(
         this,
         {
-            execute: moveWithAuthorization,
+            execute: joinWithAuthorization,
             context: this,
-            args: [invokeRequest, flowKey],
+            args: [flowKey],
             name: 'invoke',
             type: 'done',
         },
