@@ -241,8 +241,8 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return isAuthorized(response, flowKey);
 
-        })
-        .fail(onInitializeFailed)
+        }, 
+              onInitializeFailed) // This should only ever be called when the ajax request itself returns an error response
         .then((response) => {
 
             if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
