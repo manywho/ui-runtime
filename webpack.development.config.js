@@ -70,6 +70,7 @@ var config = {
         'react-dom' : 'ReactDOM',
         'jquery': 'jQuery',
         'moment': 'moment',
+        'numbro': 'numbro',
         'socket.io-client': 'io'
     }
 }
