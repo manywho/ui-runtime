@@ -1,167 +1,223 @@
-/// <reference path="../../typings/index.d.ts" />
+import * as Component from './component';
+import * as Model from './model';
+import * as Settings from './settings';
+import * as Utils from './utils';
 
-declare var manywho: any;
+const isValueDefined = function (value: any, contentType: string) {
+    switch (contentType) {
+    case Component.contentTypes.object:
+    case Component.contentTypes.list:
+        return value == null || value.length === 0 || value.filter(item => item.isSelected).length === 0;
 
-manywho.validation = (function (manywho) {
-
-    const isValueDefined = function(value: any, contentType: string) {
-        switch (contentType) {
-            case manywho.component.contentTypes.object:
-            case manywho.component.contentTypes.list:
-                return value === null || value.length === 0 || value.filter(item => item.isSelected).length === 0;
-
-            case manywho.component.contentTypes.boolean:
-                if (typeof value === 'string') {
-                    if (manywho.utils.isEqual(value, 'true', true))
-                        return false;
-                    else if (manywho.utils.isEqual(value, 'false', true))
-                        return true;
-                }
-                else
-                    return !value;
-                break;
-
-            default:
-                return manywho.utils.isNullOrEmpty(value);
+    case Component.contentTypes.boolean:
+        if (typeof value === 'string') {
+            if (Utils.isEqual(value, 'true', true))
+                return false;
+            
+            if (Utils.isEqual(value, 'false', true))
+                return true;
         }
-    };
+        else
+                return !value;
 
-    const getResponse = function(message: string, messageKey: string, flowKey: string) {
-        return { isValid: false, validationMessage: message || manywho.settings.global(messageKey, flowKey) };
-    };
+        break;
 
-    const getRequiredResponse = function(message: string, flowKey: string) {
-        return getResponse(message, 'localization.validation.required', flowKey);
-    };
+    default:
+        return Utils.isNullOrEmpty(value);
+    }
+};
 
-    const getInvalidResponse = function(message: string, flowKey: string) {
-        return getResponse(message, 'localization.validation.invalid', flowKey);
-    };
+const getResponse = function (message: string, messageKey: string, flowKey: string): IValidationResult {
+    return { isValid: false, validationMessage: message || Settings.global(messageKey, flowKey) };
+};
 
-    const validateRegex = function(value: string, regex: string) {
-        if (!manywho.utils.isNullOrWhitespace(regex)) {
-            const validationRegex = new RegExp(regex);
-            return validationRegex.test(manywho.utils.isNullOrUndefined(value) ? '' : value);
-        }
+const getRequiredResponse = function (message: string, flowKey: string): IValidationResult {
+    return getResponse(message, 'localization.validation.required', flowKey);
+};
 
-        return true;
-    };
+const getInvalidResponse = function (message: string, flowKey: string): IValidationResult {
+    return getResponse(message, 'localization.validation.invalid', flowKey);
+};
 
-    return {
-        shouldValidate(when: string, flowKey: string) {
-            return manywho.settings.global('validation.when', flowKey).indexOf(when.toLowerCase()) !== -1;
-        },
+const validateRegex = function (value: string, regex: string) {
+    if (!Utils.isNullOrWhitespace(regex)) {
+        const validationRegex = new RegExp(regex);
+        return validationRegex.test(Utils.isNullOrUndefined(value) ? '' : value);
+    }
 
-        validate(model: any, state: any, flowKey: string) {
-            if (!manywho.settings.global('validation.isenabled', flowKey, false))
-                return { isValid: true, validationMessage: null };
+    return true;
+};
 
-            if (model.isValid === false)
-                return { isValid: false, validationMessage: manywho.settings.global('localization.validation.required', flowKey) };
+export interface IValidationResult {
+    isValid: boolean;
+    validationMessage: string;
+}
 
-            let regex = null;
-            let message = null;
+/**
+ * Check if the `validation.when` setting contains the `when` parameter, thus validation should be performed
+ * @param invokeType When to validate: INITIALIZE, JOIN, MOVE, SYNC
+ * @param flowKey
+ */
+export const shouldValidate = (invokeType: string, flowKey: string) => {
+    return Settings.global('validation.when', flowKey).indexOf(invokeType.toLowerCase()) !== -1;
+};
 
-            if (model.attributes) {
-                regex = model.attributes.validation ? model.attributes.validation : null;
-                message = model.attributes.validationMessage ? model.attributes.validationMessage : null;
-            }
+/**
+ * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be 
+ * taken from the models `validation` attribute, and a custom message from the `validationMessage` attribute
+ * @param model The model that will be validated
+ * @param state The matching local state for the model that will be validated
+ * @param flowKey
+ */
+export const validate = (model: any, state: any, flowKey: string): IValidationResult => {
+    if (!Settings.global('validation.isenabled', flowKey, false))
+        return { isValid: true, validationMessage: null };
 
-            let value = null;
+    if (model.isValid === false)
+        return { isValid: false, validationMessage: Settings.global('localization.validation.required', flowKey) };
 
-            if (manywho.utils.isEqual(model.contentType, manywho.component.contentTypes.object, true)
-                || manywho.utils.isEqual(model.contentType, manywho.component.contentTypes.list, true))
-                value = state && state.objectData !== undefined ? state.objectData : model.objectData;
-            else
-                value = state && state.contentValue !== undefined ? state.contentValue : model.contentValue;
+    let regex = null;
+    let message = null;
 
-            switch (model.contentType.toUpperCase()) {
-                case manywho.component.contentTypes.string:
-                case manywho.component.contentTypes.password:
-                case manywho.component.contentTypes.content:
-                case manywho.component.contentTypes.datetime:
-                    return manywho.validation.validateString(value, regex, message, model.isRequired, flowKey);
+    if (model.attributes) {
+        regex = model.attributes.validation ? model.attributes.validation : null;
+        message = model.attributes.validationMessage ? model.attributes.validationMessage : null;
+    }
 
-                case manywho.component.contentTypes.number:
-                    return manywho.validation.validateNumber(value, regex, message, model.isRequired, flowKey);
+    let value = null;
 
-                case manywho.component.contentTypes.boolean:
-                    return manywho.validation.validateBoolean(value, message, model.isRequired, flowKey);
+    if (Utils.isEqual(model.contentType, Component.contentTypes.object, true)
+        || Utils.isEqual(model.contentType, Component.contentTypes.list, true))
+        value = state && state.objectData !== undefined ? state.objectData : model.objectData;
+    else
+        value = state && state.contentValue !== undefined ? state.contentValue : model.contentValue;
 
-                case manywho.component.contentTypes.object:
-                    return manywho.validation.validateObject(value, message, model.isRequired, flowKey);
+    switch (model.contentType.toUpperCase()) {
+    case Component.contentTypes.string:
+    case Component.contentTypes.password:
+    case Component.contentTypes.content:
+    case Component.contentTypes.datetime:
+        return validateString(value, regex, message, model.isRequired, flowKey);
 
-                case manywho.component.contentTypes.list:
-                    return manywho.validation.validateList(value, message, model.isRequired, flowKey);
+    case Component.contentTypes.number:
+        return validateNumber(value, regex, message, model.isRequired, flowKey);
 
-                default:
-                    return { isValid: true, validationMessage: null };
-            }
-        },
+    case Component.contentTypes.boolean:
+        return validateBoolean(value, message, model.isRequired, flowKey);
 
-        validateString(value: string, regex: string, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isValueDefined(value, manywho.component.contentTypes.string))
-                return getRequiredResponse(message, flowKey);
+    case Component.contentTypes.object:
+        return validateObject(value, message, model.isRequired, flowKey);
 
-            if (!validateRegex(value, regex))
-                return getInvalidResponse(message, flowKey);
+    case Component.contentTypes.list:
+        return validateList(value, message, model.isRequired, flowKey);
+    }
+};
 
-            return { isValid: true, validationMessage: null };
-        },
+/**
+ * Validate a string against a regex and / or null check if required
+ * @param value The string to validate
+ * @param regex Regex to validate the string with.
+ * @param message Custom validation message to be returned in an invalid response
+ * @param isRequired Set to true to return an invalid response if the the value is null or empty
+ * @param flowKey
+ */
+export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
+    if (isRequired && isValueDefined(value, Component.contentTypes.string))
+        return getRequiredResponse(message, flowKey);
 
-        validateNumber(value: any, regex: string, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isValueDefined(value, manywho.component.contentTypes.number))
-                return getRequiredResponse(message, flowKey);
+    if (!validateRegex(value, regex))
+        return getInvalidResponse(message, flowKey);
 
-            if (isNaN(value) && !manywho.utils.isNullOrWhitespace(value))
-                return getInvalidResponse(message, flowKey);
+    return { isValid: true, validationMessage: null };
+};
 
-            if (!validateRegex(manywho.utils.isNullOrUndefined(value) ? '' : value.toString(), regex))
-                return getInvalidResponse(message, flowKey);
+/**
+ * Validate a number against a regex and / or null check if required
+ * @param value The number to validate
+ * @param regex Regex to validate the number with. `toString()` will be called on the number first
+ * @param message Custom validation message to be returned in an invalid response
+ * @param isRequired Set to true to return an invalid response if the the value is null or empty
+ * @param flowKey
+ */
+export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
+    if (isRequired && isValueDefined(value, Component.contentTypes.number))
+        return getRequiredResponse(message, flowKey);
 
-            return { isValid: true, validationMessage: true };
-        },
+    if (isNaN(value) && !Utils.isNullOrWhitespace(value))
+        return getInvalidResponse(message, flowKey);
 
-        validateBoolean(value: boolean, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isValueDefined(value, manywho.component.contentTypes.boolean))
-                return getRequiredResponse(message, flowKey);
+    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex))
+        return getInvalidResponse(message, flowKey);
 
-            return { isValid: true, validationMessage: true };
-        },
+    return { isValid: true, validationMessage: null };
+};
 
-        validateObject(value: object, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isValueDefined(value, manywho.component.contentTypes.object))
-                return getRequiredResponse(message, flowKey);
+/**
+ * Validate a boolean
+ * @param value The boolean to validate
+ * @param message Custom validation message to be returned in an invalid response
+ * @param isRequired Set to true to return an invalid response if the the value false
+ * @param flowKey
+ */
+export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
+    if (isRequired && isValueDefined(value, Component.contentTypes.boolean))
+        return getRequiredResponse(message, flowKey);
 
-            return { isValid: true, validationMessage: true };
-        },
+    return { isValid: true, validationMessage: null };
+};
 
-        validateList(value: Array<object>, message: string, isRequired: boolean, flowKey: string) {
-            if (isRequired && isValueDefined(value, manywho.component.contentTypes.list))
-                return getRequiredResponse(message, flowKey);
+/**
+ * Only isRequired validation is currently supported for objects
+ * @param value The object to validate
+ * @param message Custom validation message to be returned in an invalid response
+ * @param isRequired Set to true to return an invalid response if the the value is null or empty
+ * @param flowKey
+ */
+export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
+    if (isRequired && isValueDefined(value, Component.contentTypes.object))
+        return getRequiredResponse(message, flowKey);
 
-            return { isValid: true, validationMessage: true };
-        },
+    return { isValid: true, validationMessage: null };
+};
 
-        scrollToInvalidElement(flowKey: string) {
-            if (manywho.settings.global('validation.scroll.isEnabled', flowKey, false)) {
-                const invalidElement = document.querySelector(manywho.settings.global('validation.scroll.selector', flowKey, '.has-error'));
-                if (invalidElement)
-                    invalidElement.scrollIntoView();
-            }
-        },
+/**
+ * Only isRequired validation is currently supported for lists
+ * @param value The array to validate
+ * @param message Custom validation message to be returned in an invalid response
+ * @param isRequired Set to true to return an invalid response if the the value is null or empty
+ * @param flowKey
+ */
+export const validateList = (value: object[], message: string, isRequired: boolean, flowKey: string): IValidationResult => {
+    if (isRequired && isValueDefined(value, Component.contentTypes.list))
+        return getRequiredResponse(message, flowKey);
 
-        addNotification(flowKey: string) {
-            if (manywho.settings.global('validation.notification.isEnabled', flowKey, false))
-                manywho.model.addNotification(flowKey, {
-                    message: manywho.settings.global('localization.validation.notification', flowKey),
-                    position: 'center',
-                    type: 'danger',
-                    timeout: '0',
-                    dismissible: true
-                });
-        }
+    return { isValid: true, validationMessage: null };
+};
 
-    };
+/**
+ * Scroll to the first invalid element based on the selector in the `validation.scroll.selector` setting. Defaults to `.has-error`
+ * @param flowKey
+ */
+export const scrollToInvalidElement = (flowKey: string): void => {
+    if (Settings.global('validation.scroll.isEnabled', flowKey, false)) {
+        const invalidElement = document.querySelector(Settings.global('validation.scroll.selector', flowKey, '.has-error'));
 
-})(manywho);
+        if (invalidElement)
+            invalidElement.scrollIntoView();
+    }
+};
+
+/**
+ * Add an invalid notification populated with the message from the `localization.validation.notification` setting
+ * @param flowKey
+ */
+export const addNotification = (flowKey: string): void => {
+    if (Settings.global('validation.notification.isEnabled', flowKey, false))
+        Model.addNotification(flowKey, {
+            message: Settings.global('localization.validation.notification', flowKey),
+            position: 'center',
+            type: 'danger',
+            timeout: '0',
+            dismissible: true,
+        });
+};

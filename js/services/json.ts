@@ -1,103 +1,160 @@
-/// <reference path="../../typings/index.d.ts" />
+/**
+ * A collection of helpers for generating request bodies for the various ajax requests
+ */
 
-declare var manywho: any;
+ /**
+  * @ignore
+  */
+export const generateFlowInputs = (inputsData: any) => {
+    if (inputsData && !Array.isArray(inputsData))
+        inputsData = [inputsData];
 
-manywho.json = {
+    return inputsData.map((input) => {
 
-    generateFlowInputs: function (inputsData) {
-        if (inputsData && !Array.isArray(inputsData))
-            inputsData = [inputsData];
+        for (const property in input) {
+            if (input[property].objectData)
+                return {
+                    contentType: input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
+                    contentValue: null,
+                    developerName: property,
+                    objectData: Array.isArray(input[property].objectData) ? input[property].objectData : [input[property].objectData],
+                    typeElementDeveloperName: input[property].typeElementDeveloperName,
+                };
+            else if (input[property].contentType && input[property].developerName)
+                return input[property];
+            else
+                return {
+                    contentType: 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase(),
+                    contentValue: input[property],
+                    developerName: property,
+                    objectData: null,
+                    typeElementDeveloperName: null,
+                };
+        }
+    });
+};
 
-        return inputsData.map(input => {
+export interface IFlowId {
+    id: string;
+    versionId?: string;
+    versionid?: string;
+}
 
-            for (const property in input) {
-                if (input[property].objectData)
-                    return {
-                        'contentType': input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
-                        'contentValue': null,
-                        'developerName': property,
-                        'objectData': [input[property].objectData],
-                        'typeElementDeveloperName': input[property].typeElementDeveloperName || null
-                    };
-                else if (input[property].contentType && input[property].developerName)
-                    return input[property];
-                else
-                    return {
-                        'contentType': 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase() || 'ContentString',
-                        'contentValue': input[property],
-                        'developerName': property,
-                        'objectData': null,
-                        'typeElementDeveloperName': null
-                    };
-            };
-        });
-    },
+/**
+  * @ignore
+  */
+export const generateInitializationRequest = (
+    flowId: IFlowId, 
+    stateId?: string,
+    annotations?, 
+    inputs?: any[], 
+    playerUrl?: string, 
+    joinUrl?: string, 
+    mode?: string, 
+    reportingMode?: string,
+) => {
 
-    generateInitializationRequest: function(flowId, stateId, annotations, inputs, playerUrl, joinUrl, mode, reportingMode) {
-        return {
-            'flowId': {
-                'id': flowId.id,
-                'versionId': flowId.versionid || flowId.versionId || null
+    return {
+        flowId: {
+            id: flowId.id,
+            versionId: flowId.versionid || flowId.versionId || null,
+        },
+        stateId: stateId || null,
+        annotations: annotations || null,
+        inputs: inputs || null,
+        playerUrl: playerUrl || null,
+        joinPlayerUrl: joinUrl || null,
+        mode: mode || '',
+        reportingMode: reportingMode || '',
+    };
+};
+
+/**
+  * @ignore
+  */
+export const generateInvokeRequest = (
+    stateData: any, 
+    invokeType: string, 
+    selectedOutcomeId?: string,
+    selectedMapElementId?: string,
+    pageComponentInputResponses?: any[],
+    navigationElementId?: string, 
+    selectedNavigationElementId?: string,
+    annotations?, 
+    location?: any, 
+    mode?: string,
+) => {
+
+    return {
+        invokeType,
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        annotations: annotations || null,
+        geoLocation: location || null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: pageComponentInputResponses || null,
             },
-            'stateId': stateId || null,
-            'annotations': annotations || null,
-            'inputs': inputs || null,
-            'playerUrl': playerUrl || null,
-            'joinPlayerUrl': joinUrl || null,
-            'mode': mode || '',
-            'reportingMode': reportingMode || ''
-        };
-    },
+            selectedOutcomeId: selectedOutcomeId || null,
+        },
+        mode: mode || '',
+        selectedMapElementId: selectedMapElementId || null,
+        navigationElementId: navigationElementId || null,
+        selectedNavigationElementId: selectedNavigationElementId || null,
+    };
+};
 
-    generateInvokeRequest: function(stateData, invokeType, selectedOutcomeId, selectedMapElementId, pageComponentInputResponses, navigationElementId, selectedNavigationElementId, annotations, location, mode) {
-        return {
-            'stateId': stateData.id,
-            'stateToken': stateData.token,
-            'currentMapElementId': stateData.currentMapElementId,
-            'invokeType': invokeType,
-            'annotations': annotations || null,
-            'geoLocation': location || null,
-            'mapElementInvokeRequest': {
-                'pageRequest': {
-                    'pageComponentInputResponses': pageComponentInputResponses || null
-                },
-                'selectedOutcomeId': selectedOutcomeId || null
+/**
+  * @ignore
+  */
+export const generateNavigateRequest = (
+    stateData: any, 
+    navigationId: string,
+    navigationElementId: string,
+    mapElementId: string,
+    pageComponentInputResponses?: any[],
+    annotations?: any, 
+    location?: any,
+) => {
+
+    return {
+        stateId: stateData.id,
+        stateToken: stateData.token,
+        currentMapElementId: stateData.currentMapElementId,
+        invokeType: 'NAVIGATE',
+        navigationElementId: navigationId,
+        selectedMapElementId: mapElementId,
+        selectedNavigationItemId: navigationElementId,
+        annotations: annotations || null,
+        geoLocation: location || null,
+        mapElementInvokeRequest: {
+            pageRequest: {
+                pageComponentInputResponses: pageComponentInputResponses || null,
             },
-            'mode': mode || '',
-            'selectedMapElementId': selectedMapElementId || null,
-            'navigationElementId': navigationElementId || null,
-            'selectedNavigationElementId': selectedNavigationElementId || null
-        };
-    },
+            selectedOutcomeId: null,
+        },
+    };
+};
 
-    generateNavigateRequest: function (stateData, navigationId, navigationElementId, mapElementId, pageComponentInputResponses, annotations, location) {
-        return {
-            'stateId': stateData.id,
-            'stateToken': stateData.token,
-            'currentMapElementId': stateData.currentMapElementId,
-            'invokeType': 'NAVIGATE',
-            'navigationElementId': navigationId,
-            'selectedMapElementId': mapElementId,
-            'selectedNavigationItemId': navigationElementId,
-            'annotations': annotations || null,
-            'geoLocation': location || null,
-            'mapElementInvokeRequest': {
-                'pageRequest': {
-                    'pageComponentInputResponses': pageComponentInputResponses || null
-                },
-                'selectedOutcomeId': null
-            }
-        };
-    },
+/**
+  * @ignore
+  */
+export const generateSessionRequest = (
+    sessionId: string, 
+    sessionUrl: string, 
+    loginUrl: string,
+    username?: string,
+    password?: string, 
+    token?: string,
+) => {
 
-    generateSessionRequest: function (sessionId, sessionUrl, loginUrl, username, password, token) {
-        return {
-            'sessionToken': sessionId,
-            'sessionUrl': sessionUrl,
-            'loginUrl': loginUrl,
-            'username': username || null,
-            'password': password || null,
-            'token': token || null
-        };
-    }
+    return {
+        loginUrl,
+        sessionUrl,
+        sessionToken: sessionId,
+        username: username || null,
+        password: password || null,
+        token: token || null,
+    };
 };

@@ -1,6 +1,8 @@
-declare var manywho: any;
-declare var log: any;
+/**
+ * Re-exports loglevel with noConflict
+ */
 
-manywho.log = (function (manywho) {
-    return log.noConflict();
-})(manywho);
+ /** this comment exists as a typedoc workaround */
+import * as Log from 'loglevel';
+
+export default Log.noConflict();

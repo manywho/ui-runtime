@@ -1,31 +1,80 @@
 {
-  "name": "manywho-ui-core",
-  "version": "2.65.0",
-  "description": "Core JavaScript services used by the ManyWho UI framework to do the heavy lifting.",
+  "name": "@manywho/ui-core",
+  "version": "2.68.0",
+  "description": "Core JavaScript services used by the Boomi Flow UI framework to do the heavy lifting.",
   "author": "ManyWho",
   "repository": {
     "type": "git",
-    "url": "https://github.com/manywho/ui-bootstrap.git"
+    "url": "https://github.com/manywho/ui-core.git"
   },
+  "scripts": {
+    "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
+    "start": "webpack --config webpack.development.config.js",
+    "dev": "webpack --config webpack.development.config.js",
+    "dist": "webpack -p --config webpack.production.config.js && webpack -p --config webpack.npm.config.js && node bundle",
+    "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
+    "lint-docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
+    "precommit": "lint-staged",
+    "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\" --timeout=5s",
+    "coverage": "nyc check-coverage --lines 80 --functions 80 --branches 80",
+    "test:report": "npm test -- --tap | tap-xunit > test-report.xml",
+    "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
+  },
+  "lint-staged": {
+    "*.ts": "lint",
+    "js/services/*.ts": "lint-docs"
+  },
+  "main": "publish/js/ui-core.js",
+  "files": [
+    "publish/"
+  ],
   "devDependencies": {
+    "@types/jquery": "^3.2.11",
+    "@types/lodash": "^4.14.101",
+    "@types/mockery": "^1.4.29",
+    "@types/node": "^8.0.30",
+    "@types/react": "^16.0.2",
+    "@types/sinon": "^2.3.3",
+    "@types/socket.io-client": "^1.4.30",
+    "ava": "^0.22.0",
+    "awesome-typescript-loader": "^3.2.3",
+    "browser-env": "^3.1.2",
+    "chokidar-cli": "^1.2.0",
     "del": "^1.1.1",
-    "git-guppy": "^2.0.0",
-    "gulp": "^3.8.11",
-    "gulp-add-src": "^0.2.0",
-    "gulp-filelist": "^1.0.0",
-    "gulp-filter": "^5.0.0",
-    "gulp-json-editor": "^2.2.1",
-    "gulp-load-plugins": "^1.2.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-rev": "^7.0.0",
-    "gulp-sourcemaps": "^2.6.0",
-    "gulp-tslint": "^7.0.1",
-    "gulp-typescript": "^2.13.4",
-    "gulp-uglify": "^1.1.0",
-    "gulp-util": "^3.0.4",
-    "guppy-pre-commit": "^0.4.0",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.2",
-    "yargs": "^2.3.0"
+    "form-data": "^2.2.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.1",
+    "mock-socket": "^7.0.0",
+    "mockery": "^2.1.0",
+    "nyc": "^11.1.0",
+    "script-loader": "^0.7.0",
+    "sinon": "^3.2.1",
+    "tap-xunit": "^2.2.0",
+    "tslint": "^5.5.0",
+    "tslint-config-airbnb": "^5.4.2",
+    "tslint-loader": "^3.5.3",
+    "typedoc": "^0.9.0",
+    "typescript": "^2.4.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^3.6.0",
+    "webpack-bundle-analyzer": "^2.9.0",
+    "xhr-mock": "^1.9.0"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "license-webpack-plugin": "^1.1.1",
+    "loglevel": "^1.4.1",
+    "moment": "^2.18.1",
+    "numbro": "^1.11.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
+    "webpack-dashboard": "^1.0.2"
+  },
+  "ava": {
+    "require": [
+      "./dist_test/test/helpers/setup-browser-env.js"
+    ]
   }
 }
