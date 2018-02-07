@@ -11,9 +11,9 @@ function onError(xhr, status, error) {
 }
 
 /**
- * @private
+ * Adding authentication token and tenant id to request headers
  * */
-function beforeSend(xhr: XMLHttpRequest, tenantId: string, authenticationToken: string, event: string, request) {
+export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authenticationToken: string, event: string, request) => {
     xhr.setRequestHeader('ManyWhoTenant', tenantId);
 
     if (authenticationToken)
@@ -21,7 +21,7 @@ function beforeSend(xhr: XMLHttpRequest, tenantId: string, authenticationToken: 
 
     if (Settings.event(event + '.beforeSend'))
         Settings.event(event + '.beforeSend').call(this, xhr, request);
-}
+};
 
 /**
  * Make an AJAX request to the Boomi Flow platform
