@@ -265,8 +265,9 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey));
 
-        })
-        .fail(response => onAuthorizationFailed(response, flowKey, callback))
+        },
+              response => onAuthorizationFailed(response, flowKey, callback))
+
         .then((response) => {
 
             window.sessionStorage.removeItem('oauth-' + response.stateId);
@@ -300,8 +301,8 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             return Utils.whenAll(deferreds);
 
-        })
-        .fail(response => notifyError(flowKey, response))
+        },                                                       
+              response => notifyError(flowKey, response))
         .always(() => {
 
             if (flowKey) {
