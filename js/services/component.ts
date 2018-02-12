@@ -91,12 +91,13 @@ export const get = (model: any) => {
     if (aliases[componentType])
         componentType = aliases[componentType];
 
-    if (components.hasOwnProperty(componentType))
+    if (components.hasOwnProperty(componentType)) {
         return components[componentType];
-    else {
-        Log.error('Component of type: ' + componentType + ' could not be found');
-        throw 'Component of type: ' + componentType + ' could not be found';
     }
+
+    Log.error('Component of type: ' + componentType + ' could not be found');
+
+    return components['not-found-placeholder'](componentType);
 };
 
 /**
