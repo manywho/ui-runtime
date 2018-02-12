@@ -29,6 +29,7 @@ mockery.registerMock('react', react);
 import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';
 import * as Utils from '../js/services/utils';
+import { ReactNode } from 'React';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -104,6 +105,17 @@ test('Get 2', (t) => {
     t.is(Component.get(model), component);
 });
 
+test('Get 3', (t) => {
+    const mwContainer = () => null;
+    const container = () => null;
+
+    Component.register('mw-container', mwContainer, null);
+    Component.registerContainer('container-1', container);
+
+    const model = { containerType: 'container-1' };
+    t.not(Component.get(model), null);
+});
+
 test('Get Child Components', (t) => {
     const component = () => null;
 
@@ -166,7 +178,15 @@ test.cb.serial('Handle Event', (t) => {
         hasEvents: true,
     };
 
-    const component = () => null;
+    const component = {
+        forceUpdate: sinon.stub(),
+        setState: () => {},
+        render: (): ReactNode => null,
+        props: null,
+        state: null,
+        context: null,
+        refs: null,
+    };
 
     const callback = () => {
         t.is(engine.render.callCount, 1, 'Engine Render Count');
@@ -175,7 +195,7 @@ test.cb.serial('Handle Event', (t) => {
         t.end();
     };
 
-    Component.handleEvent(component, model, flowKey, callback);
+    Component.handleEvent(component as React.Component, model, flowKey, callback);
 });
 
 test('Get Selected Rows 1', (t) => {
@@ -258,15 +278,29 @@ test('Get Display Columns 4', (t) => {
 });
 
 test('Append Flow Container', (t) => {
-    const lookUpKey = Utils.getLookUpKey(flowKey);
+    const lookUpKey = Utils.getLookUpKey(flowKey + '_modal');
 
     const container = document.createElement('div');
     container.id = 'manywho';
     document.body.appendChild(container);
 
-    Component.appendFlowContainer(flowKey);
+    Component.appendFlowContainer(flowKey + '_modal');
 
-    t.not(document.getElementById(Utils.getLookUpKey(flowKey)), null);
+    const flowContainer = document.getElementById(lookUpKey);
+    t.not(flowContainer, null);
+    t.true(flowContainer.classList.contains('modal-container'));
+});
+
+test('Append Flow Container Modal', (t) => {
+    const modalFlowKey = flowKey + '_modal-standalone';
+
+    const container = document.createElement('div');
+    container.id = 'manywho';
+    document.body.appendChild(container);
+
+    Component.appendFlowContainer(modalFlowKey);
+
+    t.not(document.getElementById('manywho'), null);
 });
 
 test('Focus Input', (t) => {
@@ -283,7 +317,7 @@ test('Focus Input', (t) => {
     root.classList.add('main');
 
     const container = document.createElement('div');
-    root.classList.add('mw-input');
+    container.classList.add('mw-input');
 
     const input = document.createElement('input');
     input.id = 'focused';

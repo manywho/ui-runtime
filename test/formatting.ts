@@ -158,3 +158,7 @@ test('Number Exponent', (t) => {
 test('Number Unformatted', (t) => {
     t.is(Formatting.number(99.9, null, flowKey), '99.9');
 });
+
+test('Number Unsupported format', (t) => {
+    t.is(Formatting.number(99.9, '##.11', flowKey), '99.90');
+});

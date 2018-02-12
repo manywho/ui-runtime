@@ -253,7 +253,7 @@ test.cb.serial('FileData Request', (t) => {
         tenantId, 
         stateId, 
         token, 
-        expected.listFilter.limit, 
+        null, 
         expected.listFilter.search, 
         expected.listFilter.orderByPropertyDeveloperName, 
         expected.listFilter.orderByDirectionType, 

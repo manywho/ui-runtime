@@ -1,4 +1,18 @@
 import test from 'ava'; // tslint:disable-line:import-name
+import * as mockery from 'mockery';
+import * as sinon from 'sinon';
+
+const model = {
+    addNotification: sinon.stub(),
+};
+
+mockery.enable({
+    useCleanCache: true,
+    warnOnUnregistered: false,
+});
+
+mockery.registerMock('./model', model);
+
 import * as Settings from '../js/services/settings';
 import * as Validation from '../js/services/validation';
 
@@ -7,6 +21,9 @@ test.beforeEach((t) => {
         {
             validation: {
                 isEnabled: true,
+                scroll: {
+                    isEnabled: true,
+                },
             },
         },
         null,
@@ -338,4 +355,40 @@ test.failing('Validate State List', (t) => {
 
     const actual = Validation.validate(model, state, null);
     t.deepEqual(actual, expected);
+});
+
+test('Should Validate', (t) => {
+    t.true(Validation.shouldValidate('MOVE', null));
+});
+
+test('Scroll to invalid element', (t) => {
+    const invalidElement = document.createElement('div');
+    invalidElement.classList.add('has-error');
+    document.body.appendChild(invalidElement);
+
+    try {
+        Validation.scrollToInvalidElement(null);
+    }
+    catch (e) {
+        
+    }
+
+    t.pass();
+});
+
+test('Add Notification', (t) => {
+    const flowKey = 'flowKey';
+    const expected = {
+        dismissible: true,
+        message: 'Page contains invalid values',
+        position: 'center',
+        timeout: '0',
+        type: 'danger', 
+    };
+
+    Validation.addNotification(flowKey);
+
+    t.true(model.addNotification.calledOnce);
+    t.is(model.addNotification.firstCall.args[0], flowKey);
+    t.deepEqual(model.addNotification.firstCall.args[1], expected);
 });

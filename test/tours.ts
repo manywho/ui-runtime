@@ -70,11 +70,33 @@ test.before((t) => {
             currentStep: 0,
             steps: [],
         },
+        {
+            id: 'tour3',
+            currentStep: 0,
+            steps: [
+                {
+                    target: '.tour-target-1',
+                    title: 'step 1 title',
+                    content: 'step 1 content',
+                    placement: 'left',
+                    showBack: false,
+                    showNext: false,
+                },
+                {
+                    target: '.tour-target-2',
+                    title: 'step 2 title',
+                    content: 'step 2 content',
+                    placement: 'left',
+                    showBack: false,
+                    showNext: false,
+                },
+            ],
+        },
     ]);
 
     const container = document.createElement('div');
     container.classList.add('container');
-
+    
     document.body.appendChild(container);
 });
 
@@ -90,10 +112,18 @@ test.after((t) => {
     mockery.disable();
 });
 
-test.cb('Start 1', (t) => {
+test.afterEach((t) => {
+    reactDOM.default.unmountComponentAtNode.resetHistory();
+});
+
+test.serial('Get Target Element', (t) => {
+    t.is(Tours.getTargetElement(null), null);
+});
+
+test.cb.serial('Start 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     t.is(tour.currentStep, 0);
-
+    
     setTimeout(
         () => {
             t.is(reactDOM.default.render.callCount, 1);
@@ -239,4 +269,20 @@ test('Refresh 4', (t) => {
     Tours.start(null, '.container', flowKey);
     Tours.refresh();
     t.true(reactDOM.default.unmountComponentAtNode.called);
+});
+
+
+test.cb.serial('Watch', (t) => {
+    const stub = sinon.stub().onFirstCall().returns({});
+    stub.onSecondCall().returns({});
+
+    Tours.start('tour3', '.container', flowKey, stub);
+
+    setInterval(
+        () => {
+            if (reactDOM.default.unmountComponentAtNode.called)
+                t.end();
+        },
+        100,
+    );
 });

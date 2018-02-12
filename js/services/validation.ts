@@ -20,8 +20,6 @@ const isValueDefined = function (value: any, contentType: string) {
         else
                 return !value;
 
-        break;
-
     default:
         return Utils.isNullOrEmpty(value);
     }
