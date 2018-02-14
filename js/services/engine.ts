@@ -176,8 +176,6 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         options.reportingMode,
     );
 
-    State.setOptions(options, flowKey);
-
     if (flowKey) {
 
         State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
@@ -199,6 +197,8 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
             }));
 
             flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
+
+            State.setOptions(options, flowKey);
 
             if (options.callbacks != null && options.callbacks.length > 0) {
 
