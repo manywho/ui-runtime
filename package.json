@@ -10,19 +10,18 @@
   "scripts": {
     "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
     "start": "webpack --config webpack.development.config.js",
-    "dev": "webpack --config webpack.development.config.js",
     "dist": "webpack -p --config webpack.production.config.js && webpack -p --config webpack.npm.config.js && node bundle",
     "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
-    "lint-docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
-    "precommit": "lint-staged",
-    "test": "tsc -p tsconfig.test.json && nyc --reporter=html ava \"dist_test/test/*.js\" --timeout=5s",
-    "coverage": "nyc check-coverage --lines 80 --functions 80 --branches 80",
+    "lint:docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
+    "test": "tsc -p tsconfig.test.json && nyc --reporter=html --reporter=lcov ava \"dist_test/test/*.js\" --timeout=5s --color --fail-fast -v",
+    "test:coverage": "nyc check-coverage --lines 90 --functions 90 --branches 70",
     "test:report": "npm test -- --tap | tap-xunit > test-report.xml",
-    "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
+    "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\"",
+    "precommit": "lint-staged && npm run test && npm run test:coverage"
   },
   "lint-staged": {
     "*.ts": "lint",
-    "js/services/*.ts": "lint-docs"
+    "js/services/*.ts": "lint:docs"
   },
   "main": "publish/js/ui-core.js",
   "files": [
