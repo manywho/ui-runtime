@@ -1,5 +1,12 @@
 /node_modules
+/coverage
 /dist
+/dist_test
 /build
+/publish
 /typings
-bundles.json
+.nyc_output
+.scannerwork
+npm-debug.log
+package-lock.json
+test-report.xml
