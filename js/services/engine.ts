@@ -543,7 +543,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             if (container) {
                 const scroller = container.querySelector('.main-scroller');
-                if (scroller && Settings.global('isScrollResetEnabled') === true)
+                if (scroller && Settings.global('isScrollResetEnabled') === true || Settings.global('isScrollResetEnabled') === undefined)
                     scroller.scrollTop = 0;
             }
 
