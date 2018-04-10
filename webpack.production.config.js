@@ -1,6 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+
+var pathsToClean = [
+    'dist'
+];
 
 var config = {
     entry: {
@@ -23,7 +28,8 @@ var config = {
             sourceMap: true,
             include: /\.min\.js$/,
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new CleanWebpackPlugin(pathsToClean),
     ],
     module: {
         loaders: [

@@ -39,6 +39,7 @@
     "awesome-typescript-loader": "3.2.3",
     "browser-env": "3.1.2",
     "chokidar-cli": "1.2.0",
+    "clean-webpack-plugin": "^0.1.19",
     "del": "1.1.1",
     "form-data": "2.2.0",
     "husky": "0.14.3",

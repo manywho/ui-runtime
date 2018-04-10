@@ -27,6 +27,7 @@ let globals = {
         },
         searchFirst: 'Perform a search to display results here',
     },
+    isScrollResetEnabled: true,
     i18n: {
         overrideTimezoneOffset: false,
         timezoneOffset: null,
