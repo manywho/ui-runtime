@@ -2,11 +2,9 @@ import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-const reactDOM = {
-    default: {
-        render: sinon.stub(),
-        unmountComponentAtNode: sinon.stub(),
-    },
+const ReactDOM = {
+    render: sinon.stub(),
+    unmountComponentAtNode: sinon.stub(),
 };
 
 const react = {
@@ -24,7 +22,7 @@ mockery.enable({
 });
 
 mockery.registerMock('react', react);
-mockery.registerMock('react-dom', reactDOM);
+mockery.registerMock('react-dom', ReactDOM);
 mockery.registerMock('loglevel', log);
 
 import * as Tours from '../js/services/tours';
@@ -102,7 +100,7 @@ test.before((t) => {
 
 test.beforeEach((t) => {
     react.createElement.resetHistory();
-    reactDOM.default.render.resetHistory();
+    ReactDOM.render.resetHistory();
     log.error.resetHistory();
     log.warning.resetHistory();
 });
@@ -113,7 +111,7 @@ test.after((t) => {
 });
 
 test.afterEach((t) => {
-    reactDOM.default.unmountComponentAtNode.resetHistory();
+    ReactDOM.unmountComponentAtNode.resetHistory();
 });
 
 test.serial('Get Target Element', (t) => {
@@ -126,7 +124,7 @@ test.cb.serial('Start 1', (t) => {
     
     setTimeout(
         () => {
-            t.is(reactDOM.default.render.callCount, 1);
+            t.is(ReactDOM.render.callCount, 1);
             t.is(react.createElement.callCount, 1);
             t.end();
         },
@@ -158,7 +156,7 @@ test.cb('Next 1', (t) => {
 
             setTimeout(
                 () => {
-                    t.is(reactDOM.default.render.callCount, 3, 'Render');
+                    t.is(ReactDOM.render.callCount, 3, 'Render');
                     t.is(react.createElement.callCount, 3, 'Create Element');
                     t.is(tour.currentStep, 1, 'Current Step');
                     t.end();
@@ -172,7 +170,7 @@ test.cb('Next 1', (t) => {
 
 test('Next 2', (t) => {
     Tours.next(null);
-    t.false(reactDOM.default.render.called);
+    t.false(ReactDOM.render.called);
 });
 
 test('Next 3', (t) => {
@@ -182,7 +180,7 @@ test('Next 3', (t) => {
     Tours.next(tour);
 
     t.is(Tours.current, null);
-    t.true(reactDOM.default.unmountComponentAtNode.calledOnce);
+    t.true(ReactDOM.unmountComponentAtNode.calledOnce);
 });
 
 test.cb('Previous 1', (t) => {
@@ -198,7 +196,7 @@ test.cb('Previous 1', (t) => {
 
                     setTimeout(
                         () => {
-                            t.is(reactDOM.default.render.callCount, 4, 'Render');
+                            t.is(ReactDOM.render.callCount, 4, 'Render');
                             t.is(react.createElement.callCount, 4, 'Creat Element');
                             t.is(Tours.current.currentStep, 0, 'Current Step');
                             t.end();
@@ -215,17 +213,17 @@ test.cb('Previous 1', (t) => {
 
 test('Previous 2', (t) => {
     Tours.previous(null);
-    t.false(reactDOM.default.render.called);
+    t.false(ReactDOM.render.called);
 });
 
 test('Render', (t) => {
     Tours.render(null);
-    t.false(reactDOM.default.render.called);
+    t.false(ReactDOM.render.called);
 });
 
 test('Move 1', (t) => {
     Tours.move(null, 0);
-    t.false(reactDOM.default.render.called);
+    t.false(ReactDOM.render.called);
 });
 
 test('Move 2', (t) => {
@@ -239,20 +237,20 @@ test('Move 3', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     Tours.move(tour, 1);
 
-    t.is(reactDOM.default.render.callCount, 2, 'Render');
+    t.is(ReactDOM.render.callCount, 2, 'Render');
     t.is(react.createElement.callCount, 2, 'Create Element');
     t.is(tour.currentStep, 1, 'Current Step');
 });
 
 test('Refresh 1', (t) => {
     Tours.refresh(null);
-    t.false(reactDOM.default.render.called);
+    t.false(ReactDOM.render.called);
 });
 
 test('Refresh 2', (t) => {
     Tours.start(null, '.container', flowKey, sinon.stub().returns({}));
     Tours.refresh();
-    t.true(reactDOM.default.render.called);
+    t.true(ReactDOM.render.called);
 });
 
 test('Refresh 3', (t) => {
@@ -268,7 +266,7 @@ test('Refresh 3', (t) => {
 test('Refresh 4', (t) => {
     Tours.start(null, '.container', flowKey);
     Tours.refresh();
-    t.true(reactDOM.default.unmountComponentAtNode.called);
+    t.true(ReactDOM.unmountComponentAtNode.called);
 });
 
 
@@ -280,7 +278,7 @@ test.cb.serial('Watch', (t) => {
 
     setInterval(
         () => {
-            if (reactDOM.default.unmountComponentAtNode.called)
+            if (ReactDOM.unmountComponentAtNode.called)
                 t.end();
         },
         100,
