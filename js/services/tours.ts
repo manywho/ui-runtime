@@ -1,6 +1,5 @@
 import * as React from 'react';
-import reactDom from 'react-dom';
-
+import * as ReactDOM from 'react-dom';
 import * as Component from './component';
 import * as Log from 'loglevel';
 import * as Settings from './settings';
@@ -120,7 +119,7 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
             getTargetElement = getElement;
 
         watchForStep(current);
-        reactDom.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
+        ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
         return current;
     }
     else
@@ -194,7 +193,7 @@ export const refresh = (tour: ITour = current) => {
             }
         }
 
-        reactDom.unmountComponentAtNode(document.querySelector('.mw-tours'));
+        ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
     }
     else
         render(tour);
@@ -206,7 +205,7 @@ export const refresh = (tour: ITour = current) => {
  */
 export const done = (tour: ITour = current) => {
     current = null;
-    reactDom.unmountComponentAtNode(document.querySelector('.mw-tours'));
+    ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
 };
 
 /**
@@ -217,7 +216,7 @@ export const render = (tour: ITour = current) => {
     if (!tour)
         return;
 
-    reactDom.render(React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
+    ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
 };
 
 /**
