@@ -17,7 +17,6 @@ var config = {
         extensions: ['.ts', '.tsx', '.js']
     },
     devtool: 'source-map',
-    watch: true,
     module: {
         loaders: [
             {
@@ -57,7 +56,6 @@ var config = {
         ]
     },
     plugins: [
-        new BundleAnalyzerPlugin(),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new LicenseWebpackPlugin({
             pattern: /.*/,
@@ -80,6 +78,19 @@ module.exports = function(env) {
 
     if (env && env.build)
         dir = env.build;
+
+    if(env && env.watch) {
+        config.watch = true;
+        config.watchOptions = {
+            poll: true
+        };
+    }
+
+    if(env && env.analyze) {
+        config.plugins.push(
+            new BundleAnalyzerPlugin()
+        );
+    }
 
     config.output.path = path.resolve(__dirname, dir, 'js');
     return config;
