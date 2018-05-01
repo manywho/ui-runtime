@@ -155,7 +155,11 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
     if (engineInvokeResponse)
         flowModel[lookUpKey].parentStateId = engineInvokeResponse.parentStateId;
 
-    if (engineInvokeResponse && engineInvokeResponse.mapElementInvokeResponses) {
+    if (
+        engineInvokeResponse 
+        && engineInvokeResponse.mapElementInvokeResponses 
+        && engineInvokeResponse.mapElementInvokeResponses.length > 0
+    ) {
 
         flowModel[lookUpKey].invokeType = engineInvokeResponse.invokeType;
         flowModel[lookUpKey].waitMessage = engineInvokeResponse.notAuthorizedMessage || engineInvokeResponse.waitMessage;
