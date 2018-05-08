@@ -64,7 +64,7 @@ let globals = {
         toolbar: `undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify 
                 | bullist numlist outdent indent | link mwimage`,
     },
-    errorMessage: 'Whoops, something went wrong inside ManyWho - if this keeps happening, contact us at support@manywho.com',
+    errorMessage: 'An unknown error has occurred, please contact support',
     outcomes: {
         display: null,
         isFixed: false,

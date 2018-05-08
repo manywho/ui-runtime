@@ -9,7 +9,8 @@
   },
   "scripts": {
     "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
-    "start": "webpack --config webpack.development.config.js",
+    "start": "webpack --config webpack.development.config.js --env.watch",
+    "dev": "webpack --config webpack.development.config.js",
     "dist": "webpack -p --config webpack.production.config.js && webpack -p --config webpack.npm.config.js && node bundle",
     "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
     "lint:docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
