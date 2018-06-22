@@ -37,7 +37,7 @@ export const invokeAuthorization = (response: any, flowKey, onAuthenticated: Cal
             return;
         }
 
-        if (Utils.isEqual(response.authorizationContext.authenticationType, 'oauth1', true)) {
+        if (Utils.isEqual(response.authorizationContext.authenticationType, 'oauth', true)) {
             window.location.href = response.authorizationContext.loginUrl;
             return;
         }
