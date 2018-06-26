@@ -65,7 +65,7 @@
     "jquery": "3.2.1",
     "license-webpack-plugin": "1.1.1",
     "loglevel": "1.4.1",
-    "moment": "2.18.1",
+    "moment": "2.19.3",
     "numbro": "1.11.0",
     "react": "15.6.1",
     "react-dom": "15.6.1",

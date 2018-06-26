@@ -23,7 +23,7 @@ export const isAuthorized = (response: any, flowKey: string): boolean => {
 };
 
 /**
- * Redirect to a provided OAuth2 or SAML url, or display the login dialog component
+ * Redirect to a provided OAuth1, OAuth2 or SAML url, or display the login dialog component
  * @param response Response from `Ajax.join` or `Ajax.invoke`
  * @param flowKey
  * @param onAuthenticated Callback after the running user has successfully authenticated using the Login dialog.
@@ -33,6 +33,11 @@ export const invokeAuthorization = (response: any, flowKey, onAuthenticated: Cal
     if (response.authorizationContext != null && response.authorizationContext.directoryId != null) {
 
         if (Utils.isEqual(response.authorizationContext.authenticationType, 'oauth2', true)) {
+            window.location.href = response.authorizationContext.loginUrl;
+            return;
+        }
+
+        if (Utils.isEqual(response.authorizationContext.authenticationType, 'oauth', true)) {
             window.location.href = response.authorizationContext.loginUrl;
             return;
         }

@@ -76,6 +76,20 @@ test('Invoke Authorization OAuth2', (t) => {
     t.is(State.getLogin(flowKey), null);
 });
 
+test('Invoke Authorization OAuth1', (t) => {
+    const response = {
+        authorizationContext: {
+            directoryId: 'id',
+            authenticationType: 'oauth',
+            loginUrl: 'https://flow.manywho.com',
+        },
+    };
+
+    Authorization.invokeAuthorization(response, flowKey, null);
+
+    t.is(State.getLogin(flowKey), null);
+});
+
 test('Invoke Authorization SAML', (t) => {
     const response = {
         authorizationContext: {
