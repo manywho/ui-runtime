@@ -159,12 +159,17 @@ function onInitializeFailed(response) {
     return null;
 }
 
-function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken) {
+function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken, stateId) {
 
     let flowKey = callback.flowKey;
-    const stateId = (flowKey) ? Utils.extractStateId(flowKey) : null;
     let streamId = null;
-
+    
+    stateId = stateId !== undefined 
+        ? stateId 
+        : (flowKey) 
+            ? Utils.extractStateId(flowKey) 
+            : null;
+    
     const initializationRequest = Json.generateInitializationRequest(
         { id: flowId, versionId: flowVersionId },
         stateId,
@@ -194,6 +199,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                 flowVersionId,
                 container,
                 options,
+                stateId,
             }));
 
             flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
@@ -622,6 +628,7 @@ export const initialize = (
             config.container,
             config.options,
             authenticationToken,
+            stateId,
         );
 
     }
