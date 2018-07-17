@@ -370,9 +370,11 @@ export const removeFlowFromDOM = (flowKey) => {
     const lookUpKey = getLookUpKey(flowKey);
     const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
-    for (let i = 0, len = rootElement.children.length; i < len; i += 1) {
+    for (let i = 0; i < rootElement.children.length; i += 1) {
 
-        if (rootElement.children[i].id === lookUpKey) {
+        const elementId = rootElement.children[i].id;
+
+        if (elementId && elementId === lookUpKey) {
             ReactDOM.unmountComponentAtNode(rootElement.children[i]);
             rootElement.removeChild(rootElement.children[i]);
         }
