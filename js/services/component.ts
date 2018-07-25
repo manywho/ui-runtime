@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Log from 'loglevel';
+import { withErrorBoundary } from 'react-error-boundary';
 
 import * as Collaboration from './collaboration';
 import * as Engine from './engine';
@@ -104,11 +105,16 @@ export const get = (model: any) => {
  * Get the previously registered component by name
  * @param name Name of the component
  */
-export const getByName = (name: string) => {
-    if (name && aliases[name.toLowerCase()])
-        name = aliases[name.toLowerCase()];
+export const getByName: any = (name: string) => {
 
-    return components[name.toLowerCase()];
+    if (name && aliases[name.toLowerCase()]) {
+        name = aliases[name.toLowerCase()];
+    }
+
+    const ComponentToDecorate = components[name.toLowerCase()];
+    const CustomFallbackComponent = components['error-fallback'];
+
+    return withErrorBoundary(ComponentToDecorate, CustomFallbackComponent);
 };
 
 /**
