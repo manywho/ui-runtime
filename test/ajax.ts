@@ -261,43 +261,6 @@ test.cb.serial('FileData Request', (t) => {
     );
 });
 
-test.cb.failing('Upload File', (t) => {
-    t.plan(4);
-
-    const url = `https://flow.manywho.com/api/service/1/file/content`;
-    const formData = new FormData();
-    formData.append('key', 'value');
-
-    mock.post(url, (req, res) => {
-        t.is(req._url, url);
-        t.is(req._method, 'POST');
-        t.deepEqual(req._headers, expectedStateHeaders);
-        t.end();
-        return res.status(200);
-    });
-
-    Ajax.uploadFile(formData, tenantId, token, null);
-});
-
-test.cb.failing('Upload Social File', (t) => {
-    t.plan(4);
-
-    const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/file`;
-    const formData = new FormData();
-    formData.append('key', 'value');
-
-    mock.post(url, (req, res) => {
-        t.is(req._url, url);
-        t.is(req._method, 'POST');
-        t.deepEqual(req._headers, expectedStateHeaders);
-        t.end();
-        return res.status(200);
-    });
-
-    Ajax.uploadSocialFile(formData, streamId, tenantId, token, null);
-});
-
 test.cb.serial('Session Authentication', (t) => {
     t.plan(4);
 

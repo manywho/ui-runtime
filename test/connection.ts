@@ -52,30 +52,3 @@ test.cb('Request', (t) => {
 
     Connection.request(null, 'myevent', 'testurl', 'POST', 'tenantId', 'stateId', 'token', payload);
 });
-
-test.cb.failing('Upload', (t) => {
-    t.plan(3);
-
-    const url = 'https://flow.manywho.com/fileupload';
-    const formData = new FormData();
-    formData.append('key', 'value');
-
-    const onProgress = () => {
-        return;
-    };
-
-    const expectedHeaders = {
-        authorization: 'token',
-        manywhotenant: 'tenantId',
-    };
-
-    mock.post(url, (req, res) => {
-        t.is(req._method, 'POST');
-        t.is(req._url, url);
-        t.deepEqual(req._headers, expectedHeaders);
-        t.end();
-        return res.status(200).body();
-    });
-
-    Connection.upload(null, 'myevent', 'fileupload', formData, 'tenantId', 'token', onProgress);
-});

@@ -112,7 +112,7 @@ export const getByName: any = (name: string) => {
     }
 
     const ComponentToDecorate = components[name.toLowerCase()];
-    const CustomFallbackComponent = components['error-fallback'];
+    const CustomFallbackComponent = components['error-fallback'] || null;
 
     return withErrorBoundary(ComponentToDecorate, CustomFallbackComponent);
 };

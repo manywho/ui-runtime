@@ -320,43 +320,6 @@ test('Validate State Boolean (false)', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test.failing('Validate State Object', (t) => {
-    const expected = {
-        isValid: true,
-        validationMessage: null,
-    };
-
-    const model = {
-        contentType: 'ContentObject',
-        isRequired: true,
-    };
-    const state = {
-        objectData: [{}],
-    };
-
-    const actual = Validation.validate(model, state, null);
-
-    t.deepEqual(actual, expected);
-});
-
-test.failing('Validate State List', (t) => {
-    const expected = {
-        isValid: true,
-        validationMessage: null,
-    };
-
-    const model = {
-        contentType: 'ContentList',
-        isRequired: true,
-    };
-    const state = {
-        objectData: [{}],
-    };
-
-    const actual = Validation.validate(model, state, null);
-    t.deepEqual(actual, expected);
-});
-
 test('Should Validate', (t) => {
     t.true(Validation.shouldValidate('MOVE', null));
 });
