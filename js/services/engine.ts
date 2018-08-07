@@ -608,7 +608,15 @@ export const initialize = (
 
     if (stateId && !isInitializing) {
 
-        join(config.tenantId, config.flowId, config.flowVersionId, config.container, stateId, authenticationToken, config.options);
+        return join(
+            config.tenantId, 
+            config.flowId, 
+            config.flowVersionId, 
+            config.container, 
+            stateId, 
+            authenticationToken, 
+            config.options,
+       );
 
     }
     else {
