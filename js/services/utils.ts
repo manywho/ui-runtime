@@ -370,15 +370,27 @@ export const removeFlowFromDOM = (flowKey) => {
     const lookUpKey = getLookUpKey(flowKey);
     const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
-    for (let i = 0; i < rootElement.children.length; i += 1) {
+    // Ref. CORE-4602
+    // Intermittently receiving the following error in the tooling
+    // Cannot read property 'children' of null at Object.n.removeFlowFromDOM
+    // I have added extra guards around accessing rootElement even within the loop,
+    // just in case while looping rootElement gets removed
 
-        const elementId = rootElement.children[i].id;
+    if (rootElement) {
+        
+        for (let i = 0; i < rootElement.children.length; i += 1) {
 
-        if (elementId && elementId === lookUpKey) {
-            ReactDOM.unmountComponentAtNode(rootElement.children[i]);
-            rootElement.removeChild(rootElement.children[i]);
+            const elementId = 
+                (rootElement && rootElement.children && rootElement.children[i])
+                    ? rootElement.children[i].id
+                    : null;
+    
+            if (rootElement && elementId === lookUpKey) {
+                ReactDOM.unmountComponentAtNode(rootElement.children[i]);
+                rootElement.removeChild(rootElement.children[i]);
+            }
         }
-    }
+    }    
 };
 
 /**
