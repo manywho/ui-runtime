@@ -110,11 +110,8 @@ export const getByName: any = (name: string) => {
     if (name && aliases[name.toLowerCase()]) {
         name = aliases[name.toLowerCase()];
     }
-
-    const ComponentToDecorate = components[name.toLowerCase()];
-    const CustomFallbackComponent = components['error-fallback'] || null;
-
-    return withErrorBoundary(ComponentToDecorate, CustomFallbackComponent);
+    
+    return  components[name.toLowerCase()];
 };
 
 /**
