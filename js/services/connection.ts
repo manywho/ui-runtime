@@ -113,7 +113,7 @@ export const upload = (
  * @param context TODO
  * @param event Type of event, `Settings.event(event + '.done')` will be called when the request completes
  * @param url The path to make the request against, excluding the host which is fetched from `Settings.global('platform.uri')`
- * @param files FormData for the file being uploaded
+ * @param files List of files to be uploaded
  * @param request Request payload data
  * @param tenantId The GUID of the tenant to make the request against
  * @param authenticationToken Current running users authentication token
