@@ -219,6 +219,7 @@ export const dispatchFileDataRequest = (
 
 /**
  * POST to `/api/service/1/file/content` to upload a file to a 3rd party service
+ * DEPRECATED: Does not support offline file upload
  * @param onProgress Callback to recieve progress event info
  */
 export const uploadFile = (
@@ -228,6 +229,31 @@ export const uploadFile = (
     onProgress: EventListenerOrEventListenerObject,
 ): JQueryXHR => {
     return Connection.upload(null, 'fileData', '/api/service/1/file/content', formData, tenantId, authenticationToken, onProgress);
+};
+
+/**
+ * POST to `/api/service/1/file/content` to upload a file to a 3rd party service (offline supported)
+ * @param onProgress Callback to recieve progress event info
+ */
+export const uploadFiles = (
+    files: File[],
+    request: any,
+    tenantId: string,
+    authenticationToken: string,
+    onProgress: EventListenerOrEventListenerObject,
+    stateId: string,
+): JQueryXHR => {
+    return Connection.uploadFiles(
+        null, 
+        'fileData', 
+        '/api/service/1/file/content', 
+        files, 
+        request, 
+        tenantId, 
+        authenticationToken, 
+        onProgress, 
+        stateId,
+    );
 };
 
 /**
