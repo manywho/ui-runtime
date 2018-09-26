@@ -26,6 +26,7 @@ let globals = {
             notification: 'Page contains invalid values',
         },
         searchFirst: 'Perform a search to display results here',
+        fileUploadMessage: 'Drop files here, or click to select files',
     },
     isScrollResetEnabled: true,
     i18n: {
