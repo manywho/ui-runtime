@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as Log from 'loglevel';
-import { withErrorBoundary } from 'react-error-boundary';
 
 import * as Collaboration from './collaboration';
 import * as Engine from './engine';
