@@ -54,7 +54,7 @@ let globals = {
         downloadUriPropertyName: 'Download Uri',
     },
     richText: {
-        url: 'https://cdn.tinymce.com/4/tinymce.min.js',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.4/tinymce.min.js',
         fontSize: '14px',
         plugins: [
             'advlist autolink link lists link image charmap print hr anchor',
