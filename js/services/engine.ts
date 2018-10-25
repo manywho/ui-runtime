@@ -616,7 +616,8 @@ export const initialize = (
             stateId, 
             authenticationToken, 
             config.options,
-        );
+       );
+
     }
     else {
 
