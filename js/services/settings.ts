@@ -55,7 +55,7 @@ let globals = {
         downloadUriPropertyName: 'Download Uri',
     },
     richText: {
-        url: 'https://cdn.tinymce.com/4/tinymce.min.js',
+        url: 'https://assets.manywho.com/js/vendor/tinymce/tinymce.min.js',
         fontSize: '14px',
         plugins: [
             'advlist autolink link lists link image charmap print hr anchor',
