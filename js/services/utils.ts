@@ -70,6 +70,60 @@ export const getNumber = (value) => {
 };
 
 /**
+ * Remove param with the provided key from a url
+ */
+export const removeURIParam = (uri, key) => {
+    const anchorElement = document.createElement('a');
+
+    anchorElement.href = uri;
+
+    const currentQuery = anchorElement.search;
+    const hasQuery = currentQuery !== '';
+
+    const queryParams = hasQuery 
+        ? parseQueryString(currentQuery.substring(1))
+        : {};
+
+    const paramStringPairs = [];
+    for (const paramKey in queryParams) {
+        if (paramKey !== key) {
+            paramStringPairs.push(`${paramKey}=${queryParams[paramKey]}`);
+        }
+    }
+
+    anchorElement.search = `?${paramStringPairs.join('&')}`;
+
+    return anchorElement.href;
+};
+
+/**
+ * Update a url with provided key and value
+ */
+export const setURIParam = (uri, key, value) => {
+    const anchorElement = document.createElement('a');
+
+    anchorElement.href = uri;
+
+    const currentQuery = anchorElement.search;
+    const hasQuery = currentQuery !== '';
+
+    const queryParams = hasQuery 
+        ? parseQueryString(currentQuery.substring(1))
+        : {};
+
+    queryParams[encodeURIComponent(key)] = encodeURIComponent(value);
+
+    const paramStringPairs = [];
+    for (const paramKey in queryParams) {
+        paramStringPairs.push(`${paramKey}=${queryParams[paramKey]}`);
+    }
+
+    anchorElement.search = `?${paramStringPairs.join('&')}`;
+
+    return anchorElement.href;
+};
+
+/**
  * Update the url in the browser to the join url
  */
 export const replaceBrowserUrl = (response: any) => {
