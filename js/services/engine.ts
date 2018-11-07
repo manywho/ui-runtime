@@ -137,7 +137,7 @@ function notifyError(flowKey, response) {
             });
         else if (response)
             Model.addNotification(flowKey, {
-                message: response.responseText,
+                message: response.responseJSON, // Error responses are JSON encoded strings
                 position: 'center',
                 type: 'danger',
                 timeout: 0,
