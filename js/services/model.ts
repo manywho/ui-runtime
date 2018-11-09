@@ -204,12 +204,31 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
                     fault = { message: engineInvokeResponse.mapElementInvokeResponses[0].rootFaults[faultName] };
                 }
 
+                if (fault.responseBody) {
+                    try {
+                        fault.responseBody = JSON.parse(fault.responseBody);
+                    } 
+                    catch (e) {
+                        fault.responseBody = fault.responseBody;
+                    }
+                }
+
                 fault.name = faultName;
 
                 flowModel[lookUpKey].rootFaults.push(fault);
 
+                let notificationMessage = fault.message;
+
+                if (fault.responseBody && fault.responseBody.hasOwnProperty('invokeType')) {
+                    // There is an original nested error
+                    notificationMessage = 
+                        `Type: ${fault.responseBody.kind.toUpperCase()}
+                        Message: ${fault.responseBody.message}
+                        URI: ${fault.responseBody.uri}`;
+                }
+
                 flowModel[lookUpKey].notifications.push({
-                    message: fault.message,
+                    message: notificationMessage,
                     position: 'center',
                     type: 'danger',
                     timeout: '0',
