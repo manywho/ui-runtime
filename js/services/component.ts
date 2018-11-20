@@ -104,9 +104,11 @@ export const get = (model: any) => {
  * Get the previously registered component by name
  * @param name Name of the component
  */
-export const getByName = (name: string) => {
-    if (name && aliases[name.toLowerCase()])
+export const getByName: any = (name: string) => {
+
+    if (name && aliases[name.toLowerCase()]) {
         name = aliases[name.toLowerCase()];
+    }
 
     return components[name.toLowerCase()];
 };

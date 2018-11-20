@@ -78,13 +78,16 @@ export const request = (context,
  * @param onProgress Callback to recieve progress event info
  * @returns JQuery deferred from the $.ajax request
  */
-export const upload = (context, 
-                       event: string, 
-                       url: string, 
-                       formData: FormData, 
-                       tenantId: string, 
-                       authenticationToken: string,
-                       onProgress: EventListenerOrEventListenerObject) => {
+export const upload = (
+    context, 
+    event: string, 
+    url: string, 
+    formData: FormData, 
+    tenantId: string, 
+    authenticationToken: string,
+    onProgress: EventListenerOrEventListenerObject,
+) => {
+
     return $.ajax({
         url: Settings.global('platform.uri') + url,
         type: 'POST',
@@ -103,4 +106,47 @@ export const upload = (context,
     .done(Settings.event(event + '.done'))
     .fail(onError)
     .fail(Settings.event(event + '.fail'));
+};
+
+/**
+ * Upload a file to the Boomi Flow platform
+ * @param context TODO
+ * @param event Type of event, `Settings.event(event + '.done')` will be called when the request completes
+ * @param url The path to make the request against, excluding the host which is fetched from `Settings.global('platform.uri')`
+ * @param files List of files to be uploaded
+ * @param request Request payload data
+ * @param tenantId The GUID of the tenant to make the request against
+ * @param authenticationToken Current running users authentication token
+ * @param onProgress Callback to recieve progress event info
+ * @param _ (stateId) Only currently used when offline
+ * @returns JQuery deferred from the $.ajax request
+ */
+export const uploadFiles = (
+    context, 
+    event: string, 
+    url: string, 
+    files: File[], 
+    request: any,
+    tenantId: string, 
+    authenticationToken: string,
+    onProgress: EventListenerOrEventListenerObject,
+    _: string,
+) => {
+    const formData = new FormData();
+
+    files.forEach((file) => {
+        formData.append('FileData', file);
+    });
+
+    formData.append('FileDataRequest', JSON.stringify(request));
+
+    return upload(
+        context,
+        event,
+        url,
+        formData,
+        tenantId,
+        authenticationToken,
+        onProgress,
+    );
 };

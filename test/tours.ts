@@ -16,6 +16,10 @@ const log = {
     warning: sinon.stub(),
 };
 
+const reactErrorBoundary = {
+    withErrorBoundary: sinon.stub().returnsArg(0),
+};
+
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
@@ -23,6 +27,7 @@ mockery.enable({
 
 mockery.registerMock('react', react);
 mockery.registerMock('react-dom', ReactDOM);
+mockery.registerMock('react-error-boundary', reactErrorBoundary);
 mockery.registerMock('loglevel', log);
 
 import * as Tours from '../js/services/tours';

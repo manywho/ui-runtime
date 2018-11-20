@@ -17,6 +17,11 @@ const react = {
     createElement: sinon.stub(),
 };
 
+const reactErrorBoundary = {
+    withErrorBoundary: sinon.stub().returnsArg(0),
+};
+
+
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
@@ -25,6 +30,7 @@ mockery.enable({
 mockery.registerMock('./engine', engine);
 mockery.registerMock('./collaboration', collaboration);
 mockery.registerMock('react', react);
+mockery.registerMock('react-error-boundary', reactErrorBoundary);
 
 import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';

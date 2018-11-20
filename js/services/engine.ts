@@ -137,7 +137,7 @@ function notifyError(flowKey, response) {
             });
         else if (response)
             Model.addNotification(flowKey, {
-                message: response.responseText,
+                message: response.responseJSON, // Error responses are JSON encoded strings
                 position: 'center',
                 type: 'danger',
                 timeout: 0,
@@ -191,153 +191,190 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
     }
 
     return Ajax.initialize(initializationRequest, tenantId, authenticationToken)
-        .then((response) => {
+        .then(
+            (response) => {
 
-            window.sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
-                tenantId,
-                flowId,
-                flowVersionId,
-                container,
-                options,
-                stateId,
-            }));
+                window.sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
+                    tenantId,
+                    flowId,
+                    flowVersionId,
+                    container,
+                    options,
+                    stateId,
+                }));
 
-            flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
+                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
 
-            State.setOptions(options, flowKey);
+                State.setOptions(options, flowKey);
 
-            if (options.callbacks != null && options.callbacks.length > 0) {
+                if (options.callbacks != null && options.callbacks.length > 0) {
 
-                options.callbacks.forEach((callback) => {
-                    Callbacks.register(flowKey, callback);
-                });
+                    options.callbacks.forEach((callback) => {
+                        Callbacks.register(flowKey, callback);
+                    });
 
-            }
+                }
 
-            streamId = response.currentStreamId;
+                streamId = response.currentStreamId;
 
-            callback.flowKey = flowKey;
+                callback.flowKey = flowKey;
 
-            Model.initializeModel(flowKey);
-            Settings.initializeFlow(options, flowKey);
-            State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-            State.setAuthenticationToken(authenticationToken, flowKey);
+                Model.initializeModel(flowKey);
+                Settings.initializeFlow(options, flowKey);
+                State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
+                State.setAuthenticationToken(authenticationToken, flowKey);
 
-            if (options.authentication != null && options.authentication.sessionId != null) {
+                if (options.authentication != null && options.authentication.sessionId != null) {
 
-                State.setSessionData(options.authentication.sessionId, options.authentication.sessionUrl, flowKey);
+                    State.setSessionData(options.authentication.sessionId, options.authentication.sessionUrl, flowKey);
 
-            }
+                }
 
-            if (response.navigationElementReferences && response.navigationElementReferences.length > 0) {
+                if (response.navigationElementReferences && response.navigationElementReferences.length > 0) {
 
-                Model.setSelectedNavigation(response.navigationElementReferences[0].id, flowKey);
+                    Model.setSelectedNavigation(response.navigationElementReferences[0].id, flowKey);
 
-            }
+                }
 
-            if (!Utils.isNullOrWhitespace(options.navigationElementId)) {
+                if (!Utils.isNullOrWhitespace(options.navigationElementId)) {
 
-                Model.setSelectedNavigation(options.navigationElementId, flowKey);
+                    Model.setSelectedNavigation(options.navigationElementId, flowKey);
 
-            }
+                }
 
-            Component.appendFlowContainer(flowKey);
-            State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
-            render(flowKey);
-
-            return isAuthorized(response, flowKey);
-
-        }, 
-              onInitializeFailed) // This should only ever be called when the ajax request itself returns an error response
-        .then((response) => {
-
-            if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
-                State.setUserTime(flowKey);
-
-            Formatting.initialize(flowKey);
-
-            const invokeRequest = Json.generateInvokeRequest(
-                State.getState(flowKey),
-                'FORWARD',
-                null,
-                null,
-                null,
-                null,
-                null,
-                Settings.flow('annotations', flowKey),
-                State.getLocation(flowKey),
-                Settings.flow('mode', flowKey),
-            );
-
-            return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey));
-
-        },
-              response => onAuthorizationFailed(response, flowKey, callback))
-
-        .then((response) => {
-
-            window.sessionStorage.removeItem('oauth-' + response.stateId);
-
-            parseResponse(response, Model.parseEngineResponse, 'initialize', flowKey);
-
-            State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-
-            if (Settings.flow('collaboration.isEnabled', flowKey)) {
-                Collaboration.initialize(flowKey);
-                Collaboration.join('Another user', flowKey);
-            }
-
-            State.setLocation(flowKey);
-
-            const deferreds = [];
-
-            const navigationId = Model.getSelectedNavigation(flowKey);
-
-            if (!Utils.isNullOrWhitespace(navigationId))
-                deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
-
-            if (Settings.isDebugEnabled(flowKey))
-                deferreds.push(loadExecutionLog(flowKey, authenticationToken));
-
-            if (streamId)
-                Social.initialize(flowKey, response.currentStreamId);
-
-            if (Utils.isEqual(response.invokeType, 'DONE', true))
-                Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
-
-            return Utils.whenAll(deferreds);
-
-        },                                                       
-              response => notifyError(flowKey, response))
-        .always(() => {
-
-            if (flowKey) {
+                Component.appendFlowContainer(flowKey);
+                State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
                 render(flowKey);
-                processObjectDataRequests(Model.getComponents(flowKey), flowKey);
-            }
 
-        })
-        .then(() => {
+                return isAuthorized(response, flowKey);
 
-            const autoStart = Settings.global('tours.autoStart', flowKey, false);
-            const containerSelector = Settings.global('tours.container', flowKey, null);
+            }, 
+            // This should only ever be called when the ajax request itself returns an error response
+            onInitializeFailed,
+        ) 
+        .then(
+            // Is authorized
+            (response) => {
 
-            if (autoStart)
-                if (typeof autoStart === 'string')
-                    Tours.start(autoStart, containerSelector, flowKey);
-                else if (typeof autoStart === 'boolean')
-                    Tours.start(null, containerSelector, flowKey);
+                // Ensure the url has no authorization or join information
+                // if settings.replaceUrl is false
+                // and authentication type is oauth2
+                const isOauth2 = response.authorizationContext 
+                    && response.authorizationContext.authenticationType
+                    && response.authorizationContext.authenticationType.toLowerCase() === 'oauth2';
 
-        })
-        .always(() => {
+                const replaceUrl = Settings.flow('replaceUrl', flowKey);
 
-            if (flowKey) {
-                State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
-                render(flowKey);
-            }
+                if (flowKey && replaceUrl === false && isOauth2) {
 
-        })
-        .then(() => flowKey);
+                    const flowId = manywho.utils.extractFlowId(flowKey);
+
+                    const urlWithRemovedAuth = Utils.removeURIParam(`${location.pathname}${location.search}`, 'authorization');
+                    const urlWithRemovedJoin = Utils.removeURIParam(urlWithRemovedAuth, 'join');
+                    const urlWithAddedFlowId = Utils.setURIParam(urlWithRemovedJoin, 'flow-id', flowId);
+                    
+                    history.replaceState(null, '', urlWithAddedFlowId);
+                }
+
+                if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
+                    State.setUserTime(flowKey);
+
+                Formatting.initialize(flowKey);
+
+                const invokeRequest = Json.generateInvokeRequest(
+                    State.getState(flowKey),
+                    'FORWARD',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    Settings.flow('annotations', flowKey),
+                    State.getLocation(flowKey),
+                    Settings.flow('mode', flowKey),
+                );
+
+                return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey));
+
+            },
+            // Is NOT authorized
+            response => onAuthorizationFailed(response, flowKey, callback))
+
+        .then(
+            // Invoke call was successful
+            (response) => {
+
+                window.sessionStorage.removeItem('oauth-' + response.stateId);
+
+                parseResponse(response, Model.parseEngineResponse, 'initialize', flowKey);
+
+                State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
+
+                if (Settings.flow('collaboration.isEnabled', flowKey)) {
+                    Collaboration.initialize(flowKey);
+                    Collaboration.join('Another user', flowKey);
+                }
+
+                State.setLocation(flowKey);
+
+                const deferreds = [];
+
+                const navigationId = Model.getSelectedNavigation(flowKey);
+
+                if (!Utils.isNullOrWhitespace(navigationId))
+                    deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
+
+                if (Settings.isDebugEnabled(flowKey))
+                    deferreds.push(loadExecutionLog(flowKey, authenticationToken));
+
+                if (streamId)
+                    Social.initialize(flowKey, response.currentStreamId);
+
+                if (Utils.isEqual(response.invokeType, 'DONE', true))
+                    Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
+
+                return Utils.whenAll(deferreds);
+
+            },
+            // Invoke call failed
+            response => notifyError(flowKey, response))
+        .always(
+            () => {
+
+                if (flowKey) {
+                    render(flowKey);
+                    processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+                }
+
+            },
+        )
+        .then(
+            () => {
+
+                const autoStart = Settings.global('tours.autoStart', flowKey, false);
+                const containerSelector = Settings.global('tours.container', flowKey, null);
+
+                if (autoStart)
+                    if (typeof autoStart === 'string')
+                        Tours.start(autoStart, containerSelector, flowKey);
+                    else if (typeof autoStart === 'boolean')
+                        Tours.start(null, containerSelector, flowKey);
+
+            },
+        )
+        .always(
+            () => {
+
+                if (flowKey) {
+                    State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
+                    render(flowKey);
+                }
+
+            },
+        )
+        .then(
+            () => flowKey,
+        );
 
 }
 
