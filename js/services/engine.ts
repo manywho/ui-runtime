@@ -35,7 +35,7 @@ function processObjectDataRequests(components, flowKey) {
 
             if (component.attributes
                 && (component.attributes.onlyDisplaySearchResults === true
-                    || manywho.utils.isEqual(component.attributes.onlyDisplaySearchResults, 'true', true)))
+                    || Utils.isEqual(component.attributes.onlyDisplaySearchResults, 'true', true)))
                 return false;
 
             return component.objectDataRequest != null || component.fileDataRequest != null;
