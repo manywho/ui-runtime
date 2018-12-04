@@ -33,6 +33,11 @@ function processObjectDataRequests(components, flowKey) {
                     || Utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'true', true)))
                 return false;
 
+            if (component.attributes
+                && (component.attributes.onlyDisplaySearchResults === true
+                    || Utils.isEqual(component.attributes.onlyDisplaySearchResults, 'true', true)))
+                return false;
+
             return component.objectDataRequest != null || component.fileDataRequest != null;
 
         });
