@@ -1,13 +1,14 @@
-var path = require('path');
-var webpack = require('webpack');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 
-var pathsToClean = [
+const pathsToClean = [
     'dist'
 ];
 
-var config = {
+const config = {
     entry: {
         'ui-core': './js/index.ts'
     },
@@ -29,6 +30,7 @@ var config = {
             include: /\.min\.js$/,
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new WriteBundleFilePlugin(),
         new CleanWebpackPlugin(pathsToClean),
     ],
     module: {
@@ -55,7 +57,7 @@ var config = {
     },
     externals: {
         'react': 'React',
-        'react-dom' : 'ReactDOM',
+        'react-dom': 'ReactDOM',
         'jquery': 'jQuery',
         'numbro': 'numbro',
         'moment': 'moment',
