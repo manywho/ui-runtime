@@ -30,16 +30,18 @@ export const refreshComponents = (models: any, invokeType: string, flowKey: stri
         let selectedObjectData = null;
 
         // We need to do a little work on the object data as we only want the selected values in the state
-        if (models[id].objectData && !Utils.isEmptyObjectData(models[id]))
+        if (models[id].objectData && !Utils.isEmptyObjectData(models[id])) {
             selectedObjectData = models[id].objectData.filter(item => item.isSelected);
+        }
 
         components[lookUpKey][id] = {
             contentValue: models[id].contentValue || null,
             objectData: selectedObjectData || null,
         };
 
-        if (Validation.shouldValidate(invokeType, flowKey))
+        if (Validation.shouldValidate(invokeType, flowKey)) {
             components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], isValid(id, flowKey));
+        }
     }
 };
 
@@ -86,19 +88,22 @@ export const setUserTime = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     const now = moment();
 
-    if (!Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey)))
+    if (!Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey))) {
         now.utcOffset(Settings.global('i18n.timezoneOffset', flowKey));
+    }
 
-    if (location[lookUpKey])
+    if (location[lookUpKey]) {
         location[lookUpKey].time = now.format();
-    else
+    }
+    else {
         location[lookUpKey] = { time: now.format() };
+    }
 };
 
 /**
  * Get the state of a specific component
  * @param id Id of the component
- * @param flowKey 
+ * @param flowKey
  */
 export const getComponent = (id: string, flowKey: string): IComponentValue => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -107,7 +112,7 @@ export const getComponent = (id: string, flowKey: string): IComponentValue => {
 
 /**
  * Get the state of every component
- * @param flowKey 
+ * @param flowKey
  */
 export const getComponents = (flowKey: string): IComponentValue[] => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -136,8 +141,9 @@ export const setComponent = (id: string, value: IComponentValue, flowKey: string
 
     components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], value);
 
-    if (value != null)
+    if (value != null) {
         components[lookUpKey][id].objectData = value.objectData;
+    }
 
     if (typeof value.isValid === 'undefined' && components[lookUpKey][id].isValid === false) {
         const model = Model.getComponent(id, flowKey);
@@ -150,14 +156,15 @@ export const setComponent = (id: string, value: IComponentValue, flowKey: string
         }
     }
 
-    if (push)
+    if (push) {
         Collaboration.push(id, value, flowKey);
+    }
 };
 
 /**
  * Overwrite the existing state of every component
  * @param values The state of each component
- * @param flowKey 
+ * @param flowKey
  */
 export const setComponents = (values: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -183,12 +190,13 @@ export const getPageComponentInputResponseRequests = (flowKey: string): IPageCom
 
         for (const id in components[lookUpKey]) {
 
-            if (guidRegex.test(id))
+            if (guidRegex.test(id)) {
                 pageComponentInputResponseRequests.push({
                     pageComponentId: id,
                     contentValue: components[lookUpKey][id].contentValue,
                     objectData: components[lookUpKey][id].objectData,
                 });
+            }
         }
     }
 
@@ -213,7 +221,7 @@ export const isAllValid = (flowKey: string): boolean => {
     const components = Model.getComponents(flowKey);
     let result = true;
 
-    if (components)
+    if (components) {
         for (const id in components) {
             const validationResult: Validation.IValidationResult = isValid(id, flowKey);
 
@@ -222,6 +230,7 @@ export const isAllValid = (flowKey: string): boolean => {
                 result = false;
             }
         }
+    }
 
     return result;
 };
@@ -230,7 +239,7 @@ export const isAllValid = (flowKey: string): boolean => {
  * Update the id, token, and map element id of the current state
  * @param id The state id
  * @param mapElementId Id of the map element the state is currently on
- * @param flowKey 
+ * @param flowKey
  */
 export const setState = (id: string, token: string, mapElementId: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -316,9 +325,9 @@ export const setSessionData = (id: string, url: string, flowKey: string) => {
 
 /**
  * Set the `loading` property of the component's state to `data`
- * @param componentId 
- * @param data 
- * @param flowKey 
+ * @param componentId
+ * @param data
+ * @param flowKey
  */
 export const setComponentLoading = (componentId: string, data: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
@@ -330,7 +339,7 @@ export const setComponentLoading = (componentId: string, data: any, flowKey: str
 };
 
 /**
- * Set the `error` property on a component to an object with `message` and `id` properties. 
+ * Set the `error` property on a component to an object with `message` and `id` properties.
  * If the `error` argument is a string it will populate the `message` property
  */
 export const setComponentError = (componentId: string, error: any | string, flowKey: string) => {
@@ -343,13 +352,15 @@ export const setComponentError = (componentId: string, error: any | string, flow
         components[lookUpKey][componentId].error = error;
         components[lookUpKey][componentId].error.id = componentId;
     }
-    else if (typeof error === 'string')
+    else if (typeof error === 'string') {
         components[lookUpKey][componentId].error = {
             message: error,
             id: componentId,
         };
-    else if (!error)
+    }
+    else if (!error) {
         components[lookUpKey][componentId].error = null;
+    }
 };
 
 /**

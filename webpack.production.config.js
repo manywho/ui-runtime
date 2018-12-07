@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
+const Compression = require('compression-webpack-plugin');
 
 const pathsToClean = [
     'dist'
@@ -24,22 +25,29 @@ const config = {
     },
     devtool: 'source-map',
     plugins: [
+        new CleanWebpackPlugin(pathsToClean),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new UglifyJSPlugin({
             minimize: true,
             sourceMap: true,
             include: /\.min\.js$/,
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new Compression({
+            filename: '[file]',
+            algorithm: 'gzip',
+            test: /\.js$|\.css$|\.svg$/,
+            threshold: 10240,
+            minRatio: 0.8,
+        }),
         new WriteBundleFilePlugin({
             bundleKey: 'core',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
             filenameFilter: filename => !filename.endsWith('.map'),
         }),
-        new CleanWebpackPlugin(pathsToClean),
     ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 enforce: 'pre',

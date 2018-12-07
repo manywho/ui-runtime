@@ -1,5 +1,4 @@
 
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
@@ -16,8 +15,9 @@ function extendShallow(mergedObject, objects) {
 
     objects.forEach((object) => {
         for (const key in object) {
-            if (object.hasOwnProperty(key))
+            if (object.hasOwnProperty(key)) {
                 mergedObject[key] = object[key];
+            }
         }
     });
 
@@ -29,12 +29,15 @@ function extendDeep(mergedObject, object) {
     for (const key in object) {
 
         try {
-            if (Array.isArray(object[key]))
+            if (Array.isArray(object[key])) {
                 mergedObject[key] = extendArray(mergedObject[key] || [], object[key]);
-            else if (object[key].constructor === Object)
+            }
+            else if (object[key].constructor === Object) {
                 mergedObject[key] = extendDeep(mergedObject[key], object[key]);
-            else if (object.hasOwnProperty(key))
+            }
+            else if (object.hasOwnProperty(key)) {
                 mergedObject[key] = object[key];
+            }
         }
         catch (e) {
             mergedObject[key] = object[key];
@@ -62,8 +65,9 @@ export const getNumber = (value) => {
     if (value != null) {
         float = parseFloat(value);
 
-        if (isNaN(float) || !isFinite(value))
+        if (isNaN(float) || !isFinite(value)) {
             float = 0;
+        }
     }
 
     return float;
@@ -80,7 +84,7 @@ export const removeURIParam = (uri, key) => {
     const currentQuery = anchorElement.search;
     const hasQuery = currentQuery !== '';
 
-    const queryParams = hasQuery 
+    const queryParams = hasQuery
         ? parseQueryString(currentQuery.substring(1))
         : {};
 
@@ -107,7 +111,7 @@ export const setURIParam = (uri, key, value) => {
     const currentQuery = anchorElement.search;
     const hasQuery = currentQuery !== '';
 
-    const queryParams = hasQuery 
+    const queryParams = hasQuery
         ? parseQueryString(currentQuery.substring(1))
         : {};
 
@@ -135,8 +139,9 @@ export const replaceBrowserUrl = (response: any) => {
         const ignoreParameters = ['tenant-id', 'flow-id', 'flow-version-id', 'navigation-element-id', 'join', 'initialization', 'authorization'];
 
         for (const queryParameter in queryParameters) {
-            if (ignoreParameters.indexOf(queryParameter) === -1)
+            if (ignoreParameters.indexOf(queryParameter) === -1) {
                 newJoinUri += '&' + queryParameter + '=' + queryParameters[queryParameter];
+            }
         }
 
         try {
@@ -174,19 +179,23 @@ export const parseQueryString = (queryString: string): any => {
  * @hidden
  */
 export const extend = (mergedObject, objects, isDeep?: boolean) => {
-    if (!mergedObject)
+    if (!mergedObject) {
         return {};
+    }
 
     if (objects) {
-        if (!Array.isArray(objects))
+        if (!Array.isArray(objects)) {
             objects = [objects];
+        }
 
-        if (!isDeep)
+        if (!isDeep) {
             mergedObject = extendShallow(mergedObject, objects);
-        else
+        }
+        else {
             objects.forEach((object) => {
                 mergedObject = extendDeep(mergedObject, object);
             });
+        }
     }
 
     return mergedObject;
@@ -209,11 +218,14 @@ export const extendObjectData = (mergedObjectData: any[], objectData: any[]): an
 
                 mergedObjectData.forEach((property) => {
 
-                    if (isEqual(property.developerName, objectProperty.developerName, true))
-                        if (objectProperty.contentValue != null)
+                    if (isEqual(property.developerName, objectProperty.developerName, true)) {
+                        if (objectProperty.contentValue != null) {
                             extend(property, objectProperty, true);
-                        else if (objectProperty.objectData != null)
+                        }
+                        else if (objectProperty.objectData != null) {
                             property.objectData = objectProperty.objectData;
+                        }
+                    }
                 });
             }
         });
@@ -226,8 +238,9 @@ export const extendObjectData = (mergedObjectData: any[], objectData: any[]): an
  * Check if a string is `null` or only contains whitespace
  */
 export const isNullOrWhitespace = (value: string): boolean => {
-    if (isNullOrUndefined(value))
+    if (isNullOrUndefined(value)) {
         return true;
+    }
 
     return value.replace(/\s/g, '').length < 1;
 };
@@ -250,13 +263,16 @@ export const isNullOrEmpty = (value: string): boolean => {
  * Check equality for two strings
  */
 export const isEqual = (value1: string, value2: string, ignoreCase: boolean): boolean => {
-    if (!value1 && !value2)
+    if (!value1 && !value2) {
         return true;
+    }
     else if (value1 && value2) {
-        if (ignoreCase)
+        if (ignoreCase) {
             return value1.toLowerCase() === value2.toLowerCase();
-        else
+        }
+        else {
             return value1 === value2;
+        }
     }
 
     return false;
@@ -292,8 +308,9 @@ export const contains = (collection: any[], id: string, key: string) => {
 export const get = (collection: any[], id: string, key: string) => {
     const selectedItem = collection.filter(item => item[key] === id);
 
-    if (selectedItem && selectedItem.length > 0)
+    if (selectedItem && selectedItem.length > 0) {
         return selectedItem[0];
+    }
 
     return null;
 };
@@ -305,8 +322,9 @@ export const getAll = (map: any, id: string, key: string) => {
     const items = [];
 
     for (const name in map) {
-        if (map[name][key] === id)
+        if (map[name][key] === id) {
             items.push(map[name]);
+        }
     }
 
     return items;
@@ -324,8 +342,9 @@ export const getFlowKey = function (tenantId: string, flowId: string, flowVersio
  * Get a key in the format of `tenantid_stateid` derived from the `flowKey`
  */
 export const getLookUpKey = (flowKey: string) => {
-    if (flowKey)
+    if (flowKey) {
         return [flowKey.split('_')[0], flowKey.split('_')[3]].join('_');
+    }
 };
 
 /**
@@ -368,8 +387,9 @@ export const extractStateId = (flowKey: string) => {
  */
 export const removeLoadingIndicator = (id: string) => {
     const element = document.getElementById(id);
-    if (element)
+    if (element) {
         element.parentNode.removeChild(element);
+    }
 };
 
 /**
@@ -391,8 +411,9 @@ export const isSmallScreen = (flowKey): boolean => {
  * Stolen from here: http://stackoverflow.com/questions/8817394/javascript-get-deep-value-from-object-by-passing-path-to-it-as-string
  */
 export const getValueByPath = (obj: any, path: string): any => {
-    if (!path || path === '')
+    if (!path || path === '') {
         return obj;
+    }
 
     try {
         const parts = path.split('.');
@@ -401,14 +422,17 @@ export const getValueByPath = (obj: any, path: string): any => {
             let foundKey = null;
 
             for (const key in obj) {
-                if (key.toLowerCase() === parts[i].toLowerCase())
+                if (key.toLowerCase() === parts[i].toLowerCase()) {
                     foundKey = key;
+                }
             }
 
-            if (foundKey)
+            if (foundKey) {
                 obj = obj[foundKey];
-            else
+            }
+            else {
                 obj = undefined;
+            }
         }
         return obj;
     }
@@ -431,20 +455,20 @@ export const removeFlowFromDOM = (flowKey) => {
     // just in case while looping rootElement gets removed
 
     if (rootElement) {
-        
+
         for (let i = 0; i < rootElement.children.length; i += 1) {
 
-            const elementId = 
+            const elementId =
                 (rootElement && rootElement.children && rootElement.children[i])
                     ? rootElement.children[i].id
                     : null;
-    
+
             if (rootElement && elementId === lookUpKey) {
                 ReactDOM.unmountComponentAtNode(rootElement.children[i]);
                 rootElement.removeChild(rootElement.children[i]);
             }
         }
-    }    
+    }
 };
 
 /**
@@ -459,18 +483,21 @@ export const getObjectDataProperty = (properties: any[], propertyName: string): 
  */
 export const setObjectDataProperty = (properties: any[], propertyName: string, value: string | number | boolean) => {
     const property = properties.find(property => isEqual(property.developerName, propertyName, true));
-    if (property)
+    if (property) {
         property.contentValue = value;
+    }
 };
 
 /**
  * Check if the models objectdata is empty
  */
 export const isEmptyObjectData = (model): boolean => {
-    if (model.objectDataRequest && model.objectData && model.objectData.length === 1)
+    if (model.objectDataRequest && model.objectData && model.objectData.length === 1) {
         return isPlaceholderObjectData(model.objectData);
-    else if (model.objectData)
+    }
+    else if (model.objectData) {
         return false;
+    }
 
     return true;
 };
@@ -481,8 +508,9 @@ export const isEmptyObjectData = (model): boolean => {
 export const isPlaceholderObjectData = (objectData: any[]): boolean => {
     if (objectData.length === 1) {
         for (const prop in objectData[0].properties) {
-            if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue))
+            if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue)) {
                 return false;
+            }
         }
         return true;
     }
@@ -537,8 +565,9 @@ export const removeFlow = (flowKey: string) => {
 export const guid = (): string => {
     let now = new Date().getTime();
 
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function')
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
         now += performance.now();
+    }
 
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         const r = (now + Math.random() * 16) % 16 | 0;
@@ -570,7 +599,7 @@ export const whenAll = (deferreds: JQueryDeferred<any[]>[]): JQueryDeferred<any>
             d.fail(fail).always(always);
         });
         return deferred;
-    } 
+    }
     else {
         return $.Deferred().resolve();
     }

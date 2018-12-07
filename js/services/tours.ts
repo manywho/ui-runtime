@@ -29,11 +29,13 @@ const watchForStep = function (tour: ITour) {
 
     const step = tour.steps[tour.currentStep];
 
-    if (!step.showNext && tour.currentStep < tour.steps.length - 1)
+    if (!step.showNext && tour.currentStep < tour.steps.length - 1) {
         domWatcher = setInterval(() => onInterval(tour, step, tour.steps[tour.currentStep + 1], !step.showNext && !step.showBack), 500);
+    }
 
-    if (tour.currentStep === tour.steps.length - 1)
+    if (tour.currentStep === tour.steps.length - 1) {
         domWatcher = setInterval(() => onDoneInterval(tour, tour.steps[tour.currentStep]), 500);
+    }
 };
 
 export interface ITourState {
@@ -96,8 +98,9 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
             container.appendChild(tourContainer);
         }
 
-        if (Utils.isNullOrWhitespace(id))
+        if (Utils.isNullOrWhitespace(id)) {
             id = Object.keys(configs)[0];
+        }
 
         if (!configs[id]) {
             Log.error(`A Tour with the id ${id} could not be found`);
@@ -110,20 +113,22 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
         }
 
         current = JSON.parse(JSON.stringify(configs[id])) as ITour;
-        current.steps = (current.steps || []).map((step, index) => 
+        current.steps = (current.steps || []).map((step, index) =>
             Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
 
         current.currentStep = 0;
 
-        if (getElement)
+        if (getElement) {
             getTargetElement = getElement;
+        }
 
         watchForStep(current);
         ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
         return current;
     }
-    else
+    else {
         Log.error(`A Container matching the selector ${containerSelector} could not be found when attempting to start a Tour`);
+    }
 };
 
 /**
@@ -131,13 +136,16 @@ export const start = (id: string, containerSelector: string, flowKey: string, ge
  * @param tour The tour to progress, defaults to `current`
  */
 export const next = (tour: ITour = current) => {
-    if (!tour)
+    if (!tour) {
         return;
+    }
 
-    if (tour.currentStep + 1 >= tour.steps.length)
+    if (tour.currentStep + 1 >= tour.steps.length) {
         done(tour);
-    else
+    }
+    else {
         tour.currentStep += 1;
+    }
 
     watchForStep(tour);
     render();
@@ -148,8 +156,9 @@ export const next = (tour: ITour = current) => {
  * @param tour The tour to progress, defaults to `current`
  */
 export const previous = (tour: ITour = current) => {
-    if (!tour)
+    if (!tour) {
         return;
+    }
 
     tour.currentStep = Math.max(0, tour.currentStep - 1);
 
@@ -162,8 +171,9 @@ export const previous = (tour: ITour = current) => {
  * @param tour The tour to move, defaults to `current`
  */
 export const move = (tour: ITour = current, index) => {
-    if (!tour)
+    if (!tour) {
         return;
+    }
 
     if (index >= tour.steps.length) {
         Log.warning(`Cannot move Tour ${tour.id} to Step ${index} as it is out of bounds`);
@@ -177,13 +187,14 @@ export const move = (tour: ITour = current, index) => {
 };
 
 /**
- * Either re-render the current step, or move through the tour until a matching target node is found, 
+ * Either re-render the current step, or move through the tour until a matching target node is found,
  * or if no target nodes can be found unmount the `.mw-tours` node
  * @param tour The tour to move, defaults to `current`
  */
 export const refresh = (tour: ITour = current) => {
-    if (!tour)
+    if (!tour) {
         return;
+    }
 
     if (!getTargetElement(tour.steps[tour.currentStep])) {
         for (let i = tour.currentStep; i < tour.steps.length; i += 1) {
@@ -195,8 +206,9 @@ export const refresh = (tour: ITour = current) => {
 
         ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
     }
-    else
+    else {
         render(tour);
+    }
 };
 
 /**
@@ -213,8 +225,9 @@ export const done = (tour: ITour = current) => {
  * @param tour The tour to move, defaults to `current`
  */
 export const render = (tour: ITour = current) => {
-    if (!tour)
+    if (!tour) {
         return;
+    }
 
     ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
 };

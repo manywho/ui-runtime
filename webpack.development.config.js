@@ -18,7 +18,7 @@ var config = {
     },
     devtool: 'source-map',
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 enforce: 'pre',

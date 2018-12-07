@@ -21,7 +21,7 @@ function decodeEntities(item, textArea) {
 
         item.objectData.forEach((objectData) => {
 
-            if (objectData.properties)
+            if (objectData.properties) {
                 objectData.properties = objectData.properties.map((prop) => {
 
                     if (prop.contentValue) {
@@ -31,6 +31,7 @@ function decodeEntities(item, textArea) {
                     }
                     return prop;
                 });
+            }
         });
     }
 
@@ -45,8 +46,9 @@ function updateData(collection, item, key) {
 
     if (data != null) {
 
-        if (item.hasOwnProperty('contentType') && item.contentType == null)
+        if (item.hasOwnProperty('contentType') && item.contentType == null) {
             item.contentType = Component.contentTypes.string;
+        }
 
         return Utils.extend({}, [item, data]);
     }
@@ -89,8 +91,9 @@ function getNavigationItems(itemsResponse, dataResponse) {
 
             navigationItems[item.id] = Utils.extend({}, [item, data], false);
 
-            if (item.navigationItems != null)
+            if (item.navigationItems != null) {
                 navigationItems[item.id].items = getNavigationItems(item.navigationItems, dataResponse);
+            }
 
         });
     }
@@ -105,23 +108,24 @@ function hideContainers(lookUpKey) {
 
     containers
         .filter(container => !container.parent)
-        .forEach((container) => { 
-            hideContainer(container, containers, components, outcomes); 
+        .forEach((container) => {
+            hideContainer(container, containers, components, outcomes);
         });
 }
 
 function hideContainer(container, containers, components, outcomes) {
     let childContainers = containers.filter(child => child.parent === container.id);
-    childContainers.forEach((child) => { 
-        hideContainer(child, containers, components, outcomes); 
+    childContainers.forEach((child) => {
+        hideContainer(child, containers, components, outcomes);
     });
 
     const childComponents = components.filter(component => component.pageContainerId === container.id && component.isVisible);
     const childOutcomes = outcomes.filter(outcome => outcome.pageContainerId === container.id);
     childContainers = childContainers.filter(child => child.isVisible);
 
-    if (childComponents.length === 0 && childOutcomes.length === 0 && childContainers.length === 0 && Utils.isNullOrWhitespace(container.label))
+    if (childComponents.length === 0 && childOutcomes.length === 0 && childContainers.length === 0 && Utils.isNullOrWhitespace(container.label)) {
         container.isVisible = false;
+    }
 }
 
 export interface INotification {
@@ -135,8 +139,8 @@ export interface INotification {
 /**
  * Parse the engine response into the model for this state from a `FORWARD` invoke request. This will setup the model
  * for things like: components, containers, outcomes, faults, votes, etc
- * @param engineInvokeResponse 
- * @param flowKey 
+ * @param engineInvokeResponse
+ * @param flowKey
  */
 export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
@@ -152,12 +156,13 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
     flowModel[lookUpKey].rootFaults = [];
 
-    if (engineInvokeResponse)
+    if (engineInvokeResponse) {
         flowModel[lookUpKey].parentStateId = engineInvokeResponse.parentStateId;
+    }
 
     if (
-        engineInvokeResponse 
-        && engineInvokeResponse.mapElementInvokeResponses 
+        engineInvokeResponse
+        && engineInvokeResponse.mapElementInvokeResponses
         && engineInvokeResponse.mapElementInvokeResponses.length > 0
     ) {
 
@@ -181,10 +186,11 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
         }
 
-        if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses)
+        if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses) {
             engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses.forEach((item) => {
                 flowModel[lookUpKey].outcomes[item.id.toLowerCase()] = item;
             });
+        }
 
         hideContainers(lookUpKey);
 
@@ -207,7 +213,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
                 if (fault.responseBody) {
                     try {
                         fault.responseBody = JSON.parse(fault.responseBody);
-                    } 
+                    }
                     catch (e) {
                         fault.responseBody = fault.responseBody;
                     }
@@ -221,7 +227,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
                 if (fault.responseBody && fault.responseBody.hasOwnProperty('invokeType')) {
                     // There is an original nested error
-                    notificationMessage = 
+                    notificationMessage =
                         `Type: ${fault.responseBody.kind.toUpperCase()}
                         Message: ${fault.responseBody.message}
                         URI: ${fault.responseBody.uri}`;
@@ -239,8 +245,9 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
             State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
         }
 
-        if (Settings.global('history', flowKey) && Utils.isEqual(engineInvokeResponse.invokeType, 'FORWARD', true))
+        if (Settings.global('history', flowKey) && Utils.isEqual(engineInvokeResponse.invokeType, 'FORWARD', true)) {
             setHistory(engineInvokeResponse, flowKey);
+        }
 
         flowModel[lookUpKey].preCommitStateValues = engineInvokeResponse.preCommitStateValues;
         flowModel[lookUpKey].stateValues = engineInvokeResponse.stateValues;
@@ -252,7 +259,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
         }
 
     }
-    else if (Utils.isEqual(engineInvokeResponse.invokeType, 'not_allowed', true))
+    else if (Utils.isEqual(engineInvokeResponse.invokeType, 'not_allowed', true)) {
         flowModel[lookUpKey].notifications.push({
             message: 'You are not authorized to access this content. Please contact your administrator for more details.',
             position: 'center',
@@ -261,19 +268,21 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
             dismissible: false,
 
         });
+    }
 };
 
 /**
  * Parse the engine response into the model for this state from a `SYNC` invoke request
  * @param response Response from `Ajax.invoke`
- * @param flowKey 
+ * @param flowKey
  */
 export const parseEngineSyncResponse = (response, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (response.invokeType)
+    if (response.invokeType) {
         flowModel[lookUpKey].invokeType = response.invokeType;
+    }
 
     if (response.mapElementInvokeResponses) {
 
@@ -281,8 +290,9 @@ export const parseEngineSyncResponse = (response, flowKey: string) => {
             let containerId = item.pageContainerId;
 
             // Steps will only ever have one container, the id is re-generated server side so it won't match up here, grab the existing id instead
-            if (Utils.isEqual(response.mapElementInvokeResponses[0].developerName, 'step', true))
+            if (Utils.isEqual(response.mapElementInvokeResponses[0].developerName, 'step', true)) {
                 containerId = Object.keys(flowModel[lookUpKey].containers)[0];
+            }
 
             flowModel[lookUpKey].containers[containerId] = Utils.extend(flowModel[lookUpKey].containers[containerId], item);
         });
@@ -299,8 +309,8 @@ export const parseEngineSyncResponse = (response, flowKey: string) => {
  * Parse the navigation response from `Ajax.getNavigation` into the model for this state
  * @param id Id of the navigation configuration in the flow
  * @param response Navigation response returned by `Ajax.getNavigation`
- * @param flowKey 
- * @param currentMapElementId 
+ * @param flowKey
+ * @param currentMapElementId
  */
 export const parseNavigationResponse = (id: string, response, flowKey: string, currentMapElementId: string) => {
 
@@ -344,8 +354,9 @@ export const parseNavigationResponse = (id: string, response, flowKey: string, c
 
     const parentStateId = getParentStateId(flowKey);
 
-    if (parentStateId)
+    if (parentStateId) {
         flowModel[lookUpKey].navigation[id].returnToParent = React.createElement(Component.getByName('returnToParent'), { flowKey, parentStateId });
+    }
 };
 
 /**
@@ -363,11 +374,13 @@ export const getChildren = (containerId: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (flowModel[lookUpKey] === undefined || flowModel[lookUpKey].containers === undefined)
+    if (flowModel[lookUpKey] === undefined || flowModel[lookUpKey].containers === undefined) {
         return [];
+    }
 
-    if (containerId === 'root')
+    if (containerId === 'root') {
         return Utils.getAll(flowModel[lookUpKey].containers, undefined, 'parent');
+    }
 
     let children = [];
     const container = flowModel[lookUpKey].containers[containerId];
@@ -408,8 +421,9 @@ export const getComponentByName = (name: string, flowKey: string) => {
 
     if (components) {
         for (const id in components) {
-            if (Utils.isEqual(name, components[id].developerName, true))
+            if (Utils.isEqual(name, components[id].developerName, true)) {
                 return components[id];
+            }
         }
     }
 
@@ -431,8 +445,9 @@ export const getOutcome = (id: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (flowModel[lookUpKey].outcomes)
+    if (flowModel[lookUpKey].outcomes) {
         return flowModel[lookUpKey].outcomes[id.toLowerCase()];
+    }
 };
 
 /**
@@ -443,8 +458,9 @@ export const getOutcomes = (id: string, flowKey: string): any[] => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (flowModel[lookUpKey] === undefined || flowModel[lookUpKey].outcomes === undefined)
+    if (flowModel[lookUpKey] === undefined || flowModel[lookUpKey].outcomes === undefined) {
         return [];
+    }
 
     const outcomesArray = Utils.convertToArray(flowModel[lookUpKey].outcomes) || [];
 
@@ -458,15 +474,16 @@ export const getOutcomes = (id: string, flowKey: string): any[] => {
 
 /**
  * Get currently active notifications for a given position
- * @param flowKey 
- * @param position `center`, `left`, `right` 
+ * @param flowKey
+ * @param position `center`, `left`, `right`
  */
 export const getNotifications = (flowKey: string, position: string): INotification[] => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (flowModel[lookUpKey].notifications)
+    if (flowModel[lookUpKey].notifications) {
         return flowModel[lookUpKey].notifications.filter(notification => Utils.isEqual(notification.position, position, true));
+    }
 
     return [];
 };
@@ -526,8 +543,9 @@ export const getNavigation = (navigationId: string, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (navigationId)
+    if (navigationId) {
         return flowModel[lookUpKey].navigation[navigationId];
+    }
 };
 
 /**
@@ -537,8 +555,9 @@ export const getDefaultNavigationId = (flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (flowModel[lookUpKey].navigation)
+    if (flowModel[lookUpKey].navigation) {
         return Object.keys(flowModel[lookUpKey].navigation)[0];
+    }
 };
 
 /**
@@ -547,20 +566,24 @@ export const getDefaultNavigationId = (flowKey: string) => {
 export const getItem = (id: string, flowKey: string) => {
 
     let item = getContainer(id, flowKey);
-    if (item != null)
+    if (item != null) {
         return item;
+    }
 
     item = getComponent(id, flowKey);
-    if (item != null)
+    if (item != null) {
         return item;
+    }
 
     item = getOutcome(id, flowKey);
-    if (item != null)
+    if (item != null) {
         return item;
+    }
 
     item = getNavigation(id, flowKey);
-    if (item != null)
+    if (item != null) {
         return item;
+    }
 };
 
 /**
@@ -618,8 +641,9 @@ export const getHistory = (flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (!flowModel[lookUpKey].history)
+    if (!flowModel[lookUpKey].history) {
         flowModel[lookUpKey].history = [];
+    }
 
     return flowModel[lookUpKey].history;
 };
@@ -631,21 +655,24 @@ export const setHistory = (engineInvokeResponse, flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (!flowModel[lookUpKey].history)
+    if (!flowModel[lookUpKey].history) {
         flowModel[lookUpKey].history = [];
+    }
 
-    if (!flowModel[lookUpKey].lastInvoke)
+    if (!flowModel[lookUpKey].lastInvoke) {
         flowModel[lookUpKey].lastInvoke = 'FORWARD';
+    }
 
     const length = flowModel[lookUpKey].history.length;
     let outcomes = null;
 
     if (Utils.isEqual(flowModel[lookUpKey].lastInvoke, 'FORWARD', true)) {
 
-        if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses)
+        if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses) {
             outcomes = engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses.map((outcome) => {
                 return { name: outcome.developerName, id: outcome.id, label: outcome.label, order: outcome.order };
             });
+        }
 
         flowModel[lookUpKey].history[length] = Utils.extend(flowModel[lookUpKey].history[length] || {}, [{
             outcomes,
@@ -668,13 +695,15 @@ export const setHistorySelectedOutcome = (selectedOutcome, invokeType: string, f
 
     if (selectedOutcome) {
 
-        if (!flowModel[lookUpKey].history)
+        if (!flowModel[lookUpKey].history) {
             flowModel[lookUpKey].history = [];
+        }
 
         const length = flowModel[lookUpKey].history.length - 1;
 
-        if (!flowModel[lookUpKey].history[length])
+        if (!flowModel[lookUpKey].history[length]) {
             flowModel[lookUpKey].history[length] = {};
+        }
 
         flowModel[lookUpKey].history[length].selectedOutcome = selectedOutcome;
     }
@@ -693,8 +722,9 @@ export const popHistory = (mapElementId: string, flowKey: string) => {
 
         const mapElement = flowModel[lookUpKey].history[i - 1];
 
-        if (mapElement.id === mapElementId)
+        if (mapElement.id === mapElementId) {
             break;
+        }
 
         flowModel[lookUpKey].history.pop();
     }
@@ -714,8 +744,9 @@ export const initializeModel = (flowKey: string) => {
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (!flowModel[lookUpKey])
+    if (!flowModel[lookUpKey]) {
         flowModel[lookUpKey] = {};
+    }
 };
 
 /**
@@ -754,7 +785,7 @@ export const getRootFaults = (flowKey: string) => {
 };
 
 /**
- * Set this flow models `containers` property by iterating through the `containers` array merge with the matching container data in `data` 
+ * Set this flow models `containers` property by iterating through the `containers` array merge with the matching container data in `data`
  */
 export const setContainers = (flowKey: string, containers: any[], data: any, propertyName?: string) => {
 
@@ -771,14 +802,15 @@ export const setContainers = (flowKey: string, containers: any[], data: any, pro
 
             flowModel[lookUpKey].containers[item.id] = item;
 
-            if (data && Utils.contains(data, item.id, 'pageContainerId'))
+            if (data && Utils.contains(data, item.id, 'pageContainerId')) {
                 flowModel[lookUpKey].containers[item.id] = updateData(data, item, 'pageContainerId');
+            }
         });
     }
 };
 
 /**
- * Set this flow models `components` property by iterating through the `components` array merge with the matching container data in `data` 
+ * Set this flow models `components` property by iterating through the `components` array merge with the matching container data in `data`
  */
 export const setComponents = (flowKey: string, components: any[], data: any) => {
 
@@ -796,13 +828,15 @@ export const setComponents = (flowKey: string, components: any[], data: any) => 
 
             flowModel[lookUpKey].components[item.id] = item;
 
-            if (!flowModel[lookUpKey].containers[item.pageContainerId].childCount)
+            if (!flowModel[lookUpKey].containers[item.pageContainerId].childCount) {
                 flowModel[lookUpKey].containers[item.pageContainerId].childCount = 0;
+            }
 
             flowModel[lookUpKey].containers[item.pageContainerId].childCount += 1;
 
-            if (data && Utils.contains(data, item.id, 'pageComponentId'))
+            if (data && Utils.contains(data, item.id, 'pageComponentId')) {
                 flowModel[lookUpKey].components[item.id] = updateData(data, item, 'pageComponentId');
+            }
 
             flowModel[lookUpKey].components[item.id] = decodeEntities(flowModel[lookUpKey].components[item.id], decodeTextArea);
 

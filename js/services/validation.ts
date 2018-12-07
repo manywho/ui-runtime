@@ -11,14 +11,17 @@ const isValueDefined = function (value: any, contentType: string) {
 
     case Component.contentTypes.boolean:
         if (typeof value === 'string') {
-            if (Utils.isEqual(value, 'true', true))
+            if (Utils.isEqual(value, 'true', true)) {
                 return false;
-            
-            if (Utils.isEqual(value, 'false', true))
+            }
+
+            if (Utils.isEqual(value, 'false', true)) {
                 return true;
+            }
         }
-        else
-                return !value;
+        else {
+            return !value;
+        }
 
     default:
         return Utils.isNullOrEmpty(value);
@@ -61,18 +64,20 @@ export const shouldValidate = (invokeType: string, flowKey: string) => {
 };
 
 /**
- * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be 
+ * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be
  * taken from the models `validation` attribute, and a custom message from the `validationMessage` attribute
  * @param model The model that will be validated
  * @param state The matching local state for the model that will be validated
  * @param flowKey
  */
 export const validate = (model: any, state: any, flowKey: string): IValidationResult => {
-    if (!Settings.global('validation.isenabled', flowKey, false))
+    if (!Settings.global('validation.isenabled', flowKey, false)) {
         return { isValid: true, validationMessage: null };
+    }
 
-    if (model.isValid === false)
+    if (model.isValid === false) {
         return { isValid: false, validationMessage: Settings.global('localization.validation.required', flowKey) };
+    }
 
     let regex = null;
     let message = null;
@@ -85,10 +90,12 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
     let value = null;
 
     if (Utils.isEqual(model.contentType, Component.contentTypes.object, true)
-        || Utils.isEqual(model.contentType, Component.contentTypes.list, true))
+        || Utils.isEqual(model.contentType, Component.contentTypes.list, true)) {
         value = state && state.objectData !== undefined ? state.objectData : model.objectData;
-    else
+    }
+    else {
         value = state && state.contentValue !== undefined ? state.contentValue : model.contentValue;
+    }
 
     switch (model.contentType.toUpperCase()) {
     case Component.contentTypes.string:
@@ -120,11 +127,13 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
  * @param flowKey
  */
 export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueDefined(value, Component.contentTypes.string))
+    if (isRequired && isValueDefined(value, Component.contentTypes.string)) {
         return getRequiredResponse(message, flowKey);
+    }
 
-    if (!validateRegex(value, regex))
+    if (!validateRegex(value, regex)) {
         return getInvalidResponse(message, flowKey);
+    }
 
     return { isValid: true, validationMessage: null };
 };
@@ -138,14 +147,17 @@ export const validateString = (value: string, regex: string | null, message: str
  * @param flowKey
  */
 export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueDefined(value, Component.contentTypes.number))
+    if (isRequired && isValueDefined(value, Component.contentTypes.number)) {
         return getRequiredResponse(message, flowKey);
+    }
 
-    if (isNaN(value) && !Utils.isNullOrWhitespace(value))
+    if (isNaN(value) && !Utils.isNullOrWhitespace(value)) {
         return getInvalidResponse(message, flowKey);
+    }
 
-    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex))
+    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex)) {
         return getInvalidResponse(message, flowKey);
+    }
 
     return { isValid: true, validationMessage: null };
 };
@@ -158,8 +170,9 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
  * @param flowKey
  */
 export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueDefined(value, Component.contentTypes.boolean))
+    if (isRequired && isValueDefined(value, Component.contentTypes.boolean)) {
         return getRequiredResponse(message, flowKey);
+    }
 
     return { isValid: true, validationMessage: null };
 };
@@ -172,8 +185,9 @@ export const validateBoolean = (value: boolean, message: string, isRequired: boo
  * @param flowKey
  */
 export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueDefined(value, Component.contentTypes.object))
+    if (isRequired && isValueDefined(value, Component.contentTypes.object)) {
         return getRequiredResponse(message, flowKey);
+    }
 
     return { isValid: true, validationMessage: null };
 };
@@ -186,8 +200,9 @@ export const validateObject = (value: object, message: string, isRequired: boole
  * @param flowKey
  */
 export const validateList = (value: object[], message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueDefined(value, Component.contentTypes.list))
+    if (isRequired && isValueDefined(value, Component.contentTypes.list)) {
         return getRequiredResponse(message, flowKey);
+    }
 
     return { isValid: true, validationMessage: null };
 };
@@ -200,8 +215,9 @@ export const scrollToInvalidElement = (flowKey: string): void => {
     if (Settings.global('validation.scroll.isEnabled', flowKey, false)) {
         const invalidElement = document.querySelector(Settings.global('validation.scroll.selector', flowKey, '.has-error'));
 
-        if (invalidElement)
+        if (invalidElement) {
             invalidElement.scrollIntoView();
+        }
     }
 };
 
@@ -210,7 +226,7 @@ export const scrollToInvalidElement = (flowKey: string): void => {
  * @param flowKey
  */
 export const addNotification = (flowKey: string): void => {
-    if (Settings.global('validation.notification.isEnabled', flowKey, false))
+    if (Settings.global('validation.notification.isEnabled', flowKey, false)) {
         Model.addNotification(flowKey, {
             message: Settings.global('localization.validation.notification', flowKey),
             position: 'center',
@@ -218,4 +234,5 @@ export const addNotification = (flowKey: string): void => {
             timeout: '0',
             dismissible: true,
         });
+    }
 };
