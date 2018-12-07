@@ -1,21 +1,28 @@
 const path = require('path');
 const writefile = require('write-file');
 
-function WriteBundleFile() { }
+function WriteBundleFile(options) { 
+    this.options = options; 
+}
 
 WriteBundleFile.prototype.apply = function (compiler) {
+
+    const options = this.options;
+
     compiler.plugin('emit', function (compilation, callback) {
 
         // We're only emitting one chunk
         const [ chunk ] = compilation.chunks;
 
-        // chunk.files contains the js file and a sourcemap (.map) file
-        const uiCoreJSFilename = chunk.files.find(filename => filename.endsWith('.js'));
+        const filteredFiles = chunk.files.filter(options.filenameFilter);
+
+        const correctedFilePaths = filteredFiles.map(
+            filename => options.pathPrefix + filename,
+        );
 
         // bundle file contents
-        const bundle = {
-            core: [path.join('/js/', uiCoreJSFilename)]
-        };
+        const bundle = {};
+        bundle[options.bundleKey] = correctedFilePaths;
 
         writefile(path.resolve(__dirname, 'dist', 'bundle.json'), bundle, callback);
     });

@@ -13,8 +13,8 @@ const config = {
         'ui-core': './js/index.ts'
     },
     output: {
-        path: path.resolve(__dirname, 'dist/js'),
-        filename: 'ui-core-[chunkhash].js',
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'js/ui-core-[chunkhash].js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
@@ -30,7 +30,12 @@ const config = {
             include: /\.min\.js$/,
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new WriteBundleFilePlugin(),
+        new WriteBundleFilePlugin({
+            bundleKey: 'core',
+            pathPrefix: '/',
+            // remove sourcemaps from the bundle list
+            filenameFilter: filename => !filename.endsWith('.map'),
+        }),
         new CleanWebpackPlugin(pathsToClean),
     ],
     module: {
