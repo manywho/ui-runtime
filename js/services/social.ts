@@ -103,8 +103,9 @@ export const getMessages = (flowKey: string) => {
  * @param attachments Files to be uploaded as part of the message
  */
 export const sendMessage = (flowKey: string, message: string, repliedTo: string, mentionedUsers: any, attachments: any) => {
-    if (Utils.isNullOrWhitespace(message))
+    if (Utils.isNullOrWhitespace(message)) {
         return;
+    }
 
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
@@ -120,8 +121,9 @@ export const sendMessage = (flowKey: string, message: string, repliedTo: string,
         uploadedFiles: attachments,
     };
 
-    if (repliedTo)
+    if (repliedTo) {
         request.repliedTo = repliedTo;
+    }
 
     request.messageText = request.messageText.replace(/@\[[A-za-z0-9 ]*\]/ig, (match) => {
         return match.substring(2, match.length - 1);

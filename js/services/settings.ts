@@ -1,5 +1,5 @@
 /**
- * Store for the various settings that are supported in the UI framework, details on the available 
+ * Store for the various settings that are supported in the UI framework, details on the available
  * settings can be found here: https://github.com/manywho/ui-html5/wiki/Settings
  */
 
@@ -62,7 +62,7 @@ let globals = {
             'searchreplace visualblocks fullscreen wordcount code insertdatetime',
             'media table directionality emoticons contextmenu paste textcolor',
         ],
-        toolbar: `undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify 
+        toolbar: `undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify
                 | bullist numlist outdent indent | link mwimage`,
     },
     errorMessage: 'An unknown error has occurred, please contact support',
@@ -221,15 +221,18 @@ export const global = (path: string, flowKey?: string, defaultValue?: any) => {
     if (flowKey) {
         const flowValue = Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
 
-        if (typeof flowValue !== 'undefined')
+        if (typeof flowValue !== 'undefined') {
             return flowValue;
+        }
     }
 
-    if (typeof globalValue !== 'undefined')
+    if (typeof globalValue !== 'undefined') {
         return globalValue;
+    }
 
-    if (typeof defaultValue !== 'undefined')
+    if (typeof defaultValue !== 'undefined') {
         return defaultValue;
+    }
 
     return globalValue;
 };
@@ -242,9 +245,10 @@ export const global = (path: string, flowKey?: string, defaultValue?: any) => {
 export const flow = (path: string, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (Utils.isNullOrWhitespace(path))
+    if (Utils.isNullOrWhitespace(path)) {
         return flows[lookUpKey];
-    
+    }
+
     return Utils.getValueByPath(flows[lookUpKey] || {}, path.toLowerCase());
 };
 
@@ -272,13 +276,16 @@ export const theme = (path: string) => {
 export const isDebugEnabled = (flowKey: string, value?: boolean): boolean => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    if (typeof value === 'undefined')
+    if (typeof value === 'undefined') {
         return Utils.isEqual(this.flow('mode', flowKey), 'Debug', true) || Utils.isEqual(this.flow('mode', flowKey), 'Debug_StepThrough', true);
-    
-    if (value)
+    }
+
+    if (value) {
         flows[lookUpKey].mode = 'Debug';
-    else
+    }
+    else {
         flows[lookUpKey].mode = '';
+    }
 };
 
 /**

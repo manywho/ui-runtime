@@ -63,13 +63,16 @@ export const initialize = (flowKey) => {
     else if (window.navigator && window.navigator.language && window.navigator.language.indexOf('-') !== -1) {
         const parts = window.navigator.language.split('-');
         const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
-        if (window.numbro.cultures()[userCulture])
+        if (window.numbro.cultures()[userCulture]) {
             culture = userCulture;
-        else
+        }
+        else {
             culture = 'en-US';
+        }
     }
-    else
+    else {
         culture = 'en-US';
+    }
 };
 
 /**
@@ -80,8 +83,9 @@ export const initialize = (flowKey) => {
  * @param flowKey
  */
 export const format = (value: string | number, format: string, contentType: string, flowKey: string): string | number => {
-    if (!Settings.global('formatting.isEnabled', flowKey, false) || Utils.isNullOrWhitespace(contentType))
+    if (!Settings.global('formatting.isEnabled', flowKey, false) || Utils.isNullOrWhitespace(contentType)) {
         return value;
+    }
 
     switch (contentType.toUpperCase()) {
     case Component.contentTypes.datetime:
@@ -101,34 +105,48 @@ export const format = (value: string | number, format: string, contentType: stri
 export const toMomentFormat = (format: string): string => {
     if (!Utils.isNullOrEmpty(format)) {
 
-        if (format === 'd')
+        if (format === 'd') {
             return 'l';
-        else if (format === 'D')
+        }
+        else if (format === 'D') {
             return 'dddd, MMMM DD, YYYY';
-        else if (format === 'f')
+        }
+        else if (format === 'f') {
             return 'LLLL';
-        else if (format === 'F')
+        }
+        else if (format === 'F') {
             return 'dddd, LL LTS';
-        else if (format === 'g')
+        }
+        else if (format === 'g') {
             return 'L LT';
-        else if (format === 'G')
+        }
+        else if (format === 'G') {
             return 'L LTS';
-        else if (format === 'm')
+        }
+        else if (format === 'm') {
             return 'MMMM D';
-        else if (format === 'r')
+        }
+        else if (format === 'r') {
             return 'ddd, DD MMM YYYY HH:mm:ss [GMT]';
-        else if (format === 's')
+        }
+        else if (format === 's') {
             return 'YYYY-MM-DD[T]HH:mm:ss';
-        else if (format === 't')
+        }
+        else if (format === 't') {
             return 'LT';
-        else if (format === 'T')
+        }
+        else if (format === 'T') {
             return 'LTS';
-        else if (format === 'u')
+        }
+        else if (format === 'u') {
             return 'YYYY-MM-DD HH:mm:ss[Z]';
-        else if (format === 'U')
+        }
+        else if (format === 'U') {
             return 'dddd, LL LTS';
-        else if (format === 'y')
+        }
+        else if (format === 'y') {
             return 'MMMM YYYY';
+        }
 
         const parts = format.split(dateTimeFormatRegex);
 
@@ -154,37 +172,45 @@ export const toMomentFormat = (format: string): string => {
  * @param flowKey
  */
 export const dateTime = (dateTime: string, format: string, flowKey: string): string => {
-    if (!Settings.global('formatting.isEnabled', flowKey, false))
+    if (!Settings.global('formatting.isEnabled', flowKey, false)) {
         return dateTime;
+    }
 
     let offset = moment().utcOffset();
     const overrideTimezoneOffset = Settings.global('i18n.overrideTimezoneOffset', flowKey);
 
-    if (overrideTimezoneOffset && !Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey)))
+    if (overrideTimezoneOffset && !Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey))) {
         offset = Settings.global('i18n.timezoneOffset', flowKey);
+    }
 
-    if ((Utils.isNullOrUndefined(offset) || offset === 0) && Utils.isNullOrWhitespace(format) && !overrideTimezoneOffset)
+    if ((Utils.isNullOrUndefined(offset) || offset === 0) && Utils.isNullOrWhitespace(format) && !overrideTimezoneOffset) {
         return dateTime;
+    }
 
     try {
         const momentFormat = Utils.isNullOrWhitespace(format) ? null : toMomentFormat(format);
         const formats: (string|moment.MomentBuiltinFormat)[] = [moment.ISO_8601];
 
-        if (momentFormat)
+        if (momentFormat) {
             formats.unshift(momentFormat);
+        }
 
         const parsedDateTime = moment.utc(dateTime, formats);
 
-        if (!parsedDateTime.isValid())
+        if (!parsedDateTime.isValid()) {
             return dateTime;
+        }
 
-        if (format !== 'r' && format !== 'u' && overrideTimezoneOffset)
+        if (format !== 'r' && format !== 'u' && overrideTimezoneOffset) {
             parsedDateTime.utcOffset(offset);
+        }
 
-        if (overrideTimezoneOffset)
+        if (overrideTimezoneOffset) {
             return parsedDateTime.format(momentFormat);
-        else
+        }
+        else {
             return parsedDateTime.utc().format(momentFormat);
+        }
     }
     catch (ex) {
         Log.error(ex);
@@ -196,20 +222,23 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
 /**
  * Format a number and return it as a string
  * @param value Number to format
- * @param format Format string, supported formats include e, E (scientifix); c, C (currency); and symbols as 
+ * @param format Format string, supported formats include e, E (scientifix); c, C (currency); and symbols as
  * documented here: http://numbrojs.com/format.html
  * @param flowKey
  */
 export const number = (value: number | string, format: string, flowKey: string): string => {
-    if (Utils.isNullOrWhitespace(format) || !Settings.global('formatting.isEnabled', flowKey, false))
+    if (Utils.isNullOrWhitespace(format) || !Settings.global('formatting.isEnabled', flowKey, false)) {
         return value.toString();
+    }
 
-    if (typeof value === 'string' && Utils.isNullOrWhitespace(value))
+    if (typeof value === 'string' && Utils.isNullOrWhitespace(value)) {
         return value;
+    }
 
     try {
-        if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1)
+        if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1) {
             return (Number(value)).toExponential();
+        }
 
         if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
             const numbroValue = numbro(value);
@@ -233,8 +262,9 @@ export const number = (value: number | string, format: string, flowKey: string):
             decimalsFormat.split('').forEach((part, index) => {
                 switch (part.toUpperCase()) {
                 case '#':
-                    if (index < decimals.length)
+                    if (index < decimals.length) {
                         format += 0;
+                    }
                     break;
 
                 case '0':

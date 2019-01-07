@@ -29,14 +29,16 @@ function processObjectDataRequests(components, flowKey) {
         const requestComponents = Utils.convertToArray(components).filter((component) => {
 
             if (component.attributes
-                && (component.attributes.isExecuteRequestOnRenderDisabled === true 
-                    || Utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'true', true)))
+                && (component.attributes.isExecuteRequestOnRenderDisabled === true
+                    || Utils.isEqual(component.attributes.isExecuteRequestOnRenderDisabled, 'true', true))) {
                 return false;
+            }
 
             if (component.attributes
                 && (component.attributes.onlyDisplaySearchResults === true
-                    || Utils.isEqual(component.attributes.onlyDisplaySearchResults, 'true', true)))
+                    || Utils.isEqual(component.attributes.onlyDisplaySearchResults, 'true', true))) {
                 return false;
+            }
 
             return component.objectDataRequest != null || component.fileDataRequest != null;
 
@@ -49,8 +51,9 @@ function processObjectDataRequests(components, flowKey) {
                 let limit = Settings.global('paging.' + component.componentType);
                 const paginationSize = parseInt(component.attributes.paginationSize, 10);
 
-                if (!isNaN(paginationSize))
+                if (!isNaN(paginationSize)) {
                     limit = paginationSize;
+                }
 
                 if (component.fileDataRequest) {
 
@@ -84,12 +87,15 @@ function isAuthorized(response, flowKey) {
 }
 
 function onAuthorizationFailed(response, flowKey, callback) {
-    if (flowKey)
-        if (State.getSessionData(flowKey) != null)
+    if (flowKey) {
+        if (State.getSessionData(flowKey) != null) {
             Authorization.authorizeBySession(response.authorizationContext.loginUrl, flowKey, callback);
-        else
+        }
+        else {
             // Authorization failed, retry
             Authorization.invokeAuthorization(response, flowKey, callback);
+        }
+    }
 }
 
 function loadNavigation(flowKey, stateToken, navigationId, currentMapElementId?) {
@@ -131,8 +137,8 @@ function loadExecutionLog(flowKey, authenticationToken) {
 }
 
 function notifyError(flowKey, response) {
-    if (flowKey)
-        if (response && !response.responseText && (response.status === 0 || response.status === 500 || response.status === 504))
+    if (flowKey) {
+        if (response && !response.responseText && (response.status === 0 || response.status === 500 || response.status === 504)) {
             Model.addNotification(flowKey, {
                 message: Settings.global('errorMessage', flowKey),
                 position: 'center',
@@ -140,7 +146,8 @@ function notifyError(flowKey, response) {
                 timeout: 0,
                 dismissible: true,
             });
-        else if (response)
+        }
+        else if (response) {
             Model.addNotification(flowKey, {
                 message: response.responseJSON, // Error responses are JSON encoded strings
                 position: 'center',
@@ -148,6 +155,8 @@ function notifyError(flowKey, response) {
                 timeout: 0,
                 dismissible: true,
             });
+        }
+    }
 }
 
 function onInitializeFailed(response) {
@@ -168,13 +177,13 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
     let flowKey = callback.flowKey;
     let streamId = null;
-    
-    stateId = stateId !== undefined 
-        ? stateId 
-        : (flowKey) 
-            ? Utils.extractStateId(flowKey) 
+
+    stateId = stateId !== undefined
+        ? stateId
+        : (flowKey)
+            ? Utils.extractStateId(flowKey)
             : null;
-    
+
     const initializationRequest = Json.generateInitializationRequest(
         { id: flowId, versionId: flowVersionId },
         stateId,
@@ -253,10 +262,10 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
                 return isAuthorized(response, flowKey);
 
-            }, 
+            },
             // This should only ever be called when the ajax request itself returns an error response
             onInitializeFailed,
-        ) 
+        )
         .then(
             // Is authorized
             (response) => {
@@ -264,7 +273,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                 // Ensure the url has no authorization or join information
                 // if settings.replaceUrl is false
                 // and authentication type is oauth2
-                const isOauth2 = response.authorizationContext 
+                const isOauth2 = response.authorizationContext
                     && response.authorizationContext.authenticationType
                     && response.authorizationContext.authenticationType.toLowerCase() === 'oauth2';
 
@@ -277,12 +286,13 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     const urlWithRemovedAuth = Utils.removeURIParam(`${location.pathname}${location.search}`, 'authorization');
                     const urlWithRemovedJoin = Utils.removeURIParam(urlWithRemovedAuth, 'join');
                     const urlWithAddedFlowId = Utils.setURIParam(urlWithRemovedJoin, 'flow-id', flowId);
-                    
+
                     history.replaceState(null, '', urlWithAddedFlowId);
                 }
 
-                if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
+                if (Settings.global('i18n.overrideTimezoneOffset', flowKey)) {
                     State.setUserTime(flowKey);
+                }
 
                 Formatting.initialize(flowKey);
 
@@ -326,17 +336,21 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
                 const navigationId = Model.getSelectedNavigation(flowKey);
 
-                if (!Utils.isNullOrWhitespace(navigationId))
+                if (!Utils.isNullOrWhitespace(navigationId)) {
                     deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
+                }
 
-                if (Settings.isDebugEnabled(flowKey))
+                if (Settings.isDebugEnabled(flowKey)) {
                     deferreds.push(loadExecutionLog(flowKey, authenticationToken));
+                }
 
-                if (streamId)
+                if (streamId) {
                     Social.initialize(flowKey, response.currentStreamId);
+                }
 
-                if (Utils.isEqual(response.invokeType, 'DONE', true))
+                if (Utils.isEqual(response.invokeType, 'DONE', true)) {
                     Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
+                }
 
                 return Utils.whenAll(deferreds);
 
@@ -359,11 +373,14 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                 const autoStart = Settings.global('tours.autoStart', flowKey, false);
                 const containerSelector = Settings.global('tours.container', flowKey, null);
 
-                if (autoStart)
-                    if (typeof autoStart === 'string')
+                if (autoStart) {
+                    if (typeof autoStart === 'string') {
                         Tours.start(autoStart, containerSelector, flowKey);
-                    else if (typeof autoStart === 'boolean')
+                    }
+                    else if (typeof autoStart === 'boolean') {
                         Tours.start(null, containerSelector, flowKey);
+                    }
+                }
 
             },
         )
@@ -394,8 +411,9 @@ function joinWithAuthorization(callback, flowKey) {
     State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.joining') }, flowKey);
     render(flowKey);
 
-    if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
+    if (Settings.global('i18n.overrideTimezoneOffset', flowKey)) {
         State.setUserTime(flowKey);
+    }
 
     Formatting.initialize(flowKey);
 
@@ -447,7 +465,7 @@ function joinWithAuthorization(callback, flowKey) {
 
             return Utils.whenAll(deferreds);
 
-        }, 
+        },
               (response) => {
 
                   onAuthorizationFailed(response, flowKey, callback);
@@ -482,8 +500,9 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
     let outcome = null;
     const selectedOutcomeId = invokeRequest.mapElementInvokeRequest.selectedOutcomeId;
 
-    if (selectedOutcomeId)
+    if (selectedOutcomeId) {
         outcome = Model.getOutcome(invokeRequest.mapElementInvokeRequest.selectedOutcomeId, flowKey);
+    }
 
     if (Settings.global('history', flowKey)) {
 
@@ -510,8 +529,9 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
             State.setLocation(flowKey);
 
-            if (response.mapElementInvokeResponses[0].outcomeResponses)
+            if (response.mapElementInvokeResponses[0].outcomeResponses) {
                 outcome = response.mapElementInvokeResponses[0].outcomeResponses.find(outcome => outcome.id === selectedOutcomeId);
+            }
 
             if (Collaboration.isInitialized(flowKey) && (!outcome || !outcome.isOut)) {
 
@@ -536,11 +556,13 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             const deferreds = [];
 
-            if (!Utils.isNullOrWhitespace(selectedNavigationId))
+            if (!Utils.isNullOrWhitespace(selectedNavigationId)) {
                 deferreds.push(loadNavigation(flowKey, moveResponse.stateToken, selectedNavigationId));
+            }
 
-            if (Settings.isDebugEnabled(flowKey))
+            if (Settings.isDebugEnabled(flowKey)) {
                 deferreds.push(loadExecutionLog(flowKey, authenticationToken));
+            }
 
             return Utils.whenAll(deferreds);
 
@@ -555,8 +577,9 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             Component.focusInput(flowKey);
 
-            if (Settings.global('isScrollResetEnabled') === true)
+            if (Settings.global('isScrollResetEnabled') === true) {
                 Component.scrollToTop(flowKey);
+            }
 
         })
         .always(() => {
@@ -593,8 +616,9 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             if (container) {
                 const scroller = container.querySelector('.main-scroller');
-                if (scroller && Settings.global('isScrollResetEnabled') === true)
+                if (scroller && Settings.global('isScrollResetEnabled') === true) {
                     scroller.scrollTop = 0;
+                }
             }
 
         })
@@ -602,18 +626,18 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
 }
 /**
- * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not 
+ * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not
  * authenticated and the flow requires authentication a login dialog will be displayed or the user will be redirected to an OAUTH2 or SAML url.
  * The flow will then be rendered into the DOm
  */
 export const initialize = (
-    tenantId: string, 
-    flowId: string, 
-    flowVersionId: string, 
-    container: string, 
-    stateId: string, 
-    authenticationToken: string, 
-    options: any, 
+    tenantId: string,
+    flowId: string,
+    flowVersionId: string,
+    container: string,
+    stateId: string,
+    authenticationToken: string,
+    options: any,
     isInitializing: string | boolean,
 ) => {
 
@@ -629,8 +653,9 @@ export const initialize = (
 
     }
 
-    if (options.theme && manywho.theming)
+    if (options.theme && manywho.theming) {
         manywho.theming.apply(options.theme);
+    }
 
     const storedConfig = window.sessionStorage.getItem('oauth-' + stateId);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
@@ -642,21 +667,21 @@ export const initialize = (
 
     if (window.navigator.language) {
         const language = window.navigator.language.split('-');
-        if (language.length === 2)
+        if (language.length === 2) {
             // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
             window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
+        }
     }
-
 
     if (stateId && !isInitializing) {
 
         return join(
-            config.tenantId, 
-            config.flowId, 
-            config.flowVersionId, 
-            config.container, 
-            stateId, 
-            authenticationToken, 
+            config.tenantId,
+            config.flowId,
+            config.flowVersionId,
+            config.container,
+            stateId,
+            authenticationToken,
             config.options,
        );
 
@@ -872,12 +897,12 @@ export const navigate = (navigationId: string, navigationElementId: string, mapE
  */
 export const join = (
     tenantId: string,
-    flowId: string, 
-    flowVersionId: string, 
-    container: string, 
-    stateId: string, 
-    authenticationToken: 
-    string, 
+    flowId: string,
+    flowVersionId: string,
+    container: string,
+    stateId: string,
+    authenticationToken:
+    string,
     options: any,
 ): JQueryDeferred<any> => {
 
@@ -938,13 +963,13 @@ export const join = (
  * @param page Page offset for the list filter
  */
 export const objectDataRequest = (
-    id: string, 
-    request: any, 
+    id: string,
+    request: any,
     flowKey: string,
-    limit: number, 
-    search?: string, 
+    limit: number,
+    search?: string,
     orderBy?: string,
-    orderByDirection?: string, 
+    orderByDirection?: string,
     page?: number,
 ) => {
 
@@ -952,13 +977,13 @@ export const objectDataRequest = (
     render(flowKey);
 
     return Ajax.dispatchObjectDataRequest(
-        request, Utils.extractTenantId(flowKey), 
-        Utils.extractStateId(flowKey), 
+        request, Utils.extractTenantId(flowKey),
+        Utils.extractStateId(flowKey),
         State.getAuthenticationToken(flowKey),
-        limit, 
-        search, 
-        orderBy, 
-        orderByDirection, 
+        limit,
+        search,
+        orderBy,
+        orderByDirection,
         page,
     )
         .then((response) => {
@@ -993,13 +1018,13 @@ export const objectDataRequest = (
  * @param page Page offset for the list filter
  */
 export const fileDataRequest = (
-    id: string, 
-    request: any, 
-    flowKey: string, 
-    limit: number, 
-    search?: string, 
-    orderBy?: string, 
-    orderByDirection?: string, 
+    id: string,
+    request: any,
+    flowKey: string,
+    limit: number,
+    search?: string,
+    orderBy?: string,
+    orderByDirection?: string,
     page?: number,
 ) => {
 
@@ -1007,12 +1032,12 @@ export const fileDataRequest = (
     render(flowKey);
 
     return Ajax.dispatchFileDataRequest(
-        request, 
-        Utils.extractTenantId(flowKey), 
-        Utils.extractStateId(flowKey), 
-        State.getAuthenticationToken(flowKey), 
-        limit, 
-        search, 
+        request,
+        Utils.extractTenantId(flowKey),
+        Utils.extractStateId(flowKey),
+        State.getAuthenticationToken(flowKey),
+        limit,
+        search,
         orderBy,
         orderByDirection,
         page,
@@ -1035,8 +1060,9 @@ export const fileDataRequest = (
             State.setComponentLoading(id, null, flowKey);
             render(flowKey);
 
-            if (error)
+            if (error) {
                 return error;
+            }
         });
 
 };
@@ -1052,13 +1078,13 @@ export const toggleDebug = (flowKey: string) => {
 };
 
 /**
- * Parse the platform response using the `responseParser` and update the local state. If the response status is WAIT or STATUS 
+ * Parse the platform response using the `responseParser` and update the local state. If the response status is WAIT or STATUS
  * then kickoff an `Engine.ping`
  */
 export const parseResponse = (
-    response: any, 
-    responseParser: (model: any, response: any, flowKey: string) => void, 
-    invokeType: string, 
+    response: any,
+    responseParser: (model: any, response: any, flowKey: string) => void,
+    invokeType: string,
     flowKey: string,
 ) => {
 
@@ -1133,15 +1159,17 @@ export const render = (flowKey: string) => {
 
     const login = State.getLogin(flowKey);
 
-    if (login)
-        ReactDOM.render(React.createElement(Component.getByName('mw-login'), { 
-            flowKey, 
+    if (login) {
+        ReactDOM.render(React.createElement(Component.getByName('mw-login'), {
+            flowKey,
             api: 'run',
             callback: login.callback,
             stateId: login.stateId,
-            directoryName: login.directoryName, 
+            directoryName: login.directoryName,
             loginUrl: login.loginUrl,
         }),             container);
-    else
+    }
+    else {
         ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
+    }
 };

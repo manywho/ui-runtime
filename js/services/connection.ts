@@ -16,11 +16,13 @@ function onError(xhr, status, error) {
 export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authenticationToken: string, event: string, request) => {
     xhr.setRequestHeader('ManyWhoTenant', tenantId);
 
-    if (authenticationToken)
+    if (authenticationToken) {
         xhr.setRequestHeader('Authorization', authenticationToken);
+    }
 
-    if (Settings.event(event + '.beforeSend'))
+    if (Settings.event(event + '.beforeSend')) {
         Settings.event(event + '.beforeSend').call(this, xhr, request);
+    }
 };
 
 /**
@@ -36,17 +38,18 @@ export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authentication
  * @returns JQuery deferred from the $.ajax request
  */
 export const request = (context,
-                        event: string, 
-                        url: string, 
-                        type: string, 
-                        tenantId: string, 
+                        event: string,
+                        url: string,
+                        type: string,
+                        tenantId: string,
                         stateId: string,
-                        authenticationToken: string, 
+                        authenticationToken: string,
                         data: object) => {
     let json = null;
 
-    if (data != null)
+    if (data != null) {
         json = JSON.stringify(data);
+    }
 
     return $.ajax({
         type,
@@ -58,8 +61,9 @@ export const request = (context,
         beforeSend: (xhr) => {
             beforeSend.call(this, xhr, tenantId, authenticationToken, event, data);
 
-            if (!Utils.isNullOrWhitespace(stateId))
+            if (!Utils.isNullOrWhitespace(stateId)) {
                 xhr.setRequestHeader('ManyWhoState', stateId);
+            }
         },
     })
     .done(Settings.event(event + '.done'))
@@ -79,11 +83,11 @@ export const request = (context,
  * @returns JQuery deferred from the $.ajax request
  */
 export const upload = (
-    context, 
-    event: string, 
-    url: string, 
-    formData: FormData, 
-    tenantId: string, 
+    context,
+    event: string,
+    url: string,
+    formData: FormData,
+    tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
 ) => {
@@ -122,12 +126,12 @@ export const upload = (
  * @returns JQuery deferred from the $.ajax request
  */
 export const uploadFiles = (
-    context, 
-    event: string, 
-    url: string, 
-    files: File[], 
+    context,
+    event: string,
+    url: string,
+    files: File[],
     request: any,
-    tenantId: string, 
+    tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
     _: string,
