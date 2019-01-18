@@ -35,8 +35,6 @@ const config = {
         new Compression({
             filename: '[file]',
             algorithm: 'gzip',
-            test: /\.js$|\.css$|\.svg$/,
-            threshold: 10240,
             minRatio: 0.8,
         }),
         new WriteBundleFilePlugin({
