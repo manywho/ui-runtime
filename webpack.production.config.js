@@ -78,7 +78,7 @@ const config = {
             sourceMap: true
         }),
         new WriteBundleFilePlugin({
-            filename: 'offline-bundle',
+            filename: 'offline-bundle.json',
             bundleKey: 'offline',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
