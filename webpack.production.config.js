@@ -38,7 +38,7 @@ const config = {
             minRatio: 0.8,
         }),
         new WriteBundleFilePlugin({
-            filename: 'core-bundle',
+            filename: 'core-bundle.json',
             bundleKey: 'core',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
