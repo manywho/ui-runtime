@@ -34,6 +34,7 @@ const config = {
         }),
         new Compression({
             filename: '[file]',
+            exclude: /bundle\.json/,
             algorithm: 'gzip',
             minRatio: 0.8,
         }),
