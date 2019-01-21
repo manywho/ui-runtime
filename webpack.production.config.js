@@ -77,17 +77,18 @@ const config = {
         new UglifyJsPlugin({
             sourceMap: true
         }),
+        new Compression({
+            filename: '[file]',
+            exclude: /bundle\.json/,
+            algorithm: 'gzip',
+            minRatio: 0.8,
+        }),
         new WriteBundleFilePlugin({
             filename: 'offline-bundle.json',
             bundleKey: 'offline',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
             filenameFilter: filename => !filename.endsWith('.map'),
-        }),
-        new Compression({
-            filename: '[file]',
-            algorithm: 'gzip',
-            minRatio: 0.8,
         }),
     ],
     resolve: {
