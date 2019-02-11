@@ -238,7 +238,7 @@ function initializeSimpleWithAuthorization(
 
                 flowKey = Utils.getFlowKey(tenantId, id, versionId, response.stateId, container);
 
-                if (response.authorizationContext && !Utils.isNullOrEmpty(response.authorizationContext.loginUrl))
+                if (response.authorizationContext && !Utils.isNullOrEmpty(response.authorizationContext.loginUrl)) {
                     return Ajax.login(
                         response.authorizationContext.loginUrl,
                         username,
@@ -248,7 +248,8 @@ function initializeSimpleWithAuthorization(
                         response.stateId,
                         tenantId,
                     );
-                
+                }
+
                 return null;
             },
             // fail
@@ -265,10 +266,11 @@ function initializeSimpleWithAuthorization(
         .then((response) => {
             State.setOptions(options, flowKey);
 
-            if (options.callbacks != null && options.callbacks.length > 0)
+            if (options.callbacks != null && options.callbacks.length > 0) {
                 options.callbacks.forEach((callback) => {
                     Callbacks.register(flowKey, callback);
                 });
+            }
 
             streamId = response.currentStreamId;
 
@@ -276,11 +278,13 @@ function initializeSimpleWithAuthorization(
             Settings.initializeFlow(options, flowKey);
             State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
 
-            if (response.navigationElementReferences && response.navigationElementReferences.length > 0)
+            if (response.navigationElementReferences && response.navigationElementReferences.length > 0) {
                 Model.setSelectedNavigation(response.navigationElementReferences[0].id, flowKey);
+            }
 
-            if (!Utils.isNullOrWhitespace(options.navigationElementId))
+            if (!Utils.isNullOrWhitespace(options.navigationElementId)) {
                 Model.setSelectedNavigation(options.navigationElementId, flowKey);
+            }
 
             Component.appendFlowContainer(flowKey);
             State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
@@ -291,8 +295,9 @@ function initializeSimpleWithAuthorization(
         .then(
             // success
             (response) => {
-                if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
+                if (Settings.global('i18n.overrideTimezoneOffset', flowKey)) {
                     State.setUserTime(flowKey);
+                }
 
                 Formatting.initialize(flowKey);
 
@@ -311,19 +316,22 @@ function initializeSimpleWithAuthorization(
 
                 const navigationId = Model.getSelectedNavigation(flowKey);
 
-                if (!Utils.isNullOrWhitespace(navigationId))
+                if (!Utils.isNullOrWhitespace(navigationId)) {
                     deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
+                }
 
-                if (streamId)
+                if (streamId) {
                     Social.initialize(flowKey, response.currentStreamId);
+                }
 
-                if (Utils.isEqual(response.invokeType, 'DONE', true))
+                if (Utils.isEqual(response.invokeType, 'DONE', true)) {
                     Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
+                }
 
                 return Utils.whenAll(deferreds);
 
-            },   
-            // fail                                                    
+            },
+            // fail
             response => notifyError(flowKey, response),
         )
         .always(() => renderAndProcessRequests(flowKey))
@@ -848,15 +856,17 @@ export const initializeSimple = (
     options: any,
     container: string,
 ) => {
-    
-    if (options.theme && manywho.theming)
+
+    if (options.theme && manywho.theming) {
         manywho.theming.apply(options.theme);
+    }
 
     if (window.navigator.language) {
         const language = window.navigator.language.split('-');
-        if (language.length === 2)
+        if (language.length === 2) {
             // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
             window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
+        }
     }
 
     return initializeSimpleWithAuthorization(
