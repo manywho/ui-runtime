@@ -173,6 +173,165 @@ function onInitializeFailed(response) {
     return null;
 }
 
+function startTours(flowKey) {
+
+    const autoStart = Settings.global('tours.autoStart', flowKey, false);
+    const containerSelector = Settings.global('tours.container', flowKey, null);
+
+    if (autoStart) {
+
+        if (typeof autoStart === 'string') {
+            Tours.start(autoStart, containerSelector, flowKey);
+        }
+        else if (typeof autoStart === 'boolean') {
+            Tours.start(null, containerSelector, flowKey);
+        }
+    }
+}
+
+function renderAndProcessRequests(flowKey) {
+
+    if (flowKey) {
+        render(flowKey);
+        processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+    }
+
+}
+
+function showLoader(flowKey) {
+
+    if (flowKey) {
+        State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
+        render(flowKey);
+    }
+}
+
+function initializeSimpleWithAuthorization(
+    tenantId: string,
+    developerName: string,
+    id: string,
+    versionId: string,
+    username: string,
+    password: string,
+    inputs: any[],
+    options: any,
+    container: string,
+) {
+    let flowKey = null;
+    let streamId = null;
+    let initializationResponse = null;
+
+    const initializationRequest = {
+        developerName,
+        versionId,
+        username,
+        password,
+        inputs,
+        id: id || '00000000-0000-0000-0000-000000000000',
+    };
+
+    return Ajax.initializeSimple(initializationRequest, tenantId)
+        .then(
+            // success
+            (response) => {
+                initializationResponse = response;
+
+                flowKey = Utils.getFlowKey(tenantId, id, versionId, response.stateId, container);
+
+                if (response.authorizationContext && !Utils.isNullOrEmpty(response.authorizationContext.loginUrl))
+                    return Ajax.login(
+                        response.authorizationContext.loginUrl,
+                        username,
+                        password,
+                        null,
+                        null,
+                        response.stateId,
+                        tenantId,
+                    );
+                
+                return null;
+            },
+            // fail
+            onInitializeFailed,
+        )
+        .then((authenticationToken) => {
+            if (authenticationToken && typeof authenticationToken === 'string') {
+                State.setAuthenticationToken(authenticationToken, flowKey);
+                return initializationResponse;
+            }
+
+            return initializationResponse;
+        })
+        .then((response) => {
+            State.setOptions(options, flowKey);
+
+            if (options.callbacks != null && options.callbacks.length > 0)
+                options.callbacks.forEach((callback) => {
+                    Callbacks.register(flowKey, callback);
+                });
+
+            streamId = response.currentStreamId;
+
+            Model.initializeModel(flowKey);
+            Settings.initializeFlow(options, flowKey);
+            State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
+
+            if (response.navigationElementReferences && response.navigationElementReferences.length > 0)
+                Model.setSelectedNavigation(response.navigationElementReferences[0].id, flowKey);
+
+            if (!Utils.isNullOrWhitespace(options.navigationElementId))
+                Model.setSelectedNavigation(options.navigationElementId, flowKey);
+
+            Component.appendFlowContainer(flowKey);
+            State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
+            render(flowKey);
+
+            return response;
+        })
+        .then(
+            // success
+            (response) => {
+                if (Settings.global('i18n.overrideTimezoneOffset', flowKey))
+                    State.setUserTime(flowKey);
+
+                Formatting.initialize(flowKey);
+
+                parseResponse(response, Model.parseEngineResponse, 'initialize', flowKey);
+
+                State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
+
+                if (Settings.flow('collaboration.isEnabled', flowKey)) {
+                    Collaboration.initialize(flowKey);
+                    Collaboration.join('Another user', flowKey);
+                }
+
+                State.setLocation(flowKey);
+
+                const deferreds = [];
+
+                const navigationId = Model.getSelectedNavigation(flowKey);
+
+                if (!Utils.isNullOrWhitespace(navigationId))
+                    deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
+
+                if (streamId)
+                    Social.initialize(flowKey, response.currentStreamId);
+
+                if (Utils.isEqual(response.invokeType, 'DONE', true))
+                    Callbacks.execute(flowKey, response.invokeType, null, response.currentMapElementId, [response]);
+
+                return Utils.whenAll(deferreds);
+
+            },   
+            // fail                                                    
+            response => notifyError(flowKey, response),
+        )
+        .always(() => renderAndProcessRequests(flowKey))
+        .then(() => startTours(flowKey))
+        .always(() => showLoader(flowKey))
+        .then(() => flowKey);
+}
+
 function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken, stateId) {
 
     let flowKey = callback.flowKey;
@@ -357,46 +516,10 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
             },
             // Invoke call failed
             response => notifyError(flowKey, response))
-        .always(
-            () => {
-
-                if (flowKey) {
-                    render(flowKey);
-                    processObjectDataRequests(Model.getComponents(flowKey), flowKey);
-                }
-
-            },
-        )
-        .then(
-            () => {
-
-                const autoStart = Settings.global('tours.autoStart', flowKey, false);
-                const containerSelector = Settings.global('tours.container', flowKey, null);
-
-                if (autoStart) {
-                    if (typeof autoStart === 'string') {
-                        Tours.start(autoStart, containerSelector, flowKey);
-                    }
-                    else if (typeof autoStart === 'boolean') {
-                        Tours.start(null, containerSelector, flowKey);
-                    }
-                }
-
-            },
-        )
-        .always(
-            () => {
-
-                if (flowKey) {
-                    State.setComponentLoading(Utils.extractElement(flowKey), null, flowKey);
-                    render(flowKey);
-                }
-
-            },
-        )
-        .then(
-            () => flowKey,
-        );
+            .always(() => renderAndProcessRequests(flowKey))
+            .then(() => startTours(flowKey))
+            .always(() => showLoader(flowKey))
+            .then(() => flowKey);
 
 }
 
@@ -708,6 +831,45 @@ export const initialize = (
 
     }
 
+};
+
+/**
+ * Intialize a new state of a flow by calling the `/api/run/1/state` endpoint. This initializes the flow and calls INVOKE immediately
+ * in a single request. Complex authentication methods are not supported.
+ */
+export const initializeSimple = (
+    tenantId: string,
+    developerName: string,
+    id: string,
+    versionId: string,
+    username: string,
+    password: string,
+    inputs: any[],
+    options: any,
+    container: string,
+) => {
+    
+    if (options.theme && manywho.theming)
+        manywho.theming.apply(options.theme);
+
+    if (window.navigator.language) {
+        const language = window.navigator.language.split('-');
+        if (language.length === 2)
+            // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
+            window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
+    }
+
+    return initializeSimpleWithAuthorization(
+        tenantId,
+        developerName,
+        id,
+        versionId,
+        username,
+        password,
+        inputs,
+        options,
+        container,
+    );
 };
 
 /**
