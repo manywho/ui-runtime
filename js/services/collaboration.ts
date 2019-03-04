@@ -20,16 +20,18 @@ function emit(flowKey, kind, data?) {
         data.id = socket.id;
         data.owner = socket.id;
 
-        if (socket.connected)
+        if (socket.connected) {
             socket.emit(kind, data);
-        else
+        }
+        else {
             socket.on('connect', socket.emit.bind(socket, kind, data));
+        }
     }
 }
 
 function onDisconnect() {
     for (const stateId in rooms) {
-        socket.emit('left', { 
+        socket.emit('left', {
             stateId,
             user: rooms[stateId].user,
         });
@@ -118,11 +120,11 @@ function onReturnToParent(data) {
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
     Engine.join(tenantId,
-                null, 
-                null, 
-                element, 
-                data.parentStateId, 
-                State.getAuthenticationToken(data.subFlowKey), 
+                null,
+                null,
+                element,
+                data.parentStateId,
+                State.getAuthenticationToken(data.subFlowKey),
                 Settings.flow(null, data.subFlowKey));
 }
 
@@ -200,8 +202,9 @@ export const isInitialized = (flowKey: string): boolean => {
 export const enable = (flowKey: string) => {
     rooms[Utils.extractStateId(flowKey)].isEnabled = true;
 
-    if (!socket)
+    if (!socket) {
         initialize(flowKey);
+    }
 };
 
 /**
@@ -221,10 +224,12 @@ export const join = (user, flowKey) => {
         rooms[stateId].user = user;
         emit(flowKey, 'join', { user });
 
-        if (!socket.connected)
+        if (!socket.connected) {
             socket.on('connect', this.getValues.bind(null, flowKey));
-        else
+        }
+        else {
             getValues(flowKey);
+        }
     }
 };
 

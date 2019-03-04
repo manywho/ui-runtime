@@ -10,10 +10,12 @@ const components = {};
 const aliases = {};
 
 function getComponentType(item) {
-    if ('containerType' in item)
+    if ('containerType' in item) {
         return item.containerType;
-    if ('componentType' in item)
+    }
+    if ('componentType' in item) {
         return item.componentType;
+    }
 
     return null;
 }
@@ -46,10 +48,11 @@ export const contentTypes = {
 export const register = (name: string, component: React.Component | React.SFC, alias?: string[]) => {
     components[name.toLowerCase()] = component;
 
-    if (alias)
+    if (alias) {
         alias.forEach((aliasName) => {
             aliases[aliasName.toLowerCase()] = name.toLowerCase();
         });
+    }
 };
 
 /**
@@ -88,8 +91,9 @@ export const registerContainer = (name: string, component: React.Component | Rea
 export const get = (model: any) => {
     let componentType = getComponentType(model).toLowerCase();
 
-    if (aliases[componentType])
+    if (aliases[componentType]) {
         componentType = aliases[componentType];
+    }
 
     if (components.hasOwnProperty(componentType)) {
         return components[componentType];
@@ -154,8 +158,9 @@ export const handleEvent = (component: React.Component | React.SFC, model: any, 
             .then(callback);
     }
 
-    if ((component as React.Component).forceUpdate)
+    if ((component as React.Component).forceUpdate) {
         (component as React.Component).forceUpdate();
+    }
 };
 
 /**
@@ -169,7 +174,7 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
     if (selectedIds) {
         selectedIds.forEach((selectedId) => {
 
-            if (!Utils.isNullOrWhitespace(selectedId))
+            if (!Utils.isNullOrWhitespace(selectedId)) {
                 selectedObjectData = selectedObjectData.concat(
                     model.objectData.filter(item => Utils.isEqual(item.externalId, selectedId, true))
                                     .map((item) => {
@@ -178,6 +183,7 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
                                         return clone;
                                     }),
                 );
+            }
         });
     }
 
@@ -185,25 +191,27 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
 };
 
 /**
- * Get the columns that have `isDisplayValue` set to true, or contain a property with a developer name of `isDisplayValue` 
+ * Get the columns that have `isDisplayValue` set to true, or contain a property with a developer name of `isDisplayValue`
  * and a content value of `true`
  * @param columns
  */
 export const getDisplayColumns = (columns: any[]): any[] => {
     let displayColumns = null;
 
-    if (columns)
+    if (columns) {
         displayColumns = columns.filter((column) => {
             if (column.properties) {
                 const property = Utils.getObjectDataProperty(column.properties, 'isDisplayValue');
                 return property ? Utils.isEqual(property.contentValue, 'true', true) : false;
             }
-            
+
             return column.isDisplayValue;
         });
+    }
 
-    if (!displayColumns || displayColumns.length === 0)
+    if (!displayColumns || displayColumns.length === 0) {
         Log.error('No display columns found');
+    }
 
     return displayColumns;
 };
@@ -218,13 +226,14 @@ export const appendFlowContainer = (flowKey: string) => {
     let container = document.getElementById(lookUpKey);
     const containerType = Utils.extractElement(flowKey);
 
-    // Added this fix because embedded Flows and normal Flows should not be positioned absolute on their main container, 
+    // Added this fix because embedded Flows and normal Flows should not be positioned absolute on their main container,
     // that should only happen for modal containers
 
     let containerClasses = 'mw-bs flow-container';
 
-    if (Utils.isEqual(containerType, 'modal', true))
+    if (Utils.isEqual(containerType, 'modal', true)) {
         containerClasses += ' modal-container';
+    }
 
     if (!container && !Utils.isEqual(containerType, 'modal-standalone', true)) {
         const manywhoContainer = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
@@ -234,8 +243,9 @@ export const appendFlowContainer = (flowKey: string) => {
         container.className = containerClasses;
         manywhoContainer.appendChild(container);
     }
-    else if (Utils.isEqual(containerType, 'modal-standalone', true))
+    else if (Utils.isEqual(containerType, 'modal-standalone', true)) {
         container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
+    }
 
     return container;
 };
@@ -245,18 +255,19 @@ export const appendFlowContainer = (flowKey: string) => {
  * @param flowKey
  */
 export const focusInput = (flowKey: string) => {
-    // Focus the first input or textarea control on larger screen devices, this should help stop a keyboard from 
+    // Focus the first input or textarea control on larger screen devices, this should help stop a keyboard from
     // becoming visible on mobile devices when the flow first renders
     if (Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
-        const input = document.querySelector(`.main .mw-input input, .main .mw-content input, 
-            .main .mw-textarea textarea, .modal-container .mw-input input, .modal-container 
+        const input = document.querySelector(`.main .mw-input input, .main .mw-content input,
+            .main .mw-textarea textarea, .modal-container .mw-input input, .modal-container
             .mw-content input, .modal-container .mw-textarea textarea`) as HTMLInputElement;
-            
+
         if (input) {
             input.focus();
 
-            if (Utils.isEqual(input.type, 'text', true))
+            if (Utils.isEqual(input.type, 'text', true)) {
                 input.setSelectionRange(input.value.length, input.value.length);
+            }
         }
     }
 };
@@ -268,12 +279,13 @@ export const focusInput = (flowKey: string) => {
 export const scrollToTop = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     const container = document.getElementById(lookUpKey);
-    if (container)
+    if (container) {
         window.scroll(0, container.offsetTop);
+    }
 };
 
 /**
- * Calls `Engine.move` then `Engine.flowOut` if the `outcome.isOut` is true. Will open a new window instead if the `uri` 
+ * Calls `Engine.move` then `Engine.flowOut` if the `outcome.isOut` is true. Will open a new window instead if the `uri`
  * or `uriTypeElementPropertyId` attributes are defined
  * @param outcome
  * @param objectData
@@ -301,7 +313,8 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
 
     return Engine.move(outcome, flowKey)
         .then(() => {
-            if (outcome.isOut)
+            if (outcome.isOut) {
                 Engine.flowOut(outcome, flowKey);
+            }
         });
 };

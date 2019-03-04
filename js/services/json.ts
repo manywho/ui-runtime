@@ -6,13 +6,14 @@
   * @ignore
   */
 export const generateFlowInputs = (inputsData: any) => {
-    if (inputsData && !Array.isArray(inputsData))
+    if (inputsData && !Array.isArray(inputsData)) {
         inputsData = [inputsData];
+    }
 
     return inputsData.map((input) => {
 
         for (const property in input) {
-            if (input[property].objectData)
+            if (input[property].objectData) {
                 return {
                     contentType: input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
                     contentValue: null,
@@ -20,9 +21,11 @@ export const generateFlowInputs = (inputsData: any) => {
                     objectData: Array.isArray(input[property].objectData) ? input[property].objectData : [input[property].objectData],
                     typeElementDeveloperName: input[property].typeElementDeveloperName,
                 };
-            else if (input[property].contentType && input[property].developerName)
+            }
+            else if (input[property].contentType && input[property].developerName) {
                 return input[property];
-            else
+            }
+            else {
                 return {
                     contentType: 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase(),
                     contentValue: input[property],
@@ -30,6 +33,7 @@ export const generateFlowInputs = (inputsData: any) => {
                     objectData: null,
                     typeElementDeveloperName: null,
                 };
+            }
         }
     });
 };
@@ -44,13 +48,13 @@ export interface IFlowId {
   * @ignore
   */
 export const generateInitializationRequest = (
-    flowId: IFlowId, 
+    flowId: IFlowId,
     stateId?: string,
-    annotations?, 
-    inputs?: any[], 
-    playerUrl?: string, 
-    joinUrl?: string, 
-    mode?: string, 
+    annotations?,
+    inputs?: any[],
+    playerUrl?: string,
+    joinUrl?: string,
+    mode?: string,
     reportingMode?: string,
 ) => {
 
@@ -73,15 +77,15 @@ export const generateInitializationRequest = (
   * @ignore
   */
 export const generateInvokeRequest = (
-    stateData: any, 
-    invokeType: string, 
+    stateData: any,
+    invokeType: string,
     selectedOutcomeId?: string,
     selectedMapElementId?: string,
     pageComponentInputResponses?: any[],
-    navigationElementId?: string, 
+    navigationElementId?: string,
     selectedNavigationElementId?: string,
-    annotations?, 
-    location?: any, 
+    annotations?,
+    location?: any,
     mode?: string,
 ) => {
 
@@ -109,12 +113,12 @@ export const generateInvokeRequest = (
   * @ignore
   */
 export const generateNavigateRequest = (
-    stateData: any, 
+    stateData: any,
     navigationId: string,
     navigationElementId: string,
     mapElementId: string,
     pageComponentInputResponses?: any[],
-    annotations?: any, 
+    annotations?: any,
     location?: any,
 ) => {
 
@@ -141,11 +145,11 @@ export const generateNavigateRequest = (
   * @ignore
   */
 export const generateSessionRequest = (
-    sessionId: string, 
-    sessionUrl: string, 
+    sessionId: string,
+    sessionUrl: string,
     loginUrl: string,
     username?: string,
-    password?: string, 
+    password?: string,
     token?: string,
 ) => {
 

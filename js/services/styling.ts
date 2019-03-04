@@ -20,8 +20,9 @@ export const getClasses = (parentId: string, id: string, type: string, flowKey: 
     if (parent) {
         const containerType = parent.containerType.toLowerCase();
 
-        if (containers.hasOwnProperty(containerType))
+        if (containers.hasOwnProperty(containerType)) {
             classes = classes.concat(containers[containerType].call(this, model, parent));
+        }
     }
 
     if (model) {
@@ -31,21 +32,26 @@ export const getClasses = (parentId: string, id: string, type: string, flowKey: 
             const typeLowerCase = type.toLowerCase();
 
             if (components.hasOwnProperty(typeLowerCase)) {
-                if (typeof components[typeLowerCase] === 'string' || components[typeLowerCase] instanceof String)
+                if (typeof components[typeLowerCase] === 'string' || components[typeLowerCase] instanceof String) {
                     classes.push(components[typeLowerCase]);
-                else if ({}.toString.call(components[typeLowerCase]) === '[object Function]')
+                }
+                else if ({}.toString.call(components[typeLowerCase]) === '[object Function]') {
                     classes.push(components[typeLowerCase].call(this, model, parent));
-                else if (Array.isArray(components[typeLowerCase]))
+                }
+                else if (Array.isArray(components[typeLowerCase])) {
                     classes = classes.concat(components[typeLowerCase]);
+                }
             }
         }
     }
 
-    if (model.attributes && !Utils.isNullOrWhitespace(model.attributes.classes))
+    if (model.attributes && !Utils.isNullOrWhitespace(model.attributes.classes)) {
         classes.push(model.attributes.classes);
+    }
 
-    if (Model.isContainer(model))
+    if (Model.isContainer(model)) {
         classes.push('clearfix');
+    }
 
     return classes;
 };

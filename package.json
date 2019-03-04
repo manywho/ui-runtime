@@ -11,7 +11,7 @@
     "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
     "start": "webpack --config webpack.development.config.js --env.watch",
     "dev": "webpack --config webpack.development.config.js",
-    "dist": "webpack -p --config webpack.production.config.js && webpack -p --config webpack.npm.config.js && node bundle",
+    "dist": "webpack -p --config webpack.production.config.js",
     "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
     "lint:docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
     "test": "tsc -p tsconfig.test.json && nyc --reporter=html --reporter=lcov ava \"dist_test/test/*.js\" --timeout=5s --color --fail-fast -v",
@@ -51,17 +51,20 @@
     "script-loader": "0.7.0",
     "sinon": "3.2.1",
     "tap-xunit": "2.2.0",
-    "tslint": "5.9.1",
-    "tslint-config-airbnb": "5.4.2",
-    "tslint-loader": "3.5.3",
+    "ts-loader": "4.4.2",
+    "tslint": "5.8.0",
+    "tslint-config-airbnb": "5.9.2",
+    "tslint-loader": "3.6.0",
     "typedoc": "0.9.0",
     "typescript": "2.4.2",
     "uglifyjs-webpack-plugin": "0.4.6",
-    "webpack": "3.6.0",
+    "webpack": "4.26.1",
+    "webpack-cli": "3.1.2",
     "webpack-bundle-analyzer": "2.9.0",
     "xhr-mock": "1.9.0"
   },
   "dependencies": {
+    "compression-webpack-plugin": "^2.0.0",
     "jquery": "3.2.1",
     "license-webpack-plugin": "1.1.1",
     "loglevel": "1.4.1",
@@ -71,7 +74,8 @@
     "react-dom": "15.6.1",
     "socket.io": "2.0.3",
     "socket.io-client": "2.0.3",
-    "webpack-dashboard": "1.0.2"
+    "webpack-dashboard": "1.0.2",
+    "write-file": "1.0.0"
   },
   "ava": {
     "require": [

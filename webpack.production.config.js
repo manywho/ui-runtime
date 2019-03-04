@@ -1,19 +1,21 @@
-var path = require('path');
-var webpack = require('webpack');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
+const Compression = require('compression-webpack-plugin');
 
-var pathsToClean = [
+const pathsToClean = [
     'dist'
 ];
 
-var config = {
+const config = {
     entry: {
         'ui-core': './js/index.ts'
     },
     output: {
-        path: path.resolve(__dirname, 'dist/js'),
-        filename: 'ui-core-[chunkhash].js',
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'js/ui-core-[chunkhash].js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
@@ -23,16 +25,29 @@ var config = {
     },
     devtool: 'source-map',
     plugins: [
+        new CleanWebpackPlugin(pathsToClean),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new UglifyJSPlugin({
             minimize: true,
             sourceMap: true,
             include: /\.min\.js$/,
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new CleanWebpackPlugin(pathsToClean),
+        new Compression({
+            filename: '[file]',
+            exclude: /bundle\.json/,
+            algorithm: 'gzip',
+            minRatio: 0.8,
+        }),
+        new WriteBundleFilePlugin({
+            filename: 'core-bundle.json',
+            bundleKey: 'core',
+            pathPrefix: '/',
+            // remove sourcemaps from the bundle list
+            filenameFilter: filename => !filename.endsWith('.map'),
+        }),
     ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 enforce: 'pre',
@@ -55,7 +70,7 @@ var config = {
     },
     externals: {
         'react': 'React',
-        'react-dom' : 'ReactDOM',
+        'react-dom': 'ReactDOM',
         'jquery': 'jQuery',
         'numbro': 'numbro',
         'moment': 'moment',
