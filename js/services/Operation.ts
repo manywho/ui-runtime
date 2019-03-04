@@ -3,7 +3,7 @@
 import { getStateValue, setStateValue } from '../models/State';
 import { clone, guid } from '../services/Utils';
 import { IState } from '../interfaces/IModels';
-import Worker from 'worker-loader?inline=true&name=worker.js!../../workers/Worker';
+import Worker from 'worker-loader?inline=true&name=js/worker.js!../../workers/Worker';
 
 declare var manywho: any;
 
@@ -19,7 +19,7 @@ const isCommandSupported = (command: string) => {
     if (manywho.utils.isNullOrWhitespace(command) || commands.indexOf(command) !== -1) {
         return true;
     }
-    manywho.log.info('The Operation command is not supported and this operation will be ignored: ' + command);
+    manywho.log.info(`The Operation command is not supported and this operation will be ignored: ${command}`);
     return false;
 };
 

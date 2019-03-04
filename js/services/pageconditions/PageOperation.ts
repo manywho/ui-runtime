@@ -35,7 +35,7 @@ const PageOperation = (
         );
 
         if (!assignorValue) {
-            throw new Error(`Cannot find an assignor value for operation`);
+            throw new Error('Cannot find an assignor value for operation');
         }
 
         // Now we need to compare the equality of the result from the page

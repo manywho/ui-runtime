@@ -75,7 +75,7 @@ export const getTriggerComponentContentValue = (triggerComponent, snapshot, page
     }
 
     if (typeof triggerComponentContentValue === 'undefined') {
-        throw new Error(`Cannot find a trigger component content value`);
+        throw new Error('Cannot find a trigger component content value');
     }
 
     return triggerComponentContentValue;
@@ -153,7 +153,7 @@ const PageCondition = (pageElement, snapshot, component, value) => {
         );
 
         if (!valueComparable) {
-            throw new Error(`Cannot find a value to compare`);
+            throw new Error('Cannot find a value to compare');
         }
 
         const pageRuleResult = PageRule(

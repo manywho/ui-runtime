@@ -117,13 +117,13 @@ export const toEngineUTCStringFormat = (dateValue) => {
         const norm = Math.floor(Math.abs(num));
         return (norm < 10 ? '0' : '') + norm;
     };
-    return dateValue.getUTCFullYear() +
-        '-' + pad(dateValue.getUTCMonth() + 1) +
-        '-' + pad(dateValue.getUTCDate()) +
-        'T' + pad(dateValue.getUTCHours()) +
-        ':' + pad(dateValue.getUTCMinutes()) +
-        ':' + pad(dateValue.getUTCSeconds()) +
-        ':' + (pad(dateValue.getUTCMilliseconds()) + '0000') +
-        '+' + '00' +
-        ':' + '00';
+    return `${dateValue.getUTCFullYear()}\
+        -${pad(dateValue.getUTCMonth() + 1)}\
+        -${pad(dateValue.getUTCDate())}\
+        T${pad(dateValue.getUTCHours())}\
+        :${pad(dateValue.getUTCMinutes())}\
+        :${pad(dateValue.getUTCSeconds())}\
+        :${pad(dateValue.getUTCMilliseconds())}\
+        0000\
+        +00:00`;
 };

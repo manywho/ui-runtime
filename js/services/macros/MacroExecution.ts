@@ -38,7 +38,7 @@ export const executeMacro = (macro: string, metadata: any, macroState: any) => {
         setValue: settingContentValue,
     };
 
-    Function('"use strict";return (' + macro + ')')()(
+    Function(`"use strict";return (${macro})`)()(
         state,
     );
 

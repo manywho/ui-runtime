@@ -7,7 +7,7 @@ ctx.onmessage = (e) => {
     let macroResult;
     try {
         macroResult = executeMacro(
-            'function(state){ ' + parsedResponse.macro + '}',
+            `function(state){ ${parsedResponse.macro}}`,
             parsedResponse.metadata,
             parsedResponse.state,
         );

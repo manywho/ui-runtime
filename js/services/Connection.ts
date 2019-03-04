@@ -30,7 +30,7 @@ export const hasNetwork = () => {
     const deferred = jQuery.Deferred();
 
     $.ajax({
-        url: manywho.settings.global('platform.uri') + '/api/health',
+        url: `${manywho.settings.global('platform.uri')}/api/health`,
         timeout: pingTimeout,
     })
     .then(() => {
@@ -174,10 +174,10 @@ export const onlineRequest = (
                     });
             }
         }
-        manywho.settings.event(event + '.done');
+        manywho.settings.event(`${event}.done`);
     })
     .fail(manywho.connection.onError)
-    .fail(manywho.settings.event(event + '.fail'));
+    .fail(manywho.settings.event(`${event}.fail`));
 };
 
 /**
@@ -206,9 +206,9 @@ export const offlineRequest = (
         });
 
     return deferred
-        .done(manywho.settings.event(event + '.done'))
+        .done(manywho.settings.event(`${event}.done`))
         .fail(manywho.connection.onError)
-        .fail(manywho.settings.event(event + '.fail'));
+        .fail(manywho.settings.event(`${event}.fail`));
 };
 
 /**
@@ -339,9 +339,9 @@ export const onlineUploadFiles = (
             manywho.connection.beforeSend.call(this, xhr, tenantId, authenticationToken, event);
         },
     })
-    .done(manywho.settings.event(event + '.done'))
+    .done(manywho.settings.event(`${event}.done`))
     .fail(manywho.connection.onError)
-    .fail(manywho.settings.event(event + '.fail'));
+    .fail(manywho.settings.event(`${event}.fail`));
 };
 
 /**
@@ -364,7 +364,7 @@ export const offlineUploadFiles = (
 
     deferred.resolve(response);
 
-    return deferred.done(manywho.settings.event(event + '.done'));
+    return deferred.done(manywho.settings.event(`${event}.done`));
 };
 
 /**
