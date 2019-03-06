@@ -90,6 +90,17 @@ export const initialize = (engineInitializationRequest: any, tenantId: string, a
 };
 
 /**
+ * POST to `/api/run/1/state` to initialize a state
+ */
+export const initializeSimple = (engineInitializationRequest: any, tenantId: string): JQueryXHR => {
+    Log.info(`Initializing Flow:
+        \n Name: ${engineInitializationRequest.developerName}
+        \n Id: ${engineInitializationRequest.id}
+        \n Version Id: '${engineInitializationRequest.versionId}`);
+    return Connection.request(null, 'initialization', '/api/run/1/state', 'POST', tenantId, null, null, engineInitializationRequest);
+};
+
+/**
  * POST to `/api/run/1/state/out/stateId/selectedOutcomeId` to flow out
  */
 export const flowOut = (stateId: string, tenantId: string, selectedOutcomeId: string, authenticationToken: string): JQueryXHR => {
