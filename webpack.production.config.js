@@ -1,6 +1,8 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
+const Compression = require('compression-webpack-plugin');
 
 const pathsToClean = [
     'dist'
@@ -71,27 +73,41 @@ const config = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(pathsToClean),
         new UglifyJsPlugin({
             sourceMap: true
         }),
-        new CleanWebpackPlugin(pathsToClean),
+        new Compression({
+            filename: '[file]',
+            exclude: /bundle\.json/,
+            algorithm: 'gzip',
+            minRatio: 0.8,
+        }),
+        new WriteBundleFilePlugin({
+            filename: 'offline-bundle.json',
+            bundleKey: 'offline',
+            pathPrefix: '/',
+            // remove sourcemaps from the bundle list
+            filenameFilter: filename => !filename.endsWith('.map'),
+        }),
     ],
     resolve: {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'ui-offline-[chunkhash].js',
+        filename: 'js/ui-offline-[chunkhash].js',
     }
 };
 
 module.exports = (env) => {
     var defaultDirectory = 'dist';
-    const publicPath = mapPublicPath(env.assets, publicPaths);
+    const assets = (env && env.assets) ? env.assets : 'production';
+    const publicPath = mapPublicPath(assets, publicPaths);
 
     if (env && env.build)
         defaultDirectory = env.build;
 
-    config.output.path = path.resolve(__dirname, defaultDirectory, 'js');
+    config.output.path = path.resolve(__dirname, defaultDirectory);
     config.output.publicPath = publicPath + 'js/';
     return config;
 };
