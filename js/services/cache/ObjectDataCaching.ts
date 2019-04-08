@@ -10,32 +10,20 @@ declare const metaData: any;
 
 let objectDataCachingTimer;
 
-export const onCached = (flow: IFlow) => {
-    const flowKey = manywho.utils.getFlowKey(
-        flow.tenantId,
-        flow.id.id,
-        flow.id.versionId,
-        flow.state.id,
-        'main',
-    );
-    const pollInterval = manywho.settings.global(
-        'offline.cache.objectDataCachingInterval',
-        flowKey,
-    );
-
-    objectDataCachingTimer = setTimeout(
-        () => { ObjectDataCaching(flow); }, pollInterval,
-    );
-};
-
 /**
- * @param flow
+ * @param flow flow information e.g. flow id, version id, tenant id
  * @description retrieve object data request responses from the engine
  * and set them in the flow model and insert them update indexdb
+ * @returns true/false whether any requests were executed
  */
 const ObjectDataCaching = (flow: IFlow) => {
 
     clearTimeout(objectDataCachingTimer);
+
+    // only poll api whilst online
+    if (store.getState().isOffline) {
+        return false;
+    }
 
     const initRequests = generateObjectData();
 
@@ -85,6 +73,7 @@ const ObjectDataCaching = (flow: IFlow) => {
 /**
  * @description extracting page element object data requests and flow data actions
  * from the snapshot to determine what object data requests to make
+ * @returns array of all object data requests that the flow uses
  */
 export const generateObjectData = () => {
     const objectDataRequests = {};
@@ -115,9 +104,10 @@ export const generateObjectData = () => {
 };
 
 /**
- * @param request
- * @description Constructs an object data request object
+ * @param request generated metadata properties that define an object data request
+ * @description constructs an object data request object
  * based on the generated metadata properties
+ * @returns the constructed object data request object
  */
 export const getObjectDataRequest = (request: any) => {
 
