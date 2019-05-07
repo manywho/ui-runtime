@@ -84,6 +84,7 @@ was simulated offline.
 - Delete map elements
 - Listners
 - Realtime collaboration
+- Scenarios where you want to set the isBound property on a page components column to equal true (e.g. when you have a object property of type string which is set based on the list value selection)
 
 ## Supported Browsers
 
