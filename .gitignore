@@ -8,5 +8,4 @@
 .nyc_output
 .scannerwork
 npm-debug.log
-package-lock.json
 test-report.xml
