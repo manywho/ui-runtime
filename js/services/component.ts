@@ -166,7 +166,7 @@ export const handleEvent = (component: React.Component | React.SFC, model: any, 
 /**
  * Get the ObjectData items from the model that match the selected ids
  * @param model
- * @param selectedIds The external ids of the selected items
+ * @param selectedIds The internal ids of the selected items
  */
 export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
     let selectedObjectData = [];
@@ -176,7 +176,7 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
 
             if (!Utils.isNullOrWhitespace(selectedId)) {
                 selectedObjectData = selectedObjectData.concat(
-                    model.objectData.filter(item => Utils.isEqual(item.externalId, selectedId, true))
+                    model.objectData.filter(item => Utils.isEqual(item.internalId, selectedId, true))
                                     .map((item) => {
                                         const clone = JSON.parse(JSON.stringify(item));
                                         clone.isSelected = true;

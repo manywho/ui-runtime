@@ -1,6 +1,6 @@
 {
   "name": "@manywho/ui-core",
-  "version": "2.68.0",
+  "version": "3.7.0",
   "description": "Core JavaScript services used by the Boomi Flow UI framework to do the heavy lifting.",
   "author": "ManyWho",
   "repository": {
@@ -14,8 +14,8 @@
     "dist": "webpack -p --config webpack.production.config.js",
     "lint": "tslint -p tsconfig.json -c tslint.json js/**/*.ts --fix",
     "lint:docs": "tslint --project tsconfig.lint.json -c tslint.docs.json",
-    "test": "tsc -p tsconfig.test.json && nyc --reporter=html --reporter=lcov ava \"dist_test/test/*.js\" --timeout=5s --color --fail-fast -v",
-    "test:coverage": "nyc check-coverage --lines 90 --functions 90 --branches 70",
+    "test": "tsc -p tsconfig.test.json && nyc --reporter=html --reporter=lcov ava \"dist_test/test/*.js\" --timeout=10s --color --fail-fast -v",
+    "test:coverage": "nyc check-coverage --lines 80 --functions 80 --branches 60",
     "test:report": "npm test -- --tap | tap-xunit > test-report.xml",
     "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\"",
     "precommit": "lint-staged && npm run test && npm run test:coverage"

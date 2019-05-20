@@ -216,10 +216,10 @@ test('Get Selected Rows 2', (t) => {
     const model = {
         objectData: [
             {
-                externalId: 'id1',
+                internalId: 'id1',
             },
             {
-                externalId: 'id2',
+                internalId: 'id2',
             },
         ],
     };
@@ -228,11 +228,11 @@ test('Get Selected Rows 2', (t) => {
 
     const expected = [
         {
-            externalId: 'id1',
+            internalId: 'id1',
             isSelected: true,
         },
         {
-            externalId: 'id2',
+            internalId: 'id2',
             isSelected: true,
         },
     ];
