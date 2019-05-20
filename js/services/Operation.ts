@@ -168,7 +168,6 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                             property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
                             return property;
                         }),
-                        // properties: valueToReference.objectData[0].properties,
                     }];
                 }
 

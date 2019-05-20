@@ -1,6 +1,5 @@
 import { IFlow } from '../../interfaces/IModels';
 import { cacheObjectData } from '../../models/Flow';
-import { clone } from '../Utils';
 import store from '../../stores/store';
 import { cachingProgress } from '../../actions';
 import OnCached from './OnCached';
@@ -10,38 +9,28 @@ declare const metaData: any;
 
 let objectDataCachingTimer;
 
-export const onCached = (flow: IFlow) => {
-    const flowKey = manywho.utils.getFlowKey(
-        flow.tenantId,
-        flow.id.id,
-        flow.id.versionId,
-        flow.state.id,
-        'main',
-    );
-    const pollInterval = manywho.settings.global(
-        'offline.cache.objectDataCachingInterval',
-        flowKey,
-    );
-
-    objectDataCachingTimer = setTimeout(
-        () => { ObjectDataCaching(flow); }, pollInterval,
-    );
-};
-
 /**
- * @param flow
+ * @param flow flow information e.g. flow id, version id, tenant id
  * @description retrieve object data request responses from the engine
  * and set them in the flow model and insert them update indexdb
+ * @returns true/false whether any requests were executed
  */
 const ObjectDataCaching = (flow: IFlow) => {
 
     clearTimeout(objectDataCachingTimer);
+
+    // only poll api whilst online
+    if (store.getState().isOffline) {
+        return false;
+    }
 
     const initRequests = generateObjectData();
 
     if (!initRequests || initRequests.length === 0) {
         return false;
     }
+
+    store.dispatch<any>(cachingProgress({ progress: 1, flowKey: null }));
 
     const executeRequest = function (
         req: any,
@@ -50,6 +39,14 @@ const ObjectDataCaching = (flow: IFlow) => {
         currentTypeElementId: null) {
 
         let requests = req;
+
+        const flowKey = manywho.utils.getFlowKey(
+            flow.tenantId,
+            flow.id.id,
+            flow.id.versionId,
+            flow.state.id,
+            'main',
+        );
 
         if (reqIndex >= requests.length) {
             objectDataCachingTimer = OnCached(flow);
@@ -62,7 +59,12 @@ const ObjectDataCaching = (flow: IFlow) => {
         return manywho.ajax.dispatchObjectDataRequest(request, flow.tenantId, flow.state.id, flow.authenticationToken, request.listFilter.limit)
             .then((response) => {
                 if (response.objectData) {
-                    cacheObjectData(response.objectData, request.objectDataType.typeElementId);
+                    cacheObjectData(
+                        response.objectData.map((objectData) => {
+                            return { objectData, assocData: null };
+                        }),
+                        request.objectDataType.typeElementId,
+                    );
                 } else {
                     requests = requests.filter(item => !item.objectDataType.typeElementId === currentTypeElementId);
                 }
@@ -70,11 +72,11 @@ const ObjectDataCaching = (flow: IFlow) => {
             })
             .then(() => {
                 const newIndex = reqIndex + 1;
-                store.dispatch(cachingProgress(Math.round(Math.min((newIndex / initRequests.length) * 100, 100))));
+                store.dispatch<any>(cachingProgress({ flowKey, progress: Math.round(Math.min((newIndex / initRequests.length) * 100, 100)) }));
                 executeRequest(requests, newIndex, flow, currentTypeElementId);
             })
             .fail((xhr, status, error) => {
-                store.dispatch(cachingProgress(100));
+                store.dispatch<any>(cachingProgress({ flowKey, progress: 100 }));
                 alert('An error caching data has occured, your flow may not work as expected whilst offline');
             });
     };
@@ -85,6 +87,7 @@ const ObjectDataCaching = (flow: IFlow) => {
 /**
  * @description extracting page element object data requests and flow data actions
  * from the snapshot to determine what object data requests to make
+ * @returns array of all object data requests that the flow uses
  */
 export const generateObjectData = () => {
     const objectDataRequests = {};
@@ -115,9 +118,10 @@ export const generateObjectData = () => {
 };
 
 /**
- * @param request
- * @description Constructs an object data request object
+ * @param request generated metadata properties that define an object data request
+ * @description constructs an object data request object
  * based on the generated metadata properties
+ * @returns the constructed object data request object
  */
 export const getObjectDataRequest = (request: any) => {
 

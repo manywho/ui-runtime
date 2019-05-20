@@ -1,6 +1,6 @@
 {
     "name": "ui-offline",
-    "version": "0.0.1",
+    "version": "2.14.0",
     "description": "ManyWho offline services and components",
     "author": "ManyWho",
     "repository": {
@@ -44,6 +44,7 @@
         "react-addons-test-utils": "^15.6.2",
         "react-redux": "^5.0.7",
         "redux": "^4.0.0",
+        "redux-thunk": "^2.3.0",
         "request-promise": "^4.1.1",
         "run-sequence": "^1.2.1",
         "script-loader": "^0.7.0",
@@ -95,6 +96,7 @@
         "testResultsProcessor": "./node_modules/jest-junit-reporter"
     },
     "dependencies": {
+        "ramda": "^0.25.0",
         "react": "^16.3.1",
         "react-dom": "^16.3.1",
         "tslint-config-airbnb": "^5.8.0",

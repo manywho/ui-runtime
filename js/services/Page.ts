@@ -135,9 +135,17 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
         if (selectedValue) {
             if (!selectedValue.hasOwnProperty('contentValue') ||
             typeof (selectedValue.contentValue) === undefined || selectedValue.contentValue === null) {
+
+                // If there is no contentValue then use the default value
                 value.contentValue = selectedSnapshotValue.defaultContentValue === null ?
                 selectedSnapshotValue.defaultContentValue :
                 String(selectedSnapshotValue.defaultContentValue);
+
+                // If there is object data then assign it to the values object data key
+                if (selectedValue.objectData) {
+                    value.objectData = selectedValue.objectData;
+                }
+
             } else {
                 value.contentValue = selectedValue.contentValue === null ?
                 selectedValue.contentValue :

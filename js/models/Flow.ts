@@ -1,4 +1,5 @@
 import { StateInit } from './State';
+import { merge } from 'ramda';
 import { IFlow } from '../interfaces/IModels';
 
 declare var manywho: any;
@@ -62,7 +63,7 @@ export const addRequest = (request: any, snapshot: any) => {
     request.key = requests.length;
     request.currentMapElementDeveloperName = currentMapElementDeveloperName;
 
-    requests.push(request);
+    requests.push({ request, assocData: null });
 };
 
 /**
@@ -85,6 +86,18 @@ export const getRequests = () => {
 };
 
 /**
+ * @param offlineId a randomly generated GUID that links cached requests to cached objectdata
+ * @param valueId the id of a value that has objectdat bound to it
+ * @param typeElementId the type id associated to objectdata linked to a request
+ * @description update the assocData property of the last cached request
+ */
+export const setCurrentRequestOfflineId = (offlineId, valueId, typeElementId) => {
+    const currentRequest = requests[requests.length - 1];
+    currentRequest.assocData = { offlineId, valueId, typeElementId };
+    return requests;
+};
+
+/**
  * @param typeElementId
  */
 export const getObjectData = (typeElementId: string) => {
@@ -101,5 +114,21 @@ export const cacheObjectData = (data: any, typeElementId: string) => {
     } else {
         objectData[typeElementId] = data;
     }
+    return objectData;
+};
+
+/**
+ * @param data
+ * @param typeElementId
+ */
+export const patchObjectDataCache = (data: any, typeElementId: string) => {
+    objectData[typeElementId] = objectData[typeElementId].map((existingObj) => {
+        if (existingObj.objectData.internalId === data[0].objectData.internalId) {
+            return merge(existingObj, data[0]);
+        }
+
+        return existingObj;
+    });
+
     return objectData;
 };
