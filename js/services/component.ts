@@ -74,7 +74,7 @@ export const registerAlias = (alias: string, name: string) => {
     aliases[alias.toLowerCase()] = name;
 };
 
-/**y
+/**
  * Register a React component as a container, the name will be prepended with `mw-`
  * @param name
  * @param component
@@ -145,7 +145,7 @@ export const getOutcomes = (outcomes: any[], flowKey: string): any[] => {
  * @param component
  * @param model
  * @param flowKey
- * @param callback Callaback that is called after `Engine.sync` returns
+ * @param callback Callback that is called after `Engine.sync` returns
  */
 export const handleEvent = (component: React.Component | React.SFC, model: any, flowKey: any, callback: () => void) => {
     if (model.hasEvents) {
@@ -158,8 +158,10 @@ export const handleEvent = (component: React.Component | React.SFC, model: any, 
             .then(callback);
     }
 
-    if ((component as React.Component).forceUpdate) {
-        (component as React.Component).forceUpdate();
+    const reactComponent = component as React.Component;
+
+    if (reactComponent && reactComponent.forceUpdate) {
+        reactComponent.forceUpdate();
     }
 };
 
@@ -217,7 +219,7 @@ export const getDisplayColumns = (columns: any[]): any[] => {
 };
 
 /**
- * Add's a div element as the React target for the flow to the element targetted by the containerSelector setting
+ * Adds a div element as the React target for the flow to the element targetted by the containerSelector setting
  * @param flowKey
  */
 export const appendFlowContainer = (flowKey: string) => {
