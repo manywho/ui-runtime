@@ -4,6 +4,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 const Compression = require('compression-webpack-plugin');
+const package = require('./package.json');
 
 const pathsToClean = [
     'dist'
@@ -15,7 +16,7 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'js/ui-core-[chunkhash].js',
+        filename: `js/flow-core-${package.version}.js`,
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
