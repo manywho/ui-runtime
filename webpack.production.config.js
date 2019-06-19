@@ -3,6 +3,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 const Compression = require('compression-webpack-plugin');
+const package = require('./package.json');
 
 const pathsToClean = [
     'dist'
@@ -95,7 +96,7 @@ const config = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'js/ui-offline-[chunkhash].js',
+        filename: `js/flow-offline-${package.version}.js`,
     }
 };
 
