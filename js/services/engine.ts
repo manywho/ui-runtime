@@ -622,6 +622,11 @@ function joinWithAuthorization(callback, flowKey) {
 
 }
 
+const parseSyncResponse = (response, flowKey: string) => {
+    parseResponse(response, Model.parseEngineSyncResponse, 'sync', flowKey);
+    return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+};
+
 function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
     flowKey = callback.flowKey || flowKey;
@@ -652,6 +657,12 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
         })
         .then((response) => {
+
+            if (response.invokeType === 'SYNC') {
+                // It is possible for a forward request to be returned a sync response
+                parseSyncResponse(response, flowKey);
+                return response;
+            }
 
             moveResponse = response;
 
@@ -1016,8 +1027,7 @@ export const sync = (flowKey: string) => {
             }
             else {
 
-                parseResponse(response, Model.parseEngineSyncResponse, 'sync', flowKey);
-                return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
+                return parseSyncResponse(response, flowKey);
 
             }
 
@@ -1345,3 +1355,4 @@ export const render = (flowKey: string) => {
         ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
     }
 };
+
