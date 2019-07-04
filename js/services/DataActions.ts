@@ -25,7 +25,7 @@ const loadData = (action: any, objectData: any, snapshot: any) => {
  * @description simulate saving or updating of object data by mutating the
  * data cached in memory
  */
-const saveData = (action: any, objectData: any, snapshot: any, flow: IFlow) => {
+const saveData = (action: any, objectData: any, snapshot: any) => {
     const valueReferenceToSave = snapshot.getValue(action.valueElementToApplyId);
     const typeElementId = valueReferenceToSave.typeElementId;
     const type = typeElementId ? snapshot.metadata.typeElements.find(typeElement => typeElement.id === typeElementId) : null;
@@ -142,7 +142,7 @@ export default (action: any, flow: IFlow, snapshot: any) => {
         loadData(action, objectData, snapshot);
         break;
     case 'SAVE':
-        saveData(action, objectData, snapshot, flow);
+        saveData(action, objectData, snapshot);
         break;
     case 'DELETE':
         // No implementation for a delete as its potential very destructive

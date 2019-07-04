@@ -1,23 +1,33 @@
-import { FlowInit, cacheObjectData, patchObjectDataCache, setCurrentRequestOfflineId, getRequests } from '../../js/models/Flow';
-import { guid } from '../../test-utils';
+import { FlowInit, cacheObjectData, getObjectData, patchObjectDataCache, setCurrentRequestOfflineId, getRequests } from '../../js/models/Flow';
+import { guid, str } from '../../test-utils';
 
 describe('Flow model expected behaviour', () => {
-    test('Object data gets concatenated', () => {
-        const tenantId = 'test';
+    test('Object data gets replaced with new data for the correct typeElement key', () => {
+        const tenantId = str();
         const state = {};
         const objectData = {};
-        const flow = FlowInit({ tenantId, state, objectData });
+        FlowInit({ tenantId, state, objectData });
 
-        const data = [{}];
-        const typeElementId = '123';
-        let cache = null;
-        let n = 0;
+        const typeElementId1 = str();
+        const typeElementId2 = str();
 
-        while (n < 10) {
-            n += 1;
-            cache = cacheObjectData(data, typeElementId);
-        }
-        expect(cache[typeElementId].length).toEqual(10);
+        const dataSampleOne = [{test1: str()}];
+        const dataSampleTwo = [{test1: str()}, {test2: str()}];
+        cacheObjectData(dataSampleOne, typeElementId1);
+        cacheObjectData(dataSampleTwo, typeElementId2);
+
+        const cachedObjectDataForTypeElementId1 = getObjectData(typeElementId1);
+        const cachedObjectDataForTypeElementId2 = getObjectData(typeElementId2);
+        expect(cachedObjectDataForTypeElementId1).toEqual(dataSampleOne);
+        expect(cachedObjectDataForTypeElementId2).toEqual(dataSampleTwo);
+
+        const dataSampleThree = [{test1: str()}, {test2: str()}, {test3: str()}];
+        cacheObjectData(dataSampleThree, typeElementId1);
+
+        const updatedCachedObjectDataForTypeElementId1 = getObjectData(typeElementId1);
+        const updatedCachedObjectDataForTypeElementId2 = getObjectData(typeElementId2);
+        expect(updatedCachedObjectDataForTypeElementId1).toEqual(dataSampleThree);
+        expect(updatedCachedObjectDataForTypeElementId2).toEqual(dataSampleTwo);
     });
 
     test('Object data returned should get updated if object with matching internalId exists', () => {
