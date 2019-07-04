@@ -109,11 +109,7 @@ export const getObjectData = (typeElementId: string) => {
  * @param typeElementId
  */
 export const cacheObjectData = (data: any, typeElementId: string) => {
-    if (objectData[typeElementId]) {
-        objectData[typeElementId] = objectData[typeElementId].concat(data);
-    } else {
-        objectData[typeElementId] = data;
-    }
+    objectData[typeElementId] = data;
     return objectData;
 };
 

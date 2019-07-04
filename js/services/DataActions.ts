@@ -1,10 +1,9 @@
 import ObjectData from './ObjectData';
-import { getOfflineData, setOfflineData } from './Storage';
 import { cacheObjectData, setCurrentRequestOfflineId, getObjectData, patchObjectDataCache } from '../models/Flow';
 import { getStateValue, setStateValue } from '../models/State';
 import { IFlow } from '../interfaces/IModels';
 import { guid } from './Utils';
-import { clone } from 'ramda';
+import { append, clone } from 'ramda';
 
 /**
  * @param action object extracted from the request that describes the data action
@@ -116,7 +115,10 @@ const saveData = (action: any, objectData: any, snapshot: any, flow: IFlow) => {
         } else {
 
             // Adding a new object to the cache
-            cacheObjectData(newObject, typeElementId);
+            cacheObjectData(
+                append(newObject, objectData),
+                typeElementId,
+            );
         }
     });
 };
