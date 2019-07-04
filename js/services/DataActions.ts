@@ -1,10 +1,9 @@
 import ObjectData from './ObjectData';
-import { getOfflineData, setOfflineData } from './Storage';
 import { cacheObjectData, setCurrentRequestOfflineId, getObjectData, patchObjectDataCache } from '../models/Flow';
 import { getStateValue, setStateValue } from '../models/State';
 import { IFlow } from '../interfaces/IModels';
 import { guid } from './Utils';
-import { clone } from 'ramda';
+import { append, clone } from 'ramda';
 
 /**
  * @param action object extracted from the request that describes the data action
@@ -26,7 +25,7 @@ const loadData = (action: any, objectData: any, snapshot: any) => {
  * @description simulate saving or updating of object data by mutating the
  * data cached in memory
  */
-const saveData = (action: any, objectData: any, snapshot: any, flow: IFlow) => {
+const saveData = (action: any, objectData: any, snapshot: any) => {
     const valueReferenceToSave = snapshot.getValue(action.valueElementToApplyId);
     const typeElementId = valueReferenceToSave.typeElementId;
     const type = typeElementId ? snapshot.metadata.typeElements.find(typeElement => typeElement.id === typeElementId) : null;
@@ -84,30 +83,28 @@ const saveData = (action: any, objectData: any, snapshot: any, flow: IFlow) => {
             setCurrentRequestOfflineId(offlineId, valueElementToApplyId.id, typeElementId);
         }
 
-        const newObject = [
-            {
-                assocData: { offlineId, typeElementId, valueId: valueElementToApplyId.id },
-                objectData: {
-                    typeElementId,
-                    externalId: existingObject ? existingObject.objectData.externalId : null,
-                    internalId: existingObject ? existingObject.objectData.internalId : guid(),
-                    developerName: obj.developerName,
-                    order: 0,
-                    isSelected: false,
-                    properties: clone(type.properties).map((property) => {
-                        const newProp = obj.properties.filter(
-                            prop => prop.typeElementPropertyId === property.id,
-                        );
-                        if (newProp.length > 0) {
-                            property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
-                            property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
-                            property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
-                        }
-                        return property;
-                    }),
-                },
+        const newObject = {
+            assocData: { offlineId, typeElementId, valueId: valueElementToApplyId.id },
+            objectData: {
+                typeElementId,
+                externalId: existingObject ? existingObject.objectData.externalId : null,
+                internalId: existingObject ? existingObject.objectData.internalId : guid(),
+                developerName: obj.developerName,
+                order: 0,
+                isSelected: false,
+                properties: clone(type.properties).map((property) => {
+                    const newProp = obj.properties.filter(
+                        prop => prop.typeElementPropertyId === property.id,
+                    );
+                    if (newProp.length > 0) {
+                        property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
+                        property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
+                        property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
+                    }
+                    return property;
+                }),
             },
-        ];
+        };
 
         if (existingObject) {
 
@@ -116,7 +113,10 @@ const saveData = (action: any, objectData: any, snapshot: any, flow: IFlow) => {
         } else {
 
             // Adding a new object to the cache
-            cacheObjectData(newObject, typeElementId);
+            cacheObjectData(
+                append(newObject, objectData),
+                typeElementId,
+            );
         }
     });
 };
@@ -140,7 +140,7 @@ export default (action: any, flow: IFlow, snapshot: any) => {
         loadData(action, objectData, snapshot);
         break;
     case 'SAVE':
-        saveData(action, objectData, snapshot, flow);
+        saveData(action, objectData, snapshot);
         break;
     case 'DELETE':
         // No implementation for a delete as its potential very destructive
