@@ -11,8 +11,8 @@ describe('Flow model expected behaviour', () => {
         const typeElementId1 = str();
         const typeElementId2 = str();
 
-        const dataSampleOne = [{test1: str()}];
-        const dataSampleTwo = [{test1: str()}, {test2: str()}];
+        const dataSampleOne = [{ test1: str() }];
+        const dataSampleTwo = [{ test1: str() }, { test2: str() }];
         cacheObjectData(dataSampleOne, typeElementId1);
         cacheObjectData(dataSampleTwo, typeElementId2);
 
@@ -21,7 +21,7 @@ describe('Flow model expected behaviour', () => {
         expect(cachedObjectDataForTypeElementId1).toEqual(dataSampleOne);
         expect(cachedObjectDataForTypeElementId2).toEqual(dataSampleTwo);
 
-        const dataSampleThree = [{test1: str()}, {test2: str()}, {test3: str()}];
+        const dataSampleThree = [{ test1: str() }, { test2: str() }, { test3: str() }];
         cacheObjectData(dataSampleThree, typeElementId1);
 
         const updatedCachedObjectDataForTypeElementId1 = getObjectData(typeElementId1);
@@ -64,7 +64,7 @@ describe('Flow model expected behaviour', () => {
 
         FlowInit({ tenantId, state, objectData });
 
-        const updatedObject =  [{
+        const updatedObject = {
             objectData: {
                 externalId: 'externalId1',
                 internalId: 'internalId1',
@@ -75,7 +75,7 @@ describe('Flow model expected behaviour', () => {
                     },
                 ],
             },
-        }];
+        };
 
         const update = patchObjectDataCache(updatedObject, typeElementId);
         expect(update[typeElementId][0].objectData.properties[0].contentValue).toEqual('testUpdated');
@@ -115,7 +115,7 @@ describe('Flow model expected behaviour', () => {
 
         FlowInit({ tenantId, state, objectData });
 
-        const updatedObject =  [{
+        const updatedObject =  {
             objectData: {
                 externalId: 'externalId3',
                 internalId: 'internalId3',
@@ -126,7 +126,7 @@ describe('Flow model expected behaviour', () => {
                     },
                 ],
             },
-        }];
+        };
 
         const update = patchObjectDataCache(updatedObject, typeElementId);
         expect(update).toEqual(objectData);

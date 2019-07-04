@@ -83,30 +83,28 @@ const saveData = (action: any, objectData: any, snapshot: any) => {
             setCurrentRequestOfflineId(offlineId, valueElementToApplyId.id, typeElementId);
         }
 
-        const newObject = [
-            {
-                assocData: { offlineId, typeElementId, valueId: valueElementToApplyId.id },
-                objectData: {
-                    typeElementId,
-                    externalId: existingObject ? existingObject.objectData.externalId : null,
-                    internalId: existingObject ? existingObject.objectData.internalId : guid(),
-                    developerName: obj.developerName,
-                    order: 0,
-                    isSelected: false,
-                    properties: clone(type.properties).map((property) => {
-                        const newProp = obj.properties.filter(
-                            prop => prop.typeElementPropertyId === property.id,
-                        );
-                        if (newProp.length > 0) {
-                            property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
-                            property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
-                            property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
-                        }
-                        return property;
-                    }),
-                },
+        const newObject = {
+            assocData: { offlineId, typeElementId, valueId: valueElementToApplyId.id },
+            objectData: {
+                typeElementId,
+                externalId: existingObject ? existingObject.objectData.externalId : null,
+                internalId: existingObject ? existingObject.objectData.internalId : guid(),
+                developerName: obj.developerName,
+                order: 0,
+                isSelected: false,
+                properties: clone(type.properties).map((property) => {
+                    const newProp = obj.properties.filter(
+                        prop => prop.typeElementPropertyId === property.id,
+                    );
+                    if (newProp.length > 0) {
+                        property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
+                        property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
+                        property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
+                    }
+                    return property;
+                }),
             },
-        ];
+        };
 
         if (existingObject) {
 
