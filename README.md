@@ -22,6 +22,12 @@ or
 npm run dev -- --env.build="custom-folder"
 ```
 
+Or dist build:
+
+```
+PACKAGE_VERSION=<version_number> npm run dist
+```
+
 ## Contributing
 
 Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to 
