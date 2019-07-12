@@ -4,6 +4,12 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 const Compression = require('compression-webpack-plugin');
 
+const { PACKAGE_VERSION } = process.env;
+
+if (!PACKAGE_VERSION) {
+    throw new Error('A version number must be supplied for a production build. eg. 1.0.0');
+}
+
 const pathsToClean = [
     'dist'
 ];
@@ -95,7 +101,7 @@ const config = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'js/ui-offline-[chunkhash].js',
+        filename: `js/flow-offline-${PACKAGE_VERSION}.js`,
     }
 };
 
