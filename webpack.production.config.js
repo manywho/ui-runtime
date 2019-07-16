@@ -5,6 +5,12 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 const Compression = require('compression-webpack-plugin');
 
+const { PACKAGE_VERSION } = process.env;
+
+if (!PACKAGE_VERSION) {
+    throw new Error('A version number must be supplied for a production build. eg. 1.0.0');
+}
+
 const pathsToClean = [
     'dist'
 ];
@@ -15,7 +21,7 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'js/ui-core-[chunkhash].js',
+        filename: `js/flow-core-${PACKAGE_VERSION}.js`,
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
