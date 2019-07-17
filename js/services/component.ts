@@ -306,6 +306,19 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
                 return Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true);
             });
 
+            // If a runtime uri has been specified, then change the Flow tiles Run link to use it
+            // Otherwise the run uri is generated from the Draw2 Service as https://development.manywho.net or https://flow.manywho.com
+            if (
+                property &&
+                outcome.attributes.uriTypeElementPropertyId === '03db5fd4-e9c0-4f2c-af2f-bc86304969a5' &&
+                !Utils.isNullOrWhitespace(Settings.global('runtimeUri'))
+            ) {
+                // Replace engine Draw2 Service base uri with runtime uri
+                property.contentValue = property.contentValue.replace(
+                    /(https:\/\/development\.manywho\.net|https:\/\/flow\.manywho\.com)/,
+                    Settings.global('runtimeUri'),
+                );
+            }
             if (property) {
                 window.open(property.contentValue, '_blank');
                 return;
