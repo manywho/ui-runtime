@@ -58,7 +58,7 @@ var config = {
 }
 
 module.exports = function(env) {
-    var dir = 'build';
+    var dir =  '../ui-html5/build';
 
     if (env && env.build)
         dir = env.build;
