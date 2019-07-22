@@ -306,6 +306,7 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
                 return Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true);
             });
 
+            // The following contentValue change is only necessary because of the Flows (Flow Tiles) System Flow
             // If a runtime uri has been specified, then change the Flow tiles Run link to use it
             // Otherwise the run uri is generated from the Draw2 Service as https://development.manywho.net or https://flow.manywho.com
             if (
