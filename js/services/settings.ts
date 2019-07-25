@@ -46,6 +46,7 @@ let globals = {
     platform: {
         uri: '',
     },
+    runtimeUri: '',
     navigation: {
         isFixed: true,
         isWizard: false,
