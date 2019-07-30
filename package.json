@@ -45,7 +45,7 @@
     "form-data": "2.2.0",
     "husky": "0.14.3",
     "lint-staged": "4.0.1",
-    "mock-socket": "7.0.0",
+    "mock-socket": "9.0.0",
     "mockery": "2.1.0",
     "nyc": "14.1.0",
     "script-loader": "0.7.0",
