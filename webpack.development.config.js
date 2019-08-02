@@ -8,7 +8,7 @@ var config = {
         'ui-core': './js/index.ts'
     },
     output: {
-        filename: 'ui-core.js',
+        filename: 'flow-core.js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
