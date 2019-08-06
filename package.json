@@ -24,7 +24,6 @@
     "*.ts": "lint",
     "js/services/*.ts": "lint:docs"
   },
-  "main": "publish/js/ui-core.js",
   "files": [
     "publish/"
   ],
