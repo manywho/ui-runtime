@@ -35,7 +35,7 @@ const config = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'ui-offline.js',
+        filename: 'flow-offline.js',
     },
     plugins: [
         new BundleAnalyzerPlugin()
