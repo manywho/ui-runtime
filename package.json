@@ -31,7 +31,7 @@
     "@types/jquery": "3.2.11",
     "@types/lodash": "4.14.101",
     "@types/mockery": "1.4.29",
-    "@types/node": "8.0.30",
+    "@types/node": "12.7.2",
     "@types/react": "16.0.2",
     "@types/sinon": "2.3.3",
     "@types/socket.io-client": "1.4.30",
