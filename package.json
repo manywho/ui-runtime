@@ -59,7 +59,7 @@
     "uglifyjs-webpack-plugin": "0.4.6",
     "webpack": "4.26.1",
     "webpack-bundle-analyzer": "3.3.2",
-    "webpack-cli": "3.1.2",
+    "webpack-cli": "3.3.7",
     "xhr-mock": "1.9.0"
   },
   "dependencies": {
