@@ -63,7 +63,6 @@
     "xhr-mock": "1.9.0"
   },
   "dependencies": {
-    "compression-webpack-plugin": "2.0.0",
     "jquery": "3.4.1",
     "license-webpack-plugin": "1.1.1",
     "loglevel": "1.4.1",

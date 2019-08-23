@@ -1355,4 +1355,3 @@ export const render = (flowKey: string) => {
         ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
     }
 };
-
