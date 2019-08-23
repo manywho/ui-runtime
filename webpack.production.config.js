@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
-const Compression = require('compression-webpack-plugin');
 
 const { PACKAGE_VERSION } = process.env;
 
@@ -37,12 +36,6 @@ const config = {
             minimize: true,
             sourceMap: true,
             include: /\.min\.js$/,
-        }),
-        new Compression({
-            filename: '[file]',
-            exclude: /bundle\.json/,
-            algorithm: 'gzip',
-            minRatio: 0.8,
         }),
         new WriteBundleFilePlugin({
             filename: 'core-bundle.json',
