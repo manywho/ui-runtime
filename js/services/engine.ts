@@ -663,7 +663,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
             // to assign the response to another variable as it does not seem to
             // get mutated elsewhere. However, moveResponse is referenced further
             // down the promise chain, and so this would be the fix with the least
-            // amount of risk considering we do not  have visibility of potential
+            // amount of risk considering we do not have visibility of potential
             // breakages in certain edge cases.
 
             // This all relates to the workaround put in place for FUI-309
