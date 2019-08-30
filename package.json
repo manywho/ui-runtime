@@ -42,7 +42,7 @@
     "clean-webpack-plugin": "0.1.19",
     "del": "4.1.1",
     "form-data": "2.2.0",
-    "husky": "0.14.3",
+    "husky": "3.0.4",
     "lint-staged": "4.0.1",
     "mock-socket": "9.0.0",
     "mockery": "2.1.0",
