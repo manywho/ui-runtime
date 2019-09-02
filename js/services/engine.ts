@@ -658,13 +658,22 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
         })
         .then((response) => {
 
+            // moveResponse is expected to be assigned the engine response
+            // in the subsequent then block. Really, it should not be necessary
+            // to assign the response to another variable as it does not seem to
+            // get mutated elsewhere. However, moveResponse is referenced further
+            // down the promise chain, and so this would be the fix with the least
+            // amount of risk considering we do not have visibility of potential
+            // breakages in certain edge cases.
+
+            // This all relates to the workaround put in place for FUI-309
+            moveResponse = response;
+
             if (response.invokeType === 'SYNC') {
                 // It is possible for a forward request to be returned a sync response
                 parseSyncResponse(response, flowKey);
                 return response;
             }
-
-            moveResponse = response;
 
             parseResponse(response, Model.parseEngineResponse, 'move', flowKey);
 
@@ -1355,4 +1364,3 @@ export const render = (flowKey: string) => {
         ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
     }
 };
-
