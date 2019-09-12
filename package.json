@@ -61,8 +61,7 @@
         "webpack-bundle-analyzer": "^2.11.1",
         "webpack-cli": "^3.3.7",
         "worker-loader": "^2.0.0",
-        "yargs": "^2.3.0",
-        "compression-webpack-plugin": "2.0.0"
+        "yargs": "^2.3.0"
     },
     "jest": {
         "collectCoverage": true,
