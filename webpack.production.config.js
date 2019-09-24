@@ -3,7 +3,12 @@ const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
-const Compression = require('compression-webpack-plugin');
+
+const { PACKAGE_VERSION } = process.env;
+
+if (!PACKAGE_VERSION) {
+    throw new Error('A version number must be supplied for a production build. eg. 1.0.0');
+}
 
 const pathsToClean = [
     'dist'
@@ -15,7 +20,7 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'js/ui-core-[chunkhash].js',
+        filename: `js/flow-core-${PACKAGE_VERSION}.js`,
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
@@ -31,12 +36,6 @@ const config = {
             minimize: true,
             sourceMap: true,
             include: /\.min\.js$/,
-        }),
-        new Compression({
-            filename: '[file]',
-            exclude: /bundle\.json/,
-            algorithm: 'gzip',
-            minRatio: 0.8,
         }),
         new WriteBundleFilePlugin({
             filename: 'core-bundle.json',

@@ -14,13 +14,21 @@ npm run start
 
 Which will start the webpack dev server and re-compile the typescript on changes.
 
-By default the compiled assets will be output to the `build` folder, you can override this using the `--env.build` arg:
+By default the compiled assets will be output to the `build` folder of an adjacent ui-html5 folder (../ui-html5/build), you can override this using the `--env.build` arg:
 
 ```
 npm start -- --env.build="custom-folder"
 or
 npm run dev -- --env.build="custom-folder"
 ```
+
+Or dist build:
+
+```
+PACKAGE_VERSION=<version_number> npm run dist
+```
+
+The compiled assets will be output to the `dist` folder
 
 ## Contributing
 

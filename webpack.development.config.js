@@ -8,7 +8,7 @@ var config = {
         'ui-core': './js/index.ts'
     },
     output: {
-        filename: 'ui-core.js',
+        filename: 'flow-core.js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true
@@ -58,7 +58,7 @@ var config = {
 }
 
 module.exports = function(env) {
-    var dir = 'build';
+    var dir =  '../ui-html5/build';
 
     if (env && env.build)
         dir = env.build;
