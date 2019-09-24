@@ -1,6 +1,6 @@
 {
   "name": "@manywho/ui-core",
-  "version": "3.8.0",
+  "version": "3.10.0",
   "description": "Core JavaScript services used by the Boomi Flow UI framework to do the heavy lifting.",
   "author": "ManyWho",
   "repository": {
