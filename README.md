@@ -116,7 +116,7 @@ npm start
 Or dist build:
 
 ```
-npm run dist
+PACKAGE_VERSION=<version_number> npm run dist
 ```
 
 ### Running locally

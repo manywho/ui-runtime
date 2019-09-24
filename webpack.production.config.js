@@ -2,7 +2,12 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
-const Compression = require('compression-webpack-plugin');
+
+const { PACKAGE_VERSION } = process.env;
+
+if (!PACKAGE_VERSION) {
+    throw new Error('A version number must be supplied for a production build. eg. 1.0.0');
+}
 
 const pathsToClean = [
     'dist'
@@ -65,7 +70,7 @@ const config = {
             {
                 test: /\.less$/,
                 use: [
-                    {loader: 'style-loader'}, 
+                    {loader: 'style-loader'},
                     {loader: 'css-loader'},
                     {loader: 'less-loader'}
                 ]
@@ -76,12 +81,6 @@ const config = {
         new CleanWebpackPlugin(pathsToClean),
         new UglifyJsPlugin({
             sourceMap: true
-        }),
-        new Compression({
-            filename: '[file]',
-            exclude: /bundle\.json/,
-            algorithm: 'gzip',
-            minRatio: 0.8,
         }),
         new WriteBundleFilePlugin({
             filename: 'offline-bundle.json',
@@ -95,7 +94,7 @@ const config = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'js/ui-offline-[chunkhash].js',
+        filename: `js/flow-offline-${PACKAGE_VERSION}.js`,
     }
 };
 

@@ -1,6 +1,7 @@
 import DataActions from '../../js/services/DataActions';
 import { setStateValue } from '../../js/models/State';
 import { cacheObjectData, patchObjectDataCache } from '../../js/models/Flow';
+import { str } from '../../test-utils';
 
 const mockCacheObjectData: any = cacheObjectData;
 
@@ -138,14 +139,22 @@ describe('Data action behaviour', () => {
         const mockObjectData = {
             objectData: [
                 {
-                    externalId: 'externalId3',
-                    internalId: 'internalId3',
+                    externalId: str(),
+                    internalId: str(),
                 },
             ],
         };
 
+        const mockArgs = mockCacheObjectData.mock.calls;
+
         setStateValue(mockValueElementToApplyId, mockTypeElementId, mockSnapshot, mockObjectData);
+
+        expect(mockArgs.length).toEqual(0);
         DataActions(mockAction, mockFlow, mockSnapshot);
+
+        // Assert that the number of objects being cached
+        // is as expected
+        expect(mockArgs[0][0].length).toEqual(3);
 
         // Calling this function indicates that a new object is being cached
         expect(mockCacheObjectData).toHaveBeenCalledTimes(1);

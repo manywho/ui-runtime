@@ -109,11 +109,7 @@ export const getObjectData = (typeElementId: string) => {
  * @param typeElementId
  */
 export const cacheObjectData = (data: any, typeElementId: string) => {
-    if (objectData[typeElementId]) {
-        objectData[typeElementId] = objectData[typeElementId].concat(data);
-    } else {
-        objectData[typeElementId] = data;
-    }
+    objectData[typeElementId] = data;
     return objectData;
 };
 
@@ -123,8 +119,8 @@ export const cacheObjectData = (data: any, typeElementId: string) => {
  */
 export const patchObjectDataCache = (data: any, typeElementId: string) => {
     objectData[typeElementId] = objectData[typeElementId].map((existingObj) => {
-        if (existingObj.objectData.internalId === data[0].objectData.internalId) {
-            return merge(existingObj, data[0]);
+        if (existingObj.objectData.internalId === data.objectData.internalId) {
+            return merge(existingObj, data);
         }
 
         return existingObj;
