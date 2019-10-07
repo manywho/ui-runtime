@@ -18,62 +18,10 @@ import * as State from './state';
 import * as Tours from './tours';
 import * as Utils from './utils';
 import * as Validation from './validation';
+import { ohCanada } from './localisation';
 
 declare var manywho: any;
 declare var window: any;
-
-const ohCanada = {
-    languageTag: 'en-CA',
-    languageName: 'English (Canadian)',
-    delimiters: {
-        thousands: ' ',
-        decimal: ',',
-    },
-    abbreviations: {
-        thousand: 'k',
-        million: 'm',
-        billion: 'b',
-        trillion: 't',
-    },
-    ordinal: (number) => {
-        const b = number % 10;
-        return (~~(number % 100 / 10) === 1) ? 'th' : (b === 1) ? 'st' : (b === 2) ? 'nd' : (b === 3) ? 'rd' : 'th';
-    },
-    currency: {
-        symbol: '$',
-        position: 'postfix',
-        code: 'CAD',
-    },
-    currencyFormat: {
-        thousandSeparated: true,
-        totalLength: 4,
-        spaceSeparated: true,
-        average: true,
-    },
-    formats: {
-        fourDigits: {
-            totalLength: 4,
-            spaceSeparated: true,
-            average: true,
-        },
-        fullWithTwoDecimals: {
-            output: 'currency',
-            mantissa: 2,
-            spaceSeparated: true,
-            thousandSeparated: true,
-        },
-        fullWithTwoDecimalsNoCurrency: {
-            mantissa: 2,
-            thousandSeparated: true,
-        },
-        fullWithNoDecimals: {
-            output: 'currency',
-            spaceSeparated: true,
-            thousandSeparated: true,
-            mantissa: 0,
-        },
-    },
-};
 
 function processObjectDataRequests(components, flowKey) {
 
@@ -829,6 +777,22 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
         .then(() => flowKey);
 
 }
+
+function checklocale() {
+    if (window.navigator.language) {
+        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
+            window.numbro.culture(ohCanada.languageTag, ohCanada);
+        }
+        else {
+            const language = window.navigator.language.split('-');
+            if (language.length === 2) {
+                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
+                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
+            }
+        }
+    }
+}
+
 /**
  * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not
  * authenticated and the flow requires authentication a login dialog will be displayed or the user will be redirected to an OAUTH2 or SAML url.
@@ -869,18 +833,7 @@ export const initialize = (
 
     }
 
-    if (window.navigator.language) {
-        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
-            window.numbro.culture(ohCanada.languageTag, ohCanada);
-        }
-        else {
-            const language = window.navigator.language.split('-');
-            if (language.length === 2) {
-                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-            }
-        }
-    }
+    checklocale();
 
     if (stateId && !isInitializing) {
 
@@ -939,18 +892,7 @@ export const initializeSimple = (
         manywho.theming.apply(options.theme);
     }
 
-    if (window.navigator.language) {
-        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
-            window.numbro.culture(ohCanada.languageTag, ohCanada);
-        }
-        else {
-            const language = window.navigator.language.split('-');
-            if (language.length === 2) {
-                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-            }
-        }
-    }
+    checklocale();
 
     return initializeSimpleWithAuthorization(
         tenantId,
