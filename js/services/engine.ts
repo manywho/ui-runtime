@@ -57,7 +57,9 @@ function processObjectDataRequests(components, flowKey) {
 
                 if (component.fileDataRequest) {
 
-                    return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
+                    if (component.componentType !== 'file-upload') {
+                        return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
+                    }
 
                 }
                 else {
