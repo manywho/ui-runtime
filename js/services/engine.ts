@@ -55,19 +55,12 @@ function processObjectDataRequests(components, flowKey) {
                     limit = paginationSize;
                 }
 
-                if (component.fileDataRequest) {
-
-                    if (component.componentType !== 'file-upload') {
-                        return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
-                    }
-
-                }
-                else {
-
+                // Only components that specify the objectDataRequest key (e.g. tables)
+                // and never components that specify the fileDataRequest key (e.g. file-upload)
+                // should ever need to make object data requests.
+                if (component.objectDataRequest && !component.fileDataRequest) {
                     return objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
-
                 }
-
             }
 
         }));
