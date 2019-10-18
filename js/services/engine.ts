@@ -56,17 +56,11 @@ function processObjectDataRequests(components, flowKey) {
                     limit = paginationSize;
                 }
 
-                if (component.fileDataRequest) {
-
-                    return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
-
-                }
-                else {
-
+                // Only components that specify the objectDataRequest key (e.g. tables)
+                // should ever need to make object data requests.
+                if (component.objectDataRequest) {
                     return objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
-
                 }
-
             }
 
         }));
