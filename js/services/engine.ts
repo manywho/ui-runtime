@@ -56,9 +56,8 @@ function processObjectDataRequests(components, flowKey) {
                 }
 
                 // Only components that specify the objectDataRequest key (e.g. tables)
-                // and never components that specify the fileDataRequest key (e.g. file-upload)
                 // should ever need to make object data requests.
-                if (component.objectDataRequest && !component.fileDataRequest) {
+                if (component.objectDataRequest) {
                     return objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
                 }
             }
