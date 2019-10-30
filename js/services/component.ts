@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { pathOr } from 'ramda';
 import * as Log from 'loglevel';
 
 import * as Collaboration from './collaboration';
@@ -8,6 +9,8 @@ import * as Utils from './utils';
 
 const components = {};
 const aliases = {};
+
+const DEFAULT_PAGE_LIMIT = 10;
 
 function getComponentType(item) {
     if ('containerType' in item) {
@@ -333,4 +336,28 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
                 Engine.flowOut(outcome, flowKey);
             }
         });
+};
+
+export const getPageSize = (model, flowKey) => {
+
+    const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
+
+    const usePaginationAttribute = Utils.isEqual(model.attributes.pagination, 'true', true)
+        && !Number.isNaN(pageLimitFromAttributes);
+
+    const pageLimitSettingForComponentType = Settings.flow(
+        `paging.${model.componentType.toLowerCase()}`, flowKey,
+    );
+
+    const pageLimitSettingFromListFilter = pathOr(null, ['objectDataRequest', 'listFilter', 'limit'], model);
+
+    const limit = usePaginationAttribute
+        ? pageLimitFromAttributes // 1st priority
+        : (
+            pageLimitSettingForComponentType // 2nd priority
+            || pageLimitSettingFromListFilter // 3rd priority
+            || DEFAULT_PAGE_LIMIT // final default
+        );
+
+    return parseInt(limit, 10);
 };
