@@ -354,8 +354,8 @@ export const getPageSize = (model, flowKey) => {
     const limit = usePaginationAttribute
         ? pageLimitFromAttributes // 1st priority
         : (
-            pageLimitSettingForComponentType // 2nd priority
-            || pageLimitSettingFromListFilter // 3rd priority
+            pageLimitSettingFromListFilter // 2rd priority
+            || pageLimitSettingForComponentType // 3nd priority
             || DEFAULT_PAGE_LIMIT // final default
         );
 
