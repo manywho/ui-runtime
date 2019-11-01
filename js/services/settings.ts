@@ -35,6 +35,7 @@ let globals = {
         culture: null,
     },
     paging: {
+        table: 10,
         files: 10,
         select: 250,
         tiles: 20,
