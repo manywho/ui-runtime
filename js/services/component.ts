@@ -346,9 +346,9 @@ export const getPageSize = (model, flowKey) => {
     const usePaginationAttribute =
         pageLimitFromAttributesIsValid &&
         (
-            // Data is comming from a service, we can ignore "pagination" boolean attribute
+            // Data is coming from a service, we can ignore "pagination" boolean attribute
             !Utils.isNullOrUndefined(model.objectDataRequest)
-            // Data is comming from a list value, we need to check that the "pagination" attribute is also set to true
+            // Data is coming from a list value, we need to check that the "pagination" attribute is also set to true
             || Utils.isEqual(model.attributes.pagination, 'true', true)
         );
 
