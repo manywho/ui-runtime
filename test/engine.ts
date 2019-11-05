@@ -210,9 +210,9 @@ test.serial('Initialize', (t) => {
             t.true(model.initializeModel.calledWith(flowKey));
             /*t.true(state.setState.calledWith(
                 flowKey,
-                initializeResponse.stateId, 
-                initializeResponse.stateToken, 
-                initializeResponse.currentMapElementId, 
+                initializeResponse.stateId,
+                initializeResponse.stateToken,
+                initializeResponse.currentMapElementId,
             ));*/
             t.true(state.setAuthenticationToken.calledWith('authenticationToken', flowKey));
             t.true(model.setSelectedNavigation.calledTwice);
@@ -314,9 +314,9 @@ test.serial('Move', (t) => {
             t.not(flowKey, null);
             /*t.true(state.setState.firstCall.calledWith(
                 flowKey,
-                invokeResponse.stateId, 
-                invokeResponse.stateToken, 
-                invokeResponse.currentMapElementId, 
+                invokeResponse.stateId,
+                invokeResponse.stateToken,
+                invokeResponse.currentMapElementId,
             ));*/
             t.true(state.setComponentLoading.calledTwice);
             t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
@@ -591,7 +591,6 @@ test.serial('Sync', (t) => {
     ]);
 
     const objectDataRequest = sinon.stub(Engine, 'objectDataRequest').resolves(null);
-    const fileDataRequest = sinon.stub(Engine, 'fileDataRequest').resolves(null);
 
     return Engine.sync(flowKey)
         .always(() => {
@@ -600,10 +599,8 @@ test.serial('Sync', (t) => {
             t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
             t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
             t.true(objectDataRequest.calledOnce);
-            t.true(fileDataRequest.calledOnce);
 
             objectDataRequest.restore();
-            fileDataRequest.restore();
         });
 });
 

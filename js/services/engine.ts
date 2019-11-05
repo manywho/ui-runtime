@@ -18,6 +18,7 @@ import * as State from './state';
 import * as Tours from './tours';
 import * as Utils from './utils';
 import * as Validation from './validation';
+import { ohCanada } from './localisation';
 
 declare var manywho: any;
 declare var window: any;
@@ -55,17 +56,11 @@ function processObjectDataRequests(components, flowKey) {
                     limit = paginationSize;
                 }
 
-                if (component.fileDataRequest) {
-
-                    return fileDataRequest(component.id, component.fileDataRequest, flowKey, limit);
-
-                }
-                else {
-
+                // Only components that specify the objectDataRequest key (e.g. tables)
+                // should ever need to make object data requests.
+                if (component.objectDataRequest) {
                     return objectDataRequest(component.id, component.objectDataRequest, flowKey, limit);
-
                 }
-
             }
 
         }));
@@ -776,6 +771,22 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
         .then(() => flowKey);
 
 }
+
+function checklocale() {
+    if (window.navigator.language) {
+        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
+            window.numbro.culture(ohCanada.languageTag, ohCanada);
+        }
+        else {
+            const language = window.navigator.language.split('-');
+            if (language.length === 2) {
+                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
+                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
+            }
+        }
+    }
+}
+
 /**
  * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not
  * authenticated and the flow requires authentication a login dialog will be displayed or the user will be redirected to an OAUTH2 or SAML url.
@@ -816,13 +827,7 @@ export const initialize = (
 
     }
 
-    if (window.navigator.language) {
-        const language = window.navigator.language.split('-');
-        if (language.length === 2) {
-            // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-            window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-        }
-    }
+    checklocale();
 
     if (stateId && !isInitializing) {
 
@@ -881,13 +886,7 @@ export const initializeSimple = (
         manywho.theming.apply(options.theme);
     }
 
-    if (window.navigator.language) {
-        const language = window.navigator.language.split('-');
-        if (language.length === 2) {
-            // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-            window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-        }
-    }
+    checklocale();
 
     return initializeSimpleWithAuthorization(
         tenantId,
