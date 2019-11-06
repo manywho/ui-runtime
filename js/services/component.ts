@@ -33,6 +33,7 @@ export const contentTypes = {
     number: 'CONTENTNUMBER',
     boolean: 'CONTENTBOOLEAN',
     password: 'CONTENTPASSWORD',
+    encrypted: 'CONTENTENCRYPTED',
     datetime: 'CONTENTDATETIME',
     content: 'CONTENTCONTENT',
     object: 'CONTENTOBJECT',
