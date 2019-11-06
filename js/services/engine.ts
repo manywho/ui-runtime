@@ -49,12 +49,7 @@ function processObjectDataRequests(components, flowKey) {
 
             if (component.isVisible) {
 
-                let limit = Settings.global('paging.' + component.componentType);
-                const paginationSize = parseInt(component.attributes.paginationSize, 10);
-
-                if (!isNaN(paginationSize)) {
-                    limit = paginationSize;
-                }
+                const limit = Component.getPageSize(component, flowKey);
 
                 // Only components that specify the objectDataRequest key (e.g. tables)
                 // should ever need to make object data requests.
