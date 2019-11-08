@@ -339,10 +339,16 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
         });
 };
 
+/**
+ * Using data from the model and settings to calculate the page size.
+ * @param model
+ * @param flowKey
+ * @returns Page limit size
+ */
 export const getPageSize = (model, flowKey) => {
 
     const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
-    const pageLimitFromAttributesIsValid = !Number.isNaN(pageLimitFromAttributes);
+    const pageLimitFromAttributesIsValid = Number.isInteger(pageLimitFromAttributes);
 
     const usePaginationAttribute =
         pageLimitFromAttributesIsValid &&
