@@ -410,3 +410,101 @@ test('On Outcome 3', async (t) => {
 
     spy.restore();
 });
+
+test('getPagesize from attribute (number)', (t) => {
+    const model = {
+        objectDataRequest: null,
+        componentType: 'comp-type',
+        attributes: {
+            pagination: 'true',
+            paginationSize: 2,
+        },
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 2);
+});
+
+test('getPagesize from attribute (string)', (t) => {
+    const model = {
+        objectDataRequest: null,
+        componentType: 'comp-type',
+        attributes: {
+            pagination: 'true',
+            paginationSize: '12',
+        },
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 12);
+});
+
+test('getPagesize from list filter', (t) => {
+    const model = {
+        objectDataRequest: {
+            listFilter: {
+                limit: 5,
+            },
+        },
+        componentType: 'comp-type',
+        attributes: {},
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 5);
+});
+
+test('getPagesize from component type', (t) => {
+    const model = {
+        objectDataRequest: null,
+        componentType: 'TILES',
+        attributes: {},
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 20); // settings.ts > globals.paging.tiles = 20
+});
+
+test('getPagesize attributes priority', (t) => {
+    const model = {
+        objectDataRequest: {
+            listFilter: {
+                limit: 30,
+            },
+        },
+        componentType: 'TILES',
+        attributes: {
+            pagination: 'true',
+            paginationSize: '40',
+        },
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 40);
+});
+
+test('getPagesize list filter priority', (t) => {
+    const model = {
+        objectDataRequest: {
+            listFilter: {
+                limit: 30,
+            },
+        },
+        componentType: 'TILES',
+        attributes: {},
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 30);
+});
+
+test('getPagesize default', (t) => {
+    const model = {
+        objectDataRequest: null,
+        componentType: 'comp-type',
+        attributes: {},
+    };
+    const result = Component.getPageSize(model, flowKey);
+
+    t.is(result, 10); // services/component.ts > DEFAULT_PAGE_LIMIT
+});
