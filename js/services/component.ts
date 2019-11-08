@@ -347,7 +347,7 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
 export const getPageSize = (model, flowKey) => {
 
     const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
-    const pageLimitFromAttributesIsValid = !Number.isNaN(Number(pageLimitFromAttributes));
+    const pageLimitFromAttributesIsValid = pageLimitFromAttributes && !Number.isNaN(Number(pageLimitFromAttributes));
 
     const usePaginationAttribute =
         pageLimitFromAttributesIsValid &&
