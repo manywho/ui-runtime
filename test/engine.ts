@@ -570,11 +570,13 @@ test.serial('Sync', (t) => {
 
     model.getComponents.returns([
         {
+            componentType: 'comp-type',
             attributes: {
                 isExecuteRequestOnRenderDisabled: true,
             },
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
@@ -582,6 +584,7 @@ test.serial('Sync', (t) => {
             isVisible: true,
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
