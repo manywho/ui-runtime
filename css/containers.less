@@ -1,0 +1,204 @@
+﻿@container-margin: 20px;
+
+html,
+body {
+    width: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+#manywho {
+    height: 100%;
+    min-height: 500px;
+    overflow-y: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.flow-container {
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    left: 0;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 100%;
+}
+
+.modal-container {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+}
+
+.mw-bs {
+
+    .full-height {
+        height: 100%;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .mw-container {
+        margin-bottom: @container-margin;
+
+        & > h3 {
+            cursor: pointer;
+
+            & > .glyphicon {
+                font-size: 75%;
+            }
+        }
+
+        .label-hidden > h3 {
+            display: none;
+        }
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        height: 100%;
+    }
+
+    .main-container-inner {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .main-scroller {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: auto;
+        width: auto;
+    }
+
+    .main {
+        flex-grow: 1;
+        margin-bottom: @container-margin;
+    }
+
+    .main:nth-of-type(1) {
+        margin-top: @container-margin;
+    }
+
+    .main-empty:nth-of-type(1) {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .mw-vertical_flow:last-child {
+        margin-bottom: 0;
+    }
+
+    .mw-horizontal_flow > div > .row > * {
+        margin-bottom: 0;
+        padding-left: 0;
+    }
+
+    /* When a column container is directly nested in a row container remove left padding on first component */
+    .mw-vertical_flow > * > .mw-horizontal_flow > .row > :first-child {
+        padding-left: 0px;
+    }
+
+    /* When a column container is directly nested in a row container remove right padding on last component */
+    .mw-vertical_flow > * > .mw-horizontal_flow > .row > :last-child {
+        padding-right: 0px;
+    }
+
+    .mw-inline_flow > div > * {
+        display: inline-block;
+        margin-right: @container-margin;
+    }
+
+    .mw-inline_flow > div > *:last-child {
+        margin-right: 0;
+    }
+
+    .tab-pane > .container-label {
+        display: none;
+    }
+
+    .container-label {
+        margin-top: 0;
+    }
+
+    .container-label:empty {
+        display: none;
+        margin: 0;
+    }
+
+    .clickable-section {
+        cursor: pointer;
+    }
+
+    .toggle-icon {
+        font-size: 0.5em;
+        margin-right: 0.6em;
+        margin-top: -0.5em;
+        vertical-align: middle;
+    }
+
+    .collapsible-container {
+        transition: height 0.3s;
+        transition-timing-function: ease-in;
+    }
+
+    .collapsed-container {
+        overflow: hidden;
+        transition: height 0.3s;
+        transition-timing-function: ease-in;
+    }
+
+    .page-label {
+        display: none;
+        margin-top: 0;
+    }
+
+    .page-label:empty {
+        display: none;
+        margin: 0;
+    }
+
+    .auto-width {
+        width: auto;
+    }
+}
+
+@media(max-width: 768px) {
+
+    .mw-bs {
+
+        .mw-horizontal_flow > * {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .mw-horizontal_flow > .row > * {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    }
+
+}

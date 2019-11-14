@@ -1,0 +1,49 @@
+.mw-bs.mw-tours {
+    background-color: transparent;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+	.mw-tour-step-appear {
+		opacity: 0.01;
+	}
+
+	.mw-tour-step-appear.mw-tour-step-appear-active {
+		opacity: 1;
+		transition: opacity 0.5s ease-in;
+	}
+
+	.mw-tour-step-leave {
+		opacity: 1;
+	}
+
+	.mw-tour-step-leave.mw-tour-step-leave-active {
+		opacity: 0.01;
+		transition: opacity 0.25s ease-in;
+	}
+}
+
+.mw-bs .mw-tour-step.popover {
+    display: block;
+    min-width: 400px;
+    position: relative;
+    z-index: 5000;
+
+	.popover-title .close {
+		color: black;
+		pointer-events: all;
+	}
+
+	.popover-buttons {
+		display: flex;
+		justify-content: flex-end;
+		pointer-events: all;
+
+		.btn-primary {
+			margin-left: 0.5em;
+		}
+	}
+}

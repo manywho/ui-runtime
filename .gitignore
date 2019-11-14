@@ -1,0 +1,16 @@
+/node_modules
+/css/*.css
+/css/themes/mw-*.css
+/dist
+/build
+/typings
+bundles.json
+coverage
+test-report.xml
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
