@@ -1,0 +1,183 @@
+.mw-bs {
+    .offline {
+        background: transparent;
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        pointer-events: none;
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: 2000;
+
+        & > .offline-options {
+            bottom: 1em;
+            right: 1em;
+            pointer-events: initial;
+            position: absolute;
+
+            & > .btn {
+                margin-right: 1em;
+
+                & > .glyphicon {
+                    margin-right: 0.5em;
+                }
+            }
+        }
+
+        & > .offline-status {
+            background: rgba(192, 192, 192, 0.5);
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            left: 0;
+            pointer-events: initial;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+
+            & > .panel {
+                align-self: center;
+                display: flex;
+                flex-direction: column;
+                max-height: 80vh;
+                width: 80%;
+
+                & > .panel-body {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+                }
+
+                .continue-offline {
+                    align-self: center;
+                }
+            }
+
+            .offline-progress,
+            .offline-error {
+                text-align: center;
+            }
+        }
+
+        .file-list {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .file-size {
+            font-size: 10px;
+            color: #b2b2b2;
+            margin-left: 10px;
+        }
+
+        .progress {
+            height: 6px;
+            margin-bottom: 0;
+            margin-top: 5px;
+            margin-right: 30px;
+            background-color: #cae6fc;
+        }
+
+        .progress.empty {
+            background-color: #eee;
+        }
+
+        .progress.full {
+            background-color: #aee4b2;
+        }
+
+        .progress-indicator {
+            height: 100%;
+            background-color: #2196f3;
+        }
+    }
+
+    .sync-pending-requests {
+        align-items: flex-start;
+
+        & > .btn {
+            margin-bottom: 1em;
+        }
+    }
+
+    .pending-requests {
+        align-self: stretch;
+        overflow-y: auto;
+    }
+
+    .pending-request-header {
+        align-items: center;
+        display: flex;
+
+        & > div {
+            flex-grow: 1;
+
+            & > span {
+                display: block;
+            }
+
+            & > small {
+                color: #4c4c4c;
+                font-size: 11px;
+            }
+        }
+
+        & > .btn:not(:last-child) {
+            margin-right: 1em;
+        }
+    }
+
+    .pending-request-json {
+        margin-top: 1em;
+    }
+
+    .pending-requests-replay-all {
+        margin-right: 1em;
+    }
+
+    .request-fault {
+        margin-top: 1em;
+        max-height: 200px;
+    }
+
+    .replaying {
+        margin-bottom: 0;
+    }
+
+    .caching-spinner {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        width: 220px;
+        height: 100px;
+    }
+
+    .caching-spinner .wait-spinner {
+        width: 70px;
+        height: 70px;
+        margin: 0;
+        left: 0
+    }
+
+    .caching-spinner .wait-message {
+        font-size: 1.5em;
+        padding: 0;
+        margin: 0;
+        top: 22px;
+        position: absolute;
+        left: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mw-bs {
+        .offline .offline-status .panel {
+            width: calc(~'100% - 2em');
+        }
+    }
+}
