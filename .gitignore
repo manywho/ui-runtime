@@ -1,0 +1,11 @@
+.idea
+/extensions
+
+/node_modules
+/css/*.css
+/css/themes/mw-*.css
+/dist
+/build
+/typings
+
+.awspublish-*
