@@ -1179,7 +1179,12 @@ export const objectDataRequest = (
             State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr, status, error) => {
+        .fail((xhr: any, status, error: string) => {
+
+            if (!error && xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                // No useful error supplied, so grab the raw response
+                error = xhr.responseJSON.message;
+            }
 
             State.setComponentError(id, error, flowKey);
 
