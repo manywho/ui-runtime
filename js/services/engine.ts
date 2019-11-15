@@ -1347,6 +1347,11 @@ export const render = (flowKey: string) => {
 
     }
 
+    // Bail here if there is no container.
+    if (!container) {
+        return;
+    }
+
     const login = State.getLogin(flowKey);
 
     if (login) {

@@ -429,6 +429,16 @@ test.serial('Render Login', (t) => {
     sinon.stub(Engine, 'render');
 });
 
+test.serial('Don\'t render if there is no container', (t) => {
+    (Engine.render as sinon.SinonStub).restore();
+
+    Engine.render(flowKey);
+
+    t.false(ReactDOM.render.calledOnce);
+
+    sinon.stub(Engine, 'render');
+});
+
 test.serial('Ping', (t) => {
     model.getInvokeType.returns('WAIT');
 
