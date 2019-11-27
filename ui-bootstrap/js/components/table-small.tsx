@@ -5,7 +5,7 @@ import ITableSmallProps from '../interfaces/ITableSmallProps';
 import { getOutcome } from './outcome';
 import { checkRowIsSelected } from './utils/TableUtils';
 
-import '../../css/table.less';
+// import '../../css/components/table.less';
 
 declare const manywho: any;
 

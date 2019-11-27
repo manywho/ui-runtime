@@ -2,7 +2,7 @@ import * as React from 'react';
 import INavigationProps from '../interfaces/INavigationProps';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/navigation.less';
+// import '../../css/components/navigation.less';
 
 declare const manywho: any;
 

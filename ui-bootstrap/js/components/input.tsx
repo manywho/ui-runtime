@@ -9,7 +9,7 @@ import { getInputNumber } from './input-number';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-import '../../css/input.less';
+// import '../../css/components/input.less';
 
 // react-maskedinput v4.0.1 has messed up default exports
 // https://github.com/insin/react-maskedinput/issues/104

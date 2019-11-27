@@ -1,7 +1,7 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
-import '../../css/debug.less';
+// import '../../css/components/debug.less';
 
 interface IDebugViewerState {
     paths?: any;

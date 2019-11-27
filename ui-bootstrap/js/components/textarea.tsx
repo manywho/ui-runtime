@@ -4,7 +4,7 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-import '../../css/textarea.less';
+// import '../../css/components/textarea.less';
 
 declare var manywho: any;
 

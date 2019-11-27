@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import IItemsHeaderProps from '../interfaces/IItemsHeaderProps';
 import { getOutcome } from './outcome';
 
-import '../../css/items.less';
+// import '../../css/components/items.less';
 
 declare var manywho: any;
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import IInputProps from '../interfaces/IInputProps';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/input.less';
+// import '../../css/components/input.less';
 
 declare var manywho: any;
 

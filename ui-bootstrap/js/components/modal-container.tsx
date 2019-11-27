@@ -1,7 +1,7 @@
 import * as React from 'react';
 import IModalContainerProps from '../interfaces/IModalContainerProps';
 
-import '../../css/modal.less';
+// import '../../css/components/modal.less';
 
 declare var manywho: any;
 

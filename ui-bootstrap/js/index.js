@@ -5,11 +5,9 @@ import 'promise-polyfill/src/polyfill';
 
 import './createClassPatch.ts';
 
-// Lib CSS
-import "../css/lib/react-selectize.css";
-
-// Themes
-import "../css/mw-bootstrap.less";
+// Styles
+import '../css/mw-bootstrap.less';
+import '../css/mw-components.less';
 
 // Services
 import './services/theming.ts';

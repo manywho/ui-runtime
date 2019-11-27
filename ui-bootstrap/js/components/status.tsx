@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 
-import '../../css/status.less';
+// import '../../css/components/status.less';
 
 declare var manywho: any;
 

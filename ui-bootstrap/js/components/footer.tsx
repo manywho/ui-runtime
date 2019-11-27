@@ -1,7 +1,7 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
-import '../../css/footer.less';
+// import '../../css/components/footer.less';
 
 declare var manywho: any;
 

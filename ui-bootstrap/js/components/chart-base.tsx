@@ -6,7 +6,7 @@ import IChartBaseProps from '../interfaces/IChartBaseProps';
 import { Chart } from 'chart.js';
 import { equals } from 'ramda';
 
-import '../../css/chart.less';
+// import '../../css/components/chart.less';
 
 declare var manywho: any;
 

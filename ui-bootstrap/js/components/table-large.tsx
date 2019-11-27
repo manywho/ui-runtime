@@ -8,7 +8,7 @@ import { checkRowIsSelected } from './utils/TableUtils';
 // tslint:disable-next-line
 import Dynamic from './dynamic';
 
-import '../../css/table.less';
+// import '../../css/components/table.less';
 
 declare const manywho: any;
 

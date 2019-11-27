@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IOutcomeProps from '../interfaces/IOutcomeProps';
 
-import '../../css/outcome.less';
+// import '../../css/components/outcome.less';
 
 declare var manywho: any;
 

@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 import feedInput from './feed-input';
 import wait from './wait';
-import '../../css/feed.less';
+// import '../../css/components/feed.less';
 
 interface ErrorBoundary {
     hasError: boolean;

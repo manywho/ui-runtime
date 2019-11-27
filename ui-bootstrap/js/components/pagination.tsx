@@ -1,7 +1,7 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/pagination.less';
+// import '../../css/components/pagination.less';
 
 declare var manywho: any;
 

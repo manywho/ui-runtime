@@ -1,0 +1,41 @@
+{
+  "name": "ui-runtime",
+  "version": "1.0.0",
+  "description": "Consolidated UI runtime repo",
+  "author": "Boomi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manywho/ui-runtime.git"
+  },
+  "main": "webpack.config.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "extract-loader": "^3.1.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "merge-webpack-plugin": "^0.2.1",
+    "mini-css-extract-plugin": "^0.8.0",
+    "raw-loader": "^4.0.0",
+    "script-loader": "^0.7.2",
+    "string-replace-loader": "^2.2.0",
+    "style-loader": "^1.0.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development --config webpack.config.development.js --env.assets=local --env.development",
+    "build": "webpack -p --config webpack.config.production.js",
+    "build_ver": "PACKAGE_VERSION=0.0.0 webpack -p --config webpack.config.production.js",
+    "dist": "webpack -p --config webpack.config.production.js"
+  }
+}

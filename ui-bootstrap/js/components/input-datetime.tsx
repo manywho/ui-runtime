@@ -5,8 +5,8 @@ import * as moment from 'moment';
 import IInputProps from '../interfaces/IInputProps';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/input.less';
-import '../../css/lib/bootstrap-datetimepicker.css';
+// import '../../css/components/input.less';
+// import '../../css/lib/bootstrap-datetimepicker.css';
 import '../lib/100-datetimepicker.js';
 
 declare var manywho: any;

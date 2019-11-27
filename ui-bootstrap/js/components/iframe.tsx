@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
-import '../../css/iframe.less';
+// import '../../css/components/iframe.less';
 
 const IFrame: React.SFC<IComponentProps> = ({ id, flowKey, parentId }) => {
 

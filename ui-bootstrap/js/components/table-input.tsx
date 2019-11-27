@@ -4,7 +4,7 @@ import registeredComponents from '../constants/registeredComponents';
 import ITableInputProps from '../interfaces/ITableInputProps';
 import { getTableInputDateTime } from './table-input-datetime';
 
-import '../../css/input.less';
+// import '../../css/components/input.less';
 
 interface ITableInputState {
     value?: any;
