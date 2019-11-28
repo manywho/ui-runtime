@@ -1,5 +1,5 @@
 // Abandon all hope ye who tries to do anything with Webpack thinking that it
-// will easy and straightforward!
+// will be easy and straightforward!
 
 const path = require('path');
 const webpack = require('webpack');
@@ -14,8 +14,6 @@ module.exports = (env) => ({
         'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
-        // ui-html5 has no js except loader.js but that is not used as an
-        // entry point
     },
 
     output: {

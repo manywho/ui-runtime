@@ -10,8 +10,8 @@ module.exports = (env) => {
     // common config and development specific bits within the standard
     // webpack config scaffolding
     // (using `...` operator makes it easier to combine objects
-    // without overwriting any properties and to add new custom ones down the
-    // line)
+    // without accidentally overwriting any properties and to add new custom
+    // ones down the line)
     return {
         mode: common.mode,
 

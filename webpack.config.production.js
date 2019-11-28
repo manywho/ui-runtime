@@ -1,11 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
+const RemovePlugin = require('remove-files-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths } = require('./config/paths');
 const configCommon = require('./webpack.config.common');
 
+// because of Bamboo we are using process.env instead of webpack env
+// for PACKAGE_VERSION
 const { PACKAGE_VERSION } = process.env;
 
 if (!PACKAGE_VERSION) {
@@ -20,8 +22,8 @@ module.exports = (env) => {
     // common config and production specific bits within the standard
     // webpack config scaffolding
     // (using `...` operator makes it easier to combine objects
-    // without overwriting any properties and to add new custom ones down the
-    // line)
+    // without accidentally overwriting any properties and to add new custom
+    // ones down the line)
     return {
         mode: common.mode,
 
@@ -52,9 +54,19 @@ module.exports = (env) => {
                 // remove sourcemaps and theme css files from the bundle list
                 filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
             }),
-            // new HtmlWebpackPlugin({
-            //     template: './ui-html5/debug.html'
-            // })
+            // remove unnecessary .js files from /dist
+            new RemovePlugin({
+                after: {
+                    test: [
+                        {
+                            folder: repoPaths.dist,
+                            method: (filePath) => {
+                                return new RegExp(/\.js$/, 'm').test(filePath);
+                            },
+                        },
+                    ],
+                },
+            }),
         ],
 
         module: {
