@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const CopyPlugin = require('copy-webpack-plugin');
+const RemovePlugin = require('remove-files-webpack-plugin');
 const { repoPaths } = require('./config/paths');
 const configProduction = require('./webpack.config.production');
 
@@ -44,6 +44,7 @@ module.exports = (env) => {
 
         output: {
             ...production.output,
+            // path on the disk
             path: path.resolve(__dirname, `${repoPaths.dist}`),
         },
 
@@ -53,21 +54,25 @@ module.exports = (env) => {
 
         plugins: [
             ...production.plugins,
-            // copy the favicons from ui-html/ into dist/
-            new CopyPlugin([
-                {
-                    context: './ui-html5/',
-                    from: 'img/**/*.*',
-                    // to: defaults to the output.path
+            new RemovePlugin({
+                after: {
+                    test: [
+                        {
+                            folder: repoPaths.dist,
+                            method: (filePath) => {
+                                return new RegExp(/\.js$/, 'm').test(filePath);
+                            },
+                        },
+                    ],
                 },
-            ]),
+            }),
         ],
 
         module: {
             rules: [
                 ...production.module.rules,
-                // export the loader.js as loader.min.js instead of
-                // loader.min-<PACKAGE_VERSION>.js
+                // export the loader.js as loader.min.js
+                // instead of loader.min-<PACKAGE_VERSION>.js
                 {
                     test: /\.js$/,
                     include: [

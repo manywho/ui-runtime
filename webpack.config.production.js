@@ -32,8 +32,10 @@ module.exports = (env) => {
         },
 
         output: {
-            filename: `[name]-${PACKAGE_VERSION}.js`,
             ...common.output,
+            filename: `[name]-${PACKAGE_VERSION}.js`,
+            // path on the disk
+            path: path.resolve(__dirname, `${repoPaths.build}`),
         },
 
         resolve: {
@@ -54,12 +56,12 @@ module.exports = (env) => {
                 // remove sourcemaps and theme css files from the bundle list
                 filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
             }),
-            // remove unnecessary .js files from /dist
+            // remove unnecessary .js files
             new RemovePlugin({
                 after: {
                     test: [
                         {
-                            folder: repoPaths.dist,
+                            folder: repoPaths.build,
                             method: (filePath) => {
                                 return new RegExp(/\.js$/, 'm').test(filePath);
                             },

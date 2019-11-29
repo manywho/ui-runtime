@@ -34,8 +34,8 @@
     "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.development.js --env.assets=local --env.development",
+    "start": "webpack-dev-server --config webpack.config.development.js --env.development",
     "build": "webpack -p --config webpack.config.production.js",
-    "dist": "webpack -p --config webpack.config.distribution.js --env.cdnurl=cdn --env.platformuri=plarform"
+    "dist": "webpack -p --config webpack.config.distribution.js --env.cdnurl=cdn --env.platformuri=plarform --env.tenant=tenant --env.player=player"
   }
 }

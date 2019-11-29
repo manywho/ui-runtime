@@ -4,6 +4,7 @@ const repoPaths = {
     uiCore: './ui-core',
     uiHtml5: './ui-html5',
     uiThemes: './ui-themes',
+    uiVendor: './ui-vendor',
     uiBootstrap: './ui-bootstrap',
 };
 

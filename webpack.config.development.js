@@ -115,13 +115,13 @@ module.exports = (env) => {
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
-            // serve files from /ui-html5 so debug.html can load stuff
-            // from ui-html5/js/vendor
-            contentBase: path.join(__dirname, 'ui-html5'),
             // since we are not creating an index page fallback
             // and load debug.html
-            historyApiFallback: { index: 'debug.html' },
+            historyApiFallback: { index: `${repoPaths.uiHtml5}/debug.html`},
         },
+        // NOTE: To see a list of all the files built and loaded by the
+        // dev server go to the following url in the browser:
+        // http://localhost:3000/webpack-dev-server
     };
 
 };

@@ -3,6 +3,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const { repoPaths, mapPublicPath } = require('./config/paths');
 
@@ -18,9 +19,7 @@ module.exports = (env) => ({
 
     output: {
         // virtual path on the dev-server
-        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : 'build/',
-        // path on the disk
-        path: path.resolve(__dirname, `${repoPaths.build}`),
+        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : 'debug/',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
@@ -35,6 +34,20 @@ module.exports = (env) => ({
             resourceRegExp: /^\.\/locale$/,
             contextRegExp: /moment$/
         }),
+        new CopyPlugin([
+            // copy the vendor scripts
+            {
+                context: './ui-vendor/',
+                from: 'vendor/**/*.*',
+                to: 'js/',
+            },
+            // copy the favicons
+            {
+                context: './ui-html5/',
+                from: 'img/**/*.*',
+                // to: defaults to the output.path
+            },
+        ]),
     ],
 
     module: {
