@@ -1,5 +1,4 @@
 const repoPaths = {
-    dist: `./runtime_dist`,
     build: `./runtime_build`,
     uiCore: './ui-core',
     uiHtml5: './ui-html5',
