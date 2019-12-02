@@ -4,6 +4,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const { repoPaths, mapPublicPath } = require('./config/paths');
 
@@ -30,6 +32,14 @@ module.exports = (env) => ({
     },
 
     plugins: [
+        new BundleAnalyzerPlugin({
+            openAnalyzer: !!(env && env.analyse),
+        }),
+        new LicenseWebpackPlugin({
+            pattern: /.*/,
+            unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
+            abortOnUnacceptableLicense: true
+        }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,
             contextRegExp: /moment$/
