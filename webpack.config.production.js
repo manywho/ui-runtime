@@ -18,24 +18,25 @@ if (!PACKAGE_VERSION) {
 module.exports = (env) => {
     // check if all required env arguments have been supplied
     // NOTE: to provide env arguments to webpack via npm commands use an
-    // additional "--", for example: "npm run build -- --env.tenant=sometenant ..."
-    if (env) {
-        const tenant = (env && env.tenant) ? env.tenant : null;
-        const player = (env && env.player) ? env.player : null;
-        const cdnURL = (env && env.cdnurl) ? env.cdnurl : null;
-        const platformURI = (env && env.platformuri) ? env.platformuri : null;
-
-        if (!cdnURL || !platformURI || !tenant || !player) {
-            const expected = ['tenant', 'player', 'cdnurl', 'platformuri'];
-            const missing = expected.reduce(
-                (acc, arg) => !env[arg] ? [...acc, `--env.${arg}`] : acc,
-                []
-            ).join(', ');
-
-            throw new Error(`The "build" command is missing arguments: ${missing}. Please supply all required arguments!`);
-        }
-    } else {
+    // additional "--", for example: "npm run build -- --env.tenant=<tenant> ..."
+    if (!env) {
         throw new Error(`The "build" command is missing all required arguments!`);
+    }
+
+    const buildPath = (env && env.build) ? env.build : repoPaths.build;
+    const tenant = (env && env.tenant) ? env.tenant : null;
+    const player = (env && env.player) ? env.player : null;
+    const cdnURL = (env && env.cdnurl) ? env.cdnurl : null;
+    const platformURI = (env && env.platformuri) ? env.platformuri : null;
+
+    if (!cdnURL || !platformURI || !tenant || !player) {
+        const expected = ['tenant', 'player', 'cdnurl', 'platformuri'];
+        const missing = expected.reduce(
+            (acc, arg) => !env[arg] ? [...acc, `--env.${arg}`] : acc,
+            []
+        ).join(', ');
+
+        throw new Error(`The "build" command is missing these required arguments: ${missing}. Please supply all required arguments!`);
     }
 
     // generate the common config object
@@ -60,7 +61,7 @@ module.exports = (env) => {
             ...common.output,
             filename: `[name]-${PACKAGE_VERSION}.js`,
             // path on the disk
-            path: path.resolve(__dirname, `${repoPaths.build}`),
+            path: path.resolve(__dirname, buildPath),
         },
 
         resolve: {

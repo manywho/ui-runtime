@@ -1,6 +1,3 @@
-// Abandon all hope ye who tries to do anything with Webpack thinking that it
-// will be easy and straightforward!
-
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -32,9 +29,6 @@ module.exports = (env) => ({
     },
 
     plugins: [
-        new BundleAnalyzerPlugin({
-            openAnalyzer: !!(env && env.analyse),
-        }),
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
@@ -58,6 +52,10 @@ module.exports = (env) => ({
                 // to: defaults to the output.path
             },
         ]),
+        new BundleAnalyzerPlugin({
+            analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
+            openAnalyzer: !!(env && env.analyse),
+        }),
     ],
 
     module: {
