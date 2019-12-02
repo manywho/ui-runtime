@@ -3,8 +3,6 @@ import registeredComponents from '../constants/registeredComponents';
 import IItemsHeaderProps from '../interfaces/IItemsHeaderProps';
 import { getOutcome } from './outcome';
 
-// import '../../css/components/items.less';
-
 declare var manywho: any;
 
 interface IItemsHeaderState {

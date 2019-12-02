@@ -4,8 +4,6 @@ import IModalProps from '../interfaces/IModalProps';
 import { getNotifications } from './notifications';
 import { getWait } from './wait';
 
-// import '../../css/components/modal.less';
-
 class Modal extends React.Component<IModalProps, null> {
     
     constructor(props) {

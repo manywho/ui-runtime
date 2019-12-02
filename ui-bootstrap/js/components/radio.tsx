@@ -1,8 +1,6 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
-
-// import '../../css/components/radio.less';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 

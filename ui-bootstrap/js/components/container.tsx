@@ -7,7 +7,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 // tslint:disable-next-line
 import Dynamic from './dynamic';
-// import '../../css/components/containers.less';
 
 
 declare var manywho: any;

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import INotificationProps from '../interfaces/INotificationProps';
-
-// import '../../css/components/notifications.less';
     
 class Notification extends React.Component<INotificationProps, null> {
 

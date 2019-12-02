@@ -3,8 +3,6 @@ import registeredComponents from '../constants/registeredComponents';
 import INotificationsProps from '../interfaces/INotificationsProps';
 import { getNotification } from './notification';
 
-// import '../../css/components/notifications.less';
-
 const Notifications: React.SFC<INotificationsProps> = ({ flowKey, position }) => {
 
     const models = manywho.model.getNotifications(flowKey, position);

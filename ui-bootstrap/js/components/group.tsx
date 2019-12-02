@@ -4,8 +4,6 @@ import { path } from 'ramda';
 import registeredComponents from '../constants/registeredComponents';
 import { getErrorFallback } from './error-fallback';
 import IComponentProps from '../interfaces/IComponentProps';
-// import '../../css/components/group.less';
-
 
 declare var manywho: any;
 

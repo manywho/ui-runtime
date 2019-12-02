@@ -2,7 +2,6 @@ import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
-// import '../../css/components/flip.less';
 
 declare var manywho: any;
 

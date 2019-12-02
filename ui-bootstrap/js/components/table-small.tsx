@@ -5,8 +5,6 @@ import ITableSmallProps from '../interfaces/ITableSmallProps';
 import { getOutcome } from './outcome';
 import { checkRowIsSelected } from './utils/TableUtils';
 
-// import '../../css/components/table.less';
-
 declare const manywho: any;
 
 class TableSmall extends React.Component<ITableSmallProps, null> {

@@ -5,8 +5,6 @@ import outcome from './outcome';
 import FileUpload from '@boomi/react-file-upload';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-// import '../../css/components/files.less';
-
 /**
  * This function handles the saving of data to state, engine and collaboration servers
  *

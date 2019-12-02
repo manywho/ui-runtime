@@ -1,8 +1,6 @@
 import * as React from 'react';
 import IModalContainerProps from '../interfaces/IModalContainerProps';
 
-// import '../../css/components/modal.less';
-
 declare var manywho: any;
 
 class ModalContainer extends React.Component<IModalContainerProps, null> {

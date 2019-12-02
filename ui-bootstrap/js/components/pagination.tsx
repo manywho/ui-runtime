@@ -1,8 +1,6 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 
-// import '../../css/components/pagination.less';
-
 declare var manywho: any;
 
 const Pagination: React.SFC<any> = (

@@ -7,8 +7,6 @@ import { getOutcome } from './outcome';
 import { checkBooleanString } from './utils/DataUtils';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-// import '../../css/components/select.less';
-
 declare const manywho: any;
 
 interface IDropDownState {

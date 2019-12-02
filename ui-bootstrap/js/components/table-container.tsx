@@ -3,8 +3,6 @@ import { findDOMNode } from 'react-dom';
 import IPaginationProps from '../interfaces/IPaginationProps';
 import IComponentProps from '../interfaces/IComponentProps';
 import registeredComponents from '../constants/registeredComponents';
-
-// import '../../css/components/table.less';
 import { getPagination } from './pagination';
 import { getTableLarge } from './table-large';
 import { getTableSmall } from './table-small';

@@ -6,8 +6,6 @@ import IChartBaseProps from '../interfaces/IChartBaseProps';
 import { Chart } from 'chart.js';
 import { equals } from 'ramda';
 
-// import '../../css/components/chart.less';
-
 declare var manywho: any;
 
 class ChartBase extends React.Component<IChartBaseProps, null> {
