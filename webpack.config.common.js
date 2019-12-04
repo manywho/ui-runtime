@@ -13,6 +13,7 @@ module.exports = (env) => ({
     entry: {
         'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
+        'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
     },
 
@@ -66,6 +67,7 @@ module.exports = (env) => ({
                 include: [
                     path.resolve(__dirname, `${repoPaths.uiCore}/js`),
                     path.resolve(__dirname, `${repoPaths.uiBootstrap}/js`),
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/js`),
                 ],
                 use: [
                     { loader: 'babel-loader' },
@@ -77,6 +79,18 @@ module.exports = (env) => ({
                     }
                 ],
                 enforce: 'pre',
+            },
+            // bundle ui-offline styles
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/css`),
+                ],
+                use: [
+                    {loader: 'style-loader'},
+                    {loader: 'css-loader'},
+                    {loader: 'less-loader'}
+                ]
             },
             // bundle themes
             {
@@ -140,7 +154,7 @@ module.exports = (env) => ({
         'socket.io-client': 'io',
     },
 
-    devtool: (env && env.development) ? 'source-map' : false,
+    devtool: (env && env.development) ? 'inline-source-map' : 'source-map',
 
     stats: {
         // add asset Information

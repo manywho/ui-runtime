@@ -76,6 +76,7 @@ module.exports = (env) => {
                     // use `name : key` pairs
                     'js/flow-ui-bootstrap': 'bootstrap',
                     'js/flow-ui-core': 'core',
+                    'js/flow-offline': 'offline',
                 },
                 bundleFilename: 'bundle.json',
                 pathPrefix: '/',

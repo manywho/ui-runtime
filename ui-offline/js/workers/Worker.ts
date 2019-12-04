@@ -1,4 +1,4 @@
-import { executeMacro } from '../js/services/macros/MacroExecution';
+import { executeMacro } from '../services/macros/MacroExecution';
 
 const ctx: Worker = self as any;
 
