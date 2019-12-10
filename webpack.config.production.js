@@ -77,6 +77,8 @@ module.exports = (env) => {
                     'js/flow-ui-bootstrap': 'bootstrap',
                     'js/flow-ui-core': 'core',
                     'js/flow-offline': 'offline',
+                    'css/flow-ui-bootstrap': 'bootstrap',
+                    'css/flow-ui-bootstrap-components': 'bootstrap',
                 },
                 bundleFilename: 'bundle.json',
                 pathPrefix: '/',
