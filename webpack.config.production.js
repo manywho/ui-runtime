@@ -85,14 +85,14 @@ module.exports = (env) => {
                 // remove sourcemaps and theme css files from the bundle list
                 filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
             }),
-            // remove unnecessary .js files
+            // remove unnecessary files from the build folder
             new RemovePlugin({
                 after: {
                     test: [
                         {
                             folder: repoPaths.build,
                             method: (filePath) => {
-                                return new RegExp(/\.js$/, 'm').test(filePath);
+                                return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
                             },
                         },
                     ],
