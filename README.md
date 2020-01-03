@@ -8,29 +8,18 @@
 ```shell script
 $ npm start
 ```
+Optional arguments:
 
-### Change the public path
+* `--env.cdnurl (default: http://localhost:3000)`
+* `--env.platformuri (default: https://development.manywho.net)`
 
-All files will be served by webpack dev server from its `debug/` public path 
-by default. 
+### Dev Server
 
-To change the default public path "on the fly" pass a custom path via the 
-optional `--env.assets` argument.
+The dev server will run at http://localhost:3000
 
-```shell script
-$ npm start -- --env.assets=<path>
-```
+Flows can be accessed with the same structure of url as they run in production. 
 
-The value of `--env.assets` can be: `local`, `development`, `qa`, `staging` or 
-`production`.
-
-To change where each of these point edit the `publicPath` object in 
-`config/paths.js`.
-
-NOTE: The `debug.html` uses the `debug/` path to load dependencies so using any 
-of the custom asset paths will break in the `debug.html`. If you still need 
-the `debug.html` to work properly you will need to edit it. The file is located 
-in `ui-html5/debug.html`. 
+Eg. `http://localhost:3000/<TENANT_ID>/play/default?flow-id=<FLOW_ID>&flow-version-id=<FLOW_VERSION_ID>`
 
 ### List of all files served by the dev server
 
