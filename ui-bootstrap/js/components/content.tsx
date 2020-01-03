@@ -5,8 +5,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import outcome from './outcome';
 import tableContainer from './table-container';
 import fileUpload from './file-upload';
-import '../../css/content.less';
-import 'tinymce/skins/lightgray/skin.min.css';
 
 /* eslint import/no-webpack-loader-syntax: off */
 import rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';

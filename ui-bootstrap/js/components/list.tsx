@@ -5,8 +5,6 @@ import { getOutcome } from './outcome';
 import { getWait } from './wait';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-import '../../css/list.less';
-
 declare var manywho: any;
 
 const List: React.SFC<IComponentProps> = ({ id, parentId, flowKey, isDesignTime }) => {

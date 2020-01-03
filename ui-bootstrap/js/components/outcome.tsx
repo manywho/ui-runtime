@@ -2,8 +2,6 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IOutcomeProps from '../interfaces/IOutcomeProps';
 
-import '../../css/outcome.less';
-
 declare var manywho: any;
 
 function getType(model) {

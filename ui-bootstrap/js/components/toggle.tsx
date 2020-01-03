@@ -4,8 +4,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-import '../../css/toggle.less';
-
 declare var manywho: any;
 
 interface IToggleState {

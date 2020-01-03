@@ -2,8 +2,6 @@ import * as React from 'react';
 import IInputProps from '../interfaces/IInputProps';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/input.less';
-
 declare var manywho: any;
 
 interface IInputNumberState {

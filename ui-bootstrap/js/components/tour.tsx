@@ -3,8 +3,6 @@ import { ITourState, ITourProps, ITourStep } from '../interfaces/ITour';
 import { CSSTransitionGroup } from 'react-transition-group';
 import registeredComponents from '../constants/registeredComponents';
 
-import '../../css/tours.less';
-
 declare var manywho: any;
 
 class Tour extends React.Component<ITourProps, ITourState> {

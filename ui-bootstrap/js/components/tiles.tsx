@@ -7,8 +7,6 @@ import { getWait } from './wait';
 import { Motion, spring } from 'react-motion';
 import { getTileItem } from './tile-item';
 
-import '../../css/tiles.less';
-
 declare var manywho: any;
 
 class Tiles extends React.Component<ITilesProps, null> {

@@ -2,8 +2,6 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IReturnToParentProps from '../interfaces/IReturnToParentProps';
 
-import '../../css/returnToParent.less';
-
 const ReturnToParent: React.SFC<IReturnToParentProps> = ({ flowKey, parentStateId }) => {
 
     const onClick = () => {

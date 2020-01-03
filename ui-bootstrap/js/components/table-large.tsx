@@ -4,11 +4,8 @@ import ITableLargeProps from '../interfaces/ITableLargeProps';
 import { getTableInput } from './table-input';
 import { getOutcome } from './outcome';
 import { checkRowIsSelected } from './utils/TableUtils';
-
 // tslint:disable-next-line
 import Dynamic from './dynamic';
-
-import '../../css/table.less';
 
 declare const manywho: any;
 

@@ -3,8 +3,6 @@ import registeredComponents from '../constants/registeredComponents';
 import ITileItemProps from '../interfaces/ITileItemProps';
 import { getOutcome } from './outcome';
 
-import '../../css/outcome.less';
-
 declare const manywho: any;
 
 class TileItem extends React.PureComponent<ITileItemProps, null> {

@@ -5,8 +5,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import Dynamic from './dynamic';
 import { checkBooleanString } from './utils/DataUtils';
 
-import '../../css/items.less';
-
 declare const manywho: any;
 
 interface IItemsContainerState {
