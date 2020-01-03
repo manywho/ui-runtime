@@ -3,20 +3,20 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" class="manywho" style="height: 100%;">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" href="{{cdnurl}}/img/favicon/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="{{cdnurl}}/img/favicon/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="{{cdnurl}}/img/favicon/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="{{cdnurl}}/img/favicon/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="{{cdnurl}}/img/favicon/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="{{cdnurl}}/img/favicon/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="{{cdnurl}}/img/favicon/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="{{cdnurl}}/img/favicon/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="{{cdnurl}}/img/favicon/apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{cdnurl}}/img/favicon/apple-touch-icon-180x180.png" />
-    <link rel="icon" sizes="192x192" href="{{cdnurl}}/img/favicon/android-icon.png">
-    <meta name="msapplication-square310x310logo" content="{{cdnurl}}/img/favicon/microsoft-310x310.png">
+    <link rel="shortcut icon" href="${CDN_URL}/img/favicon/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="${CDN_URL}/img/favicon/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="${CDN_URL}/img/favicon/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="${CDN_URL}/img/favicon/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="${CDN_URL}/img/favicon/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="${CDN_URL}/img/favicon/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="${CDN_URL}/img/favicon/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="${CDN_URL}/img/favicon/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="${CDN_URL}/img/favicon/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="${CDN_URL}/img/favicon/apple-touch-icon-180x180.png" />
+    <link rel="icon" sizes="192x192" href="${CDN_URL}/img/favicon/android-icon.png">
+    <meta name="msapplication-square310x310logo" content="${CDN_URL}/img/favicon/microsoft-310x310.png">
 
     <title>Boomi Flow</title>
     <style>
@@ -121,11 +121,11 @@
         </div>
     </div>
 
-    <script src="{{cdnurl}}/js/vendor/jquery-2.1.4.min.js"></script>
+    <script src="${CDN_URL}/js/vendor/jquery-3.4.1.min.js"></script>
 
     <script>
         var manywho = {
-            cdnUrl: '{{cdnurl}}',
+            cdnUrl: '${CDN_URL}',
             requires: ['core', 'bootstrap3'],
             initialize: function () {
 
@@ -133,7 +133,7 @@
 
                 manywho.settings.initialize({
                     platform: {
-                        uri: '{{platformuri}}',
+                        uri: '${PLATFORM_URI}',
                     },
                     adminTenantId: 'da497693-4d02-45db-bc08-8ea16d2ccbdf',
                     playerUrl: [ location.protocol, '//', location.host, location.pathname ].join(''),
@@ -187,6 +187,6 @@
         };
     </script>
 
-    <script src="{{cdnurl}}/js/loader.min.js"></script>
+    <script src="${CDN_URL}/js/loader.min.js"></script>
 </body>
 </html>

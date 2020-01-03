@@ -1,10 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
 const RemovePlugin = require('remove-files-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths } = require('./config/paths');
 const configCommon = require('./webpack.config.common');
+const CopyPlugin = require('copy-webpack-plugin');
 
 // because of Bamboo we are using process.env instead of webpack env
 // for PACKAGE_VERSION (remember to use "export PACKAGE_VERSION=x.y.z." so the
@@ -53,7 +53,6 @@ module.exports = (env) => {
 
         entry: {
             ...common.entry,
-            'loader': `${repoPaths.uiHtml5}/js/loader.js`,
             'player': `${repoPaths.uiHtml5}/js/player.js`,
         },
 
@@ -71,20 +70,6 @@ module.exports = (env) => {
         plugins: [
             ...common.plugins,
             new CleanWebpackPlugin(),
-            new WriteBundleFilePlugin({
-                bundleEntries: {
-                    // use `name : key` pairs
-                    'js/flow-ui-bootstrap': 'bootstrap',
-                    'js/flow-ui-core': 'core',
-                    'js/flow-offline': 'offline',
-                    'css/flow-ui-bootstrap': 'bootstrap',
-                    'css/flow-ui-bootstrap-components': 'bootstrap',
-                },
-                bundleFilename: 'bundle.json',
-                pathPrefix: '/',
-                // remove sourcemaps and theme css files from the bundle list
-                filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
-            }),
             // remove unnecessary files from the build folder
             new RemovePlugin({
                 after: {
@@ -98,32 +83,19 @@ module.exports = (env) => {
                     ],
                 },
             }),
+            new CopyPlugin([
+                // copy the production vendor scripts
+                {
+                    context: './ui-vendor/',
+                    from: 'vendor/**/*.*',
+                    to: 'js/',
+                },
+            ]),
         ],
 
         module: {
             rules: [
-                ...common.module.rules,
-                // export the loader.js as loader.min.js
-                // instead of loader.min-<PACKAGE_VERSION>.js
-                {
-                    test: /\.js$/,
-                    include: [
-                        path.resolve(__dirname, `${repoPaths.uiHtml5}/js/loader.js`),
-                    ],
-                    exclude: [
-                        path.resolve(__dirname, `${repoPaths.uiHtml5}/js/player.js`),
-                    ],
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: '[name].min.js',
-                                outputPath: 'js/',
-                                publicPath: 'js/',
-                            },
-                        },
-                    ],
-                },
+                ...common.module.rules,                
                 // export the default.html file and replace some bits in it
                 {
                     test: /\.html$/,
