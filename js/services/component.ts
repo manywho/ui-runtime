@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { pathOr } from 'ramda';
 import * as Log from 'loglevel';
 
 import * as Collaboration from './collaboration';
@@ -8,6 +9,8 @@ import * as Utils from './utils';
 
 const components = {};
 const aliases = {};
+
+const DEFAULT_PAGE_LIMIT = 10;
 
 function getComponentType(item) {
     if ('containerType' in item) {
@@ -33,6 +36,7 @@ export const contentTypes = {
     number: 'CONTENTNUMBER',
     boolean: 'CONTENTBOOLEAN',
     password: 'CONTENTPASSWORD',
+    encrypted: 'CONTENTENCRYPTED',
     datetime: 'CONTENTDATETIME',
     content: 'CONTENTCONTENT',
     object: 'CONTENTOBJECT',
@@ -333,4 +337,41 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
                 Engine.flowOut(outcome, flowKey);
             }
         });
+};
+
+/**
+ * Using data from the model and settings to calculate the page size.
+ * @param model
+ * @param flowKey
+ * @returns Page limit size
+ */
+export const getPageSize = (model, flowKey) => {
+
+    const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
+    const pageLimitFromAttributesIsValid = pageLimitFromAttributes && !Number.isNaN(Number(pageLimitFromAttributes));
+
+    const usePaginationAttribute =
+        pageLimitFromAttributesIsValid &&
+        (
+            // Data is coming from a service, we can ignore "pagination" boolean attribute
+            !Utils.isNullOrUndefined(model.objectDataRequest)
+            // Data is coming from a list value, we need to check that the "pagination" attribute is also set to true
+            || Utils.isEqual(model.attributes.pagination, 'true', true)
+        );
+
+    const pageLimitSettingForComponentType = Settings.flow(
+        `paging.${model.componentType.toLowerCase()}`, flowKey,
+    );
+
+    const pageLimitSettingFromListFilter = pathOr(null, ['objectDataRequest', 'listFilter', 'limit'], model);
+
+    const limit = usePaginationAttribute
+        ? pageLimitFromAttributes // 1st priority
+        : (
+            pageLimitSettingFromListFilter // 2nd priority
+            || pageLimitSettingForComponentType // 3rd priority
+            || DEFAULT_PAGE_LIMIT // final default
+        );
+
+    return parseInt(limit, 10);
 };

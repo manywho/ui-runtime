@@ -429,6 +429,16 @@ test.serial('Render Login', (t) => {
     sinon.stub(Engine, 'render');
 });
 
+test.serial('Don\'t render if there is no container', (t) => {
+    (Engine.render as sinon.SinonStub).restore();
+
+    Engine.render(flowKey);
+
+    t.false(ReactDOM.render.calledOnce);
+
+    sinon.stub(Engine, 'render');
+});
+
 test.serial('Ping', (t) => {
     model.getInvokeType.returns('WAIT');
 
@@ -559,6 +569,26 @@ test.serial('ObjectDataRequest Fail', async (t) => {
     t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
 });
 
+test.serial('ObjectDataRequest Fail extended error response', async (t) => {
+    ajax.dispatchObjectDataRequest.callsFake(() => {
+        const deferred =  $.Deferred();
+        deferred.reject({ responseJSON: { message: 'API error message returned'  } }, 'status', '');
+        return deferred;
+    });
+
+    model.getComponent.returns({
+        objectData: null,
+        objectDataRequest: {},
+    });
+
+    await t.throws(Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+
+    t.true((Engine.render as sinon.SinonStub).calledTwice);
+    t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
+    t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+    t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+});
+
 test.serial('Sync', (t) => {
     ajax.invoke.callsFake(() => {
         const deferred =  $.Deferred();
@@ -570,11 +600,13 @@ test.serial('Sync', (t) => {
 
     model.getComponents.returns([
         {
+            componentType: 'comp-type',
             attributes: {
                 isExecuteRequestOnRenderDisabled: true,
             },
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
@@ -582,6 +614,7 @@ test.serial('Sync', (t) => {
             isVisible: true,
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
