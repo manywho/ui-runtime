@@ -4,8 +4,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-import '../../css/image.less';
-
 declare const manywho: any;
 
 const Image: React.FC<IComponentProps> = ({ id, parentId, flowKey }) => {
