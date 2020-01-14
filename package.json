@@ -38,6 +38,10 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.development.js --env.development",
-    "build": "webpack -p --config webpack.config.production.js"
+    "build": "webpack -p --config webpack.config.production.js",
+    "test:bootstrap": "cd ui-bootstrap && npm test",
+    "test:core": "cd ui-core && npm test",
+    "test:offline": "cd ui-offline && npm test",
+    "test": "npm run test:bootstrap && npm run test:core && npm run test:offline"
   }
 }
