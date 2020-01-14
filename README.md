@@ -182,7 +182,7 @@ This will add the new subrepo as a subfolder within `ui-runtime`.
 
 The added subrepo's code will be placed within a new subfolder inside the parent 
 `ui-runtime` repo. It will be managed by the parent's `.git` repo and will no 
-longer have it's own `.git` repo.
+longer have its own `.git` repo.
 
 During the merge there might be some conflicts, fix those and finish the merge
 with a commit.
