@@ -56,6 +56,33 @@ To see the list with links to all files served by the webpack dev server go to:
 http://localhost:3000/webpack-dev-server
 ```
 
+## Tests
+
+To run tests on all subrepos use:
+
+```shell script
+npm test
+```
+
+To run tests on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run test:bootstrap
+
+# ui-core
+npm run test:core
+
+# ui-offline
+npm run test:offline
+```
+
+All listed commands are defined in the top-level `package.json` and should be 
+executed from the top-level directory. 
+
+Other subrepos don't have/need tests because they are either just HTML, CSS or 
+3rd party scripts.
+
 ## Production
 
 ### Build `ui-runtime` for production

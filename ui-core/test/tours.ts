@@ -13,7 +13,7 @@ const react = {
 
 const log = {
     error: sinon.stub(),
-    warning: sinon.stub(),
+    warn: sinon.stub(),
 };
 
 const reactErrorBoundary = {
@@ -107,7 +107,7 @@ test.beforeEach((t) => {
     react.createElement.resetHistory();
     ReactDOM.render.resetHistory();
     log.error.resetHistory();
-    log.warning.resetHistory();
+    log.warn.resetHistory();
 });
 
 test.after((t) => {
@@ -235,7 +235,7 @@ test('Move 2', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     Tours.move(tour, 10);
 
-    t.true(log.warning.calledWith(`Cannot move Tour ${tour.id} to Step 10 as it is out of bounds`));
+    t.true(log.warn.calledWith(`Cannot move Tour ${tour.id} to Step 10 as it is out of bounds`));
 });
 
 test('Move 3', (t) => {

@@ -176,7 +176,7 @@ export const move = (tour: ITour = current, index) => {
     }
 
     if (index >= tour.steps.length) {
-        Log.warning(`Cannot move Tour ${tour.id} to Step ${index} as it is out of bounds`);
+        Log.warn(`Cannot move Tour ${tour.id} to Step ${index} as it is out of bounds`);
         return;
     }
 
