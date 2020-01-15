@@ -83,6 +83,52 @@ executed from the top-level directory.
 Other subrepos don't have/need tests because they are either just HTML, CSS or 
 3rd party scripts.
 
+## Linting
+
+To run code linting on all subrepos use:
+
+```shell script
+npm run lint
+```
+
+To run test linting on all subrepos use:
+
+```shell script
+npm run lint:test
+```
+
+To run code linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap
+
+# ui-core
+npm run lint:core
+
+# ui-offline
+npm run lint:offline
+```
+
+To run test linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap:test
+
+# ui-core
+npm run lint:core:test
+
+# ui-offline
+npm run lint:offline:test
+```
+
+All listed commands are defined in the top-level `package.json` and should be 
+executed from the top-level directory. 
+
+Other subrepos don't have/need linting because they are either just HTML, CSS or 
+3rd party scripts.
+
 ## Production
 
 ### Build `ui-runtime` for production
