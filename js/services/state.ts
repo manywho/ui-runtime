@@ -18,9 +18,9 @@ const options = {};
 const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * Reset the local state of each component defined in the models. Optionally perform validation on each model
+ * Reset the local state of each component defined in the models.
  */
-export const refreshComponents = (models: any, invokeType: string, flowKey: string) => {
+export const refreshComponents = (models: any, flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     components[lookUpKey] = {};
@@ -38,10 +38,6 @@ export const refreshComponents = (models: any, invokeType: string, flowKey: stri
             contentValue: models[id].contentValue || null,
             objectData: selectedObjectData || null,
         };
-
-        if (Validation.shouldValidate(invokeType, flowKey)) {
-            components[lookUpKey][id] = $.extend({}, components[lookUpKey][id], isValid(id, flowKey));
-        }
     }
 };
 
@@ -141,20 +137,7 @@ export const setComponent = (id: string, value: IComponentValue, flowKey: string
 
     components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], value);
 
-    if (value != null) {
-        components[lookUpKey][id].objectData = value.objectData;
-    }
-
-    if (typeof value.isValid === 'undefined' && components[lookUpKey][id].isValid === false) {
-        const model = Model.getComponent(id, flowKey);
-
-        if (model.isRequired &&
-            (!Utils.isNullOrEmpty(value.contentValue as string)  || (value.objectData && value.objectData.length > 0))) {
-
-            components[lookUpKey][id].isValid = true;
-            components[lookUpKey][id].validationMessage = null;
-        }
-    }
+    components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], isValid(id, flowKey));
 
     if (push) {
         Collaboration.push(id, value, flowKey);
