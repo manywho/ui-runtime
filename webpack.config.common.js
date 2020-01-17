@@ -3,22 +3,18 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
+const RemovePlugin = require('remove-files-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths, mapPublicPath } = require('./config/paths');
-
-// because of Bamboo we are using process.env instead of webpack env
-// for PACKAGE_VERSION (remember to use "export PACKAGE_VERSION=x.y.z." so the
-// var is visible to all child processes)
-const { PACKAGE_VERSION } = process.env;
 
 module.exports = (env) => ({
 
-    mode: (env && env.development) ? 'development' : 'production',
-
     entry: {
-        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
+        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
+        'js/loader': `${repoPaths.uiHtml5}/js/loader.js`,
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
     },
 
@@ -28,7 +24,9 @@ module.exports = (env) => ({
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
-        filename: `[name]${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.js`,
+        filename: '[name].js',
+        // path on the disk
+        path: path.resolve(__dirname, repoPaths.build),
     },
 
     resolve: {
@@ -48,20 +46,54 @@ module.exports = (env) => ({
         new CopyPlugin([
             // copy the vendor scripts
             {
-                context: './ui-vendor/',
+                context: repoPaths.uiVendor,
                 from: 'vendor/**/*.*',
                 to: 'js/',
             },
             // copy the favicons
             {
-                context: './ui-html5/',
+                context: repoPaths.uiHtml5,
                 from: 'img/**/*.*',
                 // to: defaults to the output.path
+            },
+            // copy the default.html
+            {
+                context: repoPaths.uiHtml5,
+                from: 'default.html',
+                to: 'players/',
             },
         ]),
         new BundleAnalyzerPlugin({
             analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
             openAnalyzer: !!(env && env.analyse),
+        }),
+        new CleanWebpackPlugin(),
+        new WriteBundleFilePlugin({
+            bundleEntries: {
+                // use `name : key` pairs
+                'js/flow-ui-bootstrap': 'bootstrap',
+                'js/flow-ui-core': 'core',
+                'js/flow-offline': 'offline',
+                'css/flow-ui-bootstrap': 'bootstrap',
+                'css/flow-ui-bootstrap-components': 'bootstrap',
+            },
+            bundleFilename: 'bundle.json',
+            pathPrefix: '/',
+            // remove sourcemaps and theme css files from the bundle list
+            filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
+        }),
+        // remove unnecessary files from the build folder
+        new RemovePlugin({
+            after: {
+                test: [
+                    {
+                        folder: repoPaths.build,
+                        method: (filePath) => {
+                            return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
+                        },
+                    },
+                ],
+            },
         }),
     ],
 
@@ -147,7 +179,6 @@ module.exports = (env) => ({
                 ]
             },
             // bundle bootstrap styles
-            // use `${PACKAGE_VERSION}` in file name
             {
                 test: /\.less$/,
                 include: [
@@ -157,7 +188,7 @@ module.exports = (env) => ({
                     {
                         loader: 'file-loader',
                         options: {
-                            name: `flow-ui-bootstrap${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.css`,
+                            name: `flow-ui-bootstrap.css`,
                             outputPath: 'css/',
                             publicPath: 'css/',
                         },
@@ -179,7 +210,6 @@ module.exports = (env) => ({
                 ]
             },
             // bundle components styles
-            // use `${PACKAGE_VERSION}` in file name
             {
                 test: /\.less$/,
                 include: [
@@ -189,7 +219,7 @@ module.exports = (env) => ({
                     {
                         loader: 'file-loader',
                         options: {
-                            name: `flow-ui-bootstrap-components${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.css`,
+                            name: `flow-ui-bootstrap-components.css`,
                             outputPath: 'css/',
                             publicPath: 'css/',
                         },
