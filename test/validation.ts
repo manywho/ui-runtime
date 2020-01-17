@@ -198,7 +198,7 @@ test('Validation Disabled', (t) => {
             validation: {
                 isEnabled: false,
             },
-        }, 
+        },
         null,
     );
 
@@ -333,7 +333,7 @@ test('Scroll to invalid element', (t) => {
         Validation.scrollToInvalidElement(null);
     }
     catch (e) {
-        
+
     }
 
     t.pass();
@@ -346,7 +346,7 @@ test('Add Notification', (t) => {
         message: 'Page contains invalid values',
         position: 'center',
         timeout: '0',
-        type: 'danger', 
+        type: 'danger',
     };
 
     Validation.addNotification(flowKey);
@@ -354,4 +354,112 @@ test('Add Notification', (t) => {
     t.true(model.addNotification.calledOnce);
     t.is(model.addNotification.firstCall.args[0], flowKey);
     t.deepEqual(model.addNotification.firstCall.args[1], expected);
+});
+
+test('Non-visible components validate as true - same as back-end rules', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isVisible: false,
+    };
+    const actual = Validation.validate(model, null, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test('Visible components validate false when required but empty', (t) => {
+    const expected = {
+        isValid: false,
+        validationMessage: 'This field is required',
+    };
+
+    const model = {
+        isVisible: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: '',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test('Visible components validate true when required but non-empty', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isVisible: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: 'OK',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test('Disabled components validate as true - same as back-end rules', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isEnabled: false,
+    };
+    const actual = Validation.validate(model, null, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test('Enabled components validate false when required but empty', (t) => {
+    const expected = {
+        isValid: false,
+        validationMessage: 'This field is required',
+    };
+
+    const model = {
+        isEnabled: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: '',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test('Enabled components validate true when required but non-empty', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isEnabled: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: 'OK',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
 });
