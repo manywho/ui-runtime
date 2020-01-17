@@ -11,10 +11,16 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.5",
     "css-loader": "^3.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^6.3.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
     "extract-loader": "^3.1.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^4.2.0",
@@ -42,6 +48,14 @@
     "test:bootstrap": "cd ui-bootstrap && npm test",
     "test:core": "cd ui-core && npm test",
     "test:offline": "cd ui-offline && npm test",
-    "test": "npm run test:bootstrap && npm run test:core && npm run test:offline"
+    "test": "npm run test:bootstrap && npm run test:core && npm run test:offline",
+    "lint:bootstrap": "eslint 'ui-bootstrap/js/**'",
+    "lint:core": "eslint 'ui-core/js/**'",
+    "lint:offline": "eslint 'ui-offline/js/**'",
+    "lint": "eslint 'ui-bootstrap/js/**' 'ui-core/js/**' 'ui-offline/js/**'",
+    "lint:bootstrap:test": "eslint 'ui-bootstrap/__tests__/**'",
+    "lint:core:test": "eslint 'ui-core/test/**'",
+    "lint:offline:test": "eslint 'ui-offline/__tests__/**'",
+    "lint:test": "eslint 'ui-bootstrap/__tests__/**' 'ui-core/test/**' 'ui-offline/__tests__/**'"
   }
 }
