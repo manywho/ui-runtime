@@ -1302,7 +1302,7 @@ export const parseResponse = (
     responseParser.call(Model, response, flowKey);
 
     State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
-    State.refreshComponents(Model.getComponents(flowKey), invokeType, flowKey);
+    State.refreshComponents(Model.getComponents(flowKey), flowKey);
 
     if (Settings.flow('replaceUrl', flowKey)) {
         Utils.replaceBrowserUrl(response);

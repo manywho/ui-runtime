@@ -198,7 +198,7 @@ test('Validation Disabled', (t) => {
             validation: {
                 isEnabled: false,
             },
-        }, 
+        },
         null,
     );
 
@@ -320,10 +320,6 @@ test('Validate State Boolean (false)', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Should Validate', (t) => {
-    t.true(Validation.shouldValidate('MOVE', null));
-});
-
 test('Scroll to invalid element', (t) => {
     const invalidElement = document.createElement('div');
     invalidElement.classList.add('has-error');
@@ -333,7 +329,7 @@ test('Scroll to invalid element', (t) => {
         Validation.scrollToInvalidElement(null);
     }
     catch (e) {
-        
+
     }
 
     t.pass();
@@ -346,7 +342,7 @@ test('Add Notification', (t) => {
         message: 'Page contains invalid values',
         position: 'center',
         timeout: '0',
-        type: 'danger', 
+        type: 'danger',
     };
 
     Validation.addNotification(flowKey);
