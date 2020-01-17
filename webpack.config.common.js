@@ -2,8 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RemovePlugin = require('remove-files-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths, mapPublicPath } = require('./config/paths');
@@ -16,11 +16,12 @@ module.exports = (env) => ({
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
         'js/loader': `${repoPaths.uiHtml5}/js/loader.js`,
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
+        'loader': `${repoPaths.uiHtml5}/js/loader.js`,
     },
 
     output: {
         // virtual path on the dev-server
-        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : 'debug/',
+        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : '/',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
@@ -44,44 +45,38 @@ module.exports = (env) => ({
             contextRegExp: /moment$/
         }),
         new CopyPlugin([
-            // copy the vendor scripts
-            {
-                context: repoPaths.uiVendor,
-                from: 'vendor/**/*.*',
-                to: 'js/',
-            },
             // copy the favicons
             {
                 context: repoPaths.uiHtml5,
                 from: 'img/**/*.*',
                 // to: defaults to the output.path
             },
-            // copy the default.html
+            // copy the index.html
             {
                 context: repoPaths.uiHtml5,
-                from: 'default.html',
+                from: 'index.html',
                 to: 'players/',
             },
         ]),
+        new WriteBundleFilePlugin({
+            bundleEntries: {
+                // use `name : key` pairs
+                'js/flow-ui-bootstrap': 'bootstrap3',
+                'js/flow-ui-core': 'core',
+                'js/flow-offline': 'offline',
+                'css/flow-ui-bootstrap': 'bootstrap3',
+                'css/flow-ui-bootstrap-components': 'bootstrap3',
+            },
+            bundleFilename: 'bundles.json',
+            pathPrefix: '/',
+            // remove sourcemaps and theme css files from the bundle list
+            filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
+        }),
         new BundleAnalyzerPlugin({
             analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
             openAnalyzer: !!(env && env.analyse),
         }),
         new CleanWebpackPlugin(),
-        new WriteBundleFilePlugin({
-            bundleEntries: {
-                // use `name : key` pairs
-                'js/flow-ui-bootstrap': 'bootstrap',
-                'js/flow-ui-core': 'core',
-                'js/flow-offline': 'offline',
-                'css/flow-ui-bootstrap': 'bootstrap',
-                'css/flow-ui-bootstrap-components': 'bootstrap',
-            },
-            bundleFilename: 'bundle.json',
-            pathPrefix: '/',
-            // remove sourcemaps and theme css files from the bundle list
-            filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
-        }),
         // remove unnecessary files from the build folder
         new RemovePlugin({
             after: {
@@ -98,7 +93,7 @@ module.exports = (env) => ({
     ],
 
     module: {
-        rules: [
+        rules: [            
             // bundle source code from ui-core and ui-bootstrap
             {
                 test: /\.(ts|tsx)$/,
@@ -141,8 +136,8 @@ module.exports = (env) => ({
                         loader: 'file-loader',
                         options: {
                             name: '[name].css',
-                            outputPath: 'themes/',
-                            publicPath: 'themes/',
+                            outputPath: 'css/themes/',
+                            publicPath: 'css/themes/',
                         },
                     },
                     { loader: 'extract-loader' },
@@ -158,7 +153,7 @@ module.exports = (env) => ({
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'fonts/',
+                            outputPath: 'css/fonts/',
                             publicPath: 'fonts/',
                         }
                     }
@@ -242,8 +237,6 @@ module.exports = (env) => ({
         'bootstrap': 'bootstrap',
         'socket.io-client': 'io',
     },
-
-    devtool: (env && env.development) ? 'inline-source-map' : 'source-map',
 
     stats: {
         // add asset Information
