@@ -6,6 +6,11 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const { repoPaths, mapPublicPath } = require('./config/paths');
 
+// because of Bamboo we are using process.env instead of webpack env
+// for PACKAGE_VERSION (remember to use "export PACKAGE_VERSION=x.y.z." so the
+// var is visible to all child processes)
+const { PACKAGE_VERSION } = process.env;
+
 module.exports = (env) => ({
 
     mode: (env && env.development) ? 'development' : 'production',
@@ -23,6 +28,7 @@ module.exports = (env) => ({
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
+        filename: `[name]${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.js`,
     },
 
     resolve: {
@@ -139,6 +145,59 @@ module.exports = (env) => ({
                         }
                     }
                 ]
+            },
+            // bundle bootstrap styles
+            // use `${PACKAGE_VERSION}` in file name
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-bootstrap.less`),
+                ],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: `flow-ui-bootstrap${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
+                        },
+                    },
+                    { loader: 'extract-loader' },
+                    // Change all instances of `.mw-bs html` and `.mw-bs body`
+                    // to `.mw-bs` because we are nesting the entire
+                    // bootstrap.css file within mw-bootstrap.less.
+                    {
+                        loader: 'string-replace-loader',
+                        options: {
+                            search: '\.mw-bs html|\.mw-bs body',
+                            replace: '.mw-bs',
+                            flags: 'g',
+                        }
+                    },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ]
+            },
+            // bundle components styles
+            // use `${PACKAGE_VERSION}` in file name
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-components.less`),
+                ],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: `flow-ui-bootstrap-components${PACKAGE_VERSION ? `-${PACKAGE_VERSION}` : null}.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
+                        },
+                    },
+                    { loader: 'extract-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ],
             },
         ],
     },

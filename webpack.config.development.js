@@ -15,93 +15,23 @@ module.exports = (env) => {
     return {
         mode: common.mode,
 
-        entry: {
-            ...common.entry,
-        },
+        entry: common.entry,
 
-        output: {
-            filename: '[name].js',
-            ...common.output,
-        },
+        output: common.output,
 
-        resolve: {
-            ...common.resolve,
-        },
+        resolve: common.resolve,
 
-        plugins: [
-            ...common.plugins,
-        ],
+        plugins: common.plugins,
 
-        module: {
-            rules: [
-                ...common.module.rules,
-                // bundle bootstrap styles
-                {
-                    test: /\.less$/,
-                    include: [
-                        path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-bootstrap.less`),
-                    ],
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'flow-ui-bootstrap.css',
-                                outputPath: 'css/',
-                                publicPath: 'css/',
-                            },
-                        },
-                        { loader: 'extract-loader' },
-                        // Change all instances of `.mw-bs html` and `.mw-bs body`
-                        // to `.mw-bs` because we are nesting the entire
-                        // bootstrap.css file within mw-bootstrap.less.
-                        {
-                            loader: 'string-replace-loader',
-                            options: {
-                                search: '\.mw-bs html|\.mw-bs body',
-                                replace: '.mw-bs',
-                                flags: 'g',
-                            }
-                        },
-                        { loader: 'css-loader' },
-                        { loader: 'less-loader' },
-                    ]
-                },
-                // bundle components styles
-                {
-                    test: /\.less$/,
-                    include: [
-                        path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-components.less`),
-                    ],
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'flow-ui-bootstrap-components.css',
-                                outputPath: 'css/',
-                                publicPath: 'css/',
-                            },
-                        },
-                        { loader: 'extract-loader' },
-                        { loader: 'css-loader' },
-                        { loader: 'less-loader' },
-                    ],
-                },
-            ],
-        },
+        module: common.module,
 
-        externals: {
-            ...common.externals,
-        },
+        externals: common.externals,
 
         devtool: common.devtool,
 
-        stats: {
-            ...common.stats,
-        },
+        stats: common.stats,
 
-        performance: {
-            ...common.performance,
-        },
+        performance: common.performance,
 
         devServer: {
             hot: true,
