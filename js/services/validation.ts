@@ -70,6 +70,11 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
         return { isValid: false, validationMessage: Settings.global('localization.validation.required', flowKey) };
     }
 
+    if (model.isVisible === false || model.isEnabled === false) {
+        // Validation on the back-end ignores components that are disabled or not visible
+        return { isValid: true, validationMessage: null };
+    }
+
     let regex = null;
     let message = null;
 
