@@ -31,6 +31,9 @@ const config = {
     devtool: 'source-map',
     plugins: [
         new CleanWebpackPlugin(pathsToClean),
+        new webpack.DefinePlugin({
+            VERSION: JSON.stringify(PACKAGE_VERSION),
+        }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new UglifyJSPlugin({
             minimize: true,
