@@ -23,7 +23,7 @@ export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authentication
     }
 
     try {
-        xhr.setRequestHeader('x-manywho-version', VERSION);
+        xhr.setRequestHeader('X-Flow-Version', VERSION);
     }
     catch (e) {
         // VERSION is not defined so do not include the custom header
