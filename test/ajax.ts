@@ -192,7 +192,7 @@ test.cb.serial('Get Flow By Name', (t) => {
 test.cb.serial('ObjectData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/data`;
+    const url = `https://flow.manywho.com/api/run/1/service/data`;
     const expected = {
         listFilter: {
             search: 'search',

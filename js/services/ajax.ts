@@ -163,7 +163,7 @@ export const getFlowByName = (name: string, tenantId: string, authenticationToke
 };
 
 /**
- * POST to `/api/service/1/data` to make an objectdata request
+ * POST to `/api/run/1/service/data` to make an objectdata request
  * @param limit Number of results to return
  * @param search Search string to apply to the list filter
  * @param orderBy Property name to order results by
@@ -183,7 +183,7 @@ export const dispatchObjectDataRequest = (
 ): JQueryXHR => {
     Log.info('Dispatching object data request');
     return dispatchDataRequest(
-        '/api/service/1/data',
+        '/api/run/1/service/data',
         'objectData',
         request,
         tenantId,
