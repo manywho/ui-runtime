@@ -272,7 +272,7 @@ export const uploadFiles = (
 };
 
 /**
- * POST to `/api/social/1/stream/streamId/file` to upload a file to a 3rd party social stream
+ * POST to `/api/run/1/social/stream/streamId/file` to upload a file to a 3rd party social stream
  * @param onProgress Callback to recieve progress event info
  */
 export const uploadSocialFile = (
@@ -282,7 +282,7 @@ export const uploadSocialFile = (
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
 ): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/social/1/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
+    return Connection.upload(null, 'fileData', '/api/run/1/social/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
 };
 
 /**
@@ -328,23 +328,41 @@ export const getExecutionLog = (tenantId: string, flowId: string, stateId: strin
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/user/me`
+ * GET at `/api/run/1/social/stream/streamId/user/me`
  */
 export const getSocialMe = (tenantId: string, streamId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Social User, Me');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/user/me', 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null,
+        'social',
+        '/api/run/1/social/stream/' + streamId + '/user/me',
+        'GET',
+        tenantId,
+        stateId,
+        authenticationToken,
+        null
+    );
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/follower`
+ * GET at `/api/run/1/social/stream/streamId/follower`
  */
 export const getSocialFollowers = (tenantId: string, streamId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Social Followers');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/follower', 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null,
+        'social',
+        '/api/run/1/social/stream/' + streamId + '/follower',
+        'GET',
+        tenantId,
+        stateId,
+        authenticationToken,
+        null,
+    );
 };
 
 /**
- * GET at `/api/social/1/stream/streamId?page=page&pageSize=pageSize`
+ * GET at `/api/run/1/social/stream/streamId?page=page&pageSize=pageSize`
  */
 export const getSocialMessages = (
     tenantId: string,
@@ -358,7 +376,7 @@ export const getSocialMessages = (
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize,
+        '/api/run/1/social/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize,
         'GET',
         tenantId,
         stateId,
@@ -368,14 +386,14 @@ export const getSocialMessages = (
 };
 
 /**
- * POST to `/api/social/1/stream/streamId/message`
+ * POST to `/api/run/1/social/stream/streamId/message`
  */
 export const sendSocialMessage = (tenantId: string, streamId: string, stateId: string, request: any, authenticationToken: string): JQueryXHR => {
     Log.info('Sending Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '/message',
+        '/api/run/1/social/stream/' + streamId + '/message',
         'POST',
         tenantId,
         stateId,
@@ -385,14 +403,14 @@ export const sendSocialMessage = (tenantId: string, streamId: string, stateId: s
 };
 
 /**
- * POST to `/api/social/1/stream/streamId?follow=isFollowing`
+ * POST to `/api/run/1/social/stream/streamId?follow=isFollowing`
  */
 export const follow = (tenantId: string, streamId: string, stateId: string, isFollowing: boolean, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '?follow=' + isFollowing.toString(),
+        '/api/run/1/social/stream/' + streamId + '?follow=' + isFollowing.toString(),
         'POST',
         tenantId,
         stateId,
@@ -402,14 +420,14 @@ export const follow = (tenantId: string, streamId: string, stateId: string, isFo
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/user?name=name`
+ * GET at `/api/run/1/social/stream/streamId/user?name=name`
  */
 export const getSocialUsers = (tenantId: string, streamId: string, stateId: string, name: string, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '/user?name=' + name,
+        '/api/run/1/social/stream/' + streamId + '/user?name=' + name,
         'GET',
         tenantId,
         stateId,
