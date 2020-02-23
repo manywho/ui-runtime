@@ -320,11 +320,11 @@ export const ping = (tenantId: string, stateId: string, stateToken: string, auth
 };
 
 /**
- * GET at `/api/log/flowId/stateId`
+ * GET at `/api/run/1/state/stateId/log`
  */
 export const getExecutionLog = (tenantId: string, flowId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Execution Log');
-    return Connection.request(null, 'log', '/api/log/' + flowId + '/' + stateId, 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(null, 'log', '/api/run/1/state/' + stateId + '/log', 'GET', tenantId, stateId, authenticationToken, null);
 };
 
 /**

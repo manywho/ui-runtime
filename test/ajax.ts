@@ -14,7 +14,7 @@ test.before((t) => {
             platform: {
                 uri: 'https://flow.manywho.com',
             },
-        },                  
+        },
         null,
     );
 
@@ -219,8 +219,8 @@ test.cb.serial('ObjectData Request', (t) => {
         token,
         expected.listFilter.limit,
         expected.listFilter.search,
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
@@ -250,13 +250,13 @@ test.cb.serial('FileData Request', (t) => {
 
     Ajax.dispatchFileDataRequest(
         {},
-        tenantId, 
-        stateId, 
-        token, 
-        null, 
-        expected.listFilter.search, 
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        tenantId,
+        stateId,
+        token,
+        null,
+        expected.listFilter.search,
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
@@ -302,7 +302,7 @@ test.cb.serial('Get Execution Log', (t) => {
     t.plan(3);
 
     const flowId = 'flowId';
-    const url = `https://flow.manywho.com/api/log/${flowId}/${stateId}`;
+    const url = `https://flow.manywho.com/api/run/1/state/${stateId}/log`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
