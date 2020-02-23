@@ -228,7 +228,7 @@ test.cb.serial('ObjectData Request', (t) => {
 test.cb.serial('FileData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/file`;
+    const url = `https://flow.manywho.com/api/run/1/service/file`;
     const expected = {
         listFilter: {
             search: 'search',

@@ -198,7 +198,7 @@ export const dispatchObjectDataRequest = (
 };
 
 /**
- * POST to `/api/service/1/file` to make a filedata request
+ * POST to `/api/run/1/service/file` to make a filedata request
  * @param limit Number of results to return
  * @param search Search string to apply to the list filter
  * @param orderBy Property name to order results by
@@ -218,7 +218,7 @@ export const dispatchFileDataRequest = (
 ): JQueryXHR => {
     Log.info('Dispatching object data request');
     return dispatchDataRequest(
-        '/api/service/1/file',
+        '/api/run/1/service/file',
         'fileData',
         request,
         tenantId,
@@ -233,7 +233,7 @@ export const dispatchFileDataRequest = (
 };
 
 /**
- * POST to `/api/service/1/file/content` to upload a file to a 3rd party service
+ * POST to `/api/run/1/service/file/content` to upload a file to a 3rd party service
  * DEPRECATED: Does not support offline file upload
  * @param onProgress Callback to recieve progress event info
  */
@@ -243,11 +243,11 @@ export const uploadFile = (
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
 ): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/service/1/file/content', formData, tenantId, authenticationToken, onProgress);
+    return Connection.upload(null, 'fileData', '/api/run/1/service/file/content', formData, tenantId, authenticationToken, onProgress);
 };
 
 /**
- * POST to `/api/service/1/file/content` to upload a file to a 3rd party service (offline supported)
+ * POST to `/api/run/1/service/file/content` to upload a file to a 3rd party service (offline supported)
  * @param onProgress Callback to recieve progress event info
  */
 export const uploadFiles = (
@@ -261,7 +261,7 @@ export const uploadFiles = (
     return Connection.uploadFiles(
         null,
         'fileData',
-        '/api/service/1/file/content',
+        '/api/run/1/service/file/content',
         files,
         request,
         tenantId,
