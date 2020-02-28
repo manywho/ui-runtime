@@ -5,7 +5,6 @@ import * as sinon from 'sinon';
 
 const validation = {
     validate: sinon.stub(),
-    shouldValidate: sinon.stub().returns(true),
 };
 
 const model = {
@@ -231,18 +230,13 @@ test('Refresh Components', (t) => {
         ],
     };
 
-    State.refreshComponents(models, 'wait', flowKey);
+    State.refreshComponents(models, flowKey);
     t.deepEqual(State.getComponents(flowKey), expected);
 });
 
-test('Set Component', (t) => {
-    validation.validate
-        .onFirstCall()
-        .returns({
-            isValid: false,
-            validationMessage: 'message',
-        });
+test('Set Component with client-side validation disabled', (t) => {
 
+    // Mock the validate() method guarded by 'validation.isEnabled' as if disabled.
     validation.validate
         .returns({
             isValid: true,
@@ -254,7 +248,7 @@ test('Set Component', (t) => {
             isValid: false,
         },
     };
-    State.refreshComponents(models, 'move', flowKey);
+    State.refreshComponents(models, flowKey);
 
     const values = {
         contentValue: 'value',
@@ -275,6 +269,41 @@ test('Set Component', (t) => {
     validation.validate.resetBehavior();
 });
 
+test('Set Component with client-side validation enabled', (t) => {
+
+    // Mock the validate() method guarded by 'validation.isEnabled' as if enabled.
+    validation.validate
+        .returns({
+            isValid: false,
+            validationMessage: 'not valid',
+        });
+
+    const models = {
+        id: {
+            isValid: false,
+        },
+    };
+    State.refreshComponents(models, flowKey);
+
+    const values = {
+        contentValue: 'value',
+        objectData: [],
+    };
+    State.setComponent('id', values, flowKey, true);
+
+    const expected = {
+        contentValue: 'value',
+        isValid: false,
+        objectData: [],
+        validationMessage: 'not valid',
+    };
+
+    t.deepEqual(State.getComponent('id', flowKey), expected);
+    t.is(collaboration.push.callCount, 1);
+
+    validation.validate.resetBehavior();
+});
+
 test('Validation', (t) => {
     validation.validate.returns({
         isValid: false,
@@ -284,11 +313,11 @@ test('Validation', (t) => {
     const models = {
         id: {},
     };
-    State.refreshComponents(models, 'move', flowKey);
+    State.refreshComponents(models, flowKey);
 
     const expected = {
         contentValue: null,
-        objectData: undefined,
+        objectData: null,
         isValid: false,
         validationMessage: 'message',
     };
