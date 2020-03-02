@@ -3,8 +3,6 @@ import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
-declare const VERSION: any;
-
 /**
  * @private
  * */
@@ -20,15 +18,6 @@ export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authentication
 
     if (authenticationToken) {
         xhr.setRequestHeader('Authorization', authenticationToken);
-    }
-
-    try {
-        xhr.setRequestHeader('X-Flow-Version', VERSION);
-    }
-    catch (e) {
-        // VERSION is not defined so do not include the custom header
-        // This will prevent the header being rejected by CORS
-        // when running on localhost
     }
 
     if (Settings.event(event + '.beforeSend')) {
