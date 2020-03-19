@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+import { guid, str } from '../../test-utils';
 import Request from '../../js/components/Request';
 import OfflineCore from '../../js/services/OfflineCore';
 import extractExternalId from '../../js/services/extractExternalId';
@@ -15,9 +16,17 @@ declare const $: any;
 
 describe('Request component behaviour', () => {
 
+    globalAny.window.manywho.ajax.uploadFiles = jest.fn(() => {
+        return {
+            then: jest.fn(() => {
+                return { fail: jest.fn() };
+            }),
+        };
+    });
+
     let componentWrapper;
 
-    const props = {
+    let props: any = {
         flowKey: '',
         cachedRequest: {
             request: {
@@ -25,8 +34,8 @@ describe('Request component behaviour', () => {
             },
             assocData: null,
         },
-        tenantId: '',
-        authenticationToken: '',
+        tenantId: guid(),
+        authenticationToken: str(10),
         onReplayDone: jest.fn(),
         onDelete: jest.fn(),
         replayNow: true,
@@ -42,6 +51,29 @@ describe('Request component behaviour', () => {
         expect(componentWrapper.length).toEqual(1);
     });
 
+    test('File is uploaded on replay', () => {
+        const stateId = guid();
+        const request = {
+            stateId,
+            type: 'fileData',
+            files: [],
+        };
+
+        props.cachedRequest.request = request;
+
+        componentWrapper.find('.btn-primary').simulate('click');
+        const progressFuction = componentWrapper.instance().onProgress;
+
+        expect(globalAny.window.manywho.ajax.uploadFiles).toHaveBeenCalledWith(
+            [],
+            request,
+            props.tenantId,
+            props.authenticationToken,
+            progressFuction,
+            stateId,
+        );
+    });
+
     test('Replay is cancelled and flow is rejoined if replay request is unauthorised', () => {
         const wrapperInstance = componentWrapper.instance();
         wrapperInstance.onReplayResponse({ invokeType: 'NOT_ALLOWED' });
@@ -50,6 +82,11 @@ describe('Request component behaviour', () => {
     });
 
     test('The external id extraction method is called on replay', () => {
+        props.cachedRequest.request = {
+            type: 'invoke',
+            stateId: guid(),
+        };
+
         globalAny.manywho.ajax.invoke.mockImplementation(() => {
             return { then: (success) => {
                 success();
