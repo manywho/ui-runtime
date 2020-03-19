@@ -56,14 +56,14 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
             authenticationToken,
         } = this.props;
 
-        if (this.props.cachedRequest.type === 'fileData') {
+        if (this.props.cachedRequest.request.type === 'fileData') {
             return manywho.ajax.uploadFiles(
-                cachedRequest.files,
-                cachedRequest,
+                cachedRequest.request.files,
+                cachedRequest.request,
                 tenantId,
                 authenticationToken,
                 this.onProgress,
-                cachedRequest.stateId,
+                cachedRequest.request.stateId,
             )
             .then(this.onReplayResponse)
             .fail((response) => {
