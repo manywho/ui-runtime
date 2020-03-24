@@ -37,7 +37,7 @@ export const hasNetwork = () => {
         deferred.resolve(true);
     })
     .fail(() => {
-        store.dispatch(isOffline(true));
+        store.dispatch<any>(isOffline(true));
         deferred.resolve(false);
     });
 
@@ -57,7 +57,7 @@ export const isOnline = (stateId, request, event) => {
 
     // If requests are being replayed then we want to bypass
     // the health checks in case a request fails
-    if (store.getState().isReplaying === true) {
+    if (store.getState().isReplaying) {
         return deferred.resolve(true);
     }
 
@@ -66,11 +66,11 @@ export const isOnline = (stateId, request, event) => {
     getOfflineData(stateId, flowId, event)
         .then((flow) => {
             if (flow) {
-                store.dispatch(isOffline(true));
+                store.dispatch<any>(isOffline(true));
                 return deferred.resolve(false);
             }
 
-            store.dispatch(isOffline(false));
+            store.dispatch<any>(isOffline(false));
             hasNetwork()
                 .then((response) => {
                     if (response) {
@@ -169,7 +169,7 @@ export const onlineRequest = (
                         if (flow) {
                             // Data cached in indexdb so flow
                             // has requests that need to be replayed
-                            store.dispatch(isOffline(true));
+                            store.dispatch<any>(isOffline(true));
                         }
                     });
             }

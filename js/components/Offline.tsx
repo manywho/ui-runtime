@@ -18,7 +18,11 @@ enum OfflineView {
 }
 
 const mapStateToProps = (state) => {
-    return { isOffline: state.isOffline, isReplaying: state.isReplaying, cachingProgress: state.cachingProgress };
+    return {
+        isOffline: state.isOffline,
+        isReplaying: state.isReplaying,
+        cachingProgress: state.cachingProgress,
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
