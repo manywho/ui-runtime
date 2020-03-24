@@ -7,6 +7,10 @@ export const isOffline = result => ({
     payload: result,
 });
 
+export const isOnline = () => ({
+    type: 'IS_ONLINE',
+});
+
 export const hasNetwork = () => {
     return (dispatch) => {
 
@@ -18,13 +22,6 @@ export const hasNetwork = () => {
             flow.state.id,
             'main',
         );
-
-        manywho.model.addNotification(flowKey, {
-            message: 'You are back online',
-            position: 'left',
-            type: 'success',
-            dismissible: true,
-        });
 
         dispatch({
             type: 'HAS_NETWORK',
@@ -43,13 +40,6 @@ export const hasNoNetwork = () => {
             flow.state.id,
             'main',
         );
-
-        manywho.model.addNotification(flowKey, {
-            message: 'You are now offline',
-            position: 'left',
-            type: 'danger',
-            dismissible: true,
-        });
 
         dispatch({
             type: 'HAS_NO_NETWORK',

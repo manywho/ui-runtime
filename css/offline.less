@@ -26,6 +26,19 @@
             }
         }
 
+        & > #offline-banner {
+            top: 0;
+            left: 0;
+            background: red;
+            width: 100%;
+            pointer-events: initial;
+            position: absolute;
+        }
+
+        #offline-banner.success {
+            background: green;
+        }
+
         & > .offline-status {
             background: rgba(192, 192, 192, 0.5);
             bottom: 0;

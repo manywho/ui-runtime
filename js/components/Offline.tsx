@@ -4,7 +4,8 @@ import OfflineCore from '../services/OfflineCore';
 import { setOfflineData } from '../services/Storage';
 import { IOfflineProps, IOfflineState } from '../interfaces/IOffline';
 import { connect } from 'react-redux';
-import { isOffline, isReplaying } from '../actions';
+import { isOffline, isOnline, isReplaying } from '../actions';
+import Banner from './Banner';
 
 import GoOnline from './GoOnline';
 import NoNetwork from './NoNetwork';
@@ -20,6 +21,7 @@ enum OfflineView {
 const mapStateToProps = (state) => {
     return {
         isOffline: state.isOffline,
+        hasNetwork: state.hasNetwork,
         isReplaying: state.isReplaying,
         cachingProgress: state.cachingProgress,
     };
@@ -29,6 +31,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         toggleIsOffline: (bool) => {
             dispatch(isOffline(bool));
+        },
+        toggleIsOnline: () => {
+            dispatch(isOnline());
         },
         toggleIsReplaying: (bool) => {
             dispatch(isReplaying(bool));
@@ -64,7 +69,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
         this.setState({ view: null });
 
         // Out of offline mode and rejoining the flow
-        this.props.toggleIsOffline(false);
+        this.props.toggleIsOnline();
         this.props.toggleIsReplaying(false);
         OfflineCore.rejoin(this.props.flowKey);
     }
@@ -78,7 +83,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
             .then(() => {
 
                 // Back into offline mode
-                this.props.toggleIsOffline(true);
+                this.props.toggleIsOffline({ hasNetwork: false });
                 this.props.toggleIsReplaying(false);
                 this.setState({ view: null });
             });
@@ -125,6 +130,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
                 </div>
                 {view}
                 {cachingSpinner}
+                <Banner hasNetwork={this.props.hasNetwork} isOffline={this.props.isOffline} />
             </div>;
         }
 
