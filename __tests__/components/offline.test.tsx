@@ -9,8 +9,10 @@ describe('Offline component behaviour', () => {
     const props = {
         flowKey: 'test',
         isOffline: false,
+        hasNetwork: true,
         cachingProgress: 0,
         toggleIsOffline: jest.fn(),
+        toggleIsOnline: jest.fn(),
         toggleIsReplaying: jest.fn(),
     };
 
