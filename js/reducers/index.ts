@@ -41,7 +41,7 @@ const offlineState = (state: IOfflineState = { cachingProgress: 0, isReplaying: 
         return {
             ...state,
             isOffline: true,
-            hasNetwork: action.payload.hasNetwork,
+            hasNetwork: action.payload,
         };
 
     case 'IS_ONLINE':

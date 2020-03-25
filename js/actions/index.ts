@@ -1,51 +1,25 @@
-import { getFlowModel } from '../models/Flow';
-
 declare const manywho;
 
-export const isOffline = result => ({
+interface IisOffline {
+    hasNetwork: boolean;
+}
+
+export const isOffline = ({ hasNetwork }: IisOffline) => ({
     type: 'IS_OFFLINE',
-    payload: result,
+    payload: hasNetwork,
 });
 
 export const isOnline = () => ({
     type: 'IS_ONLINE',
 });
 
-export const hasNetwork = () => {
-    return (dispatch) => {
+export const hasNetwork = () => ({
+    type: 'HAS_NETWORK',
+});
 
-        const flow = getFlowModel();
-        const flowKey = manywho.utils.getFlowKey(
-            flow.tenantId,
-            flow.id.id,
-            flow.id.versionId,
-            flow.state.id,
-            'main',
-        );
-
-        dispatch({
-            type: 'HAS_NETWORK',
-        });
-    };
-};
-
-export const hasNoNetwork = () => {
-    return (dispatch) => {
-
-        const flow = getFlowModel();
-        const flowKey = manywho.utils.getFlowKey(
-            flow.tenantId,
-            flow.id.id,
-            flow.id.versionId,
-            flow.state.id,
-            'main',
-        );
-
-        dispatch({
-            type: 'HAS_NO_NETWORK',
-        });
-    };
-};
+export const hasNoNetwork = () => ({
+    type: 'HAS_NO_NETWORK',
+});
 
 export const isReplaying = result => ({
     type: 'IS_REPLAYING',
