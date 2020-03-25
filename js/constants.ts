@@ -26,3 +26,8 @@ export const CONTENT_TYPES = {
     PASSWORD: 'ContentPassword',
     CONTENT: 'ContentContent',
 };
+
+export const BANNER_TEXT = {
+    online: 'You are now online',
+    offline: 'You are now offline',
+};
