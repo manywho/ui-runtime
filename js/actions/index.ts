@@ -1,8 +1,24 @@
 declare const manywho;
 
-export const isOffline = result => ({
-    type: 'is_OFFLINE',
-    payload: result,
+interface IisOffline {
+    hasNetwork: boolean;
+}
+
+export const isOffline = ({ hasNetwork }: IisOffline) => ({
+    type: 'IS_OFFLINE',
+    payload: hasNetwork,
+});
+
+export const isOnline = () => ({
+    type: 'IS_ONLINE',
+});
+
+export const hasNetwork = () => ({
+    type: 'HAS_NETWORK',
+});
+
+export const hasNoNetwork = () => ({
+    type: 'HAS_NO_NETWORK',
 });
 
 export const isReplaying = result => ({
