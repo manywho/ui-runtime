@@ -39,7 +39,7 @@ export default class Banner extends React.Component<IBannerProps, IBannerState> 
         return (
             <>{ this.state.hide || (this.props.hasNetwork && !this.props.isOffline) ?
             null :
-                <div id="offline-banner" className={`alert notification ${this.props.hasNetwork ? 'alert-success' : 'alert-danger'}`}>
+                <div className={`offline-banner alert notification ${this.props.hasNetwork ? 'alert-success' : 'alert-danger'}`}>
                     <span className="format-pre-line">{this.props.hasNetwork ? BANNER_TEXT.online : BANNER_TEXT.offline}</span>
                 </div>
             }</>
