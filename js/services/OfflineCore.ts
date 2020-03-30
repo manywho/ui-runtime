@@ -430,6 +430,7 @@ export default OfflineCore;
 
 manywho.settings.initialize({
     offline: {
+        instantReplay: true,
         cache: {
             pollInterval: DEFAULT_POLL_INTERVAL,
             objectDataCachingInterval: DEFAULT_OBJECTDATA_CACHING_INTERVAL,
