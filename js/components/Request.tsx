@@ -107,6 +107,12 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
         }
     }
 
+    componentDidMount() {
+        if (this.props.replayNow) {
+            this.onReplay();
+        }
+    }
+
     render() {
         let replaying = null;
         if (this.state.isReplaying) {

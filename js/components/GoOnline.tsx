@@ -26,8 +26,14 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
 
     constructor(props: any) {
         super(props);
+
+        const isReplayAll = manywho.settings.global(
+            'offline.instantReplay',
+            props.flowKey,
+        );
+
         this.state = {
-            isReplayAll: false,
+            isReplayAll,
         };
     }
 
