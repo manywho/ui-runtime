@@ -34,6 +34,9 @@
     "script-loader": "^0.7.2",
     "string-replace-loader": "^2.2.0",
     "style-loader": "^1.0.0",
+    "stylelint": "^13.0.0",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-standard": "^19.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",
@@ -56,6 +59,10 @@
     "lint:bootstrap:test": "eslint 'ui-bootstrap/__tests__/**'",
     "lint:core:test": "eslint 'ui-core/test/**'",
     "lint:offline:test": "eslint 'ui-offline/__tests__/**'",
-    "lint:test": "eslint 'ui-bootstrap/__tests__/**' 'ui-core/test/**' 'ui-offline/__tests__/**'"
+    "lint:test": "eslint 'ui-bootstrap/__tests__/**' 'ui-core/test/**' 'ui-offline/__tests__/**'",
+    "stylelint:bootstrap": "stylelint 'ui-bootstrap/css/**/*.less'",
+    "stylelint:offline": "stylelint 'ui-offline/css/**/*.less'",
+    "stylelint:themes": "stylelint 'ui-themes/styles/**/*.less'",
+    "stylelint": "stylelint 'ui-bootstrap/css/**/*.less' 'ui-themes/styles/**/*.less' 'ui-offline/css/**/*.less'"
   }
 }

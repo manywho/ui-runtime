@@ -83,7 +83,7 @@ executed from the top-level directory.
 Other subrepos don't have/need tests because they are either just HTML, CSS or 
 3rd party scripts.
 
-## Linting
+## Code linting
 
 To run code linting on all subrepos use:
 
@@ -128,6 +128,32 @@ executed from the top-level directory.
 
 Other subrepos don't have/need linting because they are either just HTML, CSS or 
 3rd party scripts.
+
+## Style linting
+
+To run style linting on all subrepos use:
+
+```shell script
+npm run stylelint
+```
+
+To run style linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap
+
+# ui-core
+npm run lint:offline
+
+# ui-offline
+npm run lint:themes
+```
+
+All listed commands are defined in the top-level `package.json` and should be 
+executed from the top-level directory.
+
+Other subrepos don't have/need linting because they don't contain any styles.
 
 ## Production
 
