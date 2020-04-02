@@ -49,12 +49,7 @@ function processObjectDataRequests(components, flowKey) {
 
             if (component.isVisible) {
 
-                let limit = Settings.global('paging.' + component.componentType);
-                const paginationSize = parseInt(component.attributes.paginationSize, 10);
-
-                if (!isNaN(paginationSize)) {
-                    limit = paginationSize;
-                }
+                const limit = Component.getPageSize(component, flowKey);
 
                 // Only components that specify the objectDataRequest key (e.g. tables)
                 // should ever need to make object data requests.
@@ -1184,7 +1179,12 @@ export const objectDataRequest = (
             State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr, status, error) => {
+        .fail((xhr: any, status, error: string) => {
+
+            if (!error && xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                // No useful error supplied, so grab the raw response
+                error = xhr.responseJSON.message;
+            }
 
             State.setComponentError(id, error, flowKey);
 
@@ -1345,6 +1345,11 @@ export const render = (flowKey: string) => {
 
         container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
 
+    }
+
+    // Bail here if there is no container.
+    if (!container) {
+        return;
     }
 
     const login = State.getLogin(flowKey);
