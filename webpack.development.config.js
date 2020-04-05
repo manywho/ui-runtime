@@ -24,11 +24,19 @@ const config = {
             {
                 test: /\.less$/,
                 use: [
-                    {loader: 'style-loader'}, 
+                    {loader: 'style-loader'},
                     {loader: 'css-loader'},
                     {loader: 'less-loader'}
                 ]
-            }
+            },
+            {
+                test: /\.svg$/,
+                use: [
+                    {
+                        loader: 'react-svg-loader',
+                    },
+                ],
+            },
         ]
     },
     resolve: {

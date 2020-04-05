@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { BANNER_TEXT } from '../constants';
 
+import OfflineSvg from '../../icons/Offline.svg';
+import OnlineSvg from '../../icons/Online.svg';
+
 interface IBannerProps {
     hasNetwork: boolean;
     isOffline: boolean;
@@ -20,18 +23,16 @@ export default class Banner extends React.Component<IBannerProps, IBannerState> 
         hide: true,
     };
 
+    dismiss = () => {
+        this.setState({ hide: true });
+    }
+
     componentDidUpdate(prevProps) {
 
         // We only want to show the banner when switching
         // to and from offline/online
         if (prevProps.hasNetwork !== this.props.hasNetwork) {
-            this.setState(
-                { hide: false },
-                () => {
-                    setTimeout(
-                        () => { this.setState({ hide: true }); }, 5000,
-                    );
-                });
+            this.setState({ hide: false });
         }
     }
 
@@ -39,7 +40,11 @@ export default class Banner extends React.Component<IBannerProps, IBannerState> 
         return (
             <>{ this.state.hide || (this.props.hasNetwork && !this.props.isOffline) ?
             null :
-                <div className={`offline-banner alert notification ${this.props.hasNetwork ? 'alert-success' : 'alert-danger'}`}>
+                <div className={`offline-banner alert notification ${this.props.hasNetwork ? 'alert-online' : 'alert-offline'}`}>
+                    { this.props.hasNetwork ? <OnlineSvg /> : <OfflineSvg /> }
+                    <button className="close" onClick={this.dismiss}>
+                        <span>{'\u00D7'}</span>
+                    </button>
                     <span className="format-pre-line">{this.props.hasNetwork ? BANNER_TEXT.online : BANNER_TEXT.offline}</span>
                 </div>
             }</>
