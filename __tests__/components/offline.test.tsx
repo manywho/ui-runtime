@@ -2,6 +2,14 @@ import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Offline } from '../../js/components/Offline';
 
+jest.mock('../../icons/Offline.svg', () => {
+    return <div />;
+});
+
+jest.mock('../../icons/Online.svg', () => {
+    return <div />;
+});
+
 describe('Offline component behaviour', () => {
 
     let componentWrapper;

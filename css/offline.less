@@ -7,6 +7,31 @@
         position: absolute;
         pointer-events: initial;
         color: #212121;
+        display: flex;
+    }
+
+    .offline-banner svg {
+        position: absolute;
+    }
+
+    // The two wifi icons have slightly differing heights
+    // so the positioning rules need to be adjusted for each
+    .offline-banner.alert-offline .network-icon {
+        top: 12px;
+    }
+
+    .offline-banner.alert-online .network-icon {
+        top: 15px;
+    }
+
+    .offline-banner.alert-offline .network-icon {
+        position: absolute;
+        top: 12px;
+    }
+
+    .offline-banner .format-pre-line {
+        flex-grow: 1;
+        margin-left: 3em;
     }
 
     .offline-banner button.close {
