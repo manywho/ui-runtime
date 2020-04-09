@@ -4,6 +4,14 @@ import Banner from '../../js/components/Banner';
 import { shallow } from 'enzyme';
 import { BANNER_TEXT } from '../../js/constants';
 
+jest.mock('../../icons/Offline.svg', () => {
+    return <div />;
+});
+
+jest.mock('../../icons/Online.svg', () => {
+    return <div />;
+});
+
 describe('Banner component behaviour', () => {
 
     test('Banner component renders without crashing', () => {
