@@ -25,6 +25,8 @@ const globalAny: any = global;
 
 describe('GoOnline component behaviour', () => {
 
+    globalAny.window.manywho.settings.global = jest.fn();
+
     let componentWrapper;
 
     const props = {
@@ -50,6 +52,22 @@ describe('GoOnline component behaviour', () => {
         componentWrapper.setState({});
         const requestComponent = componentWrapper.find(Request);
         expect(requestComponent.props().authenticationToken).toEqual(mockAuthenticationToken);
+    });
+
+    test('When auto replay setting is switched on', () => {
+        globalAny.manywho.settings.global.mockImplementation(() => {
+            return true;
+        });
+        const componentWrapper = mount(<GoOnline {...props} />);
+        expect(componentWrapper.state().isReplayAll).toBeTruthy();
+    });
+
+    test('When auto replay setting is switched off', () => {
+        globalAny.manywho.settings.global.mockImplementation(() => {
+            return false;
+        });
+        const componentWrapper = mount(<GoOnline {...props} />);
+        expect(componentWrapper.state().isReplayAll).toBeFalsy();
     });
 
 });
