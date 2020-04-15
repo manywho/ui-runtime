@@ -136,7 +136,6 @@ let globals = {
         notification: {
             isEnabled: true,
         },
-        when: ['move'],
     },
     location: {
         isTrackingEnabled: false,

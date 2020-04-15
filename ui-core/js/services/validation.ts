@@ -55,15 +55,6 @@ export interface IValidationResult {
 }
 
 /**
- * Check if the `validation.when` setting contains the `when` parameter, thus validation should be performed
- * @param invokeType When to validate: INITIALIZE, JOIN, MOVE, SYNC
- * @param flowKey
- */
-export const shouldValidate = (invokeType: string, flowKey: string) => {
-    return Settings.global('validation.when', flowKey).indexOf(invokeType.toLowerCase()) !== -1;
-};
-
-/**
  * Validate the ContentValue or ObjectData for a given models local state. Custom regex validation will be
  * taken from the models `validation` attribute, and a custom message from the `validationMessage` attribute
  * @param model The model that will be validated
@@ -77,6 +68,11 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
 
     if (model.isValid === false) {
         return { isValid: false, validationMessage: Settings.global('localization.validation.required', flowKey) };
+    }
+
+    if (model.isVisible === false || model.isEnabled === false) {
+        // Validation on the back-end ignores components that are disabled or not visible
+        return { isValid: true, validationMessage: null };
     }
 
     let regex = null;
