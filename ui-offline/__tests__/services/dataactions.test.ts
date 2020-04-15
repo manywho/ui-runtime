@@ -1,7 +1,7 @@
 import DataActions from '../../js/services/DataActions';
 import { setStateValue } from '../../js/models/State';
 import { cacheObjectData, patchObjectDataCache } from '../../js/models/Flow';
-import { str } from '../../test-utils';
+import { str } from '../../js/test-utils';
 
 const mockCacheObjectData: any = cacheObjectData;
 

@@ -20,13 +20,13 @@ window.localforage = {
     createInstance: jest.fn(() => {
         return new Promise((resolve, reject) => {
             resolve(true);
-        });       
-    })
-}
+        });
+    }),
+};
 
 window.manywho = {
     ajax: {
-        dispatchObjectDataRequest: jest.fn(() => Promise.resolve({objectData: []})),
+        dispatchObjectDataRequest: jest.fn(() => Promise.resolve({ objectData: [] })),
         invoke: jest.fn(),
     },
     settings: {
@@ -60,15 +60,15 @@ window.manywho = {
         getAuthenticationToken: jest.fn(),
         getState: jest.fn(() => {
             return {token: 'test'};
-        })
+        }),
     },
     component: {
         contentTypes: {
-            string: ''
+            string: '',
         }
     },
     model: {
-        addNotification: jest.fn()
+        addNotification: jest.fn(),
     },
     pollInterval: 1000,
-}
+};

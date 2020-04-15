@@ -1,4 +1,12 @@
 {
+  "exclude": [
+    "node_modules",
+    "./**/*.js",
+    "./**/*.jsx"
+  ],
+  "files": [
+    "custom.d.ts"
+  ],
   "compilerOptions": {
     "pretty": true,
     "target": "es5",
@@ -7,6 +15,8 @@
     "jsx": "react",
     "lib": ["dom", "es6", "es2015"],
     "moduleResolution": "node",
-    "noUnusedLocals": true
+    // "noUnusedLocals": true,
+    "module": "es6",
+    "allowSyntheticDefaultImports": true
   }
 }

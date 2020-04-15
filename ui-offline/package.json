@@ -9,21 +9,9 @@
     },
     "scripts": {
         "docs": "typedoc js --out docs --ignoreCompilerErrors --mode modules & start docs/index.html",
-        "start": "webpack --config webpack.development.config.js --env.build=../ui-html5/build",
-        "dist": "webpack --config webpack.production.config.js",
-        "offline": "node ./js/metaData.js",
-        "precommit": "lint-staged",
-        "test": "jest",
-        "lint": "tslint --project"
+        "offline": "node ./js/metaData.js"
     },
-    "lint-staged": {
-        "*.ts": "tslint",
-        "*.tsx": [
-            "tslint",
-            "git add"
-        ]
-    },
-    "devDependencies": {
+    "backupDevDependencies": {
         "@types/enzyme": "^3.1.11",
         "@types/jest": "^23.1.4",
         "@types/react": "^0.14.57",
@@ -63,38 +51,7 @@
         "worker-loader": "^2.0.0",
         "yargs": "^2.3.0"
     },
-    "jest": {
-        "collectCoverage": true,
-        "collectCoverageFrom": [
-            "**/js/components/*.{ts,tsx}",
-            "**/js/services/*.{ts,tsx}",
-            "**/js/services/pageconditions/*.{ts,tsx}",
-            "**/js/services/macros/*.{ts,tsx}",
-            "**/js/services/cache/*.{ts,tsx}",
-            "**/js/models/*.{ts,tsx}"
-        ],
-        "setupFiles": [
-            "<rootDir>/test-setup.js"
-        ],
-        "transform": {
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "setupTestFrameworkScriptFile": "<rootDir>/setup-tests-globals.js",
-        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-        "moduleFileExtensions": [
-            "ts",
-            "tsx",
-            "js",
-            "jsx",
-            "json"
-        ],
-        "moduleNameMapper": {
-            "\\.(css|less)$": "identity-obj-proxy",
-            "worker.js": "<rootDir>/__mocks__/workerMock.js"
-        },
-        "testResultsProcessor": "./node_modules/jest-junit-reporter"
-    },
-    "dependencies": {
+    "backupDependencies": {
         "ramda": "^0.25.0",
         "react": "^16.3.1",
         "react-dom": "^16.3.1",

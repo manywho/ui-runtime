@@ -1,4 +1,4 @@
-import { guid, str } from '../../test-utils';
+import { guid, str } from '../../js/test-utils';
 
 import extractExternalId, { checkForRequestsThatNeedAnExternalId } from '../../js/services/extractExternalId';
 import { getObjectData } from '../../js/models/Flow';

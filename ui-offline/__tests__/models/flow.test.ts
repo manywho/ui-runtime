@@ -1,5 +1,5 @@
 import { FlowInit, cacheObjectData, getObjectData, patchObjectDataCache, setCurrentRequestOfflineId, getRequests } from '../../js/models/Flow';
-import { guid, str } from '../../test-utils';
+import { guid, str } from '../../js/test-utils';
 
 describe('Flow model expected behaviour', () => {
     test('Object data gets replaced with new data for the correct typeElement key', () => {

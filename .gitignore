@@ -1,3 +1,5 @@
 .idea/
 node_modules/
 runtime_build/
+coverage/
+test-report.xml
