@@ -74,7 +74,15 @@ const config = {
                     {loader: 'css-loader'},
                     {loader: 'less-loader'}
                 ]
-            }
+            },
+            {
+                test: /\.svg$/,
+                use: [
+                    {
+                        loader: 'react-svg-loader',
+                    },
+                ],
+            },
         ]
     },
     plugins: [

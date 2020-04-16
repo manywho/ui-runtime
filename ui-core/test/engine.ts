@@ -465,7 +465,7 @@ test.serial('Parse Response', (t) => {
     Engine.parseResponse(response, parser, response.invokeType, flowKey);
 
     t.true(state.setState.calledWith(response.stateId, response.stateToken, response.currentMapElementId));
-    t.true(state.refreshComponents.calledWith([], response.invokeType, flowKey));
+    t.true(state.refreshComponents.calledWith([], flowKey));
     t.true(ping.calledOnce);
 });
 

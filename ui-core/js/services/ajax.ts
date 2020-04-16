@@ -163,7 +163,7 @@ export const getFlowByName = (name: string, tenantId: string, authenticationToke
 };
 
 /**
- * POST to `/api/service/1/data` to make an objectdata request
+ * POST to `/api/run/1/service/data` to make an objectdata request
  * @param limit Number of results to return
  * @param search Search string to apply to the list filter
  * @param orderBy Property name to order results by
@@ -183,7 +183,7 @@ export const dispatchObjectDataRequest = (
 ): JQueryXHR => {
     Log.info('Dispatching object data request');
     return dispatchDataRequest(
-        '/api/service/1/data',
+        '/api/run/1/service/data',
         'objectData',
         request,
         tenantId,
@@ -198,7 +198,7 @@ export const dispatchObjectDataRequest = (
 };
 
 /**
- * POST to `/api/service/1/file` to make a filedata request
+ * POST to `/api/run/1/service/file` to make a filedata request
  * @param limit Number of results to return
  * @param search Search string to apply to the list filter
  * @param orderBy Property name to order results by
@@ -218,7 +218,7 @@ export const dispatchFileDataRequest = (
 ): JQueryXHR => {
     Log.info('Dispatching object data request');
     return dispatchDataRequest(
-        '/api/service/1/file',
+        '/api/run/1/service/file',
         'fileData',
         request,
         tenantId,
@@ -233,7 +233,7 @@ export const dispatchFileDataRequest = (
 };
 
 /**
- * POST to `/api/service/1/file/content` to upload a file to a 3rd party service
+ * POST to `/api/run/1/service/file/content` to upload a file to a 3rd party service
  * DEPRECATED: Does not support offline file upload
  * @param onProgress Callback to recieve progress event info
  */
@@ -243,11 +243,11 @@ export const uploadFile = (
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
 ): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/service/1/file/content', formData, tenantId, authenticationToken, onProgress);
+    return Connection.upload(null, 'fileData', '/api/run/1/service/file/content', formData, tenantId, authenticationToken, onProgress);
 };
 
 /**
- * POST to `/api/service/1/file/content` to upload a file to a 3rd party service (offline supported)
+ * POST to `/api/run/1/service/file/content` to upload a file to a 3rd party service (offline supported)
  * @param onProgress Callback to recieve progress event info
  */
 export const uploadFiles = (
@@ -261,7 +261,7 @@ export const uploadFiles = (
     return Connection.uploadFiles(
         null,
         'fileData',
-        '/api/service/1/file/content',
+        '/api/run/1/service/file/content',
         files,
         request,
         tenantId,
@@ -272,7 +272,7 @@ export const uploadFiles = (
 };
 
 /**
- * POST to `/api/social/1/stream/streamId/file` to upload a file to a 3rd party social stream
+ * POST to `/api/run/1/social/stream/streamId/file` to upload a file to a 3rd party social stream
  * @param onProgress Callback to recieve progress event info
  */
 export const uploadSocialFile = (
@@ -282,7 +282,7 @@ export const uploadSocialFile = (
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
 ): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/social/1/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
+    return Connection.upload(null, 'fileData', '/api/run/1/social/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
 };
 
 /**
@@ -320,31 +320,49 @@ export const ping = (tenantId: string, stateId: string, stateToken: string, auth
 };
 
 /**
- * GET at `/api/log/flowId/stateId`
+ * GET at `/api/run/1/state/stateId/log`
  */
 export const getExecutionLog = (tenantId: string, flowId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Execution Log');
-    return Connection.request(null, 'log', '/api/log/' + flowId + '/' + stateId, 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(null, 'log', '/api/run/1/state/' + stateId + '/log', 'GET', tenantId, stateId, authenticationToken, null);
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/user/me`
+ * GET at `/api/run/1/social/stream/streamId/user/me`
  */
 export const getSocialMe = (tenantId: string, streamId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Social User, Me');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/user/me', 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null,
+        'social',
+        '/api/run/1/social/stream/' + streamId + '/user/me',
+        'GET',
+        tenantId,
+        stateId,
+        authenticationToken,
+        null
+    );
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/follower`
+ * GET at `/api/run/1/social/stream/streamId/follower`
  */
 export const getSocialFollowers = (tenantId: string, streamId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Social Followers');
-    return Connection.request(null, 'social', '/api/social/1/stream/' + streamId + '/follower', 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(
+        null,
+        'social',
+        '/api/run/1/social/stream/' + streamId + '/follower',
+        'GET',
+        tenantId,
+        stateId,
+        authenticationToken,
+        null,
+    );
 };
 
 /**
- * GET at `/api/social/1/stream/streamId?page=page&pageSize=pageSize`
+ * GET at `/api/run/1/social/stream/streamId?page=page&pageSize=pageSize`
  */
 export const getSocialMessages = (
     tenantId: string,
@@ -358,7 +376,7 @@ export const getSocialMessages = (
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize,
+        '/api/run/1/social/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize,
         'GET',
         tenantId,
         stateId,
@@ -368,14 +386,14 @@ export const getSocialMessages = (
 };
 
 /**
- * POST to `/api/social/1/stream/streamId/message`
+ * POST to `/api/run/1/social/stream/streamId/message`
  */
 export const sendSocialMessage = (tenantId: string, streamId: string, stateId: string, request: any, authenticationToken: string): JQueryXHR => {
     Log.info('Sending Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '/message',
+        '/api/run/1/social/stream/' + streamId + '/message',
         'POST',
         tenantId,
         stateId,
@@ -385,14 +403,14 @@ export const sendSocialMessage = (tenantId: string, streamId: string, stateId: s
 };
 
 /**
- * POST to `/api/social/1/stream/streamId?follow=isFollowing`
+ * POST to `/api/run/1/social/stream/streamId?follow=isFollowing`
  */
 export const follow = (tenantId: string, streamId: string, stateId: string, isFollowing: boolean, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '?follow=' + isFollowing.toString(),
+        '/api/run/1/social/stream/' + streamId + '?follow=' + isFollowing.toString(),
         'POST',
         tenantId,
         stateId,
@@ -402,14 +420,14 @@ export const follow = (tenantId: string, streamId: string, stateId: string, isFo
 };
 
 /**
- * GET at `/api/social/1/stream/streamId/user?name=name`
+ * GET at `/api/run/1/social/stream/streamId/user?name=name`
  */
 export const getSocialUsers = (tenantId: string, streamId: string, stateId: string, name: string, authenticationToken: string): JQueryXHR => {
     Log.info('Following Social Message');
     return Connection.request(
         null,
         'social',
-        '/api/social/1/stream/' + streamId + '/user?name=' + name,
+        '/api/run/1/social/stream/' + streamId + '/user?name=' + name,
         'GET',
         tenantId,
         stateId,

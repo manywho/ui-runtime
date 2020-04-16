@@ -69,8 +69,10 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_connection_.html#beforesend" class="tsd-kind-icon">before<wbr>Send</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_connection_.html#request" class="tsd-kind-icon">request</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_connection_.html#upload" class="tsd-kind-icon">upload</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_connection_.html#uploadfiles" class="tsd-kind-icon">upload<wbr>Files</a></li>
 							</ul>
 						</section>
 					</div>
@@ -79,8 +81,48 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="beforesend" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> before<wbr>Send</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">before<wbr>Send<span class="tsd-signature-symbol">(</span>xhr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">XMLHttpRequest</span>, tenantId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, authenticationToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/64a8a1e/js/services/connection.ts#L16">connection.ts:16</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adding authentication token and tenant id to request headers</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>xhr: <span class="tsd-signature-type">XMLHttpRequest</span></h5>
+								</li>
+								<li>
+									<h5>tenantId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>authenticationToken: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>event: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>request: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="request" class="tsd-anchor"></a>
-					<h3>request</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> request</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
 						<li class="tsd-signature tsd-kind-icon">request<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tenantId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, stateId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, authenticationToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">jqXHR</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
@@ -88,7 +130,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/2f233e6/js/services/connection.ts#L38">connection.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/64a8a1e/js/services/connection.ts#L40">connection.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -170,7 +212,7 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="upload" class="tsd-anchor"></a>
-					<h3>upload</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> upload</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
 						<li class="tsd-signature tsd-kind-icon">upload<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, formData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">FormData</span>, tenantId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, authenticationToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, onProgress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventListenerOrEventListenerObject</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">jqXHR</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
@@ -178,7 +220,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/2f233e6/js/services/connection.ts#L81">connection.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/64a8a1e/js/services/connection.ts#L85">connection.ts:85</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,6 +292,104 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="uploadfiles" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> upload<wbr>Files</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">upload<wbr>Files<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, files<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">File</span><span class="tsd-signature-symbol">[]</span>, request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, tenantId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, authenticationToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, onProgress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventListenerOrEventListenerObject</span>, _<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">jqXHR</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/manywho/ui-core/blob/64a8a1e/js/services/connection.ts#L128">connection.ts:128</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Upload a file to the Boomi Flow platform</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>context: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>TODO</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>event: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Type of event, <code>Settings.event(event + &#39;.done&#39;)</code> will be called when the request completes</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>url: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The path to make the request against, excluding the host which is fetched from <code>Settings.global(&#39;platform.uri&#39;)</code></p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>files: <span class="tsd-signature-type">File</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>List of files to be uploaded</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>request: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Request payload data</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>tenantId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The GUID of the tenant to make the request against</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>authenticationToken: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Current running users authentication token</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>onProgress: <span class="tsd-signature-type">EventListenerOrEventListenerObject</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Callback to recieve progress event info</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>_: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>(stateId) Only currently used when offline</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">jqXHR</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>JQuery deferred from the $.ajax request</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -286,6 +426,9 @@
 						<a href="_json_.html">"json"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_localisation_.html">"localisation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_log_.html">"log"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -317,10 +460,16 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_connection_.html#beforesend" class="tsd-kind-icon">before<wbr>Send</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_connection_.html#request" class="tsd-kind-icon">request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_connection_.html#upload" class="tsd-kind-icon">upload</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_connection_.html#uploadfiles" class="tsd-kind-icon">upload<wbr>Files</a>
 					</li>
 				</ul>
 			</nav>
