@@ -186,7 +186,7 @@ Note: There is no need to assign any value to the `--env.analyse` argument.
 
 ## Subrepos
 
-### How to update the code of an existing subrepo
+### How to update the code of an existing subrepo manually
 
 Until we fully switch over to the new `ui-runtime` monorepo, from time to time 
 it will be necessary to update the code of the subrepos to include any changes 
@@ -222,6 +222,26 @@ something goes awry.
 
 During the update there might be some conflicts, fix those and finish the update
 with a commit.
+
+### How to update the subrepo code with an update scripts
+
+To make the process of updating a little bit easier there are several shell 
+scripts (one for each subrepo) that will perform the needed update steps 
+automatically.
+
+The available scripts are:
+```
+update-ui-bootstrap.sh
+update-ui-core
+update-ui-html5.sh
+update-ui-offline.sh
+update-ui-vendor.sh
+```
+
+To perform an update just execute the script(s) for the required subrepo(s). 
+
+During the update there might be some conflicts, fix those and finish the update
+with a commit and finally push the commit.
 
 ### How to add a subrepo
 
