@@ -2,9 +2,6 @@
     "exclude": [
         "node_modules"
     ],
-    "files": [
-        "custom.d.ts"
-    ],
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "es6",

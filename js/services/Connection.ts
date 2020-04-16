@@ -1,6 +1,6 @@
 import { pollForStateValues } from './cache/StateCaching';
 import store from '../stores/store';
-import { isOffline } from '../actions';
+import { isOffline, isOnline as toggleOnline } from '../actions';
 import OfflineCore from './OfflineCore';
 import { getOfflineData } from './Storage';
 import ObjectDataCaching from './cache/ObjectDataCaching';
@@ -37,7 +37,7 @@ export const hasNetwork = () => {
         deferred.resolve(true);
     })
     .fail(() => {
-        store.dispatch(isOffline(true));
+        store.dispatch<any>(isOffline({ hasNetwork: false }));
         deferred.resolve(false);
     });
 
@@ -57,7 +57,7 @@ export const isOnline = (stateId, request, event) => {
 
     // If requests are being replayed then we want to bypass
     // the health checks in case a request fails
-    if (store.getState().isReplaying === true) {
+    if (store.getState().isReplaying) {
         return deferred.resolve(true);
     }
 
@@ -65,17 +65,17 @@ export const isOnline = (stateId, request, event) => {
 
     getOfflineData(stateId, flowId, event)
         .then((flow) => {
-            if (flow) {
-                store.dispatch(isOffline(true));
-                return deferred.resolve(false);
-            }
-
-            store.dispatch(isOffline(false));
             hasNetwork()
                 .then((response) => {
                     if (response) {
+                        if (flow) {
+                            store.dispatch<any>(isOffline({ hasNetwork: true }));
+                            return deferred.resolve(false);
+                        }
+                        store.dispatch<any>(toggleOnline());
                         return deferred.resolve(true);
                     }
+
                     return deferred.resolve(false);
                 });
         });
@@ -169,7 +169,7 @@ export const onlineRequest = (
                         if (flow) {
                             // Data cached in indexdb so flow
                             // has requests that need to be replayed
-                            store.dispatch(isOffline(true));
+                            store.dispatch<any>(isOffline({ hasNetwork: true }));
                         }
                     });
             }

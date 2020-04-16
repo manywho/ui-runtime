@@ -1,4 +1,4 @@
-///<reference path="../../custom.d.ts"/>
+///<reference path="../../index.d.ts"/>
 
 import { getStateValue, setStateValue } from '../models/State';
 import { clone, guid } from '../services/Utils';
