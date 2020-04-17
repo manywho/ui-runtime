@@ -14,7 +14,7 @@ test.before((t) => {
             platform: {
                 uri: 'https://flow.manywho.com',
             },
-        },                  
+        },
         null,
     );
 
@@ -192,7 +192,7 @@ test.cb.serial('Get Flow By Name', (t) => {
 test.cb.serial('ObjectData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/data`;
+    const url = `https://flow.manywho.com/api/run/1/service/data`;
     const expected = {
         listFilter: {
             search: 'search',
@@ -219,8 +219,8 @@ test.cb.serial('ObjectData Request', (t) => {
         token,
         expected.listFilter.limit,
         expected.listFilter.search,
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
@@ -228,7 +228,7 @@ test.cb.serial('ObjectData Request', (t) => {
 test.cb.serial('FileData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/file`;
+    const url = `https://flow.manywho.com/api/run/1/service/file`;
     const expected = {
         listFilter: {
             search: 'search',
@@ -250,13 +250,13 @@ test.cb.serial('FileData Request', (t) => {
 
     Ajax.dispatchFileDataRequest(
         {},
-        tenantId, 
-        stateId, 
-        token, 
-        null, 
-        expected.listFilter.search, 
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        tenantId,
+        stateId,
+        token,
+        null,
+        expected.listFilter.search,
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
@@ -302,7 +302,7 @@ test.cb.serial('Get Execution Log', (t) => {
     t.plan(3);
 
     const flowId = 'flowId';
-    const url = `https://flow.manywho.com/api/log/${flowId}/${stateId}`;
+    const url = `https://flow.manywho.com/api/run/1/state/${stateId}/log`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -319,7 +319,7 @@ test.cb.serial('Get Social Me', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/user/me`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/user/me`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -336,7 +336,7 @@ test.cb.serial('Get Social Followers', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/follower`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/follower`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -355,7 +355,7 @@ test.cb.serial('Get Social Messages', (t) => {
     const streamId = 'streamId';
     const page = 1;
     const pageSize = 10;
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?page=${page}&pageSize=${pageSize}`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}?page=${page}&pageSize=${pageSize}`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -372,7 +372,7 @@ test.cb.serial('Send Social Message', (t) => {
     t.plan(4);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/message`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/message`;
 
     const expected = {
         message: 'hello',
@@ -394,7 +394,7 @@ test.cb.serial('Follow', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?follow=true`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}?follow=true`;
 
     mock.post(url, (req, res) => {
         t.is(req._url, url);
@@ -412,7 +412,7 @@ test.cb.serial('Get Social Users', (t) => {
 
     const streamId = 'streamId';
     const name = 'name';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/user?name=${name}`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/user?name=${name}`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);

@@ -72,6 +72,78 @@ executed from the top-level directory.
 Other subrepos don't have/need tests because they are either just HTML, CSS or 
 3rd party scripts.
 
+## Code linting
+
+To run code linting on all subrepos use:
+
+```shell script
+npm run lint
+```
+
+To run test linting on all subrepos use:
+
+```shell script
+npm run lint:test
+```
+
+To run code linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap
+
+# ui-core
+npm run lint:core
+
+# ui-offline
+npm run lint:offline
+```
+
+To run test linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap:test
+
+# ui-core
+npm run lint:core:test
+
+# ui-offline
+npm run lint:offline:test
+```
+
+All listed commands are defined in the top-level `package.json` and should be 
+executed from the top-level directory. 
+
+Other subrepos don't have/need linting because they are either just HTML, CSS or 
+3rd party scripts.
+
+## Style linting
+
+To run style linting on all subrepos use:
+
+```shell script
+npm run stylelint
+```
+
+To run style linting on individual subrepos use:
+
+```shell script
+# ui-bootstrap
+npm run lint:bootstrap
+
+# ui-core
+npm run lint:offline
+
+# ui-offline
+npm run lint:themes
+```
+
+All listed commands are defined in the top-level `package.json` and should be 
+executed from the top-level directory.
+
+Other subrepos don't have/need linting because they don't contain any styles.
+
 ## Production
 
 ### Build `ui-runtime` for production
@@ -114,7 +186,7 @@ Note: There is no need to assign any value to the `--env.analyse` argument.
 
 ## Subrepos
 
-### How to update the code of an existing subrepo
+### How to update the code of an existing subrepo manually
 
 Until we fully switch over to the new `ui-runtime` monorepo, from time to time 
 it will be necessary to update the code of the subrepos to include any changes 
@@ -150,6 +222,26 @@ something goes awry.
 
 During the update there might be some conflicts, fix those and finish the update
 with a commit.
+
+### How to update the subrepo code with an update scripts
+
+To make the process of updating a little bit easier there are several shell 
+scripts (one for each subrepo) that will perform the needed update steps 
+automatically.
+
+The available scripts are:
+```
+update-ui-bootstrap.sh
+update-ui-core
+update-ui-html5.sh
+update-ui-offline.sh
+update-ui-vendor.sh
+```
+
+To perform an update just execute the script(s) for the required subrepo(s). 
+
+During the update there might be some conflicts, fix those and finish the update
+with a commit and finally push the commit.
 
 ### How to add a subrepo
 

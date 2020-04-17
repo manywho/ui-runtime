@@ -87,6 +87,11 @@ export const format = (value: string | number, format: string, contentType: stri
         return value;
     }
 
+    // If the value is null, we don't need to (and can't) apply any content format to it
+    if (value === null) {
+        return value;
+    }
+
     switch (contentType.toUpperCase()) {
     case Component.contentTypes.datetime:
         return dateTime(value as string, format, flowKey);
