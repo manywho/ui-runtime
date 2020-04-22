@@ -4,17 +4,17 @@ const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const RemovePlugin = require('remove-files-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths, mapPublicPath } = require('./config/paths');
 
 module.exports = (env) => ({
 
-    mode: (env && env.development) ? 'development' : 'production',
-
     entry: {
-        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
+        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
+        'js/loader': `${repoPaths.uiHtml5}/js/loader.js`,
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
         'loader': `${repoPaths.uiHtml5}/js/loader.js`,
     },
@@ -25,6 +25,9 @@ module.exports = (env) => ({
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
+        filename: '[name].js',
+        // path on the disk
+        path: path.resolve(__dirname, repoPaths.build),
     },
 
     resolve: {
@@ -44,9 +47,15 @@ module.exports = (env) => ({
         new CopyPlugin([
             // copy the favicons
             {
-                context: './ui-html5/',
+                context: repoPaths.uiHtml5,
                 from: 'img/**/*.*',
                 // to: defaults to the output.path
+            },
+            // copy the index.html
+            {
+                context: repoPaths.uiHtml5,
+                from: 'index.html',
+                to: 'players/',
             },
         ]),
         new WriteBundleFilePlugin({
@@ -67,10 +76,24 @@ module.exports = (env) => ({
             analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
             openAnalyzer: !!(env && env.analyse),
         }),
+        new CleanWebpackPlugin(),
+        // remove unnecessary files from the build folder
+        new RemovePlugin({
+            after: {
+                test: [
+                    {
+                        folder: repoPaths.build,
+                        method: (filePath) => {
+                            return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
+                        },
+                    },
+                ],
+            },
+        }),
     ],
 
     module: {
-        rules: [            
+        rules: [
             // bundle source code from ui-core and ui-bootstrap
             {
                 test: /\.(ts|tsx)$/,
@@ -150,25 +173,55 @@ module.exports = (env) => ({
                     }
                 ]
             },
-            // export loader.js as loader.min.js
-            // instead of loader.min-<PACKAGE_VERSION>.js
+            // bundle bootstrap styles
             {
-                test: /\.js$/,
+                test: /\.less$/,
                 include: [
-                    path.resolve(__dirname, `${repoPaths.uiHtml5}/js/loader.js`),
-                ],
-                exclude: [
-                    path.resolve(__dirname, `${repoPaths.uiHtml5}/js/player.js`),
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-bootstrap.less`),
                 ],
                 use: [
                     {
                         loader: 'file-loader',
                         options: {
-                            name: '[name].min.js',
-                            outputPath: 'js/',
-                            publicPath: 'js/',
+                            name: `flow-ui-bootstrap.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
                         },
                     },
+                    { loader: 'extract-loader' },
+                    // Change all instances of `.mw-bs html` and `.mw-bs body`
+                    // to `.mw-bs` because we are nesting the entire
+                    // bootstrap.css file within mw-bootstrap.less.
+                    {
+                        loader: 'string-replace-loader',
+                        options: {
+                            search: '\.mw-bs html|\.mw-bs body',
+                            replace: '.mw-bs',
+                            flags: 'g',
+                        }
+                    },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ]
+            },
+            // bundle components styles
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-components.less`),
+                ],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: `flow-ui-bootstrap-components.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
+                        },
+                    },
+                    { loader: 'extract-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
                 ],
             },
         ],
@@ -185,8 +238,6 @@ module.exports = (env) => ({
         'socket.io-client': 'io',
     },
 
-    devtool: (env && env.development) ? 'eval-source-map' : 'source-map',
-    
     stats: {
         // add asset Information
         assets: false,
