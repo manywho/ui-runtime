@@ -19,13 +19,7 @@ module.exports = (env) => {
     // without accidentally overwriting any properties and to add new custom
     // ones down the line)
     return {
-        mode: common.mode,
-
-        entry: common.entry,
-
-        output: common.output,
-
-        resolve: common.resolve,
+        ...common,
 
         plugins: [
             ...common.plugins,
@@ -56,13 +50,7 @@ module.exports = (env) => {
             ],
         },
 
-        externals: common.externals,
-
         devtool: 'eval-source-map',
-
-        stats: common.stats,
-
-        performance: common.performance,
 
         devServer: {
             hot: true,

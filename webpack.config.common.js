@@ -93,7 +93,7 @@ module.exports = (env) => ({
     ],
 
     module: {
-        rules: [            
+        rules: [
             // bundle source code from ui-core and ui-bootstrap
             {
                 test: /\.(ts|tsx)$/,
