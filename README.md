@@ -135,7 +135,7 @@ To include the offline components you will need to add the following references 
 
 ```
 <script src="build/js/metadata.js"></script>
-<script src="build/js/ui-offline.js"></script>
+<script src="build/js/flow-offline.js"></script>
 ```
 
 ### Running Unit Tests
