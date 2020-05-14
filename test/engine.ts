@@ -499,7 +499,7 @@ test.serial('FileDataRequest Success', (t) => {
     return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
         .then(() => {
             t.true((Engine.render as sinon.SinonStub).calledTwice);
-            t.false(state.setComponentError.called);
+            t.true(state.setComponentError.calledWith('id', null, flowKey));
             t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
             t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
         });
@@ -521,6 +521,26 @@ test.serial('FileDataRequest Fail', async (t) => {
 
     t.true((Engine.render as sinon.SinonStub).calledTwice);
     t.true(state.setComponentError.calledWith('id', 'error', flowKey));
+    t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+    t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+});
+
+test.serial('FileDataRequest Fail extended error response', async (t) => {
+    ajax.dispatchFileDataRequest.callsFake(() => {
+        const deferred =  $.Deferred();
+        deferred.reject({ responseJSON: { message: 'API error message returned'  } }, 'status', '');
+        return deferred;
+    });
+
+    model.getComponent.returns({
+        objectData: null,
+        fileDataRequest: {},
+    });
+
+    await t.throws(Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+
+    t.true((Engine.render as sinon.SinonStub).calledTwice);
+    t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
     t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
     t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
 });

@@ -1160,6 +1160,20 @@ export const join = (
 };
 
 /**
+ * Handles errors coming back from an object data request or a file data request's response. It checks if the received
+ * error response contains an ApiProblem or ServiceProblem, and parses and uses the message if so.
+ */
+const handleDataRequestError = (id: string, flowKey: string, xhr: JQuery.jqXHR, status: JQuery.Ajax.ErrorTextStatus, error: string) => {
+    // If we're given an ApiProblem or ServiceProblem response, use it to get the error
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+        error = xhr.responseJSON.message;
+    }
+
+    State.setComponentError(id, error, flowKey);
+    return error;
+};
+
+/**
  * Set the components loading status, execute the objectdata request, update the components local state with the response then re-render
  * @param id The id of the component this objectdata request is being requested by
  * @param limit Number of results to return
@@ -1202,12 +1216,7 @@ export const objectDataRequest = (
         })
         .fail((xhr: any, status, error: string) => {
 
-            if (!error && xhr && xhr.responseJSON && xhr.responseJSON.message) {
-                // No useful error supplied, so grab the raw response
-                error = xhr.responseJSON.message;
-            }
-
-            State.setComponentError(id, error, flowKey);
+            return handleDataRequestError(id, flowKey, xhr, status, error);
 
         })
         .always(() => {
@@ -1258,12 +1267,12 @@ export const fileDataRequest = (
             const component = Model.getComponent(id, flowKey);
             component.objectData = response.objectData;
             component.fileDataRequest.hasMoreResults = response.hasMoreResults;
+            State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr, status, error) => {
+        .fail((xhr: JQuery.jqXHR, status, error: string) => {
 
-            State.setComponentError(id, error, flowKey);
-            return error;
+            return handleDataRequestError(id, flowKey, xhr, status, error);
 
         })
         .always((error) => {

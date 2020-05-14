@@ -340,7 +340,7 @@ export const getSocialMe = (tenantId: string, streamId: string, stateId: string,
         tenantId,
         stateId,
         authenticationToken,
-        null
+        null,
     );
 };
 
