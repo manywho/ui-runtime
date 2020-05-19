@@ -604,3 +604,54 @@ export const whenAll = (deferreds: JQueryDeferred<any[]>[]): JQueryDeferred<any>
         return $.Deferred().resolve();
     }
 };
+
+/**
+ * Return the current browser language/culture if one is found and supported,
+ * otherwise return a suitable fallback, or default to en-US if all else fails.
+ */
+export const currentCulture = (navCulture, supportedCultures):string => {
+    if (navCulture) {
+        const navCultureParts = navCulture.split('-');
+        // uppercase the culture suffix as safari will report it as lowercase
+        // and Numbro requires uppercase
+        const culture = navCultureParts.length === 2
+            ? `${navCultureParts[0]}-${navCultureParts[1].toUpperCase()}`
+            : navCulture;
+        const cultureIsSupported = supportedCultures.indexOf(culture) !== -1;
+
+        return cultureIsSupported ? culture : fallbackCulture(navCultureParts[0]);
+    }
+    else {
+        return 'en-US';
+    }
+};
+
+/**
+ * If current culture is not supported by Numbro try to give us a suitable
+ * fallback or default to 'en-US'.
+ */
+export const fallbackCulture = (culture):string => {
+    let fallback;
+
+    switch (culture) {
+    case 'en':
+        fallback = 'en-US';
+        break;
+    case 'de':
+        fallback = 'de-DE';
+        break;
+    case 'fr':
+        fallback = 'fr-FR';
+        break;
+    case 'es':
+        fallback = 'fr-ES';
+        break;
+    case 'it':
+        fallback = 'it-IT';
+        break;
+    default:
+        fallback = 'en-US';
+    }
+
+    return fallback;
+};

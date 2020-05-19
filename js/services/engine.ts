@@ -789,6 +789,20 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 }
 
 function checklocale() {
+    const supportedCultures = Object.keys(window.numbro.cultures());
+    const navCulture = window.navigator.language;
+    const culture = Utils.currentCulture(navCulture, supportedCultures);
+    const cultureIsCA = Utils.isEqual(navCulture, ohCanada.languageTag, true);
+
+    // check the special case if en-CA first
+    if (cultureIsCA) {
+        window.numbro.culture(ohCanada.languageTag, ohCanada);
+    }
+    else {
+        window.numbro.culture(culture);
+    }
+
+    /* OG
     if (window.navigator.language) {
         if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
             window.numbro.culture(ohCanada.languageTag, ohCanada);
@@ -801,6 +815,7 @@ function checklocale() {
             }
         }
     }
+    */
 }
 
 /**
