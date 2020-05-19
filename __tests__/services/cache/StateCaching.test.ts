@@ -1,5 +1,7 @@
-import { pollForStateValues } from '../../../js/services/cache/StateCaching';
+import { injectValuesAfterCaching, pollForStateValues } from '../../../js/services/cache/StateCaching';
 import { setStateValue } from '../../../js/models/State';
+import { setCachingProgress } from '../../../js/actions';
+import store from '../../../js/stores/store';
 
 const globalAny:any = global;
 const castSetStateValue: any = setStateValue;
@@ -48,8 +50,21 @@ describe('State caching service behaviour', () => {
     test('Every value returned gets injected into offline state', () => {
         pollForStateValues('test', 'test', 'test')
             .then(() => {
+
                 expect(setStateValue).toHaveBeenCalledTimes(2);
             });
     });
 
+    test('Update values is not called if it is still caching', () => {
+
+        injectValuesAfterCaching('test', 'test', 'token');
+        expect(setStateValue).not.toBeCalled();
+    });
+
+    test('Update values is called if caching finished', () => {
+        const unsubscribe = injectValuesAfterCaching('test', 'test', 'token');
+        expect(unsubscribe).not.toBeNull();
+        store.dispatch(setCachingProgress(0));
+        expect(setStateValue).toBeCalledTimes(1);
+    });
 });

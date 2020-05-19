@@ -9,6 +9,7 @@ declare const metaData: any;
 
 let authenticationToken = undefined;
 let timer = undefined;
+let unsubscribeEndOfCachingListener = undefined;
 
 const snapshot: any = Snapshot(metaData);
 
@@ -29,6 +30,63 @@ const injectValuesIntoState = (values: any) => {
             valueProps,
         );
     });
+};
+
+/**
+ * @description we check if unsubscribeEndOfCachingListener has been created and then remove it
+ */
+const removeListener = () => {
+    unsubscribeEndOfCachingListener === undefined
+        ? setTimeout(removeListener(), 1000)
+        : unsubscribeEndOfCachingListener();
+};
+
+/**
+ * @param stateId
+ * @param tenantId
+ * @param token
+ *
+ * @description This method add a listener to request the values when after caching is done.
+ * The full list of values will be returned from engine only after all the request have been responded.
+ */
+export const injectValuesAfterCaching = (stateId: string, tenantId: string, token: string) => {
+    if (unsubscribeEndOfCachingListener !== undefined) {
+        return;
+    }
+
+    const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${stateId}/values`;
+
+    const request = {
+        headers: {
+            ManyWhoTenant: tenantId,
+        },
+    };
+
+    if (token) {
+        request.headers['Authorization'] = token;
+    }
+
+    const handlerForEndOfCaching = () => {
+        if (store.getState().cachingProgress === 0) {
+            fetch(url, request)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((response) => {
+                    injectValuesIntoState(response);
+                    removeListener();
+                })
+                .catch((error) => {
+                    console.log(error);
+                    // the listener hasn't been removed so it will be called again
+                    // the network errors are handled during polling
+                });
+        }
+    };
+
+    unsubscribeEndOfCachingListener = store.subscribe(handlerForEndOfCaching);
+
+    return unsubscribeEndOfCachingListener;
 };
 
 /**
@@ -62,7 +120,6 @@ export const pollForStateValues = (stateId: string, tenantId: string, token: str
     if (authenticationToken) {
         request.headers['Authorization'] = authenticationToken;
     }
-
     return fetch(url, request)
         .then((response) => {
             return response.json();

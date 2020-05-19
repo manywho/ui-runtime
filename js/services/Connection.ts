@@ -1,4 +1,4 @@
-import { pollForStateValues } from './cache/StateCaching';
+import { injectValuesAfterCaching, pollForStateValues } from './cache/StateCaching';
 import store from '../stores/store';
 import { isOffline, isOnline as toggleOnline } from '../actions';
 import OfflineCore from './OfflineCore';
@@ -161,6 +161,7 @@ export const onlineRequest = (
                             // Start polling for state values
                             if (response.stateId && tenantId) {
                                 pollForStateValues(response.stateId, tenantId, authenticationToken);
+                                injectValuesAfterCaching(response.stateId, tenantId, authenticationToken);
                             }
 
                             // Start caching object data
