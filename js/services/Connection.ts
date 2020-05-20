@@ -124,6 +124,7 @@ export const onlineRequest = (
         },
     })
     .done((response) => {
+        store.dispatch(setFlowInformation({ tenantId, stateId, token: authenticationToken }));
 
         // Here is where we initiate the offline functionality
         // This happens in join and initialisation responses (when the flow first ran or user has joined)
@@ -269,13 +270,10 @@ export const initialize = (
     options: any,
     isInitializing: string | boolean,
 ) => {
-    store.dispatch(setFlowInformation({ tenantId, stateId, token: authenticationToken }));
-
     // Check if there is any cached data
     // in indexdb associated to the flow
     return getOfflineData(stateId, flowId, 'initialization')
         .then((flow) => {
-
             // If there is a state cache then we extract
             // the state id, if not then state id will be null
             // (normal for initialization requests).
@@ -283,6 +281,9 @@ export const initialize = (
             // stateid === true => do a join
             // stateid === null => move with authorization
             const currentStateId = flow ? flow.state.id : stateId;
+
+            store.dispatch(setFlowInformation({ tenantId, stateId: currentStateId, token: authenticationToken }));
+
             return manywho.engine._initialize(
                 tenantId,
                 flowId,
