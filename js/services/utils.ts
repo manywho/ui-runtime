@@ -644,7 +644,7 @@ export const fallbackCulture = (culture):string => {
         fallback = 'fr-FR';
         break;
     case 'es':
-        fallback = 'fr-ES';
+        fallback = 'es-ES';
         break;
     case 'it':
         fallback = 'it-IT';
