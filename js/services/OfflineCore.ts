@@ -405,12 +405,17 @@ const OfflineCore = {
         }
 
         const navigation = metaData.navigationElements[0];
+
+        const navigationItems = navigation.navigationItems
+            ? navigation.navigationItems
+            : [];
+
         return {
             developerName: navigation.developerName,
             isEnabled: true,
             isVisible: true,
             label: navigation.label,
-            navigationItemResponses: navigation.navigationItems.sort((a, b) => a.order - b.order),
+            navigationItemResponses: navigationItems.sort((a, b) => a.order - b.order),
             navigationItemDataResponses: flatten(navigation.navigationItems, null, [], 'navigationItems', null).map((item) => {
                 return {
                     navigationItemId: item.id,
