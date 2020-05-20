@@ -57,11 +57,14 @@ export const cachingProgress = (result) => {
                         type: 'success',
                         dismissible: true,
                     });
+                    dispatch(setCachingProgress(0));
+
+                    return response;
                 })
                 .catch(() => {
                     alert(errorPollingValues);
+                    dispatch(setCachingProgress(0));
                 });
-            dispatch(setCachingProgress(0));
         } else {
             dispatch(setCachingProgress(progress));
         }
