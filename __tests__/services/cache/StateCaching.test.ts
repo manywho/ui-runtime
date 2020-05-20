@@ -1,7 +1,5 @@
-import { injectValuesAfterCaching, pollForStateValues } from '../../../js/services/cache/StateCaching';
+import { pollForStateValues, periodicallyPollForStateValues } from '../../../js/services/cache/StateCaching';
 import { setStateValue } from '../../../js/models/State';
-import { setCachingProgress } from '../../../js/actions';
-import store from '../../../js/stores/store';
 
 const globalAny:any = global;
 const castSetStateValue: any = setStateValue;
@@ -31,15 +29,14 @@ describe('State caching service behaviour', () => {
     });
 
     test.skip('Fetch call is made only when network is available', () => {
-        pollForStateValues('test', 'test', 'test');
+        periodicallyPollForStateValues();
         expect(globalAny.fetch).not.toHaveBeenCalled();
     });
 
     test('Polling happens recursively based on polling interval', () => {
         jest.useFakeTimers();
-        pollForStateValues('test', 'test', 'test')
+        periodicallyPollForStateValues()
             .then(() => {
-
                 jest.runOnlyPendingTimers();
 
                 expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -47,24 +44,19 @@ describe('State caching service behaviour', () => {
             });
     });
 
-    test('Every value returned gets injected into offline state', () => {
-        pollForStateValues('test', 'test', 'test')
+    test('Every value returned gets injected into offline state when polling periodically', () => {
+        jest.useFakeTimers();
+        periodicallyPollForStateValues()
             .then(() => {
-
+                jest.runOnlyPendingTimers();
                 expect(setStateValue).toHaveBeenCalledTimes(2);
             });
     });
 
-    test('Update values is not called if it is still caching', () => {
-
-        injectValuesAfterCaching('test', 'test', 'token');
-        expect(setStateValue).not.toBeCalled();
-    });
-
-    test('Update values is called if caching finished', () => {
-        const unsubscribe = injectValuesAfterCaching('test', 'test', 'token');
-        expect(unsubscribe).not.toBeNull();
-        store.dispatch(setCachingProgress(0));
-        expect(setStateValue).toBeCalledTimes(1);
+    test('Every value returned gets injected into offline state when polling' , () => {
+        pollForStateValues()
+            .then(() => {
+                expect(setStateValue).toHaveBeenCalledTimes(2);
+            });
     });
 });

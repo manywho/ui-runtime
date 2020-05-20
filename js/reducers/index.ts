@@ -15,14 +15,34 @@
  * simulated.
  */
 
+interface IFlowInformation {
+    tenantId: string;
+    stateId: string;
+    token: string;
+}
+
 interface IOfflineState {
+    flowInformation: IFlowInformation;
     cachingProgress: number;
     isReplaying: boolean;
     hasNetwork: boolean;
     isOffline: boolean;
 }
 
-const offlineState = (state: IOfflineState = { cachingProgress: 0, isReplaying: false, hasNetwork: true, isOffline: false }, action) => {
+const offlineState = (
+    state: IOfflineState = {
+        flowInformation: {
+            tenantId: null,
+            stateId: null,
+            token: null,
+        },
+        cachingProgress: 0,
+        isReplaying: false,
+        hasNetwork: true,
+        isOffline: false,
+    },
+    action) => {
+
     switch (action.type) {
     case 'HAS_NETWORK':
         return {
@@ -61,6 +81,16 @@ const offlineState = (state: IOfflineState = { cachingProgress: 0, isReplaying: 
         return {
             ...state,
             cachingProgress: action.payload,
+        };
+
+    case 'FLOW_INFORMATION':
+        return {
+            ...state,
+            flowInformation: {
+                tenantId: action.payload.tenantId,
+                stateId: action.payload.stateId,
+                token: action.payload.token,
+            },
         };
 
     default:

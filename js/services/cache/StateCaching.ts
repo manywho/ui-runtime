@@ -7,9 +7,7 @@ import { setStateValue } from '../../models/State';
 declare const manywho: any;
 declare const metaData: any;
 
-let authenticationToken = undefined;
 let timer = undefined;
-let unsubscribeEndOfCachingListener = undefined;
 
 const snapshot: any = Snapshot(metaData);
 
@@ -32,93 +30,17 @@ const injectValuesIntoState = (values: any) => {
     });
 };
 
-/**
- * @description we check if unsubscribeEndOfCachingListener has been created and then remove it
- */
-const removeListener = () => {
-    unsubscribeEndOfCachingListener === undefined
-        ? setTimeout(removeListener(), 1000)
-        : unsubscribeEndOfCachingListener();
-};
-
-/**
- * @param stateId
- * @param tenantId
- * @param token
- *
- * @description This method add a listener to request the values when after caching is done.
- * The full list of values will be returned from engine only after all the request have been responded.
- */
-export const injectValuesAfterCaching = (stateId: string, tenantId: string, token: string) => {
-    if (unsubscribeEndOfCachingListener !== undefined) {
-        return;
-    }
-
-    const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${stateId}/values`;
+export const pollForStateValues = () => {
+    const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${store.getState().flowInformation.stateId}/values`;
 
     const request = {
         headers: {
-            ManyWhoTenant: tenantId,
+            ManyWhoTenant: store.getState().flowInformation.tenantId,
         },
     };
 
-    if (token) {
-        request.headers['Authorization'] = token;
-    }
-
-    const handlerForEndOfCaching = () => {
-        if (store.getState().cachingProgress === 0) {
-            fetch(url, request)
-                .then((response) => {
-                    return response.json();
-                })
-                .then((response) => {
-                    injectValuesIntoState(response);
-                    removeListener();
-                })
-                .catch((error) => {
-                    console.log(error);
-                    // the listener hasn't been removed so it will be called again
-                    // the network errors are handled during polling
-                });
-        }
-    };
-
-    unsubscribeEndOfCachingListener = store.subscribe(handlerForEndOfCaching);
-
-    return unsubscribeEndOfCachingListener;
-};
-
-/**
- * @param stateId
- * @param tenantId
- * @param token
- * @description Polling the states value endpoint.
- * We do this so that the offline value state is kept up to date
- * ready for when network connectivity is lost.
- * This polling of the values endpoint is also used as a continuous
- * network check that allows us to notify users when they have
- * lost or regained network connectivity.
- */
-export const pollForStateValues = (stateId: string, tenantId: string, token: string) => {
-    authenticationToken = token;
-
-    // This needs to be set in the player manually
-    // or injected in when generating a Cordova app
-    const pollInterval = manywho.settings.global('offline.cache.pollInterval');
-
-    clearTimeout(timer);
-
-    const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${stateId}/values`;
-
-    const request = {
-        headers: {
-            ManyWhoTenant: tenantId,
-        },
-    };
-
-    if (authenticationToken) {
-        request.headers['Authorization'] = authenticationToken;
+    if (store.getState().flowInformation.token) {
+        request.headers['Authorization'] = store.getState().flowInformation.token;
     }
     return fetch(url, request)
         .then((response) => {
@@ -127,22 +49,47 @@ export const pollForStateValues = (stateId: string, tenantId: string, token: str
         .then((response) => {
             injectValuesIntoState(response);
 
-            timer = setTimeout(
-                () => { pollForStateValues(stateId, tenantId, authenticationToken); }, pollInterval,
-            );
-
             if (!store.getState().hasNetwork) {
                 store.dispatch<any>(hasNetwork());
             }
+            return response;
         })
         .catch(() => {
-            timer = setTimeout(
-                () => { pollForStateValues(stateId, tenantId, authenticationToken); }, pollInterval,
-            );
-
             if (!store.getState().isOffline && store.getState().hasNetwork) {
                 store.dispatch<any>(hasNoNetwork());
             }
+            return;
         });
+};
 
+/**
+ * @description Polling the states value endpoint.
+ * We do this so that the offline value state is kept up to date
+ * ready for when network connectivity is lost.
+ * This polling of the values endpoint is also used as a continuous
+ * network check that allows us to notify users when they have
+ * lost or regained network connectivity.
+ */
+export const periodicallyPollForStateValues = () => {
+    // This needs to be set in the player manually
+    // or injected in when generating a Cordova app
+    const pollInterval = manywho.settings.global('offline.cache.pollInterval');
+
+    clearTimeout(timer);
+
+    return pollForStateValues()
+        .then((response) => {
+            timer = setTimeout(
+                () => { periodicallyPollForStateValues(); }, pollInterval,
+            );
+
+            return response;
+        })
+        .catch(() => {
+            timer = setTimeout(
+                () => { periodicallyPollForStateValues(); }, pollInterval,
+            );
+
+            return;
+        });
 };

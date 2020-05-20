@@ -1,6 +1,6 @@
-import { injectValuesAfterCaching, pollForStateValues } from './cache/StateCaching';
+import { periodicallyPollForStateValues } from './cache/StateCaching';
 import store from '../stores/store';
-import { isOffline, isOnline as toggleOnline } from '../actions';
+import { isOffline, isOnline as toggleOnline, setFlowInformation } from '../actions';
 import OfflineCore from './OfflineCore';
 import { getOfflineData } from './Storage';
 import ObjectDataCaching from './cache/ObjectDataCaching';
@@ -160,8 +160,7 @@ export const onlineRequest = (
 
                             // Start polling for state values
                             if (response.stateId && tenantId) {
-                                pollForStateValues(response.stateId, tenantId, authenticationToken);
-                                injectValuesAfterCaching(response.stateId, tenantId, authenticationToken);
+                                periodicallyPollForStateValues();
                             }
 
                             // Start caching object data
@@ -270,6 +269,7 @@ export const initialize = (
     options: any,
     isInitializing: string | boolean,
 ) => {
+    store.dispatch(setFlowInformation({ tenantId, stateId, token: authenticationToken }));
 
     // Check if there is any cached data
     // in indexdb associated to the flow

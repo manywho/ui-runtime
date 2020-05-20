@@ -1,4 +1,5 @@
 declare const manywho;
+import { pollForStateValues } from '../services/cache/StateCaching';
 
 interface IisOffline {
     hasNetwork: boolean;
@@ -31,18 +32,31 @@ export const setCachingProgress = result => ({
     payload: result,
 });
 
+export const setFlowInformation = result => ({
+    type: 'FLOW_INFORMATION',
+    payload: result,
+});
+
 export const cachingProgress = (result) => {
     const progress = result.progress;
     const flowKey = result.flowKey;
     return (dispatch) => {
         if (progress === 100 && flowKey) {
-            manywho.model.addNotification(flowKey, {
-                message: 'Caching is complete. You are ready to go offline',
-                position: 'bottom',
-                type: 'success',
-                dismissible: true,
-            });
-            dispatch(setCachingProgress(0));
+            pollForStateValues()
+                .then(() => {
+                    manywho.model.addNotification(flowKey, {
+                        message: 'Caching is complete. You are ready to go offline',
+                        position: 'bottom',
+                        type: 'success',
+                        dismissible: true,
+                    });
+
+                    dispatch(setCachingProgress(0));
+                })
+                .catch(() => {
+                    alert('An error caching data has occurred, your flow may not work as expected whilst offline');
+                    dispatch(setCachingProgress(0));
+                });
         } else {
             dispatch(setCachingProgress(progress));
         }
