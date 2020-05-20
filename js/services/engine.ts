@@ -801,21 +801,6 @@ function checklocale() {
     else {
         window.numbro.culture(culture);
     }
-
-    /* OG
-    if (window.navigator.language) {
-        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
-            window.numbro.culture(ohCanada.languageTag, ohCanada);
-        }
-        else {
-            const language = window.navigator.language.split('-');
-            if (language.length === 2) {
-                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-            }
-        }
-    }
-    */
 }
 
 /**
