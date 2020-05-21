@@ -788,7 +788,10 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
 }
 
-function checklocale() {
+/**
+ * Check current locale (navigator.language) and load correct culture.
+ */
+export const checkLocale = () => {
     const supportedCultures = Object.keys(window.numbro.cultures());
     const navCulture = window.navigator.language;
     const culture = Utils.currentCulture(navCulture, supportedCultures);
@@ -801,7 +804,7 @@ function checklocale() {
     else {
         window.numbro.culture(culture);
     }
-}
+};
 
 /**
  * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not
@@ -843,7 +846,7 @@ export const initialize = (
 
     }
 
-    checklocale();
+    checkLocale();
 
     if (stateId && !isInitializing) {
 
@@ -902,7 +905,7 @@ export const initializeSimple = (
         manywho.theming.apply(options.theme);
     }
 
-    checklocale();
+    checkLocale();
 
     return initializeSimpleWithAuthorization(
         tenantId,
