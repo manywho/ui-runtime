@@ -788,20 +788,23 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
 }
 
-function checklocale() {
-    if (window.navigator.language) {
-        if (Utils.isEqual(window.navigator.language, ohCanada.languageTag, true)) {
-            window.numbro.culture(ohCanada.languageTag, ohCanada);
-        }
-        else {
-            const language = window.navigator.language.split('-');
-            if (language.length === 2) {
-                // Upper case the culture suffix here as safari will report them as lowercase and numbro requires uppercase
-                window.numbro.culture(language[0] + '-' + language[1].toUpperCase());
-            }
-        }
+/**
+ * Check current locale (navigator.language) and load correct culture.
+ */
+export const checkLocale = () => {
+    const supportedCultures = Object.keys(window.numbro.cultures());
+    const navCulture = window.navigator.language;
+    const culture = Utils.currentCulture(navCulture, supportedCultures);
+    const cultureIsCA = Utils.isEqual(navCulture, ohCanada.languageTag, true);
+
+    // check the special case if en-CA first
+    if (cultureIsCA) {
+        window.numbro.culture(ohCanada.languageTag, ohCanada);
     }
-}
+    else {
+        window.numbro.culture(culture);
+    }
+};
 
 /**
  * Intialize a new state of a flow (or join an existing state if the `stateId` is specified). If the user is not
@@ -843,7 +846,7 @@ export const initialize = (
 
     }
 
-    checklocale();
+    checkLocale();
 
     if (stateId && !isInitializing) {
 
@@ -902,7 +905,7 @@ export const initializeSimple = (
         manywho.theming.apply(options.theme);
     }
 
-    checklocale();
+    checkLocale();
 
     return initializeSimpleWithAuthorization(
         tenantId,
