@@ -1,4 +1,3 @@
-import { getStateValue } from '../models/State';
 import { parseContent } from '../services/Utils';
 
 interface IMapElement {

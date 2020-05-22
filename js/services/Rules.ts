@@ -69,13 +69,16 @@ const Rules = {
         let result = false;
 
         for (const rule of rules) {
-            const contentType = manywho.component.contentTypes.string;
 
             let left = snapshot.getValue(rule.leftValueElementToReferenceId);
-            left = getStateValue(rule.leftValueElementToReferenceId, left.typeElementId, left.contentType, '') || left;
+            // TODO - What to do if the operands have different contentTypes ? E.g.
+            //        comparing a ContentObject to a ContentBoolean where left/right
+            //        are different types.
+            const contentType = left.contentType.toUpperCase();
+            left = getStateValue(rule.leftValueElementToReferenceId) || left;
 
             let right = snapshot.getValue(rule.rightValueElementToReferenceId);
-            right = getStateValue(rule.rightValueElementToReferenceId, right.typeElementId, right.contentType, '') || right;
+            right = getStateValue(rule.rightValueElementToReferenceId) || right;
 
             result = Rules.compareValues(left, right, contentType, rule.criteriaType);
 
@@ -96,7 +99,7 @@ const Rules = {
     compareValues(left: any, right: any, contentType: any, criteriaType: string) {
         switch (contentType) {
         case manywho.component.contentTypes.object:
-            return Rules.compareObjects(criteriaType);
+            return Rules.compareObjects(criteriaType, left);
         case manywho.component.contentTypes.list:
             return Rules.compareLists(criteriaType);
         default:
@@ -184,11 +187,12 @@ const Rules = {
      * TODO: Un-hide the docs for this onces its implemented
      * @hidden
      * @param criteriaType
+     * @param value
      */
-    compareObjects(criteriaType: string) {
+    compareObjects(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
         case 'IS_EMPTY':
-            return true;
+            return !(value.objectData && value.objectData.length > 0);
         }
     },
 

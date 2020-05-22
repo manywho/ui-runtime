@@ -28,39 +28,17 @@ export const StateInit = (state: IState) => {
 
 /**
  * @param id
- * @param typeElementId
- * @param contentType
- * @param command
  */
-export const getStateValue = (id: any, typeElementId: string, contentType: any, command: string) => {
+export const getStateValue = (id: any) => {
     if (values[id.id]) {
-        let value = null;
+        const value = clone(values[id.id]);
 
-        if (manywho.utils.isNullOrEmpty(typeElementId)) {
-            value = clone(values[id.id]);
-        } else {
-            value = clone(values[id.id]);
-
-            if (manywho.utils.isEqual(
-                contentType, manywho.component.contentTypes.object, true) && value.objectData && value.objectData.length > 1) {
-                // TODO: log error;
-            }
-
-            if (id.typeElementPropertyId && value.objectData && value.objectData.length > 0) {
-                const property = value.objectData[0].properties.find(prop => prop.typeElementPropertyId === id.typeElementPropertyId);
-                if (property) {
-                    value.contentValue = property.contentValue ? property.contentValue : null;
-                    value.objectData = property.objectData ? property.objectData : null;
-                    value.index = 0;
-                }
-            }
-
-            if (manywho.utils.isEqual(command, 'GET_FIRST', true) && value.objectData) {
-                value.objectData = [value.objectData[0]];
-                value.index = 0;
-            } else if (manywho.utils.isEqual(command, 'GET_NEXT', true) && value.objectData) {
-                value.index + 1;
-                value.objectData = value.index < value.objectData.length ? [value.objectData[value.index]] : [];
+        // If required, get a property value from an object
+        if (id.typeElementPropertyId && value.objectData && value.objectData.length > 0) {
+            const property = value.objectData[0].properties.find(prop => prop.typeElementPropertyId === id.typeElementPropertyId);
+            if (property) {
+                value.contentValue = property.contentValue ? property.contentValue : null;
+                value.objectData = property.objectData ? property.objectData : null;
             }
         }
 
