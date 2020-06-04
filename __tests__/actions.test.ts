@@ -30,7 +30,7 @@ describe('Actions behaviour ', () => {
         castSetStateValue.mockClear();
     });
 
-    test('The cache progress to bu updated to 100%', (done) => {
+    test('The cache progress to be updated to 100%', (done) => {
         store.subscribe(() => {
             expect(globalAny.fetch).toHaveBeenCalled();
             expect(setStateValue).toHaveBeenCalledTimes(3);
