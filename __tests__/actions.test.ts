@@ -1,4 +1,4 @@
-import { cachingProgress } from '../js/actions';
+import { cachingProgress, activatePollingValues } from '../js/actions';
 import store from '../js/stores/store';
 import { setStateValue } from '../js/models/State';
 
@@ -30,8 +30,22 @@ describe('Actions behaviour ', () => {
         castSetStateValue.mockClear();
     });
 
-    test('The cache progress to be updated to 100%', (done) => {
+    test('The activatePollingValues activate set isPollingValues to true', (done) => {
+        jest.useFakeTimers();
         store.subscribe(() => {
+            jest.runOnlyPendingTimers();
+            expect(globalAny.fetch).toHaveBeenCalled();
+            expect(store.getState().isPollingValues).toEqual(true);
+            done();
+        });
+
+        store.dispatch(activatePollingValues());
+    });
+
+    test('The cache progress to be updated to 100%', (done) => {
+        jest.useFakeTimers();
+        store.subscribe(() => {
+            jest.runOnlyPendingTimers();
             expect(globalAny.fetch).toHaveBeenCalled();
             expect(setStateValue).toHaveBeenCalledTimes(3);
             expect(manywho.model.addNotification).toBeCalledWith('123', {
@@ -41,6 +55,7 @@ describe('Actions behaviour ', () => {
                 dismissible: true,
             });
             expect(store.getState().cachingProgress).toEqual(0);
+            expect(store.getState().isPollingValues).toEqual(true);
             done();
         });
 

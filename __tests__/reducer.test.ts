@@ -6,6 +6,7 @@ const initialState = {
         stateId: null,
         token: null,
     },
+    isPollingValues: false,
     cachingProgress: 0,
     isReplaying: false,
     hasNetwork: true,
@@ -64,5 +65,11 @@ describe('Offline reducer behaviour', () => {
         const action = { type: 'FLOW_INFORMATION', payload: flowInformation };
         const state = reducers(initialState, action);
         expect(state.flowInformation).toEqual(flowInformation);
+    });
+
+    test('When ac flow information in the store', () => {
+        const action = { type: 'POLLING_VALUES', payload: true };
+        const state = reducers(initialState, action);
+        expect(state.isPollingValues).toEqual(true);
     });
 });

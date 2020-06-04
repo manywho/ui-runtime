@@ -1,5 +1,6 @@
 declare const manywho;
-import { pollForStateValues } from '../services/cache/StateCaching';
+import { periodicallyPollForStateValues, pollForStateValues } from '../services/cache/StateCaching';
+import store from '../stores/store';
 
 interface IisOffline {
     hasNetwork: boolean;
@@ -37,6 +38,22 @@ export const setFlowInformation = result => ({
     payload: result,
 });
 
+export const setPollingValues = result => ({
+    type: 'POLLING_VALUES',
+    payload: result,
+});
+
+export const activatePollingValues = () => {
+    return (dispatch) => {
+        if (store.getState().isPollingValues === false) {
+            periodicallyPollForStateValues();
+            dispatch(setPollingValues(true));
+        }
+
+        return dispatch;
+    };
+};
+
 export const cachingProgress = (result) => {
     const progress = result.progress;
     const flowKey = result.flowKey;
@@ -57,8 +74,8 @@ export const cachingProgress = (result) => {
                         type: 'success',
                         dismissible: true,
                     });
+                    dispatch(activatePollingValues());
                     dispatch(setCachingProgress(0));
-
                     return response;
                 })
                 .catch(() => {

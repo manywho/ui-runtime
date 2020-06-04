@@ -1,9 +1,8 @@
-import { periodicallyPollForStateValues } from './cache/StateCaching';
 import store from '../stores/store';
-import { isOffline, isOnline as toggleOnline, setFlowInformation } from '../actions';
+import { activatePollingValues, isOffline, isOnline as toggleOnline, setFlowInformation } from '../actions';
 import OfflineCore from './OfflineCore';
 import { getOfflineData } from './Storage';
-import ObjectDataCaching from './cache/ObjectDataCaching';
+import ObjectDataCaching, { generateObjectData } from './cache/ObjectDataCaching';
 
 declare const manywho: any;
 declare const jQuery: any;
@@ -124,11 +123,10 @@ export const onlineRequest = (
         },
     })
     .done((response) => {
-        store.dispatch(setFlowInformation({ tenantId, stateId, token: authenticationToken }));
-
         // Here is where we initiate the offline functionality
         // This happens in join and initialisation responses (when the flow first ran or user has joined)
         if (event === EventTypes.initialization || event === EventTypes.join) {
+            store.dispatch(setFlowInformation({ tenantId, stateId: response.stateId, token: authenticationToken }));
 
             // Determine if a flow that requires authentication
             // has successfully been authenticated
@@ -149,7 +147,7 @@ export const onlineRequest = (
                     .then((flow) => {
                         if (!flow) {
 
-                            // Theres nothing cached in indexedb so
+                            // There is nothing cached in indexedb so
                             // this flow has must be online with no
                             // pending requests to be replayed
                             const flowModel = OfflineCore.initialize(
@@ -159,9 +157,12 @@ export const onlineRequest = (
                                 authenticationToken,
                             );
 
-                            // Start polling for state values
                             if (response.stateId && tenantId) {
-                                periodicallyPollForStateValues();
+                                const requests = generateObjectData();
+                                if (requests.length === 0) {
+                                    // There isn't any request to cache so we start polling for state values
+                                    store.dispatch<any>(activatePollingValues());
+                                }
                             }
 
                             // Start caching object data

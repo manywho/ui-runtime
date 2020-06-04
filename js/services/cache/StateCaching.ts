@@ -44,10 +44,15 @@ export const pollForStateValues = () => {
     }
     return fetch(url, request)
         .then((response) => {
+            if (response.status === 204) {
+                return null;
+            }
             return response.json();
         })
         .then((response) => {
-            injectValuesIntoState(response);
+            if (response !== null) {
+                injectValuesIntoState(response);
+            }
 
             if (!store.getState().hasNetwork) {
                 store.dispatch<any>(hasNetwork());
@@ -77,19 +82,15 @@ export const periodicallyPollForStateValues = () => {
 
     clearTimeout(timer);
 
+    timer = setTimeout(
+        () => { periodicallyPollForStateValues(); }, pollInterval,
+    );
+
     return pollForStateValues()
         .then((response) => {
-            timer = setTimeout(
-                () => { periodicallyPollForStateValues(); }, pollInterval,
-            );
-
             return response;
         })
         .catch(() => {
-            timer = setTimeout(
-                () => { periodicallyPollForStateValues(); }, pollInterval,
-            );
-
             return;
         });
 };
