@@ -1,4 +1,4 @@
-import { pollForStateValues } from '../../../js/services/cache/StateCaching';
+import { pollForStateValues, periodicallyPollForStateValues } from '../../../js/services/cache/StateCaching';
 import { setStateValue } from '../../../js/models/State';
 
 const globalAny:any = global;
@@ -29,15 +29,14 @@ describe('State caching service behaviour', () => {
     });
 
     test.skip('Fetch call is made only when network is available', () => {
-        pollForStateValues('test', 'test', 'test');
+        periodicallyPollForStateValues();
         expect(globalAny.fetch).not.toHaveBeenCalled();
     });
 
     test('Polling happens recursively based on polling interval', () => {
         jest.useFakeTimers();
-        pollForStateValues('test', 'test', 'test')
+        periodicallyPollForStateValues()
             .then(() => {
-
                 jest.runOnlyPendingTimers();
 
                 expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -45,11 +44,19 @@ describe('State caching service behaviour', () => {
             });
     });
 
-    test('Every value returned gets injected into offline state', () => {
-        pollForStateValues('test', 'test', 'test')
+    test('Every value returned gets injected into offline state when polling periodically', () => {
+        jest.useFakeTimers();
+        periodicallyPollForStateValues()
             .then(() => {
+                jest.runOnlyPendingTimers();
                 expect(setStateValue).toHaveBeenCalledTimes(2);
             });
     });
 
+    test('Every value returned gets injected into offline state when polling' , () => {
+        pollForStateValues()
+            .then(() => {
+                expect(setStateValue).toHaveBeenCalledTimes(2);
+            });
+    });
 });
