@@ -621,6 +621,22 @@ export const getStateValues = (flowKey: string) => {
 /**
  * @ignore
  */
+export const getHistoricalNavigation = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    return flowModel[lookUpKey].historicalNavigation;
+};
+
+/**
+ * @ignore
+ */
+export const setHistoricalNavigation = (flowKey: string, historicalNavigation) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flowModel[lookUpKey].historicalNavigation = historicalNavigation;
+};
+
+/**
+ * @ignore
+ */
 export const getExecutionLog = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].executionLog;
