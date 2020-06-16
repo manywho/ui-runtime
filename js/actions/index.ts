@@ -21,19 +21,19 @@ export const hasNoNetwork = () => ({
     type: 'HAS_NO_NETWORK',
 });
 
-export const isReplaying = result => ({
+export const isReplaying = (result) => ({
     type: 'IS_REPLAYING',
     payload: result,
 });
 
-export const setCachingProgress = result => ({
+export const setCachingProgress = (result) => ({
     type: 'CACHE_PROGRESS',
     payload: result,
 });
 
 export const cachingProgress = (result) => {
-    const progress = result.progress;
-    const flowKey = result.flowKey;
+    const { progress } = result;
+    const { flowKey } = result;
     return (dispatch) => {
         if (progress === 100 && flowKey) {
             manywho.model.addNotification(flowKey, {

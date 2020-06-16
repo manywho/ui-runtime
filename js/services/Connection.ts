@@ -33,13 +33,13 @@ export const hasNetwork = () => {
         url: `${manywho.settings.global('platform.uri')}/api/health`,
         timeout: pingTimeout,
     })
-    .then(() => {
-        deferred.resolve(true);
-    })
-    .fail(() => {
-        store.dispatch<any>(isOffline({ hasNetwork: false }));
-        deferred.resolve(false);
-    });
+        .then(() => {
+            deferred.resolve(true);
+        })
+        .fail(() => {
+            store.dispatch<any>(isOffline({ hasNetwork: false }));
+            deferred.resolve(false);
+        });
 
     return deferred;
 };
@@ -110,7 +110,7 @@ export const onlineRequest = (
     }
 
     return $.ajax({
-        url: manywho.settings.global('platform.uri') + urlPart,
+        url: `${manywho.settings.global('platform.uri')}${urlPart}`,
         type: methodType,
         dataType: 'json',
         contentType: 'application/json',
@@ -123,61 +123,61 @@ export const onlineRequest = (
             }
         },
     })
-    .done((response) => {
+        .done((response) => {
 
-        // Here is where we initiate the offline functionality
-        // This happens in join and initialisation responses (when the flow first ran or user has joined)
-        if (event === EventTypes.initialization || event === EventTypes.join) {
+            // Here is where we initiate the offline functionality
+            // This happens in join and initialisation responses (when the flow first ran or user has joined)
+            if (event === EventTypes.initialization || event === EventTypes.join) {
 
-            // Determine if a flow that requires authentication
-            // has successfully been authenticated
-            const isAuthenticated = authenticationToken && response.authorizationContext &&
+                // Determine if a flow that requires authentication
+                // has successfully been authenticated
+                const isAuthenticated = authenticationToken && response.authorizationContext &&
             (response.authorizationContext.directoryId &&
             response.authorizationContext.directoryName &&
             response.authorizationContext.loginUrl);
 
-            // Determine if a flow is just public
-            const isPublic = !authenticationToken &&
+                // Determine if a flow is just public
+                const isPublic = !authenticationToken &&
             (!response.authorizationContext.directoryId &&
             !response.authorizationContext.directoryName &&
             !response.authorizationContext.loginUrl);
 
-            if (isAuthenticated || isPublic) {
+                if (isAuthenticated || isPublic) {
 
-                getOfflineData(stateId, null, null)
-                    .then((flow) => {
-                        if (!flow) {
+                    getOfflineData(stateId, null, null)
+                        .then((flow) => {
+                            if (!flow) {
 
-                            // Theres nothing cached in indexedb so
-                            // this flow has must be online with no
-                            // pending requests to be replayed
-                            const flowModel = OfflineCore.initialize(
-                                tenantId,
-                                response.stateId,
-                                response.stateToken,
-                                authenticationToken,
-                            );
+                                // Theres nothing cached in indexedb so
+                                // this flow has must be online with no
+                                // pending requests to be replayed
+                                const flowModel = OfflineCore.initialize(
+                                    tenantId,
+                                    response.stateId,
+                                    response.stateToken,
+                                    authenticationToken,
+                                );
 
-                            // Start polling for state values
-                            if (response.stateId && tenantId) {
-                                pollForStateValues(response.stateId, tenantId, authenticationToken);
+                                // Start polling for state values
+                                if (response.stateId && tenantId) {
+                                    pollForStateValues(response.stateId, tenantId, authenticationToken);
+                                }
+
+                                // Start caching object data
+                                ObjectDataCaching(flowModel);
                             }
-
-                            // Start caching object data
-                            ObjectDataCaching(flowModel);
-                        }
-                        if (flow) {
+                            if (flow) {
                             // Data cached in indexdb so flow
                             // has requests that need to be replayed
-                            store.dispatch<any>(isOffline({ hasNetwork: true }));
-                        }
-                    });
+                                store.dispatch<any>(isOffline({ hasNetwork: true }));
+                            }
+                        });
+                }
             }
-        }
-        manywho.settings.event(`${event}.done`);
-    })
-    .fail(manywho.connection.onError)
-    .fail(manywho.settings.event(`${event}.fail`));
+            manywho.settings.event(`${event}.done`);
+        })
+        .fail(manywho.connection.onError)
+        .fail(manywho.settings.event(`${event}.fail`));
 };
 
 /**
@@ -222,7 +222,7 @@ export const offlineRequest = (
  * @param tenantId
  * @param stateId
  * @param authenticationToken
- * @param request
+ * @param payload
  */
 export const request = (
     resolveContext: any,
@@ -232,20 +232,18 @@ export const request = (
     tenantId: string,
     stateId: string,
     authenticationToken: string,
-    request: any,
-) => {
-    return isOnline(stateId, request, event)
-        .then((response) => {
-            if (response) {
+    payload: any,
+) => isOnline(stateId, payload, event)
+    .then((response) => {
+        if (response) {
 
-                // Device is connected to the internet
-                return onlineRequest(event, urlPart, methodType, tenantId, stateId, authenticationToken, request);
-            }
+            // Device is connected to the internet
+            return onlineRequest(event, urlPart, methodType, tenantId, stateId, authenticationToken, payload);
+        }
 
-            // Device is not connected to the internet
-            return offlineRequest(resolveContext, event, urlPart, request, tenantId, stateId);
-        });
-};
+        // Device is not connected to the internet
+        return offlineRequest(resolveContext, event, urlPart, payload, tenantId, stateId);
+    });
 
 /**
  * Intercepts initialize requests before
@@ -268,39 +266,36 @@ export const initialize = (
     authenticationToken: string,
     options: any,
     isInitializing: string | boolean,
-) => {
 
-    // Check if there is any cached data
-    // in indexdb associated to the flow
-    return getOfflineData(stateId, flowId, 'initialization')
-        .then((flow) => {
+    // Check if there is any cached data in indexdb associated to the flow
+) => getOfflineData(stateId, flowId, 'initialization')
+    .then((flow) => {
 
-            // If there is a state cache then we extract
-            // the state id, if not then state id will be null
-            // (normal for initialization requests).
-            //
-            // stateid === true => do a join
-            // stateid === null => move with authorization
-            const currentStateId = flow ? flow.state.id : stateId;
-            return manywho.engine._initialize(
-                tenantId,
-                flowId,
-                flowVersionId,
-                container,
-                currentStateId,
-                authenticationToken,
-                options,
-                isInitializing,
-            );
-        });
-};
+        // If there is a state cache then we extract
+        // the state id, if not then state id will be null
+        // (normal for initialization requests).
+        //
+        // stateid === true => do a join
+        // stateid === null => move with authorization
+        const currentStateId = flow ? flow.state.id : stateId;
+        return manywho.engine.originalInitialize(
+            tenantId,
+            flowId,
+            flowVersionId,
+            container,
+            currentStateId,
+            authenticationToken,
+            options,
+            isInitializing,
+        );
+    });
 
 /**
  * Perform an upload request to the API in a normal online environment
  * @param event Type of event, `Settings.event(event + '.done')` will be called when the request completes
  * @param url The path to make the request against, excluding the host which is fetched from `Settings.global('platform.uri')`
  * @param files A list of files
- * @param request The request payload data
+ * @param payload The request payload data
  * @param tenantId The GUID of the tenant to make the request against
  * @param authenticationToken Current running users authentication token
  * @param onProgress Callback to recieve progress event info
@@ -310,7 +305,7 @@ export const onlineUploadFiles = (
     event: string,
     url: string,
     files: File[],
-    request: any,
+    payload: any,
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
@@ -322,10 +317,10 @@ export const onlineUploadFiles = (
         formData.append('FileData', file);
     });
 
-    formData.append('FileDataRequest', JSON.stringify(request));
+    formData.append('FileDataRequest', JSON.stringify(payload));
 
     return $.ajax({
-        url: manywho.settings.global('platform.uri') + url,
+        url: `${manywho.settings.global('platform.uri')}${url}`,
         type: 'POST',
         data: formData,
         contentType: false,
@@ -339,9 +334,9 @@ export const onlineUploadFiles = (
             manywho.connection.beforeSend.call(this, xhr, tenantId, authenticationToken, event);
         },
     })
-    .done(manywho.settings.event(`${event}.done`))
-    .fail(manywho.connection.onError)
-    .fail(manywho.settings.event(`${event}.fail`));
+        .done(manywho.settings.event(`${event}.done`))
+        .fail(manywho.connection.onError)
+        .fail(manywho.settings.event(`${event}.fail`));
 };
 
 /**
@@ -349,18 +344,18 @@ export const onlineUploadFiles = (
  * to generate the appropriate response.
  * @param event
  * @param files
- * @param request
+ * @param payload
  * @param stateId
  */
 export const offlineUploadFiles = (
     event: string,
     files: File[],
-    request: any,
+    payload: any,
     stateId: string,
 ) => {
     const deferred = jQuery.Deferred();
 
-    const response = OfflineCore.getUploadResponse(files, request, stateId);
+    const response = OfflineCore.getUploadResponse(files, payload, stateId);
 
     deferred.resolve(response);
 
@@ -373,7 +368,7 @@ export const offlineUploadFiles = (
  * @param event Type of event, `Settings.event(event + '.done')` will be called when the request completes
  * @param url The path to make the request against, excluding the host which is fetched from `Settings.global('platform.uri')`
  * @param files Files to upload
- * @param request Request payload data
+ * @param payload Request payload data
  * @param tenantId The GUID of the tenant to make the request against
  * @param authenticationToken Current running users authentication token
  * @param onProgress Callback to recieve progress event info
@@ -385,21 +380,19 @@ export const uploadFiles = (
     event: string,
     url: string,
     files: File[],
-    request: any,
+    payload: any,
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
     stateId: string,
-) => {
-    return isOnline(stateId, request, event)
-        .then((response) => {
-            if (response) {
+) => isOnline(stateId, payload, event)
+    .then((response) => {
+        if (response) {
 
-                // Device is connected to the internet
-                return onlineUploadFiles(event, url, files, request, tenantId, authenticationToken, onProgress);
-            }
+            // Device is connected to the internet
+            return onlineUploadFiles(event, url, files, payload, tenantId, authenticationToken, onProgress);
+        }
 
-            // Device is not connected to the internet
-            return offlineUploadFiles(event, files, request, stateId);
-        });
-};
+        // Device is not connected to the internet
+        return offlineUploadFiles(event, files, payload, stateId);
+    });

@@ -1,8 +1,8 @@
 import { getStateValue } from '../models/State';
 import { IState } from '../interfaces/IModels';
 
-declare var manywho: any;
-declare var moment: any;
+declare let manywho: any;
+declare let moment: any;
 
 /**
  * Support for simulating rules whilst a flow is offline
@@ -34,6 +34,8 @@ const Rules = {
                 return outcome;
             }
         }
+
+        return null;
     },
 
     /**
@@ -98,16 +100,18 @@ const Rules = {
      */
     compareValues(left: any, right: any, contentType: any, criteriaType: string) {
         switch (contentType) {
-        case manywho.component.contentTypes.object:
-            return Rules.compareObjects(criteriaType, left);
-        case manywho.component.contentTypes.list:
-            return Rules.compareLists(criteriaType);
-        default:
-            const rightContentValue = criteriaType === 'IS_EMPTY' ?
-                Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
-                Rules.getContentValue(right, contentType.toUpperCase());
+            case manywho.component.contentTypes.object:
+                return Rules.compareObjects(criteriaType, left);
+            case manywho.component.contentTypes.list:
+                return Rules.compareLists(criteriaType);
+            default: {
+                const rightContentValue = criteriaType === 'IS_EMPTY' ?
+                    Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
+                    Rules.getContentValue(right, contentType.toUpperCase());
 
-            return Rules.compareContentValues(Rules.getContentValue(left, contentType.toUpperCase()), rightContentValue, criteriaType, contentType);
+                return Rules.compareContentValues(Rules.getContentValue(left, contentType.toUpperCase()),
+                    rightContentValue, criteriaType, contentType);
+            }
         }
     },
 
@@ -119,17 +123,20 @@ const Rules = {
         const contentValue = value.defaultContentValue || value.contentValue;
 
         switch (contentType) {
-        case manywho.component.contentTypes.string:
-        case manywho.component.contentTypes.content:
-        case manywho.component.contentTypes.password:
-        case manywho.component.contentTypes.encrypted:
-            return contentValue ? contentValue.toUpperCase() : contentValue;
-        case manywho.component.contentTypes.number:
-            return contentValue ? parseFloat(contentValue) : contentValue;
-        case manywho.component.contentTypes.datetime:
-            return contentValue ? moment(contentValue) : contentValue;
-        case manywho.component.contentTypes.boolean:
-            return contentValue ? Boolean(contentValue) : contentValue;
+            case manywho.component.contentTypes.string:
+            case manywho.component.contentTypes.content:
+            case manywho.component.contentTypes.password:
+            case manywho.component.contentTypes.encrypted:
+                return contentValue ? contentValue.toUpperCase() : contentValue;
+            case manywho.component.contentTypes.number:
+                return contentValue ? parseFloat(contentValue) : contentValue;
+            case manywho.component.contentTypes.datetime:
+                return contentValue ? moment(contentValue) : contentValue;
+            case manywho.component.contentTypes.boolean:
+                return contentValue ? Boolean(contentValue) : contentValue;
+            default:
+                // TODO - Exception ?
+                return contentValue;
         }
     },
 
@@ -141,45 +148,53 @@ const Rules = {
      */
     compareContentValues(left: any, right: any, criteriaType: string, contentType: string) {
         switch (criteriaType.toUpperCase()) {
-        case 'EQUAL':
-            return left === right;
+            case 'EQUAL':
+                return left === right;
 
-        case 'NOT_EQUAL':
-            return  left !== right;
+            case 'NOT_EQUAL':
+                return left !== right;
 
-        case 'GREATER_THAN':
-            return left > right;
+            case 'GREATER_THAN':
+                return left > right;
 
-        case 'GREATER_THAN_OR_EQUAL':
-            return left >= right;
+            case 'GREATER_THAN_OR_EQUAL':
+                return left >= right;
 
-        case 'LESS_THAN':
-            return left < right;
+            case 'LESS_THAN':
+                return left < right;
 
-        case 'LESS_THAN_OR_EQUAL':
-            return left <= right;
+            case 'LESS_THAN_OR_EQUAL':
+                return left <= right;
 
-        case 'STARTS_WITH':
-            return left.startsWith(right);
+            case 'STARTS_WITH':
+                return left.startsWith(right);
 
-        case 'ENDS_WITH':
-            return left.endsWith(right);
+            case 'ENDS_WITH':
+                return left.endsWith(right);
 
-        case 'CONTAINS':
-            return left.indexOf(right) !== -1;
+            case 'CONTAINS':
+                return left.indexOf(right) !== -1;
 
-        case 'IS_EMPTY':
-            switch (contentType.toUpperCase()) {
-            case manywho.component.contentTypes.string:
-            case manywho.component.contentTypes.password:
-            case manywho.component.contentTypes.content:
-            case manywho.component.contentTypes.encrypted:
-                return (manywho.utils.isNullOrEmpty(left) && right) || (!manywho.utils.isNullOrEmpty(left) && !right);
-            case manywho.component.contentTypes.number:
-            case manywho.component.contentTypes.boolean:
-            case manywho.component.contentTypes.datetime:
-                return (left === null && right) || (left !== null && !right);
+            case 'IS_EMPTY': {
+                switch (contentType.toUpperCase()) {
+                    case manywho.component.contentTypes.string:
+                    case manywho.component.contentTypes.password:
+                    case manywho.component.contentTypes.content:
+                    case manywho.component.contentTypes.encrypted:
+                        return (manywho.utils.isNullOrEmpty(left) && right) || (!manywho.utils.isNullOrEmpty(left) && !right);
+                    case manywho.component.contentTypes.number:
+                    case manywho.component.contentTypes.boolean:
+                    case manywho.component.contentTypes.datetime:
+                        return (left === null && right) || (left !== null && !right);
+                    default:
+                        // TODO - Exception ?
+                        return false;
+                }
             }
+
+            default:
+                // TODO - Exception ?
+                return false;
         }
     },
 
@@ -191,8 +206,12 @@ const Rules = {
      */
     compareObjects(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
-        case 'IS_EMPTY':
-            return !(value.objectData && value.objectData.length > 0);
+            case 'IS_EMPTY':
+                return !(value.objectData && value.objectData.length > 0);
+
+            default:
+                // TODO - Exception ?
+                return false;
         }
     },
 
@@ -203,8 +222,12 @@ const Rules = {
      */
     compareLists(criteriaType: string) {
         switch (criteriaType.toUpperCase()) {
-        case 'IS_EMPTY':
-            return true;
+            case 'IS_EMPTY':
+                return true;
+
+            default:
+                // TODO - Exception ?
+                return false;
         }
     },
 };

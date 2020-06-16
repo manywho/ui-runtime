@@ -7,8 +7,8 @@ import { setStateValue } from '../../models/State';
 declare const manywho: any;
 declare const metaData: any;
 
-let authenticationToken = undefined;
-let timer = undefined;
+let authenticationToken;
+let timer;
 
 const snapshot: any = Snapshot(metaData);
 
@@ -23,7 +23,7 @@ const injectValuesIntoState = (values: any) => {
             objectData: value.objectData,
         };
         setStateValue(
-            { id: value.valueElementId },
+            { id: value.valueElementId, typeElementPropertyId: null },
             value.typeElementId,
             snapshot,
             valueProps,
@@ -56,17 +56,16 @@ export const pollForStateValues = (stateId: string, tenantId: string, token: str
     const request = {
         headers: {
             ManyWhoTenant: tenantId,
+            Authorization: null,
         },
     };
 
     if (authenticationToken) {
-        request.headers['Authorization'] = authenticationToken;
+        request.headers.Authorization = authenticationToken;
     }
 
     return fetch(url, request)
-        .then((response) => {
-            return response.json();
-        })
+        .then((response) => response.json())
         .then((response) => {
             injectValuesIntoState(response);
 

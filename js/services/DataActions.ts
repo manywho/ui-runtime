@@ -27,9 +27,9 @@ const loadData = (action: any, objectData: any, snapshot: any) => {
  */
 const saveData = (action: any, objectData: any, snapshot: any) => {
     const valueReferenceToSave = snapshot.getValue(action.valueElementToApplyId);
-    const typeElementId = valueReferenceToSave.typeElementId;
-    const type = typeElementId ? snapshot.metadata.typeElements.find(typeElement => typeElement.id === typeElementId) : null;
-    const valueElementToApplyId = action.valueElementToApplyId;
+    const { typeElementId } = valueReferenceToSave;
+    const type = typeElementId ? snapshot.metadata.typeElements.find((typeElement) => typeElement.id === typeElementId) : null;
+    const { valueElementToApplyId } = action;
 
     const valueToSave = getStateValue(valueElementToApplyId);
 
@@ -89,7 +89,7 @@ const saveData = (action: any, objectData: any, snapshot: any) => {
                 isSelected: false,
                 properties: clone(type.properties).map((property) => {
                     const newProp = obj.properties.filter(
-                        prop => prop.typeElementPropertyId === property.id,
+                        (prop) => prop.typeElementPropertyId === property.id,
                     );
                     if (newProp.length > 0) {
                         property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
@@ -126,20 +126,23 @@ const saveData = (action: any, objectData: any, snapshot: any) => {
 export default (action: any, flow: IFlow, snapshot: any) => {
     const objectData = getObjectData(
         action.objectDataRequest.objectDataType ?
-        action.objectDataRequest.objectDataType.typeElementId :
-        action.objectDataRequest.typeElementId,
+            action.objectDataRequest.objectDataType.typeElementId :
+            action.objectDataRequest.typeElementId,
     );
 
     switch (action.crudOperationType.toUpperCase()) {
-    case 'LOAD':
-        loadData(action, objectData, snapshot);
-        break;
-    case 'SAVE':
-        saveData(action, objectData, snapshot);
-        break;
-    case 'DELETE':
+        case 'LOAD':
+            loadData(action, objectData, snapshot);
+            break;
+        case 'SAVE':
+            saveData(action, objectData, snapshot);
+            break;
+        case 'DELETE':
         // No implementation for a delete as its potential very destructive
-        break;
+            break;
+        default:
+            // TODO - Exception ?
+            break;
     }
 
     return flow.state;

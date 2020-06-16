@@ -6,7 +6,7 @@ import { str } from '../../test-utils';
 const mockCacheObjectData: any = cacheObjectData;
 
 const mockTypeElementId = 'testTypeElementId';
-const mockValueElementToApplyId = 'testValueId';
+const mockValueElementToApplyId = { id: 'testValueId', typeElementPropertyId: null };
 
 const mockObjectOne = {
     objectData: {

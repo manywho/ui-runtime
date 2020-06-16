@@ -1,4 +1,4 @@
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const path = require('path');
 
 const config = {
@@ -9,25 +9,26 @@ const config = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loader: "ts-loader",
-                exclude: /node_modules/
+                loader: 'ts-loader',
+                exclude: /node_modules/,
             },
             {
                 test: /\.tsx?$/,
                 enforce: 'pre',
-                loader: 'tslint-loader',
+                loader: 'eslint-loader',
                 options: {
-                    emitErrors: true,
-                    failOnHint: true
+                    emitError: true,
+                    failOnError: true,
                 },
+                exclude: /node_modules/,
             },
             {
                 test: /\.less$/,
                 use: [
-                    {loader: 'style-loader'},
-                    {loader: 'css-loader'},
-                    {loader: 'less-loader'}
-                ]
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ],
             },
             {
                 test: /\.svg$/,
@@ -37,28 +38,27 @@ const config = {
                     },
                 ],
             },
-        ]
+        ],
     },
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ]
+        extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
         filename: 'flow-offline.js',
     },
     plugins: [
-        new BundleAnalyzerPlugin()
+        new BundleAnalyzerPlugin(),
     ],
     watch: true,
     watchOptions: {
-        poll: true
-    }
+        poll: true,
+    },
 };
 
 module.exports = (env) => {
-    var defaultDirectory = 'build';
+    let defaultDirectory = 'build';
 
-    if (env && env.build)
-        defaultDirectory = env.build;
+    if (env && env.build) defaultDirectory = env.build;
 
     config.output.path = path.resolve(__dirname, defaultDirectory, 'js');
     // config.output.publicPath = 'build/js/';

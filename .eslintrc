@@ -1,0 +1,94 @@
+{
+    "plugins": [
+        "react",
+        "import",
+        "@typescript-eslint"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "airbnb-typescript"
+    ],
+    "globals": {
+        "manywho": false,
+        "$": false,
+        "ga": false,
+        "module": false,
+        "jest": false,
+        "expect": false,
+        "test": false,
+        "beforeEach": false,
+        "describe": false
+    },
+    "rules": {
+        "semi": 2,
+        "indent": "off",
+        "@typescript-eslint/indent": ["error", 4],
+        "max-len": [2, 150],
+        "no-trailing-spaces": 0,
+        "brace-style": [ 2, "1tbs", { "allowSingleLine": true }],
+        "import/order": 0,
+        "padded-blocks": 0,
+        "class-methods-use-this": 0,
+        "operator-linebreak": 0,
+        "no-confusing-arrow": 0,
+        "object-curly-newline": 0,
+        "no-param-reassign": ["error", { "props": false }],
+        "linebreak-style": 0,
+        "no-nested-ternary": 0,
+
+        "import/prefer-default-export": 0,
+        "import/no-named-as-default": 0,
+
+        "react/jsx-uses-vars": [2],
+        "react/jsx-no-undef": [2, { "allowGlobals": true }],
+        "react/prop-types": [0],
+        "react/destructuring-assignment": 0,
+        "react/jsx-filename-extension": 0,
+        "react/jsx-indent": [2, 4],
+        "react/jsx-indent-props": [2, 4],
+        "react/no-unescaped-entities": 0,
+        "react/no-access-state-in-setstate": 0,
+        "react/button-has-type": 0,
+        "react/no-array-index-key": 0,
+        "react/no-string-refs": 0,
+        "react/jsx-props-no-spreading": "off",
+
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": ["error", { "allowTernary": true }],
+
+        "jsx-a11y/label-has-associated-control": 0,
+        "jsx-a11y/label-has-for": 0,
+
+
+        // Following rules disabled, or warning, for now as there are incompatibilities with
+        // the current versions of eslint and Jest/React.
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/unbound-method": "off",
+        "no-restricted-syntax": "warn",
+        "@typescript-eslint/no-implied-eval": "warn",
+        "no-new-func": "warn",
+        "import/no-cycle": "warn"
+
+
+    }
+}

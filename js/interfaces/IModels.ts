@@ -24,3 +24,8 @@ export interface IState {
     getValue?: Function;
     setValue?: Function;
 }
+
+export interface Id {
+    id: string;
+    typeElementPropertyId: string;
+}

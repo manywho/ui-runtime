@@ -10,15 +10,15 @@ if (!PACKAGE_VERSION) {
 }
 
 const pathsToClean = [
-    'dist'
+    'dist',
 ];
 
 const publicPaths = {
     DEVELOPMENT: 'https://manywho-ui-development.s3.eu-west-2.amazonaws.com/',
     QA: 'https://s3.amazonaws.com/manywho-cdn-react-qa/',
     STAGING: 'https://s3.amazonaws.com/manywho-cdn-react-staging/',
-    PRODUCTION: 'https://assets.manywho.com/'
-}
+    PRODUCTION: 'https://assets.manywho.com/',
+};
 
 const mapPublicPath = (assets, publicPaths) => {
 
@@ -44,7 +44,7 @@ const mapPublicPath = (assets, publicPaths) => {
         default:
             return publicPaths.PRODUCTION;
     }
-}
+};
 
 
 const config = {
@@ -56,24 +56,24 @@ const config = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
+                exclude: /node_modules/,
             },
             {
                 test: /\.tsx?$/,
                 enforce: 'pre',
-                loader: 'tslint-loader',
+                loader: 'eslint-loader',
                 options: {
-                    emitErrors: true,
-                    failOnHint: true
+                    emitError: true,
+                    failOnError: true,
                 },
             },
             {
                 test: /\.less$/,
                 use: [
-                    {loader: 'style-loader'},
-                    {loader: 'css-loader'},
-                    {loader: 'less-loader'}
-                ]
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ],
             },
             {
                 test: /\.svg$/,
@@ -83,38 +83,37 @@ const config = {
                     },
                 ],
             },
-        ]
+        ],
     },
     plugins: [
         new CleanWebpackPlugin(pathsToClean),
         new UglifyJsPlugin({
-            sourceMap: true
+            sourceMap: true,
         }),
         new WriteBundleFilePlugin({
             filename: 'offline-bundle.json',
             bundleKey: 'offline',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
-            filenameFilter: filename => !filename.endsWith('.map'),
+            filenameFilter: (filename) => !filename.endsWith('.map'),
         }),
     ],
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ]
+        extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
         filename: `js/flow-offline-${PACKAGE_VERSION}.js`,
-    }
+    },
 };
 
 module.exports = (env) => {
-    var defaultDirectory = 'dist';
+    let defaultDirectory = 'dist';
     const assets = (env && env.assets) ? env.assets : 'production';
     const publicPath = mapPublicPath(assets, publicPaths);
 
-    if (env && env.build)
-        defaultDirectory = env.build;
+    if (env && env.build) defaultDirectory = env.build;
 
     config.output.path = path.resolve(__dirname, defaultDirectory);
-    config.output.publicPath = publicPath + 'js/';
+    config.output.publicPath = `${publicPath}js/`;
     return config;
 };

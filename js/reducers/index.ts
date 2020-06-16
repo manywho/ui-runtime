@@ -24,47 +24,47 @@ interface IOfflineState {
 
 const offlineState = (state: IOfflineState = { cachingProgress: 0, isReplaying: false, hasNetwork: true, isOffline: false }, action) => {
     switch (action.type) {
-    case 'HAS_NETWORK':
-        return {
-            ...state,
-            hasNetwork: true,
-        };
+        case 'HAS_NETWORK':
+            return {
+                ...state,
+                hasNetwork: true,
+            };
 
-    case 'HAS_NO_NETWORK':
-        return {
-            ...state,
-            hasNetwork: false,
-            isOffline: true,
-        };
+        case 'HAS_NO_NETWORK':
+            return {
+                ...state,
+                hasNetwork: false,
+                isOffline: true,
+            };
 
-    case 'IS_OFFLINE':
-        return {
-            ...state,
-            isOffline: true,
-            hasNetwork: action.payload,
-        };
+        case 'IS_OFFLINE':
+            return {
+                ...state,
+                isOffline: true,
+                hasNetwork: action.payload,
+            };
 
-    case 'IS_ONLINE':
-        return {
-            ...state,
-            isOffline: false,
-            hasNetwork: true,
-        };
+        case 'IS_ONLINE':
+            return {
+                ...state,
+                isOffline: false,
+                hasNetwork: true,
+            };
 
-    case 'IS_REPLAYING':
-        return {
-            ...state,
-            isReplaying: action.payload,
-        };
+        case 'IS_REPLAYING':
+            return {
+                ...state,
+                isReplaying: action.payload,
+            };
 
-    case 'CACHE_PROGRESS':
-        return {
-            ...state,
-            cachingProgress: action.payload,
-        };
+        case 'CACHE_PROGRESS':
+            return {
+                ...state,
+                cachingProgress: action.payload,
+            };
 
-    default:
-        return state;
+        default:
+            return state;
     }
 };
 

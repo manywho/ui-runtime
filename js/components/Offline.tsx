@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hasNetwork } from '../services/Connection';
 import OfflineCore from '../services/OfflineCore';
 import { setOfflineData } from '../services/Storage';
-import { IOfflineProps, IOfflineState } from '../interfaces/IOffline';
+import { IOfflineProps, IOfflineState, OfflineView } from '../interfaces/IOffline';
 import { connect } from 'react-redux';
 import { isOffline, isOnline, isReplaying } from '../actions';
 import Banner from './Banner';
@@ -12,45 +12,35 @@ import NoNetwork from './NoNetwork';
 
 declare const metaData: any;
 
-enum OfflineView {
-    cache = 0,
-    replay = 1,
-    noNetwork = 2,
-}
+const mapStateToProps = (state) => ({
+    isOffline: state.isOffline,
+    hasNetwork: state.hasNetwork,
+    isReplaying: state.isReplaying,
+    cachingProgress: state.cachingProgress,
+});
 
-const mapStateToProps = (state) => {
-    return {
-        isOffline: state.isOffline,
-        hasNetwork: state.hasNetwork,
-        isReplaying: state.isReplaying,
-        cachingProgress: state.cachingProgress,
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        toggleIsOffline: (bool) => {
-            dispatch(isOffline(bool));
-        },
-        toggleIsOnline: () => {
-            dispatch(isOnline());
-        },
-        toggleIsReplaying: (bool) => {
-            dispatch(isReplaying(bool));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    toggleIsOffline: (bool) => {
+        dispatch(isOffline(bool));
+    },
+    toggleIsOnline: () => {
+        dispatch(isOnline());
+    },
+    toggleIsReplaying: (bool) => {
+        dispatch(isReplaying(bool));
+    },
+});
 
 export class Offline extends React.Component<IOfflineProps, IOfflineState> {
 
     flow = null;
+
     objectDataCachingTimer = null;
 
-    constructor(props: any) {
+    constructor(props: IOfflineProps) {
         super(props);
         this.state = {
             view: null,
-            hasInitialized: false,
         };
     }
 
@@ -60,10 +50,10 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
         hasNetwork()
             .then((response) => {
                 response ?
-                this.setState({ view: OfflineView.replay }) :
-                this.setState({ view: OfflineView.noNetwork });
+                    this.setState({ view: OfflineView.replay }) :
+                    this.setState({ view: OfflineView.noNetwork });
             });
-    }
+    };
 
     onOnline = () => {
         this.setState({ view: null });
@@ -72,7 +62,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
         this.props.toggleIsOnline();
         this.props.toggleIsReplaying(false);
         OfflineCore.rejoin(this.props.flowKey);
-    }
+    };
 
     onCloseOnline = (flow) => {
 
@@ -87,51 +77,65 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
                 this.props.toggleIsReplaying(false);
                 this.setState({ view: null });
             });
-    }
+    };
 
     onCloseNoNetwork: () => void = () => {
         this.setState({ view: null });
-    }
+    };
 
     render() {
 
         let cachingSpinner = null;
 
         if (this.props.cachingProgress > 0 && this.props.cachingProgress < 100) {
-            cachingSpinner = <div className="caching-spinner">
-                <div className="wait-container">
-                    <div className="wait-spinner-small wait-spinner"></div>
-                    <span className="wait-message">Caching { String(this.props.cachingProgress) }%</span>
+            cachingSpinner = (
+                <div className="caching-spinner">
+                    <div className="wait-container">
+                        <div className="wait-spinner-small wait-spinner" />
+                        <span className="wait-message">
+                            Caching
+                            { String(this.props.cachingProgress) }
+                            %
+                        </span>
+                    </div>
                 </div>
-            </div>;
+            );
         }
 
-        const button = this.props.isOffline ?
-            <button className="btn btn-success" onClick={this.onOnlineClick}><span className="glyphicon glyphicon-transfer" aria-hidden="true"/>
+        const button = this.props.isOffline ? (
+            <button className="btn btn-success" onClick={this.onOnlineClick}>
+                <span className="glyphicon glyphicon-transfer" aria-hidden="true" />
                 Sync Flow
-            </button> : null;
+            </button>
+        ) : null;
 
         let view = null;
 
         switch (this.state.view) {
 
-        case OfflineView.replay:
-            view = <GoOnline onOnline={this.onOnline} onClose={this.onCloseOnline} flowKey={this.props.flowKey} />;
-            break;
+            case OfflineView.replay:
+                view = <GoOnline onOnline={this.onOnline} onClose={this.onCloseOnline} flowKey={this.props.flowKey} />;
+                break;
 
-        case OfflineView.noNetwork:
-            view = <NoNetwork onClose={this.onCloseNoNetwork} />;
+            case OfflineView.noNetwork:
+                view = <NoNetwork onClose={this.onCloseNoNetwork} />;
+                break;
+
+            default:
+                break;
         }
 
         if (metaData) {
-            return <div className="offline">
-                <div className="offline-options">
-                    {button}
+            return (
+                <div className="offline">
+                    <div className="offline-options">
+                        {button}
+                    </div>
+                    {view}
+                    {cachingSpinner}
+                    <Banner hasNetwork={this.props.hasNetwork} isOffline={this.props.isOffline} />
                 </div>
-                {view}
-                {cachingSpinner}
-                <Banner hasNetwork={this.props.hasNetwork} isOffline={this.props.isOffline} />
-            </div>;
+            );
         }
 
         return null;

@@ -157,7 +157,7 @@ function setPropertyBooleanValue(typeElementPropertyId: string, contentValue: st
  * @description sets the type element properties content value
  * for a property of content type - list, to the passed in value
  */
-function setPropertyArray(typeElementPropertyId: string, objectData: object) {
+function setPropertyArray(typeElementPropertyId: string, objectData: any) {
     setProperty(typeElementPropertyId, CONTENT_TYPES.LIST, objectData, this);
 }
 
@@ -167,7 +167,7 @@ function setPropertyArray(typeElementPropertyId: string, objectData: object) {
  * @description sets the type element properties content value
  * for a property of content type - object, to the passed in value
  */
-function setPropertyObject(typeElementPropertyId: string, objectData: object) {
+function setPropertyObject(typeElementPropertyId: string, objectData: any) {
     setProperty(typeElementPropertyId, CONTENT_TYPES.OBJECT, objectData, this);
 }
 

@@ -4,36 +4,35 @@ import { IRequestFaultProps } from '../interfaces/IRequestFault';
 
 declare const manywho: any;
 
-class RequestFault extends React.Component<IRequestFaultProps, any> {
+const RequestFault: React.SFC<IRequestFaultProps> = ({ response }) => {
 
-    constructor(props: any) {
-        super(props);
-    }
+    if (response.mapElementInvokeResponses) {
+        let rootFaultsContent = [];
+        const rootFaults = response.mapElementInvokeResponses[0].rootFaults || [];
 
-    render() {
-        if (this.props.response.mapElementInvokeResponses) {
-            let rootFaultsContent = [];
-            const rootFaults = this.props.response.mapElementInvokeResponses[0].rootFaults || [];
-
-            if (!Array.isArray(rootFaults)) {
-                rootFaultsContent = values(rootFaults);
-            } else {
-                rootFaultsContent = rootFaults;
-            }
-
-            return <div className="request-fault">
-                <h4>Faults</h4>
-                <ul>
-                    {rootFaultsContent.map(fault => <li className="text-danger">{fault}</li>)}
-                </ul>
-            </div>;
+        if (!Array.isArray(rootFaults)) {
+            rootFaultsContent = values(rootFaults);
+        } else {
+            rootFaultsContent = rootFaults;
         }
 
-        return <div className="request-fault">
-            <h4>Failed Request</h4>
-            <div className="text-danger">{this.props.response}</div>
-        </div>;
+        return (
+            <div className="request-fault">
+                <h4>Faults</h4>
+                <ul>
+                    {rootFaultsContent.map((fault) => <li className="text-danger">{fault}</li>)}
+                </ul>
+            </div>
+        );
     }
-}
+
+    return (
+        <div className="request-fault">
+            <h4>Failed Request</h4>
+            <div className="text-danger">{response}</div>
+        </div>
+    );
+};
+
 
 export default RequestFault;
