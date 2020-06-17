@@ -13,7 +13,7 @@ import { append, clone } from 'ramda';
  * cached data and setting to appropriate value
  */
 const loadData = (action: any, objectData: any, snapshot: any) => {
-    const filteredObjectData = ObjectData.filter(objectData, action.objectDataRequest.listFilter, action.objectDataRequest.typeElementId);
+    const filteredObjectData = ObjectData.filter(objectData, action.objectDataRequest.listFilter);
     const value = snapshot.getValue(action.valueElementToApplyId);
     setStateValue(action.valueElementToApplyId, value.typeElementId, snapshot, filteredObjectData);
 };
@@ -50,6 +50,8 @@ const saveData = (action: any, objectData: any, snapshot: any) => {
             if (obj.externalId && existingObj.objectData.externalId === obj.externalId) {
                 return existingObj;
             }
+
+            return null;
         });
 
         // Objectdata that has already been added but is now being modified

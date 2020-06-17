@@ -70,7 +70,7 @@ export const pollForStateValues = (stateId: string, tenantId: string, token: str
             injectValuesIntoState(response);
 
             timer = setTimeout(
-                () => { pollForStateValues(stateId, tenantId, authenticationToken); }, pollInterval,
+                () => { pollForStateValues(stateId, tenantId, authenticationToken).catch(() => {}); }, pollInterval,
             );
 
             if (!store.getState().hasNetwork) {
@@ -79,7 +79,7 @@ export const pollForStateValues = (stateId: string, tenantId: string, token: str
         })
         .catch(() => {
             timer = setTimeout(
-                () => { pollForStateValues(stateId, tenantId, authenticationToken); }, pollInterval,
+                () => { pollForStateValues(stateId, tenantId, authenticationToken).catch(() => {}); }, pollInterval,
             );
 
             if (!store.getState().isOffline && store.getState().hasNetwork) {

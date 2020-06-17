@@ -98,7 +98,7 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
                 extractExternalId(cachedRequest, tenantId, authenticationToken, stateId)
                     .then(() => {
                         this.onReplayResponse(resp);
-                    });
+                    }, () => {});
             })
             .fail((response) => {
                 this.setState({ response: response.statusText, isReplaying: false });

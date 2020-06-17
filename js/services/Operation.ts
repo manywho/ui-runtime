@@ -196,5 +196,5 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
         setStateValue(operation.valueElementToApplyId, typeElementId, snapshot, valueToReference);
     }
 
-    resolve(state);
+    return resolve(state);
 });

@@ -49,7 +49,7 @@ export const flattenContainers = (containers: any[], parent: any, result: any[],
  * @param snapshot
  * @param tenantId
  */
-export const generatePage = function (request: any, mapElement: any, state: IState, snapshot: any, tenantId: string) {
+export const generatePage = (request: any, mapElement: any, state: IState, snapshot: any) => {
     const pageElement = snapshot.metadata.pageElements.find((page) => mapElement.pageElementId === page.id);
     let pageContainerDataResponses = [];
     if (pageElement.pageContainers) {
@@ -117,8 +117,7 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
         }
 
         if (selectedValue) {
-            if (!selectedValue.hasOwnProperty('contentValue') ||
-            typeof (selectedValue.contentValue) === undefined || selectedValue.contentValue === null) {
+            if (!selectedValue.contentValue) {
 
                 // If there is no contentValue then use the default value
                 value.contentValue = selectedSnapshotValue.defaultContentValue === null ?

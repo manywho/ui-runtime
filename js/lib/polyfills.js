@@ -1,3 +1,8 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable func-names */
+/* eslint-disable no-extend-native */
+
 if (!String.prototype.endsWith) {
     String.prototype.endsWith = function (searchString, position) {
         const subjectString = this.toString();
@@ -13,6 +18,6 @@ if (!String.prototype.endsWith) {
 if (!String.prototype.startsWith) {
     String.prototype.startsWith = function (searchString, position) {
         position = position || 0;
-        return this.substr(position, searchString.length) == searchString;
+        return this.substr(position, searchString.length) === searchString;
     };
 }

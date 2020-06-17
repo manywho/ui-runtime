@@ -4,9 +4,9 @@ import Banner from '../../js/components/Banner';
 import { shallow } from 'enzyme';
 import { BANNER_TEXT } from '../../js/constants';
 
-jest.mock('../../icons/Offline.svg', () => <div />);
+jest.mock('../../icons/Offline.svg');
 
-jest.mock('../../icons/Online.svg', () => <div />);
+jest.mock('../../icons/Online.svg');
 
 describe('Banner component behaviour', () => {
 

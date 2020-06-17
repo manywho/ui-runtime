@@ -187,9 +187,8 @@ const OfflineCore = {
     /**
      * @param request
      * @param flow
-     * @param context
      */
-    getInitializationResponse(request: any, flow: IFlow, context: any) {
+    getInitializationResponse(request: any, flow: IFlow) {
         const snapshot: any = Snapshot(metaData);
 
         // TODO - this will only ever get called when a flow is initialized
@@ -233,6 +232,7 @@ const OfflineCore = {
                 } else if (request.selectedMapElementId) {
                     nextMapElementId = request.selectedMapElementId;
                 } else {
+                    // eslint-disable-next-line prefer-destructuring
                     outcome = mapElement.outcomes[0];
                 }
 
@@ -345,7 +345,6 @@ const OfflineCore = {
                 nextMapElement,
                 flow.state,
                 snapshot,
-                flow.tenantId,
             );
         } else if (!nextMapElement.outcomes || nextMapElement.outcomes.length === 0) {
             pageResponse = {
@@ -387,23 +386,19 @@ const OfflineCore = {
 
     /**
      * @param request
-     * @param flow
-     * @param context
      */
-    getObjectDataResponse(request: any, flow: IFlow, context: any) {
+    getObjectDataResponse(request: any) {
         return ObjectData.filter(
             getObjectData(request.objectDataType ? request.objectDataType.typeElementId : request.typeElementId),
             request.listFilter,
-            request.objectDataType ? request.objectDataType.typeElementId : request.typeElementId,
         );
     },
 
     /**
      * @param request
      * @param flow
-     * @param context
      */
-    getNavigationResponse(request: any, flow: IFlow, context: any) {
+    getNavigationResponse(request: any, flow: IFlow) {
         if (!metaData) {
             return null;
         }

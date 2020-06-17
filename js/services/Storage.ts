@@ -37,11 +37,13 @@ export const getOfflineData = (stateId: string, flowId: string = null, event: st
             if (val.id.id === flowId && event === EventTypes.initialization) {
                 return val;
             }
+            return null;
         })
             .then((flow) => {
                 if (flow) {
                     return flow;
                 }
+                return null;
             });
     });
 
@@ -71,4 +73,6 @@ export const setOfflineData = (flow: any) => localforage.getItem(`manywho:offlin
             }
             return localforage.setItem(`manywho:offline-${flow.state.id}`, flow);
         }
+
+        return null;
     });

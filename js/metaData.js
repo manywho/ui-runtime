@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /**
  * Script used for generating flow metadata
  * that gets written to a JS file
  */
 
-const requestPromise = require('request-promise');
-const fsp = require('fs-promise');
-const { argv } = require('yargs');
+import requestPromise from 'request-promise';
+import { writeFile } from 'fs-promise';
+import { argv } from 'yargs';
 
 (() => {
 
@@ -13,7 +14,7 @@ const { argv } = require('yargs');
 
     const envArgs = [];
     for (const key in argv) {
-        if (argv.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(argv, key)) {
             envArgs.push(key);
         }
     }
@@ -26,7 +27,6 @@ const { argv } = require('yargs');
 
     const baseUrl = argv.baseUrl || 'https://flow.manywho.com';
     let authenticationToken = null;
-    const tenantId = null;
 
     return requestPromise({
         method: 'POST',
@@ -61,7 +61,7 @@ const { argv } = require('yargs');
                 json: true,
             });
         })
-        .then((snapshot) => fsp.writeFile('../ui-html5/build/js/metadata.js', `var metaData = ${JSON.stringify(snapshot)};\n`))
+        .then((snapshot) => writeFile('../ui-html5/build/js/metadata.js', `var metaData = ${JSON.stringify(snapshot)};\n`))
         .catch((response) => {
             console.error(response.message);
             process.exit(1);

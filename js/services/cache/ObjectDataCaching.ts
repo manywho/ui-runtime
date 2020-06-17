@@ -122,12 +122,12 @@ const ObjectDataCaching = (flow: IFlow) => {
 
     store.dispatch<any>(cachingProgress({ progress: 1, flowKey: null }));
 
-    const executeRequest = function (
+    const executeRequest = (
         req: any,
         reqIndex: number,
         reqFlow: IFlow,
         currentTypeElementId: null,
-    ) {
+    ) => {
 
         let requests = req;
 

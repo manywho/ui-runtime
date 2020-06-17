@@ -51,17 +51,14 @@ describe('Page service expected behaviour', () => {
         getObjectDataMock.mockClear();
     });
 
-    test('If a request is not associated to any object data no call to the state values endpoint is made', () => {
+    test('If a request is not associated to any object data no call to the state values endpoint is made', async () => {
         const mockRequest = { assocData: null, request: {} };
         expect.assertions(1);
-        extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId)
-            .then(() => {
-                expect(globalAny.fetch).toHaveBeenCalled();
-            })
-            .catch(() => {});
+        await extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId);
+        expect(globalAny.fetch).not.toHaveBeenCalled();
     });
 
-    test('if a request is associated to objectdata then a call to the state values endpoint is made', () => {
+    test('if a request is associated to objectdata then a call to the state values endpoint is made', async () => {
         const mockRequest = { assocData: { offlineId: 'test', valueId: 'test', typeElementId: 'test' }, request: {} };
         const expectedValueHeaders = { headers: { ManyWhoTenant: mockTenantId, Authorization: mockAuthToken } };
         getObjectDataMock.mockImplementation(() => [
@@ -69,15 +66,11 @@ describe('Page service expected behaviour', () => {
         ]);
 
         expect.assertions(1);
-        extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId)
-            .then(() => {
-                expect(globalAny.fetch).toHaveBeenCalled();
-// TODO - restore original
-//                expect(globalAny.fetch).toHaveBeenCalledWith(
-//                    `${globalAny.manywho.settings.global('platform.uri')}/api/run/1/state/${mockStateId}/values/${mockRequest.assocData.valueId}`,
-//                    expectedValueHeaders,
-//                );
-            });
+        await extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId);
+        expect(globalAny.fetch).toHaveBeenCalledWith(
+            `${globalAny.manywho.settings.global('platform.uri')}/api/run/1/state/${mockStateId}/values/${mockRequest.assocData.valueId}`,
+            expectedValueHeaders,
+        );
     });
 
     test('Requests associated to objectdata should get an external id assigned', () => {
