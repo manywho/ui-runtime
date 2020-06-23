@@ -229,10 +229,10 @@ test('Navigate Request', (t) => {
     const pageComponentInputResponses = ['pageComponentInputResponses'];
     const annotations = 'annotations';
     const location = 'location';
-    const selectedMapElementPath = [{ flowId: 'aaa', mapElementId: 'bbb' }];
+    const selectedStateEntryId = 'aaa';
 
     const expected: any = {
-        selectedMapElementPath,
+        selectedStateEntryId,
         stateId: stateData.id,
         stateToken: stateData.token,
         currentMapElementId: stateData.currentMapElementId,
@@ -258,7 +258,7 @@ test('Navigate Request', (t) => {
         pageComponentInputResponses,
         annotations,
         location,
-        selectedMapElementPath,
+        selectedStateEntryId,
     );
 
     t.deepEqual(actual, expected);
@@ -290,7 +290,7 @@ test('Navigate Request, optional', (t) => {
             },
             selectedOutcomeId: null,
         },
-        selectedMapElementPath: null,
+        selectedStateEntryId: null,
     };
 
     const actual = Json.generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId);
