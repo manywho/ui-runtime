@@ -1,5 +1,6 @@
 import { getStateValue } from '../models/State';
 import { IState } from '../interfaces/IModels';
+import { clone } from './Utils';
 
 declare let manywho: any;
 declare let moment: any;
@@ -10,6 +11,11 @@ declare let moment: any;
 const Rules = {
 
     /**
+     * Get the first ordered Outcome with a comparison that evaluates true, or the
+     * the first outcome without a comparison, i.e. no comparison is considered true.
+     *
+     * If no Outcomes match the criteria return null
+     *
      * @param outcomes
      * @param state
      * @param snapshot
@@ -19,7 +25,8 @@ const Rules = {
             return null;
         }
 
-        const sortedOutcomes = outcomes.sort((a, b) => a.order - b.order);
+        // Avoid sorting-in-place otherwise the caller may get a suprise
+        const sortedOutcomes = clone(outcomes).sort((a, b) => a.order - b.order);
 
         for (const outcome of sortedOutcomes) {
             let result = false;
@@ -39,9 +46,17 @@ const Rules = {
     },
 
     /**
-     * @param comparisons
-     * @param state
-     * @param snapshot
+     * Iterate comparisons, evaluating and comparing each set of Rules against the
+     * comparison type of AND or OR to return the result.
+     *
+     * Rules may contain additional nested comparisons.
+     *
+     * Note that the UI only allows one comparison type (AND/OR) that is applied
+     * to all rules within a comparison. This means we avoid the x AND y OR z issues with precedence etc.
+     *
+     * @param comparisons an array of rules with optional nested comparisons
+     * @param state state
+     * @param snapshot snapshot
      */
     evaluateComparisons(comparisons: any[], state: IState, snapshot: any[]): boolean {
         let result = false;
@@ -56,6 +71,9 @@ const Rules = {
             if (result && comparison.comparisonType === 'OR') {
                 return true;
             }
+            if (!result && comparison.comparisonType === 'AND') {
+                return false;
+            }
         }
 
         return result;
@@ -63,11 +81,11 @@ const Rules = {
 
     /**
      * @param rules
-     * @param criteriaType
+     * @param comparisonType
      * @param state
      * @param snapshot
      */
-    evaluateRules(rules: any[], criteriaType: any, state: IState, snapshot): boolean {
+    evaluateRules(rules: any[], comparisonType: any, state: IState, snapshot): boolean {
         let result = false;
 
         for (const rule of rules) {
@@ -84,8 +102,11 @@ const Rules = {
 
             result = Rules.compareValues(left, right, contentType, rule.criteriaType);
 
-            if (result && criteriaType === 'OR') {
+            if (result && comparisonType === 'OR') {
                 return true;
+            }
+            if (!result && comparisonType === 'AND') {
+                return false;
             }
         }
 
@@ -103,7 +124,7 @@ const Rules = {
             case manywho.component.contentTypes.object:
                 return Rules.compareObjects(criteriaType, left);
             case manywho.component.contentTypes.list:
-                return Rules.compareLists(criteriaType);
+                return Rules.compareLists(criteriaType, left);
             default: {
                 const rightContentValue = criteriaType === 'IS_EMPTY' ?
                     Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
@@ -127,7 +148,7 @@ const Rules = {
             case manywho.component.contentTypes.content:
             case manywho.component.contentTypes.password:
             case manywho.component.contentTypes.encrypted:
-                return contentValue ? contentValue.toUpperCase() : contentValue;
+                return contentValue ? String(contentValue).toUpperCase() : contentValue;
             case manywho.component.contentTypes.number:
                 return contentValue ? parseFloat(contentValue) : contentValue;
             case manywho.component.contentTypes.datetime:
@@ -141,41 +162,85 @@ const Rules = {
     },
 
     /**
-     * @param left
-     * @param right
-     * @param criteriaType
-     * @param contentType
+     * Compare two content values with the specified operator.
+     *
+     * Comparisons also compare types where possible as both operands ares expected to be the same type.
+     *
+     * @param left operand
+     * @param right operand
+     * @param criteriaType operator to test for equality, etc.
+     * @param contentType the Flow content type of the operands.
      */
     compareContentValues(left: any, right: any, criteriaType: string, contentType: string) {
         switch (criteriaType.toUpperCase()) {
             case 'EQUAL':
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return left.isSame(right);
+                    }
+                    return false;
+                }
                 return left === right;
 
             case 'NOT_EQUAL':
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return !left.isSame(right);
+                    }
+                    return false;
+                }
                 return left !== right;
 
             case 'GREATER_THAN':
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return left.isAfter(right);
+                    }
+                    return false;
+                }
                 return left > right;
 
             case 'GREATER_THAN_OR_EQUAL':
-                return left >= right;
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return left.isSameOrAfter(right);
+                    }
+                    return false;
+                }
+                // There is no >== operator to check types
+                return left === right || left > right;
 
             case 'LESS_THAN':
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return left.isBefore(right);
+                    }
+                    return false;
+                }
                 return left < right;
 
             case 'LESS_THAN_OR_EQUAL':
-                return left <= right;
+                if (contentType === manywho.component.contentTypes.datetime) {
+                    if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
+                        return left.isSameOrBefore(right);
+                    }
+                    return false;
+                }
+                // There is no <== operator to check types
+                return left === right || left < right;
 
             case 'STARTS_WITH':
-                return left.startsWith(right);
+                return left !== null && typeof left === 'string' && left.startsWith(right);
 
             case 'ENDS_WITH':
-                return left.endsWith(right);
+                return left !== null && typeof left === 'string' && left.endsWith(right);
 
             case 'CONTAINS':
-                return left.indexOf(right) !== -1;
+                return left !== null && typeof left === 'string' && left.indexOf(right) !== -1;
 
             case 'IS_EMPTY': {
+                // The right operand is usually true and false ($True/$False) so we can effectively
+                // perform a !IS_EMPTY by virtue of the second operand.
                 switch (contentType.toUpperCase()) {
                     case manywho.component.contentTypes.string:
                     case manywho.component.contentTypes.password:
@@ -199,15 +264,16 @@ const Rules = {
     },
 
     /**
-     * TODO: Un-hide the docs for this onces its implemented
-     * @hidden
-     * @param criteriaType
-     * @param value
+     * Is a value of ContentObject empty ?
+     *
+     * @param criteriaType - only IS_EMPTY is supported
+     * @param value an object with a objjectData property
+     * @return true if an empty object, otherwise false
      */
     compareObjects(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
             case 'IS_EMPTY':
-                return !(value.objectData && value.objectData.length > 0);
+                return !(value && value.objectData && value.objectData.length > 0);
 
             default:
                 // TODO - Exception ?
@@ -216,14 +282,16 @@ const Rules = {
     },
 
     /**
-     * TODO: Un-hide the docs for this onces its implemented
-     * @hidden
-     * @param criteriaType
+     * Is a value of ContentList empty ?
+     *
+     * @param criteriaType - only IS_EMPTY is supported
+     * @param value an object with a objjectData property
+     * @return true if an empty list, otherwise false
      */
-    compareLists(criteriaType: string) {
+    compareLists(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
             case 'IS_EMPTY':
-                return true;
+                return !(value && value.objectData && value.objectData.length > 0);
 
             default:
                 // TODO - Exception ?

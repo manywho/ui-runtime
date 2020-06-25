@@ -154,8 +154,6 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                     return objectData;
                 });
 
-                console.log(objectData);
-
                 if (!hadExisting) {
                     valueToReference.objectData = [{
                         typeElementId,
