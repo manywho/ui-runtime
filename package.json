@@ -14,7 +14,7 @@
         "offline": "node ./js/metaData.js",
         "precommit": "lint-staged",
         "test": "jest",
-        "lint": "eslint --ext .js --ext .ts --ext .tsx js/**"
+        "lint": "eslint --ext .js --ext .ts --ext .tsx js/** __tests__/**"
     },
     "lint-staged": {
         "*.ts": "eslint",

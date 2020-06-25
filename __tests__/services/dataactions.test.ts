@@ -23,12 +23,10 @@ const mockObjectTwo = {
 };
 
 jest.mock('../../js/models/Flow', () => ({
-    getObjectData: jest.fn(() => {
-        return [
-            mockObjectOne,
-            mockObjectTwo,
-        ];
-    }),
+    getObjectData: jest.fn(() => [
+        mockObjectOne,
+        mockObjectTwo,
+    ]),
     patchObjectDataCache: jest.fn(),
     cacheObjectData: jest.fn(),
     setCurrentRequestOfflineId: jest.fn(),
@@ -48,11 +46,9 @@ const mockFlow = {
 };
 
 const mockSnapshot = {
-    getValue: jest.fn(() => {
-        return {
-            typeElementId: mockTypeElementId,
-        };
-    }),
+    getValue: jest.fn(() => ({
+        typeElementId: mockTypeElementId,
+    })),
     metadata: {
         typeElements: [
             { id: mockTypeElementId, properties: [] },

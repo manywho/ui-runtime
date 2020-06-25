@@ -35,6 +35,7 @@ describe('Macro execution behaviour', () => {
         const valueName = mockMetaData.valueElements[0].developerName;
         const valueId = mockMetaData.valueElements[0].id;
         const newContentValue = 'value0';
+        // eslint-disable-next-line prefer-template
         const mockAdvancedMacro = 'function(state){state.setStringValue("{![' + valueName + ']}", "' + newContentValue + '");}';
 
         const result: any = executeMacro(mockAdvancedMacro, mockMetaData, mockState);
