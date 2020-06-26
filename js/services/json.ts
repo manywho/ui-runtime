@@ -120,9 +120,11 @@ export const generateNavigateRequest = (
     pageComponentInputResponses?: any[],
     annotations?: any,
     location?: any,
+    selectedMapElementPath?: { flowId: string; mapElementId: string; }[],
 ) => {
 
     return {
+        selectedMapElementPath: selectedMapElementPath || null,
         stateId: stateData.id,
         stateToken: stateData.token,
         currentMapElementId: stateData.currentMapElementId,

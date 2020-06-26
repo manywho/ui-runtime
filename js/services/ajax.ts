@@ -320,6 +320,28 @@ export const ping = (tenantId: string, stateId: string, stateToken: string, auth
 };
 
 /**
+ * GET at `/api/run/1/state/${stateId}/history?onlyUIMapElements=${onlyUIMapElements}`
+ */
+export const getHistoricalNavigation = (
+    tenantId: string,
+    stateId: string,
+    authenticationToken: string,
+    onlyUIMapElements: boolean = true,
+): JQueryXHR => {
+    Log.info('Getting Historical Navigation');
+    return Connection.request(
+        null,
+        'history',
+        `/api/run/1/state/${stateId}/history?onlyUIMapElements=${onlyUIMapElements}`,
+        'GET',
+        tenantId,
+        stateId,
+        authenticationToken,
+        null,
+    );
+};
+
+/**
  * GET at `/api/run/1/state/stateId/log`
  */
 export const getExecutionLog = (tenantId: string, flowId: string, stateId: string, authenticationToken: string): JQueryXHR => {
@@ -340,7 +362,7 @@ export const getSocialMe = (tenantId: string, streamId: string, stateId: string,
         tenantId,
         stateId,
         authenticationToken,
-        null
+        null,
     );
 };
 

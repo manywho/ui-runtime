@@ -111,6 +111,23 @@ function loadNavigation(flowKey, stateToken, navigationId, currentMapElementId?)
 
 }
 
+function loadHistoricalNavigation(flowKey, stateId, authenticationToken) {
+
+    return Ajax.getHistoricalNavigation(
+        Utils.extractTenantId(flowKey),
+        stateId,
+        authenticationToken,
+    )
+        .then((historicalNavigation) => {
+
+            if (historicalNavigation) {
+
+                Model.setHistoricalNavigation(flowKey, historicalNavigation);
+
+            }
+        });
+}
+
 function loadExecutionLog(flowKey, authenticationToken) {
 
     return Ajax.getExecutionLog(Utils.extractTenantId(flowKey), Utils.extractFlowId(flowKey), Utils.extractStateId(flowKey), authenticationToken)
@@ -497,6 +514,10 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     deferreds.push(loadNavigation(flowKey, response.stateToken, navigationId, response.currentMapElementId));
                 }
 
+                if (response.isHistoricalNavigationEnabled) {
+                    deferreds.push(loadHistoricalNavigation(flowKey, response.stateId, authenticationToken));
+                }
+
                 if (Settings.isDebugEnabled(flowKey)) {
                     deferreds.push(loadExecutionLog(flowKey, authenticationToken));
                 }
@@ -587,6 +608,10 @@ function joinWithAuthorization(callback, flowKey) {
                     loadNavigation(flowKey, response.stateToken, response.navigationElementReferences[0].id, response.currentMapElementId),
                 );
 
+            }
+
+            if (response.isHistoricalNavigationEnabled) {
+                deferreds.push(loadHistoricalNavigation(flowKey, response.stateId, authenticationToken));
             }
 
             if (Settings.isDebugEnabled(flowKey)) {
@@ -720,6 +745,10 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             if (!Utils.isNullOrWhitespace(selectedNavigationId)) {
                 deferreds.push(loadNavigation(flowKey, moveResponse.stateToken, selectedNavigationId));
+            }
+
+            if (response.isHistoricalNavigationEnabled) {
+                deferreds.push(loadHistoricalNavigation(flowKey, response.stateId, authenticationToken));
             }
 
             if (Settings.isDebugEnabled(flowKey)) {
@@ -1070,8 +1099,15 @@ export const sync = (flowKey: string) => {
 
 /**
  * Move the state to a specific map element as defined by a navigation item specified in the flow
+ * or a selectedMapElementPath for historical navigation
  */
-export const navigate = (navigationId: string, navigationElementId: string, mapElementId: string, flowKey: string): JQueryDeferred<any> => {
+export const navigate = (
+    navigationId: string,
+    navigationElementId: string,
+    mapElementId: string,
+    flowKey: string,
+    selectedMapElementPath?: { flowId: string; mapElementId: string; }[],
+): JQueryDeferred<any> => {
 
     State.setComponentLoading('main', { message: Settings.global('localization.navigating') }, flowKey);
     render(flowKey);
@@ -1084,6 +1120,7 @@ export const navigate = (navigationId: string, navigationElementId: string, mapE
         State.getPageComponentInputResponseRequests(flowKey),
         Settings.flow('annotations', flowKey),
         State.getLocation(flowKey),
+        selectedMapElementPath,
     );
 
     return moveWithAuthorization.call(
@@ -1163,6 +1200,20 @@ export const join = (
 };
 
 /**
+ * Handles errors coming back from an object data request or a file data request's response. It checks if the received
+ * error response contains an ApiProblem or ServiceProblem, and parses and uses the message if so.
+ */
+const handleDataRequestError = (id: string, flowKey: string, xhr: JQuery.jqXHR, status: JQuery.Ajax.ErrorTextStatus, error: string) => {
+    // If we're given an ApiProblem or ServiceProblem response, use it to get the error
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+        error = xhr.responseJSON.message;
+    }
+
+    State.setComponentError(id, error, flowKey);
+    return error;
+};
+
+/**
  * Set the components loading status, execute the objectdata request, update the components local state with the response then re-render
  * @param id The id of the component this objectdata request is being requested by
  * @param limit Number of results to return
@@ -1205,12 +1256,7 @@ export const objectDataRequest = (
         })
         .fail((xhr: any, status, error: string) => {
 
-            if (!error && xhr && xhr.responseJSON && xhr.responseJSON.message) {
-                // No useful error supplied, so grab the raw response
-                error = xhr.responseJSON.message;
-            }
-
-            State.setComponentError(id, error, flowKey);
+            return handleDataRequestError(id, flowKey, xhr, status, error);
 
         })
         .always(() => {
@@ -1261,12 +1307,12 @@ export const fileDataRequest = (
             const component = Model.getComponent(id, flowKey);
             component.objectData = response.objectData;
             component.fileDataRequest.hasMoreResults = response.hasMoreResults;
+            State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr, status, error) => {
+        .fail((xhr: JQuery.jqXHR, status, error: string) => {
 
-            State.setComponentError(id, error, flowKey);
-            return error;
+            return handleDataRequestError(id, flowKey, xhr, status, error);
 
         })
         .always((error) => {
