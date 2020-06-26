@@ -128,9 +128,31 @@ export const getByName: any = (name: string) => {
  * @param flowKey
  */
 export const getChildComponents = (children: any[], id: string, flowKey: string) => {
+    let searchingCandidate = true;
     return children
         .sort((a, b) => a.order - b.order)
-        .map(item => React.createElement(this.get(item), { flowKey, id: item.id, parentId: id, key: item.id }));
+        .map((item) => {
+            let isAutofocusCandidate = false;
+
+            if (searchingCandidate &&
+                item.contentType !== undefined &&
+                (item.componentType.toLowerCase() === 'input' || item.componentType.toLowerCase() === 'textarea') &&
+                item.isVisible === true &&
+                item.contentType === 'ContentString') {
+                isAutofocusCandidate = true;
+                searchingCandidate = false;
+            }
+
+            const props = {
+                flowKey,
+                id: item.id,
+                parentId: id,
+                key: item.id,
+                autofocusCandidate: isAutofocusCandidate,
+            };
+
+            return React.createElement(this.get(item), props);
+        });
 };
 
 /**
@@ -258,6 +280,7 @@ export const appendFlowContainer = (flowKey: string) => {
 
 /**
  * Focus the first input or textarea control on larger screen devices i.e. width > 768px
+ * @DEPRECATED this functionality is now implemented in input.ts and textarea.ts in ui-bootstrap
  * @param flowKey
  */
 export const focusInput = (flowKey: string) => {
