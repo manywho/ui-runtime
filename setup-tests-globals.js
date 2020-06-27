@@ -49,7 +49,11 @@ window.manywho = {
         extractTenantId: jest.fn(),
         getFlowKey: jest.fn(),
         isNullOrEmpty: jest.fn((input) => typeof input === 'undefined' || input === null || input === ''),
+        isNullOrWhitespace: jest.fn((input) => typeof input === 'undefined' || input === null || input.replace(/\s/g, '').length < 1),
         isEqual: jest.fn(() => false),
+    },
+    log: {
+        info: jest.fn(),
     },
     state: {
         getAuthenticationToken: jest.fn(),

@@ -76,7 +76,7 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
 
     if (operation.valueElementToReferenceId) {
         if (!isCommandSupported(operation.valueElementToReferenceId.command)) {
-            return state;
+            return resolve(state);
         }
 
         valueToReference = snapshot.getValue(operation.valueElementToReferenceId);
@@ -105,7 +105,7 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
 
     if (operation.valueElementToApplyId) {
         if (!isCommandSupported(operation.valueElementToApplyId.command)) {
-            return state;
+            return resolve(state);
         }
 
         let valueToApply = snapshot.getValue(operation.valueElementToApplyId);
@@ -142,8 +142,8 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 const objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || []).map((objData) => {
                     if (valueToReference.objectData.length > 0) {
                         const existingItem = valueToReference.objectData.find(
-                            (item) => (item.externalId === objData.externalId && item.externalId !== undefined) ||
-                                    (item.internalId === objData.internalId),
+                            (item) => (item.externalId && item.externalId === objData.externalId) ||
+                                      (item.internalId && item.internalId === objData.internalId),
                         );
                         if (existingItem) {
                             valueToReference.objectData.splice(valueToReference.objectData.indexOf(existingItem), 1);
