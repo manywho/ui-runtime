@@ -1097,14 +1097,14 @@ export const sync = (flowKey: string) => {
 
 /**
  * Move the state to a specific map element as defined by a navigation item specified in the flow
- * or a selectedMapElementPath for historical navigation
+ * or a selectedStateEntryId for historical navigation
  */
 export const navigate = (
     navigationId: string,
     navigationElementId: string,
     mapElementId: string,
     flowKey: string,
-    selectedMapElementPath?: { flowId: string; mapElementId: string; }[],
+    selectedStateEntryId?: string,
 ): JQueryDeferred<any> => {
 
     State.setComponentLoading('main', { message: Settings.global('localization.navigating') }, flowKey);
@@ -1118,7 +1118,7 @@ export const navigate = (
         State.getPageComponentInputResponseRequests(flowKey),
         Settings.flow('annotations', flowKey),
         State.getLocation(flowKey),
-        selectedMapElementPath,
+        selectedStateEntryId,
     );
 
     return moveWithAuthorization.call(
