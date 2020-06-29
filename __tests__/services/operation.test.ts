@@ -266,4 +266,519 @@ describe('Operation service', () => {
             });
         });
     });
+
+    test('Command REMOVE deletes a list item', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'REMOVE',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 1,
+                            externalId: 'externalId-1',
+                        },
+                        {
+                            contentValue: 2,
+                            externalId: 'externalId-2',
+                        },
+                        {
+                            contentValue: 3,
+                            externalId: 'externalId-3',
+                        },
+                    ],
+                    typeElementId: 'type-element-id',
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            externalId: 'externalId-2',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(6);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(2);
+            expect(applied.objectData[0].contentValue).toEqual(1);
+            expect(applied.objectData[0].externalId).toEqual('externalId-1');
+            expect(applied.objectData[1].contentValue).toEqual(3);
+            expect(applied.objectData[1].externalId).toEqual('externalId-3');
+        });
+    });
+
+    test('Command REMOVE ignores non-matching id', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'REMOVE',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 1,
+                            externalId: 'externalId-1',
+                        },
+                        {
+                            contentValue: 2,
+                            externalId: 'externalId-2',
+                        },
+                        {
+                            contentValue: 3,
+                            externalId: 'externalId-3',
+                        },
+                    ],
+                    typeElementId: 'type-element-id',
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            externalId: 'externalId-4',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(8);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(3);
+            expect(applied.objectData[0].contentValue).toEqual(1);
+            expect(applied.objectData[0].externalId).toEqual('externalId-1');
+            expect(applied.objectData[1].contentValue).toEqual(2);
+            expect(applied.objectData[1].externalId).toEqual('externalId-2');
+            expect(applied.objectData[2].contentValue).toEqual(3);
+            expect(applied.objectData[2].externalId).toEqual('externalId-3');
+        });
+    });
+
+    test('Command REMOVE operates correctly on an empty list', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'REMOVE',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                    typeElementId: 'type-element-id',
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            externalId: 'externalId-4',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(2);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(0);
+        });
+    });
+
+    test('Command NEW creates a new value based on the Type of the applied value', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'NEW',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                    typeElementId: 'type-element-id',
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: null,
+                id: null,
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(7);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].properties.length).toEqual(1);
+            expect(applied.objectData[0].properties[0].id).toEqual('property-id');
+            expect(applied.objectData[0].properties[0].typeElementPropertyId).toEqual('property-id');
+            expect(applied.objectData[0].properties[0].contentValue).toEqual(null);
+            expect(applied.objectData[0].properties[0].objectData).toEqual(null);
+        });
+    });
+
+    test('Command GET_FIRST returns null on an empty list', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_FIRST',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(2);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData).toEqual(null);
+        });
+    });
+
+    test('Command GET_NEXT returns null on an empty list', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_NEXT',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(2);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData).toEqual(null);
+        });
+    });
+
+    test('Command GET_FIRST returns first list item', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_FIRST',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 'c',
+                        },
+                        {
+                            contentValue: 'b',
+                        },
+                        {
+                            contentValue: 'a',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(3);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].contentValue).toEqual('c');
+        });
+    });
+
+    test('Command GET_FIRST returns first list item even when called twice', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_FIRST',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 'c',
+                        },
+                        {
+                            contentValue: 'b',
+                        },
+                        {
+                            contentValue: 'a',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        const operation2 = { ...operation };
+
+        expect.assertions(6);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].contentValue).toEqual('c');
+
+            return executeOperation(operation2, state, snapshot).then((ret2) => {
+                expect(ret2).toEqual(state);
+                // Get the newly applied value
+                const applied2 = getStateValue({ id: 'apply', typeElementPropertyId: null });
+                expect(applied2.objectData.length).toEqual(1);
+                expect(applied2.objectData[0].contentValue).toEqual('c');
+            });
+        });
+    });
+
+    test('Command GET_NEXT returns first list item if GET_FIRST has not been called', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_NEXT',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 'c',
+                        },
+                        {
+                            contentValue: 'b',
+                        },
+                        {
+                            contentValue: 'a',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+        expect.assertions(3);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].contentValue).toEqual('c');
+        });
+    });
+
+    test('Command GET_NEXT returns second list item if GET_FIRST has been called', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_FIRST',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 'c',
+                        },
+                        {
+                            contentValue: 'b',
+                        },
+                        {
+                            contentValue: 'a',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+
+        const operation2 = { ...operation };
+        operation2.valueElementToReferenceId.command = 'GET_NEXT';
+
+        expect.assertions(6);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].contentValue).toEqual('c');
+
+            return executeOperation(operation2, state, snapshot).then((ret2) => {
+                expect(ret2).toEqual(state);
+                // Get the newly applied value
+                const applied2 = getStateValue({ id: 'apply', typeElementPropertyId: null });
+                expect(applied2.objectData.length).toEqual(1);
+                expect(applied2.objectData[0].contentValue).toEqual('b');
+            });
+        });
+    });
+
+    test('Command GET_NEXT returns second list item if GET_FIRST has been called', () => {
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'SET_EQUAL',
+                id: 'apply',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: null,
+                },
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'GET_NEXT',
+                id: 'reference',
+                typeElementPropertyId: null,
+                expectedReturn: {
+                    objectData: [
+                        {
+                            contentValue: 'c',
+                        },
+                        {
+                            contentValue: 'b',
+                        },
+                        {
+                            contentValue: 'a',
+                        },
+                    ],
+                },
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+
+        // We need to clone operation each time as executeOperation() modifies the operation object
+        const operation2 = { ...operation };
+        const operation3 = { ...operation };
+        const operation4 = { ...operation };
+
+        expect.assertions(11);
+
+        return executeOperation(operation, state, snapshot).then((ret) => {
+            expect(ret).toEqual(state);
+            // Get the newly applied value
+            const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
+            expect(applied.objectData.length).toEqual(1);
+            expect(applied.objectData[0].contentValue).toEqual('c');
+
+            return executeOperation(operation2, state, snapshot).then((ret2) => {
+                expect(ret2).toEqual(state);
+                const applied2 = getStateValue({ id: 'apply', typeElementPropertyId: null });
+                expect(applied2.objectData.length).toEqual(1);
+                expect(applied2.objectData[0].contentValue).toEqual('b');
+
+                return executeOperation(operation3, state, snapshot).then((ret3) => {
+                    expect(ret3).toEqual(state);
+                    const applied3 = getStateValue({ id: 'apply', typeElementPropertyId: null });
+                    expect(applied3.objectData.length).toEqual(1);
+                    expect(applied3.objectData[0].contentValue).toEqual('a');
+
+                    return executeOperation(operation4, state, snapshot).then((ret4) => {
+                        expect(ret4).toEqual(state);
+                        const applied4 = getStateValue({ id: 'apply', typeElementPropertyId: null });
+                        // No more items
+                        expect(applied4.objectData.length).toEqual(0);
+                    });
+
+                });
+
+            });
+        });
+    });
 });

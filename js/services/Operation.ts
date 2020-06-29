@@ -184,7 +184,8 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
 
                 valueToReference.objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || [])
                     .filter((objectData) => !valueToReference.objectData
-                        .find((item) => (item.externalId && item.externalId === objectData.externalId) || item.internalId === objectData.internalId));
+                        .find((item) => (item.externalId && item.externalId === objectData.externalId) ||
+                                        (item.internalId && item.internalId === objectData.internalId)));
                 break;
             default:
                 // TODO - Raise error ?
