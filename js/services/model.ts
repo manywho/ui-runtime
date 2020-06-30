@@ -153,6 +153,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
     flowModel[lookUpKey].notifications = [];
     flowModel[lookUpKey].stateValues = [];
     flowModel[lookUpKey].preCommitStateValues = [];
+    flowModel[lookUpKey].mapElement = {};
 
     flowModel[lookUpKey].rootFaults = [];
 
@@ -173,6 +174,13 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
         if (engineInvokeResponse.mapElementInvokeResponses[0].pageResponse) {
 
             flowModel[lookUpKey].label = engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.label;
+
+            const mapElement = {
+                name: engineInvokeResponse.mapElementInvokeResponses[0].developerName,
+                id: engineInvokeResponse.mapElementInvokeResponses[0].mapElementId,
+            };
+
+            setMapElement(flowKey, mapElement);
 
             setAttributes(flowKey, engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.attributes || null);
 
@@ -763,6 +771,22 @@ export const initializeModel = (flowKey: string) => {
     if (!flowModel[lookUpKey]) {
         flowModel[lookUpKey] = {};
     }
+};
+
+/**
+ * @ignore
+ */
+export const getMapElement = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    return flowModel[lookUpKey].mapElement;
+};
+
+/**
+ * @ignore
+ */
+export const setMapElement = (flowKey: string, mapElement: any) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flowModel[lookUpKey].mapElement = mapElement;
 };
 
 /**
