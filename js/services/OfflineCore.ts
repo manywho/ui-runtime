@@ -15,7 +15,6 @@ import { DEFAULT_POLL_INTERVAL, DEFAULT_OBJECTDATA_CACHING_INTERVAL } from '../c
 declare const manywho: any;
 // This is the gloabl metaData object generated when building offline project
 declare const metaData: any;
-declare const localforage: any;
 declare const $: any;
 
 enum EventTypes {
@@ -101,7 +100,7 @@ const OfflineCore = {
 
         // Lets get the entry in indexDB for this state
         return getOfflineData(flowStateId, flowId, event)
-            .then((response) => {
+            .then((response:IFlow) => {
 
                 // When a flow has entered offline mode for the first time
                 // there will be no entry in indexDB, there will however
@@ -169,15 +168,16 @@ const OfflineCore = {
         // Pull the current offline data from local storage
         getOfflineData(stateId)
             .then(
-                (offlineData) => {
+                (offlineData:IFlow) => {
                 // Add the requests from the Flow repository
                 // to the offline data object
                     offlineData.requests = getRequests();
 
                     // Push the updated offline data back into local storage
-                    setOfflineData(offlineData);
+                    return setOfflineData(offlineData);
                 },
-            );
+            )
+            .catch((e) => console.error(e));
 
         return {
             objectData: [],
@@ -371,7 +371,7 @@ const OfflineCore = {
         }
 
         flow.state.currentMapElementId = nextMapElement.id;
-        setOfflineData(flow);
+        setOfflineData(flow).catch((e) => console.error(e));
 
         return {
             currentMapElementId: nextMapElement.id,

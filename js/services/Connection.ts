@@ -4,6 +4,7 @@ import { isOffline, isOnline as toggleOnline } from '../actions';
 import OfflineCore from './OfflineCore';
 import { getOfflineData } from './Storage';
 import ObjectDataCaching from './cache/ObjectDataCaching';
+import { IFlow } from '../interfaces/IModels';
 
 declare const manywho: any;
 declare const jQuery: any;
@@ -78,7 +79,8 @@ export const isOnline = (stateId, request, event) => {
 
                     return deferred.resolve(false);
                 });
-        });
+        })
+        .catch((e) => console.error(e));
 
     return deferred;
 };
@@ -171,7 +173,8 @@ export const onlineRequest = (
                             // has requests that need to be replayed
                                 store.dispatch<any>(isOffline({ hasNetwork: true }));
                             }
-                        });
+                        })
+                        .catch((e) => console.error(e));
                 }
             }
             manywho.settings.event(`${event}.done`);
@@ -203,7 +206,8 @@ export const offlineRequest = (
     OfflineCore.getResponse(resolveContext, event, urlPart, request, tenantId, stateId)
         .then((response) => {
             deferred.resolveWith(resolveContext, [response]);
-        });
+        })
+        .catch((e) => console.error(e));
 
     return deferred
         .done(manywho.settings.event(`${event}.done`))
@@ -269,7 +273,7 @@ export const initialize = (
 
     // Check if there is any cached data in indexdb associated to the flow
 ) => getOfflineData(stateId, flowId, 'initialization')
-    .then((flow) => {
+    .then((flow:IFlow) => {
 
         // If there is a state cache then we extract
         // the state id, if not then state id will be null

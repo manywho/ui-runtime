@@ -3,7 +3,7 @@ window.moment = require('moment');
 
 window.metaData = {};
 
-window.localforage = {
+jest.mock('localforage', () => ({
     setDriver: jest.fn(),
     removeItem: jest.fn(() => new Promise((resolve) => {
         resolve(true);
@@ -17,7 +17,7 @@ window.localforage = {
     createInstance: jest.fn(() => new Promise((resolve) => {
         resolve(true);
     })),
-};
+}));
 
 window.manywho = {
     ajax: {

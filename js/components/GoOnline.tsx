@@ -5,6 +5,7 @@ import { IGoOnlineProps, IGoOnlineState } from '../interfaces/IGoOnline';
 import { connect } from 'react-redux';
 import { isReplaying } from '../actions';
 import { FlowInit, removeRequest, removeRequests } from '../models/Flow';
+import { IFlow } from '../interfaces/IModels';
 
 declare const manywho: any;
 
@@ -38,7 +39,7 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
         const id = manywho.utils.extractFlowId(this.props.flowKey);
 
         getOfflineData(stateId, id, null)
-            .then((flow) => {
+            .then((flow:IFlow) => {
 
                 if (flow) {
                     this.flow = FlowInit(flow);
@@ -48,16 +49,16 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
                         // The data stored inside indexdb contains no requests,
                         // so just rejoin the flow
                         removeOfflineData(stateId)
-                            .then(() => this.props.onOnline());
+                            .then(() => this.props.onOnline())
+                            .catch((e) => console.error(e));
                     } else {
 
                         // The entry in indexDB needs to be wiped
                         // otherwise as requests are made to sync with thengine
                         // the offline middleware will still assume we are in offline mode
                         removeOfflineData(stateId)
-                            .then(() => {
-                                this.props.toggleIsReplaying(true);
-                            });
+                            .then(() => { this.props.toggleIsReplaying(true); })
+                            .catch((e) => console.error(e));
                     }
                 } else {
 
@@ -68,7 +69,8 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
                     // Therefore, there are no requests to replay and we can safely rejoin the flow
                     this.props.onOnline();
                 }
-            });
+            })
+            .catch((e) => console.error(e));
     }
 
     onDeleteRequest = (request) => {
@@ -83,7 +85,8 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
         if (index === this.flow.requests.length - 1) {
             this.onDeleteRequest(request);
             removeOfflineData(stateId)
-                .then(() => this.props.onOnline());
+                .then(() => this.props.onOnline())
+                .catch((e) => console.error(e));
         } else {
             this.onDeleteRequest(request);
         }

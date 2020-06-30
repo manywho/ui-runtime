@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -20,9 +21,7 @@ const publicPaths = {
     PRODUCTION: 'https://assets.manywho.com/',
 };
 
-const mapPublicPath = (assets, publicPaths) => {
-
-    const assetsKey = typeof assets === 'string' ? assets.toLocaleLowerCase() : null;
+const mapPublicPath = (assets) => {
 
     switch (assets) {
 
@@ -109,7 +108,7 @@ const config = {
 module.exports = (env) => {
     let defaultDirectory = 'dist';
     const assets = (env && env.assets) ? env.assets : 'production';
-    const publicPath = mapPublicPath(assets, publicPaths);
+    const publicPath = mapPublicPath(assets);
 
     if (env && env.build) defaultDirectory = env.build;
 

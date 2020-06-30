@@ -1,5 +1,6 @@
-function WriteBundleFile(options) { 
-    this.options = options; 
+/* eslint-disable */
+function WriteBundleFile(options) {
+    this.options = options;
 }
 
 WriteBundleFile.prototype.apply = function (compiler) {

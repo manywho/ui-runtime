@@ -1,7 +1,9 @@
-declare const manywho;
-declare const localforage: any;
+import * as localforage from 'localforage';
+import { IFlow } from '../interfaces/IModels';
 
-localforage.setDriver(['asyncStorage', 'webSQLStorage']);
+declare const manywho;
+
+localforage.setDriver(['asyncStorage', 'webSQLStorage']).catch((e) => console.error(e));
 
 enum EventTypes {
     invoke = 'invoke',
@@ -33,7 +35,7 @@ export const getOfflineData = (stateId: string, flowId: string = null, event: st
             return value;
         }
 
-        return localforage.iterate((val) => {
+        return localforage.iterate((val:IFlow) => {
             if (val.id.id === flowId && event === EventTypes.initialization) {
                 return val;
             }
@@ -65,11 +67,11 @@ export const setOfflineData = (flow: any) => localforage.getItem(`manywho:offlin
                 // If the flow has a new state then we want to clear out
                 // stale cache from previous state/s. Any cache store which
                 // has the same associated flow id and version will be removed
-                localforage.iterate((val) => {
+                localforage.iterate((val:IFlow) => {
                     if (val.id.id === flow.id.id && val.id.versionId === flow.id.versionId) {
-                        removeOfflineData(val.state.id);
+                        removeOfflineData(val.state.id).catch((e) => console.error(e));
                     }
-                });
+                }).catch((e) => console.error(e));
             }
             return localforage.setItem(`manywho:offline-${flow.state.id}`, flow);
         }

@@ -74,8 +74,8 @@
         "jsx-a11y/label-has-for": 0,
 
 
-        // Following rules disabled, or warning, for now as there are incompatibilities with
-        // the current versions of eslint and Jest/React and some of the changes are huge, best
+        // Following rules are disabled for now as there are incompatibilities with
+        // the current versions of eslint and Jest/React and some of the typing changes are huge, best
         // tackled slowly.
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-member-access": "off",
@@ -86,16 +86,18 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/unbound-method": "off",
-        "no-restricted-syntax": "warn",
-        "@typescript-eslint/no-implied-eval": "warn",
-        "no-new-func": "warn",
-        "import/no-cycle": "warn",
-        "@typescript-eslint/ban-types": "warn",
-        "import/no-webpack-loader-syntax": "warn",
-        "react/no-did-update-set-state": "warn",
-        "react/no-deprecated": "warn"
 
-
-
+        // These should be "warn", but WebPack regards warnings as errors
+        // in production mode so will not build.
+        "no-restricted-syntax": "off",
+        "@typescript-eslint/no-implied-eval": "off",
+        "no-new-func": "off",
+        "import/no-cycle": "off",
+        "@typescript-eslint/ban-types": "off",
+        "import/no-webpack-loader-syntax": "off",
+        "react/no-did-update-set-state": "off",
+        "react/no-deprecated": "off",
+        "no-alert": "off",
+        "no-console": "off"
     }
 }
