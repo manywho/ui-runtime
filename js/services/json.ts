@@ -120,9 +120,11 @@ export const generateNavigateRequest = (
     pageComponentInputResponses?: any[],
     annotations?: any,
     location?: any,
+    selectedStateEntryId?: string,
 ) => {
 
     return {
+        selectedStateEntryId: selectedStateEntryId || null,
         stateId: stateData.id,
         stateToken: stateData.token,
         currentMapElementId: stateData.currentMapElementId,

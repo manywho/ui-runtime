@@ -170,15 +170,15 @@ test('Invoke Request', (t) => {
     };
 
     const actual = Json.generateInvokeRequest(
-        stateData, 
-        invokeType, 
-        selectedOutcomeId, 
-        selectedMapElementId, 
-        pageComponentInputResponses, 
-        navigationElementId, 
+        stateData,
+        invokeType,
+        selectedOutcomeId,
+        selectedMapElementId,
+        pageComponentInputResponses,
+        navigationElementId,
         selectedNavigationElementId,
-        annotations, 
-        location, 
+        annotations,
+        location,
         mode,
     );
 
@@ -229,8 +229,10 @@ test('Navigate Request', (t) => {
     const pageComponentInputResponses = ['pageComponentInputResponses'];
     const annotations = 'annotations';
     const location = 'location';
+    const selectedStateEntryId = 'aaa';
 
     const expected: any = {
+        selectedStateEntryId,
         stateId: stateData.id,
         stateToken: stateData.token,
         currentMapElementId: stateData.currentMapElementId,
@@ -249,13 +251,14 @@ test('Navigate Request', (t) => {
     };
 
     const actual = Json.generateNavigateRequest(
-        stateData, 
-        navigationId, 
-        navigationElementId, 
+        stateData,
+        navigationId,
+        navigationElementId,
         mapElementId,
-        pageComponentInputResponses, 
-        annotations, 
+        pageComponentInputResponses,
+        annotations,
         location,
+        selectedStateEntryId,
     );
 
     t.deepEqual(actual, expected);
@@ -287,6 +290,7 @@ test('Navigate Request, optional', (t) => {
             },
             selectedOutcomeId: null,
         },
+        selectedStateEntryId: null,
     };
 
     const actual = Json.generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId);
