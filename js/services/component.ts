@@ -136,14 +136,9 @@ export const getChildComponents = (children: any[], id: string, flowKey: string)
 
             if (searchingCandidate &&
                 item.contentType !== undefined &&
-                (item.componentType.toUpperCase() === 'INPUT' || item.componentType.toUpperCase() === 'TEXTAREA') &&
+                (item.componentType.toLowerCase() === 'input' || item.componentType.toLowerCase() === 'textarea') &&
                 item.isVisible === true &&
-                (item.contentType.toUpperCase() === contentTypes.string ||
-                item.contentType.toUpperCase() === contentTypes.number ||
-                item.contentType.toUpperCase() === contentTypes.datetime ||
-                item.contentType.toUpperCase() === contentTypes.password ||
-                item.contentType.toUpperCase() === contentTypes.encrypted)) {
-
+                item.contentType === 'ContentString') {
                 isAutofocusCandidate = true;
                 searchingCandidate = false;
             }
