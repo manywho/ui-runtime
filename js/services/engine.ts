@@ -737,6 +737,8 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             }
 
+            Component.focusInput(flowKey);
+
             if (Settings.global('isScrollResetEnabled') === true) {
                 Component.scrollToTop(flowKey);
             }

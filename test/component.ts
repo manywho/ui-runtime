@@ -145,106 +145,11 @@ test('Get Child Components', (t) => {
         id: 'id',
         parentId: 'parentId',
         key: 'id',
-        autofocusCandidate: false,
     };
 
     t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
     t.deepEqual(react.createElement.args[0][0], component);
     t.deepEqual(react.createElement.args[0][1], expected);
-});
-
-test('Get Child Components input with autofocusCandidate', (t) => {
-    const component = () => null;
-
-    Component.register('input', component, null);
-    const model = [
-        {
-            id: 'id1',
-            componentType: 'input',
-            order: 1,
-            isVisible: false,
-            contentType: 'ContentNumeric',
-        },
-        {
-            id: 'id2',
-            componentType: 'input',
-            order: 2,
-            isVisible: true,
-            contentType: 'ContentString',
-        },
-    ];
-
-    const expected = [
-        {
-            flowKey,
-            id: 'id1',
-            parentId: 'parentId',
-            key: 'id1',
-            autofocusCandidate: false,
-        },
-        {
-            flowKey,
-            id: 'id2',
-            parentId: 'parentId',
-            key: 'id2',
-            autofocusCandidate: true,
-        },
-    ];
-
-    t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
-
-    t.deepEqual(react.createElement.args[0][0], component);
-    t.deepEqual(react.createElement.args[0][1], expected[0]);
-
-    t.deepEqual(react.createElement.args[1][0], component);
-    t.deepEqual(react.createElement.args[1][1], expected[1]);
-});
-
-test('Get Child Components textarea with autofocusCandidate', (t) => {
-    const component = () => null;
-
-    Component.register('textarea', component, null);
-    const model = [
-        {
-            id: 'id1',
-            componentType: 'textarea',
-            order: 1,
-            isVisible: false,
-            contentType: 'ContentString',
-        },
-        {
-            id: 'id2',
-            componentType: 'textarea',
-            order: 2,
-            isVisible: true,
-            contentType: 'ContentString',
-        },
-    ];
-
-    const expected = [
-        {
-            flowKey,
-            id: 'id1',
-            parentId: 'parentId',
-            key: 'id1',
-            autofocusCandidate: false,
-        },
-        {
-            flowKey,
-            id: 'id2',
-            parentId: 'parentId',
-            key: 'id2',
-            autofocusCandidate: true,
-        },
-    ];
-
-    t.is(Component.getChildComponents(model, 'parentId', flowKey).length, 2);
-
-    t.deepEqual(react.createElement.args[0][0], component);
-    t.deepEqual(react.createElement.args[0][1], expected[0]);
-
-    t.deepEqual(react.createElement.args[1][0], component);
-    t.deepEqual(react.createElement.args[1][1], expected[1]);
 });
 
 test('Get Outcomes', (t) => {
