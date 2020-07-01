@@ -91,7 +91,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
                     <div className="wait-container">
                         <div className="wait-spinner-small wait-spinner" />
                         <span className="wait-message">
-                            Caching
+                            { 'Caching ' }
                             { String(this.props.cachingProgress) }
                             %
                         </span>
