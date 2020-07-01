@@ -4,7 +4,9 @@ window.moment = require('moment');
 window.metaData = {};
 
 jest.mock('localforage', () => ({
-    setDriver: jest.fn(),
+    setDriver: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
     removeItem: jest.fn(() => new Promise((resolve) => {
         resolve(true);
     })),
