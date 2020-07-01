@@ -97,6 +97,10 @@ const config = {
             filenameFilter: (filename) => !filename.endsWith('.map'),
         }),
     ],
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+    },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
