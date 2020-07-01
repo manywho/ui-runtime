@@ -1,4 +1,4 @@
-import { pollForStateValues } from '../../../js/services/cache/StateCaching';
+import { pollForStateValues, periodicallyPollForStateValues } from '../../../js/services/cache/StateCaching';
 import { setStateValue } from '../../../js/models/State';
 
 const globalAny:any = global;
@@ -24,25 +24,37 @@ describe('State caching service behaviour', () => {
         castSetStateValue.mockClear();
     });
 
-    test.skip('Fetch call is made only when network is available', async () => {
-        await pollForStateValues('test', 'test', 'test');
-        expect(globalAny.fetch).not.toHaveBeenCalled();
+    test.skip('Fetch call is made only when network is available', () => {
+        expect.assertions(1);
+        return periodicallyPollForStateValues().then(() => {
+            expect(globalAny.fetch).not.toHaveBeenCalled();
+        });
     });
 
     test.skip('Polling happens recursively based on polling interval', async () => {
-        // TODO - FLOW-1618 has changed these tests and js/services/cache/StateCaching.ts. Fix in merge conflict.
+        expect.assertions(2);
         jest.useFakeTimers();
-        await pollForStateValues('test', 'test', 'test');
-
+        await periodicallyPollForStateValues();
         jest.runOnlyPendingTimers();
-
         expect(setTimeout).toHaveBeenCalledTimes(1);
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 30000);
     });
 
-    test('Every value returned gets injected into offline state', async () => {
-        await pollForStateValues('test', 'test', 'test');
-        expect(setStateValue).toHaveBeenCalledTimes(2);
+    test('Every value returned gets injected into offline state when polling periodically', () => {
+        expect.assertions(1);
+        jest.useFakeTimers();
+        return periodicallyPollForStateValues()
+            .then(() => {
+                jest.runOnlyPendingTimers();
+                expect(setStateValue).toHaveBeenCalledTimes(2);
+            });
     });
 
+    test('Every value returned gets injected into offline state when polling', () => {
+        expect.assertions(1);
+        return pollForStateValues()
+            .then(() => {
+                expect(setStateValue).toHaveBeenCalledTimes(2);
+            });
+    });
 });

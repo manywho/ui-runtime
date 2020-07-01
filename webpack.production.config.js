@@ -19,6 +19,7 @@ const publicPaths = {
     QA: 'https://s3.amazonaws.com/manywho-cdn-react-qa/',
     STAGING: 'https://s3.amazonaws.com/manywho-cdn-react-staging/',
     PRODUCTION: 'https://assets.manywho.com/',
+    FEDERAL: 'https://assets.federal.flow.boomi.com/',
 };
 
 const mapPublicPath = (assets) => {
@@ -39,6 +40,9 @@ const mapPublicPath = (assets) => {
 
         case 'production':
             return publicPaths.PRODUCTION;
+
+        case 'federal':
+            return publicPaths.FEDERAL;
 
         default:
             return publicPaths.PRODUCTION;

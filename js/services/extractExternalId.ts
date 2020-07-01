@@ -81,11 +81,11 @@ const extractExternalId = (request: any, tenantId: string, authenticationToken: 
         const valueRequest = {
             headers: {
                 ManyWhoTenant: tenantId,
-                Authorization: null,
             },
         };
         if (authenticationToken) {
-            valueRequest.headers.Authorization = authenticationToken;
+            // eslint-disable-next-line @typescript-eslint/dot-notation
+            valueRequest.headers['Authorization'] = authenticationToken;
         }
         return fetch(url, valueRequest)
             .then((response) => response.json())

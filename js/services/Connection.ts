@@ -1,9 +1,8 @@
-import { pollForStateValues } from './cache/StateCaching';
 import store from '../stores/store';
-import { isOffline, isOnline as toggleOnline } from '../actions';
+import { activatePollingValues, isOffline, isOnline as toggleOnline, setFlowInformation } from '../actions';
 import OfflineCore from './OfflineCore';
 import { getOfflineData } from './Storage';
-import ObjectDataCaching from './cache/ObjectDataCaching';
+import ObjectDataCaching, { generateObjectData } from './cache/ObjectDataCaching';
 import { IFlow } from '../interfaces/IModels';
 
 declare const manywho: any;
@@ -126,23 +125,23 @@ export const onlineRequest = (
         },
     })
         .done((response) => {
-
             // Here is where we initiate the offline functionality
             // This happens in join and initialisation responses (when the flow first ran or user has joined)
             if (event === EventTypes.initialization || event === EventTypes.join) {
+                store.dispatch(setFlowInformation({ tenantId, stateId: response.stateId, token: authenticationToken }));
 
                 // Determine if a flow that requires authentication
                 // has successfully been authenticated
                 const isAuthenticated = authenticationToken && response.authorizationContext &&
-            (response.authorizationContext.directoryId &&
-            response.authorizationContext.directoryName &&
-            response.authorizationContext.loginUrl);
+                    (response.authorizationContext.directoryId &&
+                    response.authorizationContext.directoryName &&
+                    response.authorizationContext.loginUrl);
 
                 // Determine if a flow is just public
                 const isPublic = !authenticationToken &&
-            (!response.authorizationContext.directoryId &&
-            !response.authorizationContext.directoryName &&
-            !response.authorizationContext.loginUrl);
+                    (!response.authorizationContext.directoryId &&
+                    !response.authorizationContext.directoryName &&
+                    !response.authorizationContext.loginUrl);
 
                 if (isAuthenticated || isPublic) {
 
@@ -150,7 +149,7 @@ export const onlineRequest = (
                         .then((flow) => {
                             if (!flow) {
 
-                                // Theres nothing cached in indexedb so
+                                // There is nothing cached in indexedb so
                                 // this flow has must be online with no
                                 // pending requests to be replayed
                                 const flowModel = OfflineCore.initialize(
@@ -160,17 +159,20 @@ export const onlineRequest = (
                                     authenticationToken,
                                 );
 
-                                // Start polling for state values
                                 if (response.stateId && tenantId) {
-                                    pollForStateValues(response.stateId, tenantId, authenticationToken).catch(() => {});
+                                    const requests = generateObjectData();
+                                    if (requests.length === 0) {
+                                        // There isn't any request to cache so we start polling for state values
+                                        store.dispatch<any>(activatePollingValues());
+                                    }
                                 }
 
                                 // Start caching object data
                                 ObjectDataCaching(flowModel);
                             }
                             if (flow) {
-                            // Data cached in indexdb so flow
-                            // has requests that need to be replayed
+                                // Data cached in indexdb so flow
+                                // has requests that need to be replayed
                                 store.dispatch<any>(isOffline({ hasNetwork: true }));
                             }
                         })
@@ -271,10 +273,11 @@ export const initialize = (
     options: any,
     isInitializing: string | boolean,
 
-    // Check if there is any cached data in indexdb associated to the flow
+    // Check if there is any cached data
+    // in indexdb associated to the flow
+
 ) => getOfflineData(stateId, flowId, 'initialization')
     .then((flow:IFlow) => {
-
         // If there is a state cache then we extract
         // the state id, if not then state id will be null
         // (normal for initialization requests).
@@ -282,6 +285,9 @@ export const initialize = (
         // stateid === true => do a join
         // stateid === null => move with authorization
         const currentStateId = flow ? flow.state.id : stateId;
+
+        store.dispatch(setFlowInformation({ tenantId, stateId: currentStateId, token: authenticationToken }));
+
         return manywho.engine.originalInitialize(
             tenantId,
             flowId,
@@ -293,6 +299,7 @@ export const initialize = (
             isInitializing,
         );
     });
+
 
 /**
  * Perform an upload request to the API in a normal online environment

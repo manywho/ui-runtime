@@ -169,7 +169,7 @@ const ObjectDataCaching = (flow: IFlow) => {
             })
             .fail(() => {
                 store.dispatch<any>(cachingProgress({ flowKey, progress: 100 }));
-                alert('An error caching data has occured, your flow may not work as expected whilst offline');
+                alert('An error caching data has occurred, your flow may not work as expected whilst offline');
             });
     };
     executeRequest(initRequests, 0, flow, null);
