@@ -36,6 +36,7 @@ export const pollForStateValues = () => {
     const request = {
         headers: {
             ManyWhoTenant: store.getState().flowInformation.tenantId,
+            // Public flows have no Authorization header. Supplying the header with a null value does not work.
         },
     };
 

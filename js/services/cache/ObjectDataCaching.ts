@@ -98,7 +98,6 @@ export const generateObjectData = () => {
     return requests.concat.apply([], requests);
 };
 
-
 /**
  * @param flow flow information e.g. flow id, version id, tenant id
  * @description retrieve object data request responses from the engine

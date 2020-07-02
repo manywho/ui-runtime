@@ -34,5 +34,4 @@ const RequestFault: React.SFC<IRequestFaultProps> = ({ response }) => {
     );
 };
 
-
 export default RequestFault;

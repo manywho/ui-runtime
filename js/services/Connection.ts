@@ -300,7 +300,6 @@ export const initialize = (
         );
     });
 
-
 /**
  * Perform an upload request to the API in a normal online environment
  * @param event Type of event, `Settings.event(event + '.done')` will be called when the request completes

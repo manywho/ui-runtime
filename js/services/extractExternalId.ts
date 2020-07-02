@@ -81,6 +81,7 @@ const extractExternalId = (request: any, tenantId: string, authenticationToken: 
         const valueRequest = {
             headers: {
                 ManyWhoTenant: tenantId,
+                // Public flows have no Authorization header. Supplying the header with a null value does not work.
             },
         };
         if (authenticationToken) {

@@ -64,7 +64,6 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
         OfflineCore.rejoin(this.props.flowKey);
     };
 
-
     // Called when the requests modal is closed
     // at this point the entry for this state
     // has been cleared from indexDB, so we need to reinstate it
