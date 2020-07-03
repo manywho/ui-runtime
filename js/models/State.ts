@@ -64,6 +64,7 @@ export const setStateValue = (valueId: Id, typeElementId: string, snapshot: any,
                 delete property.id;
                 return property;
             });
+            typeElement.elementType = 'VARIABLE';
 
             values[valueId.id] = {
                 objectData: [typeElement],

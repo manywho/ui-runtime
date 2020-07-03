@@ -151,7 +151,7 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                             return existingItem;
                         }
                     }
-                    return objectData;
+                    return objData;
                 });
 
                 if (!hadExisting) {
