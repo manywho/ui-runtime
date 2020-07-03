@@ -192,6 +192,14 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentResponses,
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses);
 
+            const containersArr = Object.keys(flowModel[lookUpKey].containers).reduce(
+                (accumulator: any, currentValue: any) => {
+                    accumulator.push(flowModel[lookUpKey].containers[currentValue]);
+                    return accumulator;
+                }, []);
+
+            checkToAutoFocus(containersArr, flowKey);
+
         }
 
         if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses) {
@@ -846,6 +854,23 @@ export const setContainers = (flowKey: string, containers: any[], data: any, pro
                 flowModel[lookUpKey].containers[item.id] = updateData(data, item, 'pageContainerId');
             }
         });
+    }
+};
+
+const checkToAutoFocus = (containers, flowKey) => {
+    for (const container of containers) {
+        const children = getChildren(container.id, flowKey);
+        for (const child of children) {
+            if (child.hasOwnProperty('pageContainerResponses') && child.pageContainerResponses !== null) {
+                checkToAutoFocus(child.pageContainerResponses, flowKey);
+            }
+
+            if (child.hasOwnProperty('componentType') && child.pageContainerResponses !== null) {
+                const lookUpKey = Utils.getLookUpKey(flowKey);
+                flowModel[lookUpKey].components[child.id]['autoFocus'] = true;
+                break;
+            }
+        }
     }
 };
 
