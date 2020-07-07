@@ -31,12 +31,7 @@ const saveData = (action: any, objectData: any, snapshot: any) => {
     const type = typeElementId ? snapshot.metadata.typeElements.find(typeElement => typeElement.id === typeElementId) : null;
     const valueElementToApplyId = action.valueElementToApplyId;
 
-    const valueToSave = getStateValue(
-        valueElementToApplyId,
-        typeElementId,
-        valueReferenceToSave.contentType,
-        null,
-    );
+    const valueToSave = getStateValue(valueElementToApplyId);
 
     valueToSave.objectData.forEach((obj) => {
 

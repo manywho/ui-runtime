@@ -36,7 +36,7 @@ const ObjectData = {
                         return true;
                     }
 
-                    const value = getStateValue(filter.where[0].valueElementToReferenceId, typeElementId, property.contentType, null);
+                    const value = getStateValue(filter.where[0].valueElementToReferenceId);
 
                     if (!value) {
                         return true;
@@ -49,7 +49,7 @@ const ObjectData = {
         // Support for filtering by an ID
         } else if (filter.filterId) {
             filteredObjectData = clonedObjectData.filter((item) => {
-                const value = getStateValue(filter.filterId, null, 'CONTENTSTRING', null);
+                const value = getStateValue(filter.filterId);
                 return value ? item.externalId === value.contentValue : false;
             });
         } else {
