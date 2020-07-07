@@ -1,5 +1,6 @@
 import { getStateValue } from '../models/State';
 import { IState } from '../interfaces/IModels';
+import { clone } from './Utils';
 
 declare var manywho: any;
 declare var moment: any;
@@ -19,7 +20,8 @@ const Rules = {
             return null;
         }
 
-        const sortedOutcomes = outcomes.sort((a, b) => a.order - b.order);
+        // Avoid sorting-in-place otherwise the caller may get a suprise
+        const sortedOutcomes = clone(outcomes).sort((a, b) => a.order - b.order);
 
         for (const outcome of sortedOutcomes) {
             let result = false;
@@ -34,6 +36,8 @@ const Rules = {
                 return outcome;
             }
         }
+
+        return null;
     },
 
     /**
@@ -53,6 +57,9 @@ const Rules = {
             }
             if (result && comparison.comparisonType === 'OR') {
                 return true;
+            }
+            if (!result && comparison.comparisonType === 'AND') {
+                return false;
             }
         }
 
@@ -85,6 +92,9 @@ const Rules = {
             if (result && criteriaType === 'OR') {
                 return true;
             }
+            if (!result && criteriaType === 'AND') {
+                return false;
+            }
         }
 
         return result;
@@ -101,7 +111,7 @@ const Rules = {
         case manywho.component.contentTypes.object:
             return Rules.compareObjects(criteriaType, left);
         case manywho.component.contentTypes.list:
-            return Rules.compareLists(criteriaType);
+            return Rules.compareLists(criteriaType, left);
         default:
             const rightContentValue = criteriaType === 'IS_EMPTY' ?
                 Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
@@ -123,13 +133,16 @@ const Rules = {
         case manywho.component.contentTypes.content:
         case manywho.component.contentTypes.password:
         case manywho.component.contentTypes.encrypted:
-            return contentValue ? contentValue.toUpperCase() : contentValue;
+            return contentValue ? String(contentValue).toUpperCase() : contentValue;
         case manywho.component.contentTypes.number:
             return contentValue ? parseFloat(contentValue) : contentValue;
         case manywho.component.contentTypes.datetime:
             return contentValue ? moment(contentValue) : contentValue;
         case manywho.component.contentTypes.boolean:
             return contentValue ? Boolean(contentValue) : contentValue;
+        default:
+            // TODO - Exception ?
+            return contentValue;
         }
     },
 
@@ -151,22 +164,24 @@ const Rules = {
             return left > right;
 
         case 'GREATER_THAN_OR_EQUAL':
-            return left >= right;
+            // There is no >== operator to check types
+            return left === right || left > right;
 
         case 'LESS_THAN':
             return left < right;
 
         case 'LESS_THAN_OR_EQUAL':
-            return left <= right;
+            // There is no <== operator to check types
+            return left === right || left < right;
 
         case 'STARTS_WITH':
-            return left.startsWith(right);
+            return left !== null && typeof left === 'string' && left.startsWith(right);
 
         case 'ENDS_WITH':
-            return left.endsWith(right);
+            return left !== null && typeof left === 'string' && left.endsWith(right);
 
         case 'CONTAINS':
-            return left.indexOf(right) !== -1;
+            return left !== null && typeof left === 'string' && left.indexOf(right) !== -1;
 
         case 'IS_EMPTY':
             switch (contentType.toUpperCase()) {
@@ -192,7 +207,7 @@ const Rules = {
     compareObjects(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
         case 'IS_EMPTY':
-            return !(value.objectData && value.objectData.length > 0);
+            return !(value && value.objectData && value.objectData.length > 0);
         }
     },
 
@@ -200,11 +215,12 @@ const Rules = {
      * TODO: Un-hide the docs for this onces its implemented
      * @hidden
      * @param criteriaType
+     * @param value
      */
-    compareLists(criteriaType: string) {
+    compareLists(criteriaType: string, value: any) {
         switch (criteriaType.toUpperCase()) {
         case 'IS_EMPTY':
-            return true;
+            return !(value && value.objectData && value.objectData.length > 0);
         }
     },
 };
