@@ -85,12 +85,7 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
             selectedSnapshotValue = snapshot.getValue(component.valueElementValueBindingReferenceId);
             selectedValue = selectedSnapshotValue;
             value.contentType = snapshot.getContentTypeForValue(component.valueElementValueBindingReferenceId);
-            const stateValue = getStateValue(
-                component.valueElementValueBindingReferenceId,
-                selectedValue.typeElementId,
-                selectedValue.contentType,
-                '',
-            );
+            const stateValue = getStateValue(component.valueElementValueBindingReferenceId);
             if (stateValue) {
                 selectedValue = stateValue;
             }
@@ -104,12 +99,7 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
                 sourceValue = snapshot.getValue(component.valueElementDataBindingReferenceId);
                 typeElementId = sourceValue.typeElementId;
 
-                const stateValue = getStateValue(
-                    component.valueElementDataBindingReferenceId,
-                    sourceValue.typeElementId,
-                    sourceValue.contentType,
-                    '',
-                );
+                const stateValue = getStateValue(component.valueElementDataBindingReferenceId);
                 if (stateValue) {
                     sourceValue = stateValue;
                 }

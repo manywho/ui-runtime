@@ -40,12 +40,7 @@ export const getTriggerComponentContentValue = (triggerComponent, snapshot, page
     let triggerComponentContentValue = undefined;
 
     // First check if the value is in the offline state
-    const triggerComponentValueObject = getStateValue(
-        { id: triggerComponent.valueElementValueBindingReferenceId.id },
-        null,
-        null,
-        null,
-    );
+    const triggerComponentValueObject = getStateValue({ id: triggerComponent.valueElementValueBindingReferenceId.id });
 
     // If is in state then grab the content value property
     if (triggerComponentValueObject) {
