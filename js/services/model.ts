@@ -7,6 +7,23 @@ import * as Settings from './settings';
 import * as State from './state';
 import * as Utils from './utils';
 
+interface Icontainer {
+    attributes?: any[];
+    childCount: number;
+    containerType: string;
+    developerName: string;
+    id: string;
+    isEditable: boolean;
+    isEnabled: boolean;
+    isVisible: boolean;
+    label: string;
+    order: number;
+    pageContainerId: string;
+    pageContainerResponses?: any[];
+    parent?: string;
+    tags?: any[];
+}
+
 const flowModel = {};
 
 function decodeEntities(item, textArea) {
@@ -128,6 +145,67 @@ function hideContainer(container, containers, components, outcomes) {
     }
 }
 
+/**
+ *
+ * @param engineInvokeResponse e.g SYNC, FORWARD etc
+ * @param flowKey
+ * @description Initiates a check to determine which component to auto focus
+ */
+const checkToAutoFocus = (engineInvokeResponse: string, flowKey: string) => {
+
+    // A Component should only auto focus if the flow
+    // has either moved forward or navigated
+    if (engineInvokeResponse !== 'SYNC' && Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
+        let foundFirstComponent = false;
+
+        const validFieldsToFocus = ['INPUT', 'INPUT_DATETIME', 'INPUT_NUMBER', 'TEXTAREA'];
+        const lookUpKey = Utils.getLookUpKey(flowKey);
+
+        // Always need to start with the root container
+        const mainContainer: Icontainer = Object.keys(flowModel[lookUpKey].containers).map((key) => {
+            return flowModel[lookUpKey].containers[key];
+        }).find(c => c.developerName.toUpperCase() === 'MAIN CONTAINER' && !c.parent);
+
+        /**
+         *
+         * @param container
+         * @param flowKey
+         * @description Finds the very first component to be rendered in the flow
+         * and sets a flag for it to either autofocus or not
+         */
+        const findFirstComponent = (container: Icontainer, flowKey: string) => {
+            const children = getChildren(container.id, flowKey);
+            for (const child of children) {
+
+                // If the container has nested elements...
+                if (child.childCount && child.childCount > 0) {
+                    findFirstComponent(child, flowKey);
+                }
+
+                const isValidField = child.componentType ?
+                    validFieldsToFocus.some(component => component === child.componentType.toUpperCase()) : false;
+
+                // We have hit a component
+                if (child.componentType && isValidField) {
+                    if (foundFirstComponent) {
+                        flowModel[lookUpKey].components[child.id]['autoFocus'] = false;
+                    }
+                    else {
+                        flowModel[lookUpKey].components[child.id]['autoFocus'] = true;
+                        foundFirstComponent = true;
+                    }
+                }
+            }
+        };
+
+        // If theres no main container then it must be a step
+        // element, so no need to bother
+        if (mainContainer) {
+            findFirstComponent(mainContainer, flowKey);
+        }
+    }
+};
+
 export interface INotification {
     timeout: number | string;
     message: string;
@@ -192,14 +270,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentResponses,
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses);
 
-            const containersArr = Object.keys(flowModel[lookUpKey].containers).reduce(
-                (accumulator: any, currentValue: any) => {
-                    accumulator.push(flowModel[lookUpKey].containers[currentValue]);
-                    return accumulator;
-                }, []);
-
-            checkToAutoFocus(containersArr, flowKey);
-
+            checkToAutoFocus(engineInvokeResponse.invokeType, flowKey);
         }
 
         if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses) {
@@ -854,23 +925,6 @@ export const setContainers = (flowKey: string, containers: any[], data: any, pro
                 flowModel[lookUpKey].containers[item.id] = updateData(data, item, 'pageContainerId');
             }
         });
-    }
-};
-
-const checkToAutoFocus = (containers, flowKey) => {
-    for (const container of containers) {
-        const children = getChildren(container.id, flowKey);
-        for (const child of children) {
-            if (child.hasOwnProperty('pageContainerResponses') && child.pageContainerResponses !== null) {
-                checkToAutoFocus(child.pageContainerResponses, flowKey);
-            }
-
-            if (child.hasOwnProperty('componentType') && child.pageContainerResponses !== null) {
-                const lookUpKey = Utils.getLookUpKey(flowKey);
-                flowModel[lookUpKey].components[child.id]['autoFocus'] = true;
-                break;
-            }
-        }
     }
 };
 
