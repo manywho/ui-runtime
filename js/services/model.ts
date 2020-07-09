@@ -147,15 +147,15 @@ function hideContainer(container, containers, components, outcomes) {
 
 /**
  *
- * @param engineInvokeResponse e.g SYNC, FORWARD etc
+ * @param invokeType e.g SYNC, FORWARD etc
  * @param flowKey
  * @description Initiates a check to determine which component to auto focus
  */
-const checkToAutoFocus = (engineInvokeResponse: string, flowKey: string) => {
+const checkToAutoFocus = (invokeType: string, flowKey: string) => {
 
     // A Component should only auto focus if the flow
     // has either moved forward or navigated
-    if (engineInvokeResponse !== 'SYNC' && Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
+    if (invokeType !== 'SYNC' && Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
         let foundFirstComponent = false;
 
         const validFieldsToFocus = ['INPUT', 'INPUT_DATETIME', 'INPUT_NUMBER', 'TEXTAREA'];
