@@ -109,7 +109,7 @@ const Rules = {
     compareValues(left: any, right: any, contentType: any, criteriaType: string) {
         switch (contentType) {
         case manywho.component.contentTypes.object:
-            return Rules.compareObjects(criteriaType, left);
+            return Rules.compareObjects(criteriaType, left, right);
         case manywho.component.contentTypes.list:
             return Rules.compareLists(criteriaType, left);
         default:
@@ -140,6 +140,10 @@ const Rules = {
             return contentValue ? moment(contentValue) : contentValue;
         case manywho.component.contentTypes.boolean:
             return contentValue ? Boolean(contentValue) : contentValue;
+        case manywho.component.contentTypes.object:
+            // If the Value has no objectdata then return the content because some Values
+            // from getState() are just single property stored in the contentValue member.
+            return value.objectData && value.objectData.length > 0 ? value : contentValue || '';
         default:
             // TODO - Exception ?
             return contentValue;
@@ -202,12 +206,19 @@ const Rules = {
      * TODO: Un-hide the docs for this onces its implemented
      * @hidden
      * @param criteriaType
-     * @param value
+     * @param left
+     * @param right
      */
-    compareObjects(criteriaType: string, value: any) {
+    compareObjects(criteriaType: string, left: any, right: any) {
         switch (criteriaType.toUpperCase()) {
         case 'IS_EMPTY':
-            return !(value && value.objectData && value.objectData.length > 0);
+            return !(left && left.objectData && left.objectData.length > 0);
+        case 'EQUAL':
+            return Rules.getContentValue(left, manywho.component.contentTypes.object) ===
+                Rules.getContentValue(right, manywho.component.contentTypes.object);
+        case 'NOT_EQUAL':
+            return Rules.getContentValue(left, manywho.component.contentTypes.object) !==
+                Rules.getContentValue(right, manywho.component.contentTypes.object);
         }
     },
 
