@@ -99,8 +99,13 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 } else if (manywho.utils.isEqual(operation.valueElementToReferenceId.command, 'GET_NEXT', true)) {
                     const v = clone(valueToReference);
                     const idx = v.index ? v.index : 0;
-                    valueToReference.objectData = idx < v.objectData.length ? [v.objectData[idx]] : [];
-                    v.index = idx + 1;
+                    if (idx < v.objectData.length) {
+                        valueToReference.objectData = [v.objectData[idx]];
+                        v.index = idx + 1;
+                    } else {
+                        valueToReference.objectData = [];
+                        v.index = 0; // Reset pointer
+                    }
                     setStateValue(operation.valueElementToReferenceId, valueToReference.typeElementId, snapshot, v);
                 }
             }
