@@ -12,6 +12,10 @@ mockery.enable({
 });
 
 mockery.registerMock('./engine', engine);
+mockery.registerMock('./settings', {
+    flow: sinon.stub().returns(true),
+    global: sinon.stub().returns(false),
+});
 
 import * as Model from '../js/services/model';
 
@@ -112,15 +116,15 @@ test.serial('Parse Response', (t) => {
 
     const expectedContainer: any = Object.assign(
         {},
-        response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0], 
+        response.mapElementInvokeResponses[0].pageResponse.pageContainerResponses[0],
         response.mapElementInvokeResponses[0].pageResponse.pageContainerDataResponses[0],
     );
     expectedContainer.childCount = 2;
     t.deepEqual(Model.getContainer('container-1', flowKey), expectedContainer);
 
     const expectedComponent = Object.assign(
-        {}, 
-        response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0], 
+        {},
+        response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0],
         response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0],
     );
     t.deepEqual(Model.getComponent('component-1', flowKey), expectedComponent);
@@ -153,6 +157,549 @@ test.serial('Parse Response', (t) => {
         },
     ];
     t.deepEqual(Model.getNotifications(flowKey, 'center'), expectedNotifications);
+});
+
+test.serial('Auto focus gets applied to text input', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: null,
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to datetime input', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: null,
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT_DATETIME',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to number input', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: null,
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT_NUMBER',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to textarea', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: null,
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'TEXTAREA',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus ignores non input elements', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: null,
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'TABLE',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, undefined);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to elements nested in child containers', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            order: 0,
+                            pageContainerResponses: [
+                                {
+                                    containerType: 'VERTICAL_FLOW',
+                                    developerName: 'container-2',
+                                    id: 'container-2',
+                                    order: 0,
+                                    pageContainerResponses: null,
+                                    parent: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                                },
+                            ],
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                        },
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-2',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'container-2',
+                            pageContainerDeveloperName: 'container-2',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-3',
+                            id: 'component-3',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            pageContainerDeveloperName: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
 });
 
 test.serial('Notifications', (t) => {
