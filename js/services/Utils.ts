@@ -25,12 +25,7 @@ export const parseContent = (content: string, snapshot: any) => {
                 valueObject = null;
             }
 
-            const currentValue = valueObject ? getStateValue(
-                { id: valueObject.id },
-                null,
-                valueObject.contentType,
-                '',
-            ) : { contentValue : null };
+            const currentValue = valueObject ? getStateValue({ id: valueObject.id }) : { contentValue : null };
 
             if (valueObject && valueObject.contentType === 'ContentObject') {
 

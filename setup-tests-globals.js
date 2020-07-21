@@ -20,7 +20,7 @@ window.localforage = {
     createInstance: jest.fn(() => {
         return new Promise((resolve, reject) => {
             resolve(true);
-        });       
+        });
     })
 }
 
@@ -53,8 +53,12 @@ window.manywho = {
         extractFlowVersionId: jest.fn(),
         extractTenantId: jest.fn(),
         getFlowKey: jest.fn(),
-        isNullOrEmpty: jest.fn(() => false),
-        isEqual: jest.fn(() => false),
+        isNullOrEmpty: jest.fn((input) => typeof input === 'undefined' || input === null || input === ''),
+        isNullOrWhitespace: jest.fn((input) => typeof input === 'undefined' || input === null || input.replace(/\s/g, '').length < 1),
+        isEqual: jest.fn((v1, v2, ignoreCase) => v1 === v2 || ignoreCase ? v1.toUpperCase() === v2.toUpperCase() : false),
+    },
+    log: {
+        info: jest.fn(),
     },
     state: {
         getAuthenticationToken: jest.fn(),
@@ -64,8 +68,16 @@ window.manywho = {
     },
     component: {
         contentTypes: {
-            string: ''
-        }
+            string: 'CONTENTSTRING',
+            number: 'CONTENTNUMBER',
+            boolean: 'CONTENTBOOLEAN',
+            password: 'CONTENTPASSWORD',
+            encrypted: 'CONTENTENCRYPTED',
+            datetime: 'CONTENTDATETIME',
+            content: 'CONTENTCONTENT',
+            object: 'CONTENTOBJECT',
+            list: 'CONTENTLIST',
+        },
     },
     model: {
         addNotification: jest.fn()

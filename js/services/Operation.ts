@@ -79,36 +79,48 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
 
         if (operation.valueElementToReferenceId) {
             if (!isCommandSupported(operation.valueElementToReferenceId.command)) {
-                return state;
+                return resolve(state);
             }
 
             valueToReference = snapshot.getValue(operation.valueElementToReferenceId);
-            const valueToReferenceStateValue = getStateValue(
-                operation.valueElementToReferenceId,
-                valueToReference.typeElementId,
-                valueToReference.contentType,
-                operation.valueElementToReferenceId.command,
-            );
+            const valueToReferenceStateValue = getStateValue(operation.valueElementToReferenceId);
             if (valueToReferenceStateValue) {
                 valueToReference = valueToReferenceStateValue;
+            }
+
+            if (valueToReference.objectData) {
+                // Handle list iteration noting that GET_NEXT will get the first element if GET_FIRST has not been called beforehand
+                // Note that for iteration we need to persist the current array index by calling setStateValue()
+                if (manywho.utils.isEqual(operation.valueElementToReferenceId.command, 'GET_FIRST', true)) {
+                    const v = clone(valueToReference);
+                    valueToReference.objectData = [v.objectData[0]];
+                    v.index = 1;
+                    setStateValue(operation.valueElementToReferenceId, valueToReference.typeElementId, snapshot, v);
+                } else if (manywho.utils.isEqual(operation.valueElementToReferenceId.command, 'GET_NEXT', true)) {
+                    const v = clone(valueToReference);
+                    const idx = v.index ? v.index : 0;
+                    if (idx < v.objectData.length) {
+                        valueToReference.objectData = [v.objectData[idx]];
+                        v.index = idx + 1;
+                    } else {
+                        valueToReference.objectData = [];
+                        v.index = 0; // Reset pointer
+                    }
+                    setStateValue(operation.valueElementToReferenceId, valueToReference.typeElementId, snapshot, v);
+                }
             }
         }
 
         if (operation.valueElementToApplyId) {
             if (!isCommandSupported(operation.valueElementToApplyId.command)) {
-                return state;
+                return resolve(state);
             }
 
             let valueToApply = snapshot.getValue(operation.valueElementToApplyId);
             const typeElementId = valueToApply ? valueToApply.typeElementId : null;
             const type = typeElementId ? snapshot.metadata.typeElements.find(typeElement => typeElement.id === typeElementId) : null;
 
-            const valueToApplyStateValue = getStateValue(
-                operation.valueElementToApplyId,
-                valueToApply.typeElementId,
-                valueToApply.contentType,
-                operation.valueElementToApplyId.command,
-            );
+            const valueToApplyStateValue = getStateValue(operation.valueElementToApplyId);
             if (valueToApplyStateValue) {
                 valueToApply = valueToApplyStateValue;
             }
@@ -138,7 +150,8 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 const objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || []).map((objectData) => {
                     if (valueToReference.objectData.length > 0) {
                         const existingItem = valueToReference.objectData.find(
-                            item => (item.externalId === objectData.externalId && item.externalId !== undefined),
+                            item => (item.externalId && item.externalId === objectData.externalId) ||
+                                    (item.internalId && item.internalId === objectData.internalId),
                         );
                         if (existingItem) {
                             valueToReference.objectData.splice(valueToReference.objectData.indexOf(existingItem), 1);
@@ -148,8 +161,6 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                     }
                     return objectData;
                 });
-
-                console.log(objectData);
 
                 if (!hadExisting) {
                     valueToReference.objectData = [{
@@ -179,7 +190,9 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 valueToReference.objectData = valueToReference.objectData || [];
 
                 valueToReference.objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || [])
-                    .filter(objectData => !valueToReference.objectData.find(item => item.externalId === objectData.externalId));
+                    .filter(objectData => !valueToReference.objectData
+                        .find(item => (item.externalId && item.externalId === objectData.externalId) ||
+                                      (item.internalId && item.internalId === objectData.internalId)));
                 break;
             }
 
