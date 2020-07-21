@@ -32,7 +32,7 @@ describe('GoOnline component behaviour', () => {
         flowKey: '',
         onOnline: jest.fn(),
         onClose: jest.fn(),
-        toggleIsReplaying: jest.fn(),
+        isReplaying: jest.fn(),
     };
 
     beforeEach(() => {

@@ -528,18 +528,18 @@ describe('Rules service Content Object expected behaviour', () => {
         expect(Rules.compareValues({ objectData: [] }, { objectData: [] }, manywho.component.contentTypes.object, 'EQUAL')).toBeTruthy();
         expect(Rules.compareValues({ objectData: [] }, { objectData: [1] }, manywho.component.contentTypes.object, 'EQUAL')).toBeFalsy();
         expect(Rules.compareValues({ contentValue: 'a', objectData: null },
-                                   { contentValue: 'a', objectData: null }, manywho.component.contentTypes.object, 'EQUAL')).toBeTruthy();
+            { contentValue: 'a', objectData: null }, manywho.component.contentTypes.object, 'EQUAL')).toBeTruthy();
         expect(Rules.compareValues({ contentValue: 'a', objectData: null },
-                                   { contentValue: 'b', objectData: null }, manywho.component.contentTypes.object, 'EQUAL')).toBeFalsy();
+            { contentValue: 'b', objectData: null }, manywho.component.contentTypes.object, 'EQUAL')).toBeFalsy();
     });
 
     test('NOT_EQUAL criteria for a Content Object', () => {
         expect(Rules.compareValues({ objectData: [] }, { objectData: [] }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeFalsy();
         expect(Rules.compareValues({ objectData: [] }, { objectData: [1] }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeTruthy();
         expect(Rules.compareValues({ contentValue: 'a', objectData: null },
-                                   { contentValue: 'a', objectData: null }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeFalsy();
+            { contentValue: 'a', objectData: null }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeFalsy();
         expect(Rules.compareValues({ contentValue: 'a', objectData: null },
-                                   { contentValue: 'b', objectData: null }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeTruthy();
+            { contentValue: 'b', objectData: null }, manywho.component.contentTypes.object, 'NOT_EQUAL')).toBeTruthy();
     });
 
     test('Unsupported criteria for a Content Object', () => {

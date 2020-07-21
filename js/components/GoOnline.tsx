@@ -11,11 +11,9 @@ declare const manywho: any;
 
 const mapStateToProps = (state: IGoOnlineState) => state;
 
-const mapDispatchToProps = (dispatch) => ({
-    toggleIsReplaying: (bool) => {
-        dispatch(isReplaying(bool));
-    },
-});
+const mapDispatchToProps = {
+    isReplaying,
+};
 
 export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
 
@@ -57,7 +55,7 @@ export class GoOnline extends React.Component<IGoOnlineProps, IGoOnlineState> {
                         // otherwise as requests are made to sync with thengine
                         // the offline middleware will still assume we are in offline mode
                         removeOfflineData(stateId)
-                            .then(() => { this.props.toggleIsReplaying(true); })
+                            .then(() => { this.props.isReplaying(true); })
                             .catch((e) => console.error(e));
                     }
                 } else {

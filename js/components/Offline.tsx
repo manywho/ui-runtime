@@ -74,7 +74,8 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
             this.props.toggleIsOffline({ hasNetwork: false });
             this.props.toggleIsReplaying(false);
             this.setState({ view: null });
-        });
+        })
+        .catch((e) => console.error('Failed going back to offline mode:', e));
 
     onCloseNoNetwork: () => void = () => {
         this.setState({ view: null });
@@ -90,9 +91,7 @@ export class Offline extends React.Component<IOfflineProps, IOfflineState> {
                     <div className="wait-container">
                         <div className="wait-spinner-small wait-spinner" />
                         <span className="wait-message">
-                            { 'Caching ' }
-                            { String(this.props.cachingProgress) }
-                            %
+                            {`Caching ${String(this.props.cachingProgress)}%`}
                         </span>
                     </div>
                 </div>

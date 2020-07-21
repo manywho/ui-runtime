@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { INoNetworkProps } from '../interfaces/INoNetwork';
 
-declare const manywho: any;
-
 const NoNetwork: React.SFC<INoNetworkProps> = ({ onClose }) => (
 
     <div className="offline-status">

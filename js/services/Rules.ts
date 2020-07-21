@@ -121,16 +121,18 @@ const Rules = {
      */
     compareValues(left: any, right: any, contentType: any, criteriaType: string) {
         switch (contentType) {
-        case manywho.component.contentTypes.object:
-            return Rules.compareObjects(criteriaType, left, right);
-        case manywho.component.contentTypes.list:
-            return Rules.compareLists(criteriaType, left);
-        default:
-            const rightContentValue = criteriaType === 'IS_EMPTY' ?
-                Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
-                Rules.getContentValue(right, contentType.toUpperCase());
+            case manywho.component.contentTypes.object:
+                return Rules.compareObjects(criteriaType, left, right);
+            case manywho.component.contentTypes.list:
+                return Rules.compareLists(criteriaType, left);
+            default: {
+                const rightContentValue = criteriaType === 'IS_EMPTY' ?
+                    Rules.getContentValue(right, manywho.component.contentTypes.boolean) :
+                    Rules.getContentValue(right, contentType.toUpperCase());
 
-            return Rules.compareContentValues(Rules.getContentValue(left, contentType.toUpperCase()), rightContentValue, criteriaType, contentType);
+                return Rules.compareContentValues(Rules.getContentValue(left, contentType.toUpperCase()),
+                    rightContentValue, criteriaType, contentType);
+            }
         }
     },
 
@@ -142,24 +144,24 @@ const Rules = {
         const contentValue = value.defaultContentValue || value.contentValue;
 
         switch (contentType) {
-        case manywho.component.contentTypes.string:
-        case manywho.component.contentTypes.content:
-        case manywho.component.contentTypes.password:
-        case manywho.component.contentTypes.encrypted:
-            return contentValue ? String(contentValue).toUpperCase() : contentValue;
-        case manywho.component.contentTypes.number:
-            return contentValue ? parseFloat(contentValue) : contentValue;
-        case manywho.component.contentTypes.datetime:
-            return contentValue ? moment(contentValue) : contentValue;
-        case manywho.component.contentTypes.boolean:
-            return contentValue ? Boolean(contentValue) : contentValue;
-        case manywho.component.contentTypes.object:
+            case manywho.component.contentTypes.string:
+            case manywho.component.contentTypes.content:
+            case manywho.component.contentTypes.password:
+            case manywho.component.contentTypes.encrypted:
+                return contentValue ? String(contentValue).toUpperCase() : contentValue;
+            case manywho.component.contentTypes.number:
+                return contentValue ? parseFloat(contentValue) : contentValue;
+            case manywho.component.contentTypes.datetime:
+                return contentValue ? moment(contentValue) : contentValue;
+            case manywho.component.contentTypes.boolean:
+                return contentValue ? Boolean(contentValue) : contentValue;
+            case manywho.component.contentTypes.object:
             // If the Value has no objectdata then return the content because some Values
             // from getState() are just single property stored in the contentValue member.
-            return value.objectData && value.objectData.length > 0 ? value : contentValue || '';
-        default:
+                return value.objectData && value.objectData.length > 0 ? value : contentValue || '';
+            default:
             // TODO - Exception ?
-            return contentValue;
+                return contentValue;
         }
     },
 
@@ -274,14 +276,17 @@ const Rules = {
      */
     compareObjects(criteriaType: string, left: any, right: any) {
         switch (criteriaType.toUpperCase()) {
-        case 'IS_EMPTY':
-            return !(left && left.objectData && left.objectData.length > 0);
-        case 'EQUAL':
-            return Rules.getContentValue(left, manywho.component.contentTypes.object) ===
-                Rules.getContentValue(right, manywho.component.contentTypes.object);
-        case 'NOT_EQUAL':
-            return Rules.getContentValue(left, manywho.component.contentTypes.object) !==
-                Rules.getContentValue(right, manywho.component.contentTypes.object);
+            case 'IS_EMPTY':
+                return !(left && left.objectData && left.objectData.length > 0);
+            case 'EQUAL':
+                return Rules.getContentValue(left, manywho.component.contentTypes.object) ===
+                    Rules.getContentValue(right, manywho.component.contentTypes.object);
+            case 'NOT_EQUAL':
+                return Rules.getContentValue(left, manywho.component.contentTypes.object) !==
+                    Rules.getContentValue(right, manywho.component.contentTypes.object);
+            default:
+                // TODO - Exception ?
+                return false;
         }
     },
 
