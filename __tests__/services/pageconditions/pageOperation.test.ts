@@ -13,9 +13,7 @@ describe('Page operation expected behaviour', () => {
 
     test('If there is now assignor value that an error is thrown', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return undefined;
-        });
+        mockSnaphot.getValue.mockImplementation(() => undefined);
 
         const operation = {
             assignment: {
@@ -55,11 +53,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is equal to the assignor value that visibility property is true', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {
@@ -98,11 +94,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is not equal to the assignor value that visibility property is false', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {
@@ -141,11 +135,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is equal to the assignor value that required property is true', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {
@@ -184,11 +176,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is not equal to the assignor value that required property is false', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {
@@ -227,11 +217,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is equal to the assignor value that enabled property is true', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {
@@ -270,11 +258,9 @@ describe('Page operation expected behaviour', () => {
 
     test('That when page rule result is not equal to the assignor value that enabled property is false', () => {
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: 'true',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: 'true',
+        }));
 
         const operation = {
             assignment: {

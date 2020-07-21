@@ -25,7 +25,7 @@ export const parseContent = (content: string, snapshot: any) => {
                 valueObject = null;
             }
 
-            const currentValue = valueObject ? getStateValue({ id: valueObject.id }) : { contentValue : null };
+            const currentValue = valueObject ? getStateValue({ id: valueObject.id, typeElementPropertyId: null }) : { contentValue: null };
 
             if (valueObject && valueObject.contentType === 'ContentObject') {
 
@@ -33,7 +33,7 @@ export const parseContent = (content: string, snapshot: any) => {
                 // correct property content value needs to be extracted
                 if (currentValue.objectData && currentValue.objectData.length > 0) {
                     const property = currentValue.objectData[0].properties.find(
-                        property => property.developerName === valueName.split('.')[1].replace(/[^a-zA-Z0-9 ]/g, ''),
+                        (prop) => prop.developerName === valueName.split('.')[1].replace(/[^a-zA-Z0-9 ]/g, ''),
                     );
                     contentCopy = contentCopy.replace(valueName, property.contentValue);
                 }
@@ -73,28 +73,22 @@ export const flatten = (items: any[], parent: any, result: any[], childKey: stri
     return result;
 };
 
+const isNullOrUndefined = (value: any): boolean => typeof value === 'undefined' || value === null;
+
 /**
  * @param object
  */
-export const clone = (object: Object) => {
-    return !isNullOrUndefined(object) ? JSON.parse(JSON.stringify(object)) : object;
-};
+export const clone = (object: unknown) => !isNullOrUndefined(object) ? JSON.parse(JSON.stringify(object)) : object;
 
 export const guid = () => {
-    const s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    };
+    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
-};
-
-const isNullOrUndefined = (value: any): boolean => {
-    return typeof value === 'undefined' || value === null;
 };
 
 export const humanFileSize = (size: number) => {
     const units = ['B', 'kB', 'MB', 'GB', 'TB'];
     const index = Math.floor(Math.log(size) / Math.log(1024));
-    const value = size / Math.pow(1024, index);
+    const value = size / (1024 ** index);
     const valueFixed = value.toFixed(1);
     return `${valueFixed} ${units[index]}`;
 };

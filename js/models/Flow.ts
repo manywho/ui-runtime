@@ -2,7 +2,7 @@ import { StateInit } from './State';
 import { merge } from 'ramda';
 import { IFlow } from '../interfaces/IModels';
 
-declare var manywho: any;
+declare let manywho: any;
 
 let authenticationToken = null;
 let id = null;
@@ -38,16 +38,14 @@ export const FlowInit = (flow: IFlow) => {
 /**
  * @description return current flow model in state
  */
-export const getFlowModel = () => {
-    return {
-        authenticationToken,
-        id,
-        objectData,
-        requests,
-        tenantId,
-        state,
-    };
-};
+export const getFlowModel = () => ({
+    authenticationToken,
+    id,
+    objectData,
+    requests,
+    tenantId,
+    state,
+});
 
 /**
  * @param request
@@ -56,7 +54,7 @@ export const getFlowModel = () => {
 export const addRequest = (request: any, snapshot: any) => {
 
     const currentMapElement = snapshot.metadata.mapElements.find(
-        element => element.id === request.currentMapElementId,
+        (element) => element.id === request.currentMapElementId,
     );
     const currentMapElementDeveloperName = currentMapElement ? currentMapElement.developerName : '';
 
@@ -81,9 +79,7 @@ export const removeRequests = () => {
     requests = [];
 };
 
-export const getRequests = () => {
-    return requests;
-};
+export const getRequests = () => requests;
 
 /**
  * @param offlineId a randomly generated GUID that links cached requests to cached objectdata
@@ -100,9 +96,7 @@ export const setCurrentRequestOfflineId = (offlineId, valueId, typeElementId) =>
 /**
  * @param typeElementId
  */
-export const getObjectData = (typeElementId: string) => {
-    return objectData[typeElementId];
-};
+export const getObjectData = (typeElementId: string) => objectData[typeElementId];
 
 /**
  * @param data

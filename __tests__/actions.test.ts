@@ -10,19 +10,15 @@ jest.mock('../js/models/State', () => ({
     setStateValue: jest.fn(),
 }));
 
-const responseJsonMock = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = ['test', 'test', 'test'];
-        resolve(mockResponse);
-    });
-});
+const responseJsonMock = jest.fn(() => new Promise((resolve) => {
+    const mockResponse = ['test', 'test', 'test'];
+    resolve(mockResponse);
+}));
 
-globalAny.fetch = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = { json: responseJsonMock };
-        resolve(mockResponse);
-    });
-});
+globalAny.fetch = jest.fn(() => new Promise((resolve) => {
+    const mockResponse = { json: responseJsonMock };
+    resolve(mockResponse);
+}));
 
 describe('Actions behaviour ', () => {
 

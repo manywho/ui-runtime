@@ -7,7 +7,7 @@ import { setStateValue } from '../../models/State';
 declare const manywho: any;
 declare const metaData: any;
 
-let timer = undefined;
+let timer;
 
 const snapshot: any = Snapshot(metaData);
 
@@ -22,7 +22,7 @@ const injectValuesIntoState = (values: any) => {
             objectData: value.objectData,
         };
         setStateValue(
-            { id: value.valueElementId },
+            { id: value.valueElementId, typeElementPropertyId: null },
             value.typeElementId,
             snapshot,
             valueProps,
@@ -36,10 +36,12 @@ export const pollForStateValues = () => {
     const request = {
         headers: {
             ManyWhoTenant: store.getState().flowInformation.tenantId,
+            // Public flows have no Authorization header. Supplying the header with a null value does not work.
         },
     };
 
     if (store.getState().flowInformation.token) {
+        // eslint-disable-next-line @typescript-eslint/dot-notation
         request.headers['Authorization'] = store.getState().flowInformation.token;
     }
     return fetch(url, request)
@@ -63,7 +65,6 @@ export const pollForStateValues = () => {
             if (!store.getState().isOffline && store.getState().hasNetwork) {
                 store.dispatch<any>(hasNoNetwork());
             }
-            return;
         });
 };
 
@@ -83,14 +84,10 @@ export const periodicallyPollForStateValues = () => {
     clearTimeout(timer);
 
     timer = setTimeout(
-        () => { periodicallyPollForStateValues(); }, pollInterval,
+        () => { periodicallyPollForStateValues().catch((e) => console.error(e)); }, pollInterval,
     );
 
     return pollForStateValues()
-        .then((response) => {
-            return response;
-        })
-        .catch(() => {
-            return;
-        });
+        .then((response) => response)
+        .catch((e) => console.error(e));
 };

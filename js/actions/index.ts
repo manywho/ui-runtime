@@ -1,6 +1,7 @@
-declare const manywho;
 import { periodicallyPollForStateValues, pollForStateValues } from '../services/cache/StateCaching';
 import store from '../stores/store';
+
+declare const manywho;
 
 interface IisOffline {
     hasNetwork: boolean;
@@ -23,41 +24,38 @@ export const hasNoNetwork = () => ({
     type: 'HAS_NO_NETWORK',
 });
 
-export const isReplaying = result => ({
+export const isReplaying = (result) => ({
     type: 'IS_REPLAYING',
     payload: result,
 });
 
-export const setCachingProgress = result => ({
+export const setCachingProgress = (result) => ({
     type: 'CACHE_PROGRESS',
     payload: result,
 });
 
-export const setFlowInformation = result => ({
+export const setFlowInformation = (result) => ({
     type: 'FLOW_INFORMATION',
     payload: result,
 });
 
-export const setPollingValues = result => ({
+export const setPollingValues = (result) => ({
     type: 'POLLING_VALUES',
     payload: result,
 });
 
-export const activatePollingValues = () => {
-    return (dispatch) => {
-        if (store.getState().isPollingValues === false) {
-            periodicallyPollForStateValues();
-            dispatch(setPollingValues(true));
-        }
+export const activatePollingValues = () => (dispatch) => {
+    if (store.getState().isPollingValues === false) {
+        periodicallyPollForStateValues().catch((e) => console.error(e));
+        dispatch(setPollingValues(true));
+    }
 
-        return dispatch;
-    };
+    return dispatch;
 };
 
 export const cachingProgress = (result) => {
-    const progress = result.progress;
-    const flowKey = result.flowKey;
-
+    const { progress } = result;
+    const { flowKey } = result;
     return (dispatch) => {
         if (progress === 100 && flowKey) {
             const errorPollingValues = 'An error caching data has occurred, your flow may not work as expected whilst offline';

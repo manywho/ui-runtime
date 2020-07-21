@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -10,7 +11,7 @@ if (!PACKAGE_VERSION) {
 }
 
 const pathsToClean = [
-    'dist'
+    'dist',
 ];
 
 const publicPaths = {
@@ -18,12 +19,10 @@ const publicPaths = {
     QA: 'https://s3.amazonaws.com/manywho-cdn-react-qa/',
     STAGING: 'https://s3.amazonaws.com/manywho-cdn-react-staging/',
     PRODUCTION: 'https://assets.manywho.com/',
-    FEDERAL: 'https://assets.federal.flow.boomi.com/'
-}
+    FEDERAL: 'https://assets.federal.flow.boomi.com/',
+};
 
-const mapPublicPath = (assets, publicPaths) => {
-
-    const assetsKey = typeof assets === 'string' ? assets.toLocaleLowerCase() : null;
+const mapPublicPath = (assets) => {
 
     switch (assets) {
 
@@ -48,7 +47,7 @@ const mapPublicPath = (assets, publicPaths) => {
         default:
             return publicPaths.PRODUCTION;
     }
-}
+};
 
 
 const config = {
@@ -60,24 +59,24 @@ const config = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
+                exclude: /node_modules/,
             },
             {
                 test: /\.tsx?$/,
                 enforce: 'pre',
-                loader: 'tslint-loader',
+                loader: 'eslint-loader',
                 options: {
-                    emitErrors: true,
-                    failOnHint: true
+                    emitError: true,
+                    failOnError: true,
                 },
             },
             {
                 test: /\.less$/,
                 use: [
-                    {loader: 'style-loader'},
-                    {loader: 'css-loader'},
-                    {loader: 'less-loader'}
-                ]
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ],
             },
             {
                 test: /\.svg$/,
@@ -87,38 +86,41 @@ const config = {
                     },
                 ],
             },
-        ]
+        ],
     },
     plugins: [
         new CleanWebpackPlugin(pathsToClean),
         new UglifyJsPlugin({
-            sourceMap: true
+            sourceMap: true,
         }),
         new WriteBundleFilePlugin({
             filename: 'offline-bundle.json',
             bundleKey: 'offline',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
-            filenameFilter: filename => !filename.endsWith('.map'),
+            filenameFilter: (filename) => !filename.endsWith('.map'),
         }),
     ],
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+    },
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ]
+        extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
         filename: `js/flow-offline-${PACKAGE_VERSION}.js`,
-    }
+    },
 };
 
 module.exports = (env) => {
-    var defaultDirectory = 'dist';
+    let defaultDirectory = 'dist';
     const assets = (env && env.assets) ? env.assets : 'production';
-    const publicPath = mapPublicPath(assets, publicPaths);
+    const publicPath = mapPublicPath(assets);
 
-    if (env && env.build)
-        defaultDirectory = env.build;
+    if (env && env.build) defaultDirectory = env.build;
 
     config.output.path = path.resolve(__dirname, defaultDirectory);
-    config.output.publicPath = publicPath + 'js/';
+    config.output.publicPath = `${publicPath}js/`;
     return config;
 };

@@ -1,6 +1,6 @@
-import { clone } from '../services/Utils';
+import { clone } from './Utils';
 
-declare var manywho: any;
+declare let manywho: any;
 
 /**
  * Helper functions for extracting values
@@ -14,25 +14,23 @@ const Snapshot = (meta: any) => {
      * @param developerName
      * @param contentType
      */
-    const createValue = (id: string, developerName: string, contentType: string) => {
-        return {
-            contentType,
-            developerName,
-            id,
-            isFixed: true,
-            isVersionless: false,
-            access: 'PRIVATE',
-            contentFormat: null,
-            defaultContentValue: null,
-            defaultObjectData: null,
-            initializationOperations: null,
-            typeElementId: null,
-            typeElementDeveloperName: null,
-            updateByName: false,
-            elementType: 'VARIABLE',
-            developerSummary: null,
-        };
-    };
+    const createValue = (id: string, developerName: string, contentType: string) => ({
+        contentType,
+        developerName,
+        id,
+        isFixed: true,
+        isVersionless: false,
+        access: 'PRIVATE',
+        contentFormat: null,
+        defaultContentValue: null,
+        defaultObjectData: null,
+        initializationOperations: null,
+        typeElementId: null,
+        typeElementDeveloperName: null,
+        updateByName: false,
+        elementType: 'VARIABLE',
+        developerSummary: null,
+    });
 
     /**
      * https://docs.manywho.com/everything-you-want-to-know-about-values/
@@ -65,7 +63,8 @@ const Snapshot = (meta: any) => {
                         { typeElementPropertyId: '5582D6D3-B673-4972-A65F-9E915C0C10AA', developerName: 'Role Id', contentValue: null },
                         { typeElementPropertyId: 'D9904FDD-8F19-4f26-96C1-83EC2f58A540', developerName: 'Role Name', contentValue: null },
                         { typeElementPropertyId: 'CE98CE03-41EE-405D-B849-509974610D7F', developerName: 'Primary Group Id', contentValue: null },
-                        { typeElementPropertyIvalueElementsd: 'F26BA831-B013-4654-8AE3-8EB3AB5E6C1E', developerName: 'Primary Group Name',
+                        { typeElementPropertyIvalueElementsd: 'F26BA831-B013-4654-8AE3-8EB3AB5E6C1E',
+                            developerName: 'Primary Group Name',
                             contentValue: null },
                         { typeElementPropertyId: '4FA61B46-A370-455E-85ED-D9A0A8723A43', developerName: 'Status', contentValue: null },
                         { typeElementPropertyId: '4FA61B47-A370-455E-85ED-D9A0A8723A43', developerName: 'AuthenticationType', contentValue: null },
@@ -130,9 +129,11 @@ const Snapshot = (meta: any) => {
                         { typeElementPropertyId: '0289AFC0-4F92-4C5A-A07D-3AF40B8F2F00', developerName: 'Owner Name', contentValue: null },
                         { typeElementPropertyId: 'DCF75168-8F6E-4FBC-9E9D-543793BC4AFD', developerName: 'Date Created', contentValue: null },
                         { typeElementPropertyId: '23F6B3CA-E136-4908-8028-AC6F975441FA', developerName: 'Date Modified', contentValue: null },
-                        { typeElementPropertyId: '81707A21-EDD7-48D5-AD80-FFCFA3471B6C', developerName: 'Current Map Element ID',
+                        { typeElementPropertyId: '81707A21-EDD7-48D5-AD80-FFCFA3471B6C',
+                            developerName: 'Current Map Element ID',
                             contentValue: null },
-                        { typeElementPropertyId: 'AE1EB1E1-1760-41EA-9A02-919781BFF313', developerName: 'Current Map Element Developer Name',
+                        { typeElementPropertyId: 'AE1EB1E1-1760-41EA-9A02-919781BFF313',
+                            developerName: 'Current Map Element Developer Name',
                             contentValue: null },
                         { typeElementPropertyId: '1A3B4FC9-912C-486E-A0FC-FF0D9F9796B7', developerName: 'Join URI', contentValue: null },
                     ],
@@ -151,10 +152,10 @@ const Snapshot = (meta: any) => {
         let value = getSystemValue(id.id);
 
         if (!value && meta.valueElements) {
-            value = meta.valueElements.find(element => element.id === id.id);
+            value = meta.valueElements.find((element) => element.id === id.id);
         }
         if (id.typeElementPropertyId && value.defaultObjectData) {
-            return clone(value.defaultObjectData[0].properties.find(prop => prop.typeElementPropertyId === id.typeElementPropertyId));
+            return clone(value.defaultObjectData[0].properties.find((prop) => prop.typeElementPropertyId === id.typeElementPropertyId));
         }
 
         return clone(value);
@@ -167,11 +168,11 @@ const Snapshot = (meta: any) => {
         let value = getSystemValue(id.id);
 
         if (!value && meta.valueElements) {
-            value = meta.valueElements.find(element => element.id === id.id);
+            value = meta.valueElements.find((element) => element.id === id.id);
         }
         if (id.typeElementPropertyId) {
-            const type = meta.typeElements.find(element => element.id === value.typeElementId);
-            const property = type.properties.find(prop => prop.id === id.typeElementPropertyId);
+            const type = meta.typeElements.find((element) => element.id === value.typeElementId);
+            const property = type.properties.find((prop) => prop.id === id.typeElementPropertyId);
             return property.contentType;
         }
 
@@ -185,24 +186,18 @@ const Snapshot = (meta: any) => {
         if (meta.navigationElements) {
             return meta.navigationElements
                 .filter((element, index) => id ? element.id === id : index === 0)
-                .map((element) => {
-                    return {
-                        developerName: element.developerName,
-                        id: element.id,
-                    };
-                });
+                .map((element) => ({
+                    developerName: element.developerName,
+                    id: element.id,
+                }));
         }
 
         return null;
     };
 
-    const getMacro = (id: string) => {
-        return meta.macroElements.find(macro => macro.id === id);
-    };
+    const getMacro = (id: string) => meta.macroElements.find((macro) => macro.id === id);
 
-    const getValueByName = (name: string) => {
-        return meta.valueElements.find(element => element.developerName === name);
-    };
+    const getValueByName = (name: string) => meta.valueElements.find((element) => element.developerName === name);
 
     return {
         getContentTypeForValue,

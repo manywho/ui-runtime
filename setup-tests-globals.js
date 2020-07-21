@@ -1,32 +1,29 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+window.moment = require('moment');
+
 window.metaData = {};
 
-window.localforage = {
-    setDriver: jest.fn(),
-    removeItem: jest.fn(() => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    }),
-    getItem: jest.fn(() => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    }),
-    setItem: jest.fn(() => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    }),
-    createInstance: jest.fn(() => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    })
-}
+jest.mock('localforage', () => ({
+    setDriver: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    removeItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    getItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    setItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    createInstance: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+}));
 
 window.manywho = {
     ajax: {
-        dispatchObjectDataRequest: jest.fn(() => Promise.resolve({objectData: []})),
+        dispatchObjectDataRequest: jest.fn(() => Promise.resolve({ objectData: [] })),
         invoke: jest.fn(),
     },
     settings: {
@@ -45,7 +42,7 @@ window.manywho = {
             }
 
             return 'https://example.com';
-        })
+        }),
     },
     utils: {
         extractFlowId: jest.fn(),
@@ -62,9 +59,7 @@ window.manywho = {
     },
     state: {
         getAuthenticationToken: jest.fn(),
-        getState: jest.fn(() => {
-            return {token: 'test'};
-        })
+        getState: jest.fn(() => ({ token: 'test' })),
     },
     component: {
         contentTypes: {
@@ -80,7 +75,7 @@ window.manywho = {
         },
     },
     model: {
-        addNotification: jest.fn()
+        addNotification: jest.fn(),
     },
     pollInterval: 1000,
-}
+};
