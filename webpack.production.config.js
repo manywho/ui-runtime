@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
@@ -9,10 +9,6 @@ const { PACKAGE_VERSION } = process.env;
 if (!PACKAGE_VERSION) {
     throw new Error('A version number must be supplied for a production build. eg. 1.0.0');
 }
-
-const pathsToClean = [
-    'dist',
-];
 
 const publicPaths = {
     DEVELOPMENT: 'https://manywho-ui-development.s3.eu-west-2.amazonaws.com/',
@@ -89,7 +85,7 @@ const config = {
         ],
     },
     plugins: [
-        new CleanWebpackPlugin(pathsToClean),
+        new CleanWebpackPlugin(),
         new UglifyJsPlugin({
             sourceMap: true,
         }),
