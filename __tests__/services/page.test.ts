@@ -50,8 +50,6 @@ const mockMapElement = {
     pageElementId: 'test',
 };
 
-const mockTenantId = '';
-
 describe('Page service expected behaviour', () => {
 
     beforeEach(() => {
@@ -59,9 +57,7 @@ describe('Page service expected behaviour', () => {
     });
 
     test('If the page element has page conditions then call the page condition service', () => {
-        pageConditionMock.mockImplementation(() => {
-            return;
-        });
+        pageConditionMock.mockImplementation(() => true);
         const mockSnapshot = {
             metadata: {
                 pageElements: [
@@ -79,18 +75,14 @@ describe('Page service expected behaviour', () => {
                     versionId: '',
                 },
             },
-            getSystemValue: jest.fn(() => {
-                return { defaultContentValue: 'False' };
-            }),
+            getSystemValue: jest.fn(() => ({ defaultContentValue: 'False' })),
         };
-        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot, mockTenantId);
+        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot);
         expect(PageCondition).toHaveBeenCalled();
     });
 
     test('If the page element does not have page conditions then page condition service is not called', () => {
-        pageConditionMock.mockImplementation(() => {
-            return;
-        });
+        pageConditionMock.mockImplementation(() => true);
         const mockSnapshot = {
             metadata: {
                 pageElements: [
@@ -108,11 +100,9 @@ describe('Page service expected behaviour', () => {
                     versionId: '',
                 },
             },
-            getSystemValue: jest.fn(() => {
-                return { defaultContentValue: 'False' };
-            }),
+            getSystemValue: jest.fn(() => ({ defaultContentValue: 'False' })),
         };
-        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot, mockTenantId);
+        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot);
         expect(PageCondition).not.toHaveBeenCalled();
     });
 
@@ -137,11 +127,9 @@ describe('Page service expected behaviour', () => {
                     versionId: '',
                 },
             },
-            getSystemValue: jest.fn(() => {
-                return { defaultContentValue: 'False' };
-            }),
+            getSystemValue: jest.fn(() => ({ defaultContentValue: 'False' })),
         };
-        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot, mockTenantId);
+        generatePage(mockRequest, mockMapElement, mockState, mockSnapshot);
         expect(console.error).toHaveBeenCalled();
     });
 });

@@ -4,33 +4,29 @@ import extractExternalId, { checkForRequestsThatNeedAnExternalId } from '../../j
 import { getObjectData } from '../../js/models/Flow';
 
 jest.mock('../../js/models/Flow', () => ({
-    getObjectData: jest.fn(() => {
-        return [];
-    }),
-    getRequests: jest.fn(() => {
-        return [
-            {
-                request: {
-                    mapElementInvokeRequest: {
-                        pageRequest: {
-                            pageComponentInputResponses: [
-                                {
-                                    objectData: [
-                                        { externalId: null, internalId: 'test' },
-                                    ],
-                                },
-                                {
-                                    objectData: [
-                                        { externalId: '', internalId: '' },
-                                    ],
-                                },
-                            ],
-                        },
+    getObjectData: jest.fn(() => []),
+    getRequests: jest.fn(() => [
+        {
+            request: {
+                mapElementInvokeRequest: {
+                    pageRequest: {
+                        pageComponentInputResponses: [
+                            {
+                                objectData: [
+                                    { externalId: null, internalId: 'test' },
+                                ],
+                            },
+                            {
+                                objectData: [
+                                    { externalId: '', internalId: '' },
+                                ],
+                            },
+                        ],
                     },
                 },
             },
-        ];
-    }),
+        },
+    ]),
 }));
 
 const getObjectDataMock: any = getObjectData;
@@ -39,19 +35,15 @@ const mockStateId = guid();
 const mockTenantId = guid();
 const mockAuthToken = str(100);
 
-const responseJsonMock = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = { objectData: [{ externalId: str(15) }] };
-        resolve(mockResponse);
-    });
-});
+const responseJsonMock = jest.fn(() => new Promise((resolve) => {
+    const mockResponse = { objectData: [{ externalId: str(15) }] };
+    resolve(mockResponse);
+}));
 
-globalAny.fetch = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = { json: responseJsonMock };
-        resolve(mockResponse);
-    });
-});
+globalAny.fetch = jest.fn().mockImplementation(() => new Promise((resolve) => {
+    const mockResponse = { json: responseJsonMock };
+    resolve(mockResponse);
+}));
 
 describe('Page service expected behaviour', () => {
 
@@ -59,24 +51,26 @@ describe('Page service expected behaviour', () => {
         getObjectDataMock.mockClear();
     });
 
-    test('If a request is not associated to any object data no call to the state values endpoint is made', () => {
+    test('If a request is not associated to any object data no call to the state values endpoint is made', async () => {
         const mockRequest = { assocData: null, request: {} };
-        extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId).
-            then(() => {
-                expect(globalAny.fetch).not.toHaveBeenCalled();
-            });
+        expect.assertions(1);
+        await extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId);
+        expect(globalAny.fetch).not.toHaveBeenCalled();
     });
 
-    test('if a request is associated to objectdata then a call to the state values endpoint is made', () => {
+    test('if a request is associated to objectdata then a call to the state values endpoint is made', async () => {
         const mockRequest = { assocData: { offlineId: 'test', valueId: 'test', typeElementId: 'test' }, request: {} };
         const expectedValueHeaders = { headers: { ManyWhoTenant: mockTenantId, Authorization: mockAuthToken } };
-        extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId).
-            then(() => {
-                expect(globalAny.fetch).toHaveBeenCalledWith(
-                    `${globalAny.manywho.settings.global('platform.uri')}/api/run/1/state/${mockStateId}/values/${mockRequest.assocData.valueId}`,
-                    expectedValueHeaders,
-                );
-            });
+        getObjectDataMock.mockImplementation(() => [
+            { assocData: { offlineId: 'test' }, objectData: { internalId: 'internalId' } },
+        ]);
+
+        expect.assertions(1);
+        await extractExternalId(mockRequest, mockTenantId, mockAuthToken, mockStateId);
+        expect(globalAny.fetch).toHaveBeenCalledWith(
+            `${globalAny.manywho.settings.global('platform.uri')}/api/run/1/state/${mockStateId}/values/${mockRequest.assocData.valueId}`,
+            expectedValueHeaders,
+        );
     });
 
     test('Requests associated to objectdata should get an external id assigned', () => {
@@ -103,12 +97,10 @@ describe('Page service expected behaviour', () => {
     });
 
     test('When internal id does not match then the external id is not modified', () => {
-        getObjectDataMock.mockImplementation(() => {
-            return [
-                { assocData: { offlineId: 'offlineIdTest1' }, objectData: { internalId: 'internalIdTest4' } },
-                { assocData: { offlineId: 'offlineIdTest2' }, objectData: { internalId: 'internalIdTest2' } },
-            ];
-        });
+        getObjectDataMock.mockImplementation(() => [
+            { assocData: { offlineId: 'offlineIdTest1' }, objectData: { internalId: 'internalIdTest4' } },
+            { assocData: { offlineId: 'offlineIdTest2' }, objectData: { internalId: 'internalIdTest2' } },
+        ]);
 
         const mockExternalId = 'test';
         const mockAssocData = {

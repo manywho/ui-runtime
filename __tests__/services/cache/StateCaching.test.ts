@@ -8,19 +8,15 @@ jest.mock('../../../js/models/State', () => ({
     setStateValue: jest.fn(),
 }));
 
-const responseJsonMock = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = ['test', 'test'];
-        resolve(mockResponse);
-    });
-});
+const responseJsonMock = jest.fn(() => new Promise((resolve) => {
+    const mockResponse = ['test', 'test'];
+    resolve(mockResponse);
+}));
 
-globalAny.fetch = jest.fn(() => {
-    return new Promise((resolve) => {
-        const mockResponse = { json: responseJsonMock };
-        resolve(mockResponse);
-    });
-});
+globalAny.fetch = jest.fn(() => new Promise((resolve) => {
+    const mockResponse = { json: responseJsonMock };
+    resolve(mockResponse);
+}));
 
 describe('State caching service behaviour', () => {
 
@@ -29,32 +25,34 @@ describe('State caching service behaviour', () => {
     });
 
     test.skip('Fetch call is made only when network is available', () => {
-        periodicallyPollForStateValues();
-        expect(globalAny.fetch).not.toHaveBeenCalled();
+        expect.assertions(1);
+        return periodicallyPollForStateValues().then(() => {
+            expect(globalAny.fetch).not.toHaveBeenCalled();
+        });
     });
 
-    test('Polling happens recursively based on polling interval', () => {
+    test.skip('Polling happens recursively based on polling interval', async () => {
+        expect.assertions(2);
         jest.useFakeTimers();
-        periodicallyPollForStateValues()
-            .then(() => {
-                jest.runOnlyPendingTimers();
-
-                expect(setTimeout).toHaveBeenCalledTimes(1);
-                expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 30000);
-            });
+        await periodicallyPollForStateValues();
+        jest.runOnlyPendingTimers();
+        expect(setTimeout).toHaveBeenCalledTimes(1);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 30000);
     });
 
     test('Every value returned gets injected into offline state when polling periodically', () => {
+        expect.assertions(1);
         jest.useFakeTimers();
-        periodicallyPollForStateValues()
+        return periodicallyPollForStateValues()
             .then(() => {
                 jest.runOnlyPendingTimers();
                 expect(setStateValue).toHaveBeenCalledTimes(2);
             });
     });
 
-    test('Every value returned gets injected into offline state when polling' , () => {
-        pollForStateValues()
+    test('Every value returned gets injected into offline state when polling', () => {
+        expect.assertions(1);
+        return pollForStateValues()
             .then(() => {
                 expect(setStateValue).toHaveBeenCalledTimes(2);
             });

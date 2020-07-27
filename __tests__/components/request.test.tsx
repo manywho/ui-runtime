@@ -16,13 +16,9 @@ declare const $: any;
 
 describe('Request component behaviour', () => {
 
-    globalAny.window.manywho.ajax.uploadFiles = jest.fn(() => {
-        return {
-            then: jest.fn(() => {
-                return { fail: jest.fn() };
-            }),
-        };
-    });
+    globalAny.window.manywho.ajax.uploadFiles = jest.fn(() => ({
+        then: jest.fn(() => ({ fail: jest.fn() })),
+    }));
 
     globalAny.manywho.ajax.invoke = jest.fn();
 
@@ -90,15 +86,11 @@ describe('Request component behaviour', () => {
             stateId: guid(),
         };
 
-        globalAny.manywho.ajax.invoke.mockImplementation(() => {
-            return { then: (success) => {
-                success();
-                return { fail: jest.fn() };
-            }};
-        });
-        globalAny.manywho.utils.extractStateId.mockImplementation(() => {
-            return 'testStateId';
-        });
+        globalAny.manywho.ajax.invoke.mockImplementation(() => ({ then: (success) => {
+            success();
+            return { fail: jest.fn() };
+        } }));
+        globalAny.manywho.utils.extractStateId.mockImplementation(() => 'testStateId');
         extractExternalIdMock.mockResolvedValue(Promise.resolve());
         componentWrapper.find('.btn-primary').simulate('click');
         expect(extractExternalId).toHaveBeenCalledWith(props.cachedRequest, props.tenantId, props.authenticationToken, 'testStateId');
