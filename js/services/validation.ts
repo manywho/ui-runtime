@@ -127,6 +127,8 @@ export const validateString = (value: string, regex: string | null, message: str
         return getRequiredResponse(message, flowKey);
     }
 
+    // Only optional fields get here...
+    // But the regex check should only trigger a validation error if a value has been set
     if (!validateRegex(value, regex) && !isValueDefined(value, Component.contentTypes.string)) {
         return getInvalidResponse(message, flowKey);
     }
