@@ -127,7 +127,7 @@ export const validateString = (value: string, regex: string | null, message: str
         return getRequiredResponse(message, flowKey);
     }
 
-    if (!validateRegex(value, regex)) {
+    if (!validateRegex(value, regex) && !isValueDefined(value, Component.contentTypes.string)) {
         return getInvalidResponse(message, flowKey);
     }
 
