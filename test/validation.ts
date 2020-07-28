@@ -72,6 +72,16 @@ test('Validate String, regex invalid', (t) => {
     t.deepEqual(actual, expected);
 });
 
+test('Validate String, regex invalid, optional', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+    const actual = Validation.validateString('', '.{3,}', null, false, null);
+
+    t.deepEqual(actual, expected);
+});
+
 test('Validate Boolean', (t) => {
     const expected = {
         isValid: true,
