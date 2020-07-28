@@ -68,7 +68,8 @@ module.exports = (env) => ({
                 'css/flow-ui-bootstrap-components': 'bootstrap3',
             },
             bundleFilename: 'bundles.json',
-            pathPrefix: '/',
+            // eslint-disable-next-line no-template-curly-in-string
+            pathPrefix: '/runtime/${BAMBOO_DEPLOY_VERSION}/',
             // remove sourcemaps and theme css files from the bundle list
             filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
         }),
