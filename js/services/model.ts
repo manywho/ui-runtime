@@ -254,7 +254,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
             flowModel[lookUpKey].label = engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.label;
 
             const mapElement = {
-                name: engineInvokeResponse.mapElementInvokeResponses[0].developerName,
+                name: engineInvokeResponse.mapElementInvokeResponses[0].label,
                 id: engineInvokeResponse.mapElementInvokeResponses[0].mapElementId,
             };
 
