@@ -1,5 +1,8 @@
 const CopyPlugin = require('copy-webpack-plugin');
 const configCommon = require('./webpack.config.common');
+const RemovePlugin = require('remove-files-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { repoPaths } = require('./config/paths');
 
 module.exports = (env) => {
     const common = configCommon(env);
@@ -19,6 +22,20 @@ module.exports = (env) => {
                     to: 'js/',
                 },
             ]),
+            new CleanWebpackPlugin(),
+            // remove unnecessary files from the build folder
+            new RemovePlugin({
+                after: {
+                    test: [
+                        {
+                            folder: repoPaths.build,
+                            method: (filePath) => {
+                                return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
+                            },
+                        },
+                    ],
+                },
+            }),
         ],
 
         devtool: 'source-map',
