@@ -932,16 +932,16 @@ test('Set map element is fired when invoke response is parsed', (t) => {
             label: 'test2',
             developerName: 'test3',
             mapElementId: 'test4',
-        }]
+        }],
     };
 
-    Model.parseEngineResponse(invokeResponse,flowKey)
+    Model.parseEngineResponse(invokeResponse, flowKey);
 
     t.deepEqual(Model.getMapElement(flowKey), {
         name: invokeResponse.mapElementInvokeResponses[0].label,
-        id: invokeResponse.mapElementInvokeResponses[0].mapElementId
+        id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
     });
-    
+
 });
 
 test('We use the developerName if the invoke response has no label', (t) => {
@@ -952,14 +952,14 @@ test('We use the developerName if the invoke response has no label', (t) => {
             label: null,
             developerName: 'test3',
             mapElementId: 'test4',
-        }]
+        }],
     };
 
-    Model.parseEngineResponse(invokeResponse,flowKey)
+    Model.parseEngineResponse(invokeResponse, flowKey);
 
     t.deepEqual(Model.getMapElement(flowKey), {
         name: invokeResponse.mapElementInvokeResponses[0].developerName,
-        id: invokeResponse.mapElementInvokeResponses[0].mapElementId
+        id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
     });
-    
+
 });
