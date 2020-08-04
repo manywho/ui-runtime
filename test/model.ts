@@ -923,3 +923,43 @@ test('Set History Selected Outcome', (t) => {
     const actual = Model.getHistory(flowKey);
     t.deepEqual(actual[-1], expected);
 });
+
+test('Set map element is fired when invoke response is parsed', (t) => {
+    const invokeResponse = {
+        invokeType: 'test',
+        mapElementInvokeResponses: [{
+            pageResponse: { label: 'test1' },
+            label: 'test2',
+            developerName: 'test3',
+            mapElementId: 'test4',
+        }],
+    };
+
+    Model.parseEngineResponse(invokeResponse, flowKey);
+
+    t.deepEqual(Model.getMapElement(flowKey), {
+        name: invokeResponse.mapElementInvokeResponses[0].label,
+        id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
+    });
+
+});
+
+test('We use the developerName if the invoke response has no label', (t) => {
+    const invokeResponse = {
+        invokeType: 'test',
+        mapElementInvokeResponses: [{
+            pageResponse: { label: 'test1' },
+            label: null,
+            developerName: 'test3',
+            mapElementId: 'test4',
+        }],
+    };
+
+    Model.parseEngineResponse(invokeResponse, flowKey);
+
+    t.deepEqual(Model.getMapElement(flowKey), {
+        name: invokeResponse.mapElementInvokeResponses[0].developerName,
+        id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
+    });
+
+});
