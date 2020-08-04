@@ -253,8 +253,12 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
             flowModel[lookUpKey].label = engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.label;
 
+            const mapElementName = !Utils.isNullOrWhitespace(engineInvokeResponse.mapElementInvokeResponses[0].label) ?
+                engineInvokeResponse.mapElementInvokeResponses[0].label :
+                engineInvokeResponse.mapElementInvokeResponses[0].developerName;
+
             const mapElement = {
-                name: engineInvokeResponse.mapElementInvokeResponses[0].label,
+                name: mapElementName,
                 id: engineInvokeResponse.mapElementInvokeResponses[0].mapElementId,
             };
 
