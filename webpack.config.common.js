@@ -4,9 +4,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// const RemovePlugin = require('remove-files-webpack-plugin');
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { repoPaths, mapPublicPath } = require('./config/paths');
+const { repoPaths } = require('./config/paths');
+const dotenv = require('dotenv').config({path: __dirname + '/.env'});
 
 module.exports = (env) => ({
 
@@ -21,7 +20,7 @@ module.exports = (env) => ({
 
     output: {
         // virtual path on the dev-server
-        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : '/',
+        publicPath: '/',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
@@ -35,6 +34,9 @@ module.exports = (env) => ({
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(dotenv.parsed),
+        }),
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,

@@ -21,13 +21,18 @@ npm install
 
 ### Run `ui-runtime` in development mode
 
+Before running the `ui-runtime` create a `.env` file in the root directory containing the following environment variables (`.env.example` can be used as a basis):
+
+```shell script
+CDN_URL=""
+PLATFORM_URI="https://development.manywho.net"
+```
+
+Then use the following command:
+
 ```shell script
 npm start
 ```
-Optional arguments:
-
-* `-- --env.cdnurl (default: http://localhost:3000)`
-* `-- --env.platformuri (default: https://development.manywho.net)`
 
 ### Dev Server
 

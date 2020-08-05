@@ -9,9 +9,6 @@ module.exports = (env) => {
     // generate the common config object
     const common = configCommon(env);
 
-    const cdnURL = (env && env.cdnurl) ? env.cdnurl : 'http://localhost:3000';
-    const platformURI = (env && env.platformuri) ? env.platformuri : 'https://development.manywho.net';
-
     // build and return the development config object by combining
     // common config and development specific bits within the standard
     // webpack config scaffolding
@@ -38,8 +35,8 @@ module.exports = (env) => {
                 inject: false,
             }),
             new HtmlWebpackStringReplacePlugin({
-                '\\$\\{CDN_URL\\}': cdnURL,
-                '\\$\\{PLATFORM_URI\\}': platformURI,
+                '\\$\\{CDN_URL\\}': process.env.CDN_URL,
+                '\\$\\{PLATFORM_URI\\}': process.env.PLATFORM_URI,
             }),
         ],
 
