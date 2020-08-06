@@ -4,9 +4,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const RemovePlugin = require('remove-files-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { repoPaths, mapPublicPath } = require('./config/paths');
+const { repoPaths } = require('./config/paths');
+const dotenv = require('dotenv').config({path: __dirname + '/.env'});
 
 module.exports = (env) => ({
 
@@ -14,14 +13,14 @@ module.exports = (env) => ({
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
         'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
-        'js/loader': `${repoPaths.uiHtml5}/js/loader.js`,
+        'js/loader.min': `${repoPaths.uiHtml5}/js/loader.js`, // using loader.min so we get loader.min.js as output
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
         'loader': `${repoPaths.uiHtml5}/js/loader.js`,
     },
 
     output: {
         // virtual path on the dev-server
-        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : '/',
+        publicPath: '/',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
@@ -35,6 +34,9 @@ module.exports = (env) => ({
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(dotenv.parsed),
+        }),
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
@@ -75,20 +77,6 @@ module.exports = (env) => ({
         new BundleAnalyzerPlugin({
             analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
             openAnalyzer: !!(env && env.analyse),
-        }),
-        new CleanWebpackPlugin(),
-        // remove unnecessary files from the build folder
-        new RemovePlugin({
-            after: {
-                test: [
-                    {
-                        folder: repoPaths.build,
-                        method: (filePath) => {
-                            return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
-                        },
-                    },
-                ],
-            },
         }),
     ],
 

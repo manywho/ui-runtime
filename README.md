@@ -21,13 +21,18 @@ npm install
 
 ### Run `ui-runtime` in development mode
 
+Before running the `ui-runtime` create a `.env` file in the root directory containing the following environment variables (`.env.example` can be used as a basis):
+
+```shell script
+CDN_URL=""
+PLATFORM_URI="https://development.manywho.net"
+```
+
+Then use the following command:
+
 ```shell script
 npm start
 ```
-Optional arguments:
-
-* `--env.cdnurl (default: http://localhost:3000)`
-* `--env.platformuri (default: https://development.manywho.net)`
 
 ### Dev Server
 
@@ -130,13 +135,13 @@ To run style linting on individual subrepos use:
 
 ```shell script
 # ui-bootstrap
-npm run lint:bootstrap
-
-# ui-core
-npm run lint:offline
+npm run stylelint:bootstrap
 
 # ui-offline
-npm run lint:themes
+npm run stylelint:offline
+
+# ui-themes
+npm run stylelint:themes
 ```
 
 All listed commands are defined in the top-level `package.json` and should be 
@@ -148,19 +153,8 @@ Other subrepos don't have/need linting because they don't contain any styles.
 
 ### Build `ui-runtime` for production
 
-```shell script
-# define the PACKAGE_VERSION:
-export PACKAGE_VERSION=x.y.z
-
-# run the build task with required arguments:
-npm run build -- --env.cdnurl=<cdnurl> --env.platformuri=<platformuri> --env.tenant=<tenant> --env.player=<player>
-```
-
-Required arguments:
-- `--env.cdnurl` (ex.: `https://cdnjs.cloudflare.com`)
-- `--env.platformuri` (ex.: `https://development.manywho.net`)
-- `--env.tenant`
-- `--env.player`
+This command is meant to be used by Bamboo to build the ui-runtime for deployment.
+Running it manually by the developer is no longer required.
 
 ### Change the build output directory
 
@@ -173,13 +167,13 @@ To change the default build output directory "on the fly" pass a custom output
 directory via the optional `--env.build` argument
 
 ```shell script
-npm run build -- --env.cdnurl=<cdnurl> ... --env.build=<output_dir>
+npm run build -- --env.build=<output_dir>
 ```
 
 ### Show the analysis of the emitted packages
 
 ```shell script
-npm run build -- --env.cdnurl=<cdnurl> ... --env.analyse
+npm run build -- --env.analyse
 ```
 
 Note: There is no need to assign any value to the `--env.analyse` argument.
