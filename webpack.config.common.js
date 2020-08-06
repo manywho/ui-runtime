@@ -69,7 +69,7 @@ module.exports = (env) => ({
             },
             bundleFilename: 'bundles.json',
             // eslint-disable-next-line no-template-curly-in-string
-            pathPrefix: '/runtime/${BAMBOO_DEPLOY_VERSION}/',
+            pathPrefix: '/runtime/${VERSION}/',
             // remove sourcemaps and theme css files from the bundle list
             filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
         }),
