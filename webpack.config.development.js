@@ -27,7 +27,16 @@ module.exports = (env) => {
                     from: 'vendor-dev/**/*.*',
                     to: 'js/vendor',
                     flatten: true,
-                }
+                },
+                {
+                    from: 'bundles.template.json',
+                    to: 'bundles.json',
+                    // The `content` argument is a [`Buffer`](https://nodejs.org/api/buffer.html) object, it could be converted to a `String` to be processed using `content.toString()`
+                    // The `absoluteFrom` argument is a `String`, it is absolute path from where the file is being copied
+                    transform(content) {
+                        return content.toString().replace(/\$\{PATH_PREFIX\}/g, '');
+                    },
+                },
             ]),
             new HtmlWebpackPlugin({
                 template: path.resolve(repoPaths.uiHtml5, 'index.html'),
