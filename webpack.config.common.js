@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
-const WriteBundleFilePlugin = require('./config/WriteBundleFilePlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { repoPaths } = require('./config/paths');
 const dotenv = require('dotenv').config({path: __dirname + '/.env'});
@@ -15,7 +14,6 @@ module.exports = (env) => ({
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
         'js/loader.min': `${repoPaths.uiHtml5}/js/loader.js`, // using loader.min so we get loader.min.js as output
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
-        'loader': `${repoPaths.uiHtml5}/js/loader.js`,
     },
 
     output: {
@@ -60,21 +58,6 @@ module.exports = (env) => ({
                 to: 'players/',
             },
         ]),
-        new WriteBundleFilePlugin({
-            bundleEntries: {
-                // use `name : key` pairs
-                'js/flow-ui-bootstrap': 'bootstrap3',
-                'js/flow-ui-core': 'core',
-                'js/flow-offline': 'offline',
-                'css/flow-ui-bootstrap': 'bootstrap3',
-                'css/flow-ui-bootstrap-components': 'bootstrap3',
-            },
-            bundleFilename: 'bundles.json',
-            // eslint-disable-next-line no-template-curly-in-string
-            pathPrefix: '/runtime/${VERSION}/',
-            // remove sourcemaps and theme css files from the bundle list
-            filenameFilter: filename => !filename.endsWith('.map') && !/themes/.test(filename),
-        }),
         new BundleAnalyzerPlugin({
             analyzerMode: !!(env && env.analyse) ? 'server' : 'disabled',
             openAnalyzer: !!(env && env.analyse),

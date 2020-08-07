@@ -1,0 +1,13 @@
+{
+    "bootstrap3": [
+        "${PATH_PREFIX}/css/flow-ui-bootstrap.css",
+        "${PATH_PREFIX}/css/flow-ui-bootstrap-components.css",
+        "${PATH_PREFIX}/js/flow-ui-bootstrap.js"
+    ],
+    "offline": [
+        "${PATH_PREFIX}/js/flow-offline.js"
+    ],
+    "core": [
+        "${PATH_PREFIX}/js/flow-ui-core.js"
+    ]
+}

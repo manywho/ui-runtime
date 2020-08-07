@@ -21,6 +21,11 @@ module.exports = (env) => {
                     from: 'vendor/**/*.*',
                     to: 'js/',
                 },
+                {
+                    // placeholders substituted during deployment
+                    from: 'bundles.template.json',
+                    to: 'bundles.template.json',
+                },
             ]),
             new CleanWebpackPlugin(),
             // remove unnecessary files from the build folder
