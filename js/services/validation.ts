@@ -3,28 +3,28 @@ import * as Model from './model';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
-const isValueNotDefined = function (value: any, contentType: string) {
+const isValueDefined = function (value: any, contentType: string) {
     switch (contentType) {
     case Component.contentTypes.object:
     case Component.contentTypes.list:
-        return value == null || value.length === 0 || value.filter(item => item.isSelected).length === 0;
+        return !(value == null || value.length === 0 || value.filter(item => item.isSelected).length === 0);
 
     case Component.contentTypes.boolean:
         if (typeof value === 'string') {
             if (Utils.isEqual(value, 'true', true)) {
-                return false;
+                return true;
             }
 
             if (Utils.isEqual(value, 'false', true)) {
-                return true;
+                return false;
             }
         }
         else {
-            return !value;
+            return value;
         }
 
     default:
-        return Utils.isNullOrEmpty(value);
+        return !Utils.isNullOrEmpty(value);
     }
 };
 
@@ -123,13 +123,13 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
  * @param flowKey
  */
 export const validateString = (value: string, regex: string | null, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueNotDefined(value, Component.contentTypes.string)) {
+    if (isRequired && !isValueDefined(value, Component.contentTypes.string)) {
         return getRequiredResponse(message, flowKey);
     }
 
     // Only optional fields get here...
     // But the regex check should only trigger a validation error if a value has been set
-    if (!validateRegex(value, regex) && !isValueNotDefined(value, Component.contentTypes.string)) {
+    if (!validateRegex(value, regex) && isValueDefined(value, Component.contentTypes.string)) {
         return getInvalidResponse(message, flowKey);
     }
 
@@ -145,7 +145,7 @@ export const validateString = (value: string, regex: string | null, message: str
  * @param flowKey
  */
 export const validateNumber = (value: any, regex: string, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueNotDefined(value, Component.contentTypes.number)) {
+    if (isRequired && !isValueDefined(value, Component.contentTypes.number)) {
         return getRequiredResponse(message, flowKey);
     }
 
@@ -168,7 +168,7 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
  * @param flowKey
  */
 export const validateBoolean = (value: boolean, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueNotDefined(value, Component.contentTypes.boolean)) {
+    if (isRequired && !isValueDefined(value, Component.contentTypes.boolean)) {
         return getRequiredResponse(message, flowKey);
     }
 
@@ -183,7 +183,7 @@ export const validateBoolean = (value: boolean, message: string, isRequired: boo
  * @param flowKey
  */
 export const validateObject = (value: object, message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueNotDefined(value, Component.contentTypes.object)) {
+    if (isRequired && !isValueDefined(value, Component.contentTypes.object)) {
         return getRequiredResponse(message, flowKey);
     }
 
@@ -198,7 +198,7 @@ export const validateObject = (value: object, message: string, isRequired: boole
  * @param flowKey
  */
 export const validateList = (value: object[], message: string, isRequired: boolean, flowKey: string): IValidationResult => {
-    if (isRequired && isValueNotDefined(value, Component.contentTypes.list)) {
+    if (isRequired && !isValueDefined(value, Component.contentTypes.list)) {
         return getRequiredResponse(message, flowKey);
     }
 
