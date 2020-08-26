@@ -153,7 +153,7 @@ export const validateNumber = (value: any, regex: string, message: string, isReq
         return getInvalidResponse(message, flowKey);
     }
 
-    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex)) {
+    if (!validateRegex(Utils.isNullOrUndefined(value) ?  '' : value.toString(), regex) && isValueDefined(value, Component.contentTypes.string)) {
         return getInvalidResponse(message, flowKey);
     }
 
