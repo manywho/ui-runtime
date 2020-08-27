@@ -122,6 +122,16 @@ test('Validate Number, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
+test('Validate Number, regex invalid, optional', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+    const actual = Validation.validateNumber('', '.{3,}', null, false, null);
+
+    t.deepEqual(actual, expected);
+});
+
 test('Validate Number, required and not defined', (t) => {
     const expected = {
         isValid: false,
