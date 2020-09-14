@@ -3,8 +3,6 @@ import IComponentProps from '../interfaces/IComponentProps';
 import registeredComponents from '../constants/registeredComponents';
 import { isNil, isEmpty } from 'ramda';
 
-import '../../css/historical-navigation.less';
-
 declare const manywho: any;
 
 const navigateToStateEntry = (flowKey, stateEntryId) => {

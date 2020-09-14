@@ -12,9 +12,6 @@ import './createClassPatch.ts';
 // Styles
 import '../css/mw-components.less';
 
-// Lib CSS
-import '../css/lib/react-selectize.css';
-
 // Themes
 import '../css/mw-bootstrap.less';
 
