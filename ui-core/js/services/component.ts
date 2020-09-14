@@ -258,6 +258,7 @@ export const appendFlowContainer = (flowKey: string) => {
 
 /**
  * Focus the first input or textarea control on larger screen devices i.e. width > 768px
+ * @DEPRECATED this functionality is now implemented in model.ts
  * @param flowKey
  */
 export const focusInput = (flowKey: string) => {

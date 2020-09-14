@@ -69,6 +69,18 @@ const reactErrorBoundary = {
     removeItem: sinon.stub(),
 };
 
+(window as any)['numbro'] = {
+    cultures: sinon.stub().returns({
+        'en-US': { languageTag: 'en-US' },
+        'en-GB': { languageTag: 'en-GB' },
+        'de-DE': { languageTag: 'en-DE' },
+        'fr-FR': { languageTag: 'en-FR' },
+        'es-ES': { languageTag: 'en-ES' },
+        'it-IT': { languageTag: 'en-IT' },
+    }),
+    culture: sinon.spy(),
+};
+
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
@@ -499,7 +511,7 @@ test.serial('FileDataRequest Success', (t) => {
     return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
         .then(() => {
             t.true((Engine.render as sinon.SinonStub).calledTwice);
-            t.false(state.setComponentError.called);
+            t.true(state.setComponentError.calledWith('id', null, flowKey));
             t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
             t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
         });
@@ -521,6 +533,26 @@ test.serial('FileDataRequest Fail', async (t) => {
 
     t.true((Engine.render as sinon.SinonStub).calledTwice);
     t.true(state.setComponentError.calledWith('id', 'error', flowKey));
+    t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+    t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+});
+
+test.serial('FileDataRequest Fail extended error response', async (t) => {
+    ajax.dispatchFileDataRequest.callsFake(() => {
+        const deferred =  $.Deferred();
+        deferred.reject({ responseJSON: { message: 'API error message returned'  } }, 'status', '');
+        return deferred;
+    });
+
+    model.getComponent.returns({
+        objectData: null,
+        fileDataRequest: {},
+    });
+
+    await t.throws(Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+
+    t.true((Engine.render as sinon.SinonStub).calledTwice);
+    t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
     t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
     t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
 });
@@ -664,4 +696,52 @@ test.serial('Flow Out', (t) => {
             t.true((Collaboration.flowOut as sinon.SinonStub).calledWith(flowKey, 'stateId', 'key1___stateId_'));
             t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, 'main', 'stateId', 'authenticationToken', 'options'));
         });
+});
+
+test('Check Locale with undefined navigator.language', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: null, configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-US'), true);
+    spy.reset();
+});
+
+test('Check Locale with supported navigator.language', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'en-GB', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-GB'), true);
+    spy.reset();
+});
+
+test('Check Locale with un-supported navigator.language variant', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'de-XX', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('de-DE'), true);
+    spy.reset();
+});
+
+test('Check Locale with navigator.language as en-CA', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'en-CA', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-CA'), true);
+    spy.reset();
 });
