@@ -1,10 +1,9 @@
-import { getStateValue } from '../models/State';
-import { parseContent } from '../services/Utils';
+import { parseContent } from './Utils';
 
 interface IMapElement {
     developerName: string;
     id: string;
-    outcomes: Object;
+    outcomes: any;
     userContent: string;
 }
 

@@ -115,7 +115,7 @@ describe('Flow model expected behaviour', () => {
 
         FlowInit({ tenantId, state, objectData });
 
-        const updatedObject =  {
+        const updatedObject = {
             objectData: {
                 externalId: 'externalId3',
                 internalId: 'internalId3',

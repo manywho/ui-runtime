@@ -19,7 +19,7 @@ const PageOperation = (
     component,
 ) => {
 
-    let pageOperationResult = undefined;
+    let pageOperationResult;
 
     if (pageOperation.assignment.assignee.pageObjectReferenceId === component.id) {
         const metaDataType = pageOperation.assignment.assignee.metadataType;
@@ -62,28 +62,31 @@ const PageOperation = (
             // Currently offline only supports - visible, required and enabled metadata types
             switch (metaDataType) {
 
-            case METADATA_TYPES.visible:
-                newProps.isVisible = pageOperationResult;
+                case METADATA_TYPES.visible:
+                    newProps.isVisible = pageOperationResult;
 
-                // If a component is being hidden, its content value must be cleared
-                if (pageOperationResult === false) {
-                    newProps.contentValue = null;
-                }
-                return Object.assign(value, newProps);
+                    // If a component is being hidden, its content value must be cleared
+                    if (pageOperationResult === false) {
+                        newProps.contentValue = null;
+                    }
+                    return Object.assign(value, newProps);
 
-            case METADATA_TYPES.required:
-                newProps.isRequired = pageOperationResult;
-                return Object.assign(value, newProps);
+                case METADATA_TYPES.required:
+                    newProps.isRequired = pageOperationResult;
+                    return Object.assign(value, newProps);
 
-            case METADATA_TYPES.enabled:
-                newProps.isEnabled = pageOperationResult;
-                return Object.assign(value, newProps);
+                case METADATA_TYPES.enabled:
+                    newProps.isEnabled = pageOperationResult;
+                    return Object.assign(value, newProps);
 
-            default:
-                return value;
+                default:
+                    return value;
             }
         }
     }
+
+    // TODO Not sure what to return here ?
+    return null;
 };
 
 export default PageOperation;

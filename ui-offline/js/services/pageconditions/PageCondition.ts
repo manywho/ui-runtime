@@ -7,26 +7,18 @@ import PageOperation from './PageOperation';
  * @param componentId
  * @description To check if a component is listening for a page condition to be triggered
  */
-export const checkForCondition = (pageConditions, componentId: String) => {
-    return pageConditions.find((pageCondition) => {
-        return pageCondition.pageOperations.some((operation) => {
-            return operation.assignment.assignee.pageObjectReferenceId === componentId;
-        });
-    });
-};
+export const checkForCondition = (pageConditions, componentId: string) => pageConditions.find(
+    (pageCondition) => pageCondition.pageOperations.some((operation) => operation.assignment.assignee.pageObjectReferenceId === componentId),
+);
 
 /**
  * @param pageConditions An array of page conditions metadata
  * @param componentId
  * @description To check if a component triggers a page condition
  */
-export const checkForEvents = (pageConditions, componentId: String) => {
-    return pageConditions.find((pageCondition) => {
-        return pageCondition.pageRules.find((pageRule) => {
-            return pageRule.left.pageObjectReferenceId === componentId;
-        });
-    });
-};
+export const checkForEvents = (pageConditions, componentId: string) => pageConditions.find(
+    (pageCondition) => pageCondition.pageRules.find((pageRule) => pageRule.left.pageObjectReferenceId === componentId),
+);
 
 /**
  * @param triggerComponent
@@ -37,15 +29,10 @@ export const checkForEvents = (pageConditions, componentId: String) => {
  * TODO: create interfaces and typecasting
  */
 export const getTriggerComponentContentValue = (triggerComponent, snapshot, pageRule) => {
-    let triggerComponentContentValue = undefined;
+    let triggerComponentContentValue;
 
     // First check if the value is in the offline state
-    const triggerComponentValueObject = getStateValue(
-        { id: triggerComponent.valueElementValueBindingReferenceId.id },
-        null,
-        null,
-        null,
-    );
+    const triggerComponentValueObject = getStateValue({ id: triggerComponent.valueElementValueBindingReferenceId.id, typeElementPropertyId: null });
 
     // If is in state then grab the content value property
     if (triggerComponentValueObject) {
@@ -69,7 +56,7 @@ export const getTriggerComponentContentValue = (triggerComponent, snapshot, page
         triggerComponentValueObject.objectData.length > 0
     ) {
         triggerComponentContentValue = triggerComponentValueObject.objectData[0].properties.find(
-            property => property.typeElementPropertyId ===
+            (property) => property.typeElementPropertyId ===
             pageRule.left.valueElementToReferenceId.typeElementPropertyId,
         ).contentValue;
     }
@@ -105,9 +92,9 @@ const PageCondition = (pageElement, snapshot, component, value) => {
     // so the ui knows to make a syncronisation call
     // to the engine.
     if (hasEvents !== undefined) {
-        component['hasEvents'] = true;
+        component.hasEvents = true;
     } else {
-        component['hasEvents'] = false;
+        component.hasEvents = false;
     }
 
     // First check to see if this component is a component
@@ -123,16 +110,16 @@ const PageCondition = (pageElement, snapshot, component, value) => {
     // to be some page operations
     if (assocCondition !== undefined && assocCondition.pageRules.length === 1 && assocCondition.pageOperations) {
         const pageRule = assocCondition.pageRules[0];
-        const pageOperations = assocCondition.pageOperations;
+        const { pageOperations } = assocCondition;
 
         // e.g. equal, not equal etc
-        const criteriaType = pageRule.criteriaType;
+        const { criteriaType } = pageRule;
 
         if (!criteriaType) {
             throw new Error('Check you have added a criteria value');
         }
 
-        const triggerComponent = pageElement.pageComponents.find(component => component.id === pageRule.left.pageObjectReferenceId);
+        const triggerComponent = pageElement.pageComponents.find((aComponent) => aComponent.id === pageRule.left.pageObjectReferenceId);
 
         if (!triggerComponent) {
             throw new Error('Could not find a trigger component');

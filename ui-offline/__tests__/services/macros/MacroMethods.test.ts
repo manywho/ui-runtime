@@ -1,4 +1,4 @@
-import { default as MacroMethods, bindValuePropertyFunctions } from '../../../js/services/macros/MacroMethods';
+import MacroMethods, { bindValuePropertyFunctions } from '../../../js/services/macros/MacroMethods';
 import { setMacroState } from '../../../js/services/macros/MacroState';
 import MacroPropertyMethods from '../../../js/services/macros/MacroPropertyMethods';
 import * as utils from '../../../js/services/macros/MacroUtils';
@@ -43,23 +43,23 @@ MacroMethods.initMethods(mockMetaData);
 describe('Macro value methods behaviour', () => {
 
     test('get datetime value returns a datetime string', () => {
-        const result = MacroMethods.getDateTimeValue('{![' + mockMetaData.valueElements[2].developerName + ']}');
+        const result = MacroMethods.getDateTimeValue(`{![${mockMetaData.valueElements[2].developerName}]}`);
         expect(result).toEqual(datetimeFormattedMock);
     });
 
     test('get number value returns a number', () => {
-        const result = MacroMethods.getNumberValue('{![' + mockMetaData.valueElements[3].developerName + ']}');
-        expect(result).toEqual(mockState.values['test4'].contentValue);
+        const result = MacroMethods.getNumberValue(`{![${mockMetaData.valueElements[3].developerName}]}`);
+        expect(result).toEqual(mockState.values.test4.contentValue);
     });
 
     test('get object value returns an object', () => {
-        const result = MacroMethods.getObject('{![' + mockMetaData.valueElements[4].developerName + ']}');
-        expect(result).toEqual(mockState.values['test5'].objectData[0]);
+        const result = MacroMethods.getObject(`{![${mockMetaData.valueElements[4].developerName}]}`);
+        expect(result).toEqual(mockState.values.test5.objectData[0]);
     });
 
     test('get array value returns an array', () => {
-        const result = MacroMethods.getArray('{![' + mockMetaData.valueElements[7].developerName + ']}');
-        expect(result).toEqual(mockState.values['test8'].objectData);
+        const result = MacroMethods.getArray(`{![${mockMetaData.valueElements[7].developerName}]}`);
+        expect(result).toEqual(mockState.values.test8.objectData);
     });
 
     test('Setter functions insert passed value into macro state', () => {
@@ -70,7 +70,7 @@ describe('Macro value methods behaviour', () => {
         MacroMethods.initMethods(mockMetaData);
 
         MacroMethods.setDateTimeValue(
-            '{![' + mockState.values.test3.developerName + ']}',
+            `{![${mockState.values.test3.developerName}]}`,
             datetimeMock,
         );
         const mockDateTimeProps = {
@@ -85,7 +85,7 @@ describe('Macro value methods behaviour', () => {
 
         const mockObjectContentValue = { properties: [] };
         MacroMethods.setObject(
-            '{![' + mockState.values.test5.developerName + ']}',
+            `{![${mockState.values.test5.developerName}]}`,
             mockObjectContentValue,
         );
         const mockObjectProps = {
@@ -100,7 +100,7 @@ describe('Macro value methods behaviour', () => {
 
         const mockArrayContentValue = [1, 2, 3];
         MacroMethods.setArray(
-            '{![' + mockState.values.test8.developerName + ']}',
+            `{![${mockState.values.test8.developerName}]}`,
             mockArrayContentValue,
         );
         const mockArrayProps = {
@@ -117,6 +117,7 @@ describe('Macro value methods behaviour', () => {
     test('Binding property methods should return an object with values mapping to property methods', () => {
         const result = bindValuePropertyFunctions();
         for (const key in MacroPropertyMethods) {
+            // eslint-disable-next-line no-prototype-builtins
             if (MacroPropertyMethods.hasOwnProperty(key)) {
                 const func = MacroPropertyMethods[key];
                 expect(result[func.name]).toEqual(MacroPropertyMethods[key]);

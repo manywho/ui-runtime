@@ -39,7 +39,7 @@ export const checkForRequestsThatNeedAnExternalId = (assocData: IassocData, exte
 
     // Find the objectdata in the cache that is associated to the request
     const objectData = getObjectData(assocData.typeElementId);
-    const assocObject = objectData.filter(obj => obj.assocData).find(obj => obj.assocData.offlineId === assocData.offlineId);
+    const assocObject = objectData.filter((obj) => obj.assocData).find((obj) => obj.assocData.offlineId === assocData.offlineId);
 
     // Extract it's internalId
     const assocObjectInternalId = assocObject.objectData.internalId;
@@ -76,20 +76,20 @@ export const checkForRequestsThatNeedAnExternalId = (assocData: IassocData, exte
 const extractExternalId = (request: any, tenantId: string, authenticationToken: string, stateId: string) => {
 
     if (request.assocData) {
-        const valueId = request.assocData.valueId;
+        const { valueId } = request.assocData;
         const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${stateId}/values/${valueId}`;
         const valueRequest = {
             headers: {
                 ManyWhoTenant: tenantId,
+                // Public flows have no Authorization header. Supplying the header with a null value does not work.
             },
         };
         if (authenticationToken) {
+            // eslint-disable-next-line @typescript-eslint/dot-notation
             valueRequest.headers['Authorization'] = authenticationToken;
         }
         return fetch(url, valueRequest)
-            .then((response) => {
-                return response.json();
-            })
+            .then((response) => response.json())
             .then((response) => {
 
                 checkForRequestsThatNeedAnExternalId(
@@ -98,7 +98,7 @@ const extractExternalId = (request: any, tenantId: string, authenticationToken: 
                 );
                 return response;
             })
-            .catch(response => console.error(response));
+            .catch((response) => console.error(response));
     }
 
     return Promise.resolve();

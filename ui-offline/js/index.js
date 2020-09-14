@@ -1,10 +1,8 @@
-import 'script-loader!./lib/localforage-1.5.0.min.js';
-
 import { request, uploadFiles, initialize } from './services/Connection';
 
 // Component required to be included in bundle and register itself
 import App from './components/App';
-import "../css/offline.less";
+import '../css/offline.less';
 
 const window2 = window;
 
@@ -23,7 +21,7 @@ if (window && window2.manywho) {
     // This is to prevent the the flow from moving once initialzed,
     // (the default behaviour) when what we actually want the flow to do is
     // pick up where it had been left which is determined in the cached data in indexdb.
-    window2.manywho.engine._initialize = window2.manywho.engine.initialize;
+    window2.manywho.engine.originalInitialize = window2.manywho.engine.initialize;
     window2.manywho.engine.initialize = initialize;
     window2.manywho.settings.initialize({
         components: {

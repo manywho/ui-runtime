@@ -47,21 +47,45 @@ const setDateTimeValue = (value: string, dateValue) => {
 };
 
 /**
+ * @description returns an object where the key values are value property methods
+ */
+export const bindValuePropertyFunctions = () => ({
+    getPropertyValue: MacroPropertyMethods.getPropertyValue,
+    getPropertyStringValue: MacroPropertyMethods.getPropertyStringValue,
+    getPropertyContentValue: MacroPropertyMethods.getPropertyContentValue,
+    getPropertyPasswordValue: MacroPropertyMethods.getPropertyPasswordValue,
+    getPropertyNumberValue: MacroPropertyMethods.getPropertyNumberValue,
+    getPropertyDateTimeValue: MacroPropertyMethods.getPropertyDateTimeValue,
+    getPropertyBooleanValue: MacroPropertyMethods.getPropertyBooleanValue,
+    getPropertyArray: MacroPropertyMethods.getPropertyArray,
+    getPropertyObject: MacroPropertyMethods.getPropertyObject,
+    setPropertyValue: MacroPropertyMethods.setPropertyValue,
+    setPropertyStringValue: MacroPropertyMethods.setPropertyStringValue,
+    setPropertyContentValue: MacroPropertyMethods.setPropertyContentValue,
+    setPropertyPasswordValue: MacroPropertyMethods.setPropertyPasswordValue,
+    setPropertyNumberValue: MacroPropertyMethods.setPropertyNumberValue,
+    setPropertyDateTimeValue: MacroPropertyMethods.setPropertyDateTimeValue,
+    setPropertyBooleanValue: MacroPropertyMethods.setPropertyBooleanValue,
+    setPropertyArray: MacroPropertyMethods.setPropertyArray,
+    setPropertyObject: MacroPropertyMethods.setPropertyObject,
+});
+
+/**
  * @param type type element ID
  * @description returns a single object based on a type
  */
 const createObject = (type: string) => {
     const result = generateNewObjectData(type, metadata);
 
-    function generateResponse() {}
+    function GenerateResponse() {}
 
     // Enables calling value property methods on the object data returned
     const macroFunctions: any = bindValuePropertyFunctions();
     for (const key of Object.keys(macroFunctions)) {
-        generateResponse.prototype[key] = macroFunctions[key];
+        GenerateResponse.prototype[key] = macroFunctions[key];
     }
 
-    const response = new generateResponse();
+    const response = new GenerateResponse();
     for (const key of Object.keys(result)) {
         response[key] = result[key];
     }
@@ -77,14 +101,14 @@ const getArray = (value: string) => {
     const list = listValue.props.objectData;
     const objectData = [];
     list.forEach((obj) => {
-        function generateResponse() {}
+        function GenerateResponse() {}
 
         // Enables calling value property methods on the object data returned
         const macroFunctions: any = bindValuePropertyFunctions();
         for (const key of Object.keys(macroFunctions)) {
-            generateResponse.prototype[key] = macroFunctions[key];
+            GenerateResponse.prototype[key] = macroFunctions[key];
         }
-        const response = new generateResponse();
+        const response = new GenerateResponse();
         for (const key of Object.keys(obj)) {
             response[key] = obj[key];
         }
@@ -119,15 +143,15 @@ const getObject = (value: string) => {
     const valueObj = getValueByName(value.replace(STRIP_VALUE_TAGS_REGEX, ''), metadata);
     const objectData = valueObj.props.objectData[0];
 
-    function generateResponse() {}
+    function GenerateResponse() {}
 
     // Enables calling value property methods on the object data returned
     const macroFunctions: any = bindValuePropertyFunctions();
     for (const key of Object.keys(macroFunctions)) {
-        generateResponse.prototype[key] = macroFunctions[key];
+        GenerateResponse.prototype[key] = macroFunctions[key];
     }
 
-    const response = new generateResponse();
+    const response = new GenerateResponse();
     for (const key of Object.keys(objectData)) {
         response[key] = objectData[key];
     }
@@ -139,7 +163,7 @@ const getObject = (value: string) => {
  * @param objectData object data to set in state
  * @description sets an array of object data to a list value
  */
-const setArray = (value: string, objectData: object) => {
+const setArray = (value: string, objectData: any) => {
     const valueObject = getValueByName(value.replace(STRIP_VALUE_TAGS_REGEX, ''), metadata);
 
     const valueProperties = {
@@ -156,7 +180,7 @@ const setArray = (value: string, objectData: object) => {
  * @param objectData
  * @description sets an array of object data to an object value
  */
-const setObject = (value: string, objectData: object) => {
+const setObject = (value: string, objectData: any) => {
     const valueObject = getValueByName(value.replace(STRIP_VALUE_TAGS_REGEX, ''), metadata);
 
     const valueProperties = {
@@ -178,31 +202,4 @@ export default {
     getObject,
     setArray,
     setObject,
-};
-
-/**
- * @description returns an object where the key values are value property methods
- */
-export const bindValuePropertyFunctions = () => {
-
-    return {
-        getPropertyValue: MacroPropertyMethods.getPropertyValue,
-        getPropertyStringValue: MacroPropertyMethods.getPropertyStringValue,
-        getPropertyContentValue: MacroPropertyMethods.getPropertyContentValue,
-        getPropertyPasswordValue: MacroPropertyMethods.getPropertyPasswordValue,
-        getPropertyNumberValue: MacroPropertyMethods.getPropertyNumberValue,
-        getPropertyDateTimeValue: MacroPropertyMethods.getPropertyDateTimeValue,
-        getPropertyBooleanValue: MacroPropertyMethods.getPropertyBooleanValue,
-        getPropertyArray: MacroPropertyMethods.getPropertyArray,
-        getPropertyObject: MacroPropertyMethods.getPropertyObject,
-        setPropertyValue: MacroPropertyMethods.setPropertyValue,
-        setPropertyStringValue: MacroPropertyMethods.setPropertyStringValue,
-        setPropertyContentValue: MacroPropertyMethods.setPropertyContentValue,
-        setPropertyPasswordValue: MacroPropertyMethods.setPropertyPasswordValue,
-        setPropertyNumberValue: MacroPropertyMethods.setPropertyNumberValue,
-        setPropertyDateTimeValue: MacroPropertyMethods.setPropertyDateTimeValue,
-        setPropertyBooleanValue: MacroPropertyMethods.setPropertyBooleanValue,
-        setPropertyArray: MacroPropertyMethods.setPropertyArray,
-        setPropertyObject: MacroPropertyMethods.setPropertyObject,
-    };
 };

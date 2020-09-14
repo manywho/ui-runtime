@@ -5,13 +5,9 @@ import { getProperty, setProperty } from '../../../js/services/macros/MacroUtils
 const mockContentValue = 'test content value';
 
 jest.mock('../../../js/services/macros/MacroUtils', () => ({
-    getProperty: jest.fn(() => {
-        return mockContentValue;
-    }),
+    getProperty: jest.fn(() => mockContentValue),
     setProperty: jest.fn(),
-    toEngineUTCStringFormat: jest.fn(() => {
-        return mockContentValue;
-    }),
+    toEngineUTCStringFormat: jest.fn(() => mockContentValue),
 }));
 
 describe('Macro value property methods behaviour', () => {
@@ -19,13 +15,13 @@ describe('Macro value property methods behaviour', () => {
     let response;
 
     beforeAll(() => {
-        function generateResponse() {}
+        function GenerateResponse() {}
 
         const macroFunctions: any = bindValuePropertyFunctions();
         for (const key of Object.keys(macroFunctions)) {
-            generateResponse.prototype[key] = macroFunctions[key];
+            GenerateResponse.prototype[key] = macroFunctions[key];
         }
-        response = new generateResponse();
+        response = new GenerateResponse();
     });
 
     test('get string property calls getProperty', () => {

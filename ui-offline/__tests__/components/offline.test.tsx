@@ -1,20 +1,17 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Offline } from '../../js/components/Offline';
+import { IOfflineProps } from '../../js/interfaces/IOffline';
 
-jest.mock('../../icons/Offline.svg', () => {
-    return <div />;
-});
+jest.mock('../../icons/Offline.svg', () => <div />);
 
-jest.mock('../../icons/Online.svg', () => {
-    return <div />;
-});
+jest.mock('../../icons/Online.svg', () => <div />);
 
 describe('Offline component behaviour', () => {
 
     let componentWrapper;
 
-    const props = {
+    const props: IOfflineProps = {
         flowKey: 'test',
         isOffline: false,
         hasNetwork: true,
