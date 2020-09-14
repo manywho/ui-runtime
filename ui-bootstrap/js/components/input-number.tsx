@@ -53,16 +53,16 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
     }
 
     componentWillMount() {
-        this.setState({ 
-            value: !manywho.utils.isNullOrUndefined(this.props.value) ? 
-                manywho.formatting.number(this.props.value, this.props.format) : 
+        this.setState({
+            value: !manywho.utils.isNullOrUndefined(this.props.value) ?
+                manywho.formatting.number(this.props.value, this.props.format) :
                 null,
         });
     }
 
     componentWillReceiveProps(nextProps) {
         if (
-            !manywho.utils.isNullOrUndefined(nextProps.value) && 
+            !manywho.utils.isNullOrUndefined(nextProps.value) &&
             parseFloat(this.state.value) !== nextProps.value
         ) {
             this.setState({ value: nextProps.value.toString() });
@@ -74,7 +74,7 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
     render() {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
-        const style = { width: 30 + (15 * model.size) + 'px' };
+        const style = { maxWidth: 30 + (15 * model.size) + 'px' };
         let max = (Math.pow(10, Math.min(model.maxSize, 17))) - 1;
         let min = (Math.pow(10, Math.min(model.maxSize, 17)) * -1) + 1;
         let step = 1;
@@ -104,7 +104,9 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
             required={this.props.required}
             onChange={!this.props.isDesignTime && this.onChange}
             onBlur={this.props.onBlur}
-            autoComplete={this.props.autocomplete} />;
+            autoComplete={this.props.autocomplete}
+            autoFocus={model.autoFocus}
+        />;
     }
 
 }

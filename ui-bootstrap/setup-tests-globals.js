@@ -31,7 +31,7 @@ window.manywho = {
         mixins: {
             enterKeyHandler: {
                 onEnter: jest.fn(),
-            }
+            },
         },
     },
     log: {
@@ -61,6 +61,8 @@ window.manywho = {
         })),
         getNotifications: jest.fn(arr),
         getHistory: jest.fn(arr),
+        getHistoricalNavigation: jest.fn(obj),
+        getMapElement: jest.fn(obj),
     },
     state: {
         getComponent: jest.fn(),
@@ -79,16 +81,14 @@ window.manywho = {
         extend: jest.fn(),
     },
     tours: {
-        getTargetElement: jest.fn(() => {
-            return {
-                getBoundingClientRect: jest.fn()
-            }
-        }),
+        getTargetElement: jest.fn(() => ({
+            getBoundingClientRect: jest.fn(),
+        })),
     },
     settings: {
         global: jest.fn(arr),
         isDebugEnabled: jest.fn(f),
-        flow: jest.fn()
+        flow: jest.fn(),
     },
     social: {
         getStream: jest.fn(),
@@ -100,6 +100,6 @@ window.manywho = {
     engine: {
         objectDataRequest: jest.fn(),
         fileDataRequest: jest.fn(),
-    }
+        navigate: jest.fn(),
+    },
 };
-

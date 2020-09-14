@@ -58,14 +58,6 @@ class Input extends React.Component<IComponentProps, null> {
             );
         }
 
-        const state = manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
-        manywho.state.setComponent(
-            this.props.id,
-            manywho.validation.validate(model, state, this.props.flowKey),
-            this.props.flowKey,
-            true,
-        );
-
         if (model.contentType.toUpperCase() === manywho.component.contentTypes.boolean) {
             this.onBlur(e);
         }
@@ -74,19 +66,6 @@ class Input extends React.Component<IComponentProps, null> {
     }
 
     onBlur(e) {
-        let callback = null;
-        const relatedElement = e.relatedTarget;
-
-        if (
-            relatedElement &&
-            (
-                relatedElement.classList.contains('outcome') ||
-                relatedElement.classList.contains('control-label')
-            )
-        ) {
-            callback = () => relatedElement.click();
-        }
-
         manywho.component.handleEvent(
             this,
             manywho.model.getComponent(
@@ -94,7 +73,7 @@ class Input extends React.Component<IComponentProps, null> {
                 this.props.flowKey,
             ),
             this.props.flowKey,
-            callback,
+            null,
         );
     }
 
@@ -142,6 +121,7 @@ class Input extends React.Component<IComponentProps, null> {
             flowKey: this.props.flowKey,
             format: model.contentFormat,
             autoComplete: autocomplete,
+            autoFocus: model.autoFocus,
         };
 
         if (this.props.isDesignTime) {

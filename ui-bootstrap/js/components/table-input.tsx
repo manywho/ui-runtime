@@ -113,7 +113,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
                         format={manywho.formatting.toMomentFormat(this.props.contentFormat)} 
                     />,
                     onConfirm: this.onCommit,
-                    onCancel: this.onCloseDateTimePicker,
+                    onCancel: this.onCloseModal,
                     flowKey: this.props.flowKey,
                 },
             );
@@ -141,7 +141,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
         }
     }
 
-    onCloseDateTimePicker = (e) => {
+    onCloseModal = (e) => {
         this.setState({ value: this.state.currentValue, currentValue: null });
         manywho.model.setModal(this.props.flowKey, null);
     }
@@ -206,6 +206,30 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             )
         ) {
             props.rows = 1;
+
+            props.onDoubleClick = () => {
+                manywho.model.setModal(
+                    this.props.flowKey, 
+                    {
+                        content: (
+                            <textarea
+                                autoFocus
+                                className={props.className}
+                                defaultValue={props.value}
+                                rows={10}
+                                onChange={e => this.setState({ currentValue: e.currentTarget.value })}
+                            />
+                        ),
+                        onConfirm: () => {
+                            this.props.onCommitted(this.props.id, this.props.propertyId, this.state.currentValue);
+                            manywho.model.setModal(this.props.flowKey, null);
+                        },
+                        onCancel: this.onCloseModal,
+                        flowKey: this.props.flowKey,
+                    }
+                );
+            }
+            
             return <textarea {...props} />;
         }
 
