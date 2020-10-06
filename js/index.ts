@@ -1,7 +1,6 @@
 
 import 'script-loader!../node_modules/numbro/dist/numbro.min.js';
 import 'script-loader!../node_modules/numbro/dist/languages.min.js';
-import 'script-loader!./lib/safari-storage.js';
 import './lib/polyfills';
 
 import * as Ajax from './services/ajax';
