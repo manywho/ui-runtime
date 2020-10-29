@@ -980,7 +980,7 @@ export const move = (outcome: any, flowKey: string)  => {
 
     const invokeRequest = Json.generateInvokeRequest(
         State.getState(flowKey),
-        'FORWARD',
+        Model.getInvokeType(flowKey),
         outcome.id,
         null,
         State.getPageComponentInputResponseRequests(flowKey),
