@@ -950,7 +950,7 @@ export const initializeSimple = (
 };
 
 /**
- * Invoke with a `FORWARD` down a specified outcome
+ * Invoke with the invoke type that the engine returned to us last (usually `FORWARD` or `RETURN`) down a specified outcome
  */
 export const move = (outcome: any, flowKey: string)  => {
 
