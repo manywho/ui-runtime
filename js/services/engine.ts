@@ -950,7 +950,7 @@ export const initializeSimple = (
 };
 
 /**
- * Invoke with a `FORWARD` down a specified outcome
+ * Invoke with the invoke type that the engine returned to us last (usually `FORWARD` or `RETURN`) down a specified outcome
  */
 export const move = (outcome: any, flowKey: string)  => {
 
@@ -980,7 +980,7 @@ export const move = (outcome: any, flowKey: string)  => {
 
     const invokeRequest = Json.generateInvokeRequest(
         State.getState(flowKey),
-        'FORWARD',
+        Model.getInvokeType(flowKey),
         outcome.id,
         null,
         State.getPageComponentInputResponseRequests(flowKey),
