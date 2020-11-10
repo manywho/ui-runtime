@@ -950,7 +950,8 @@ export const initializeSimple = (
 };
 
 /**
- * Invoke with a `FORWARD` down a specified outcome
+ * Invoke down a specified outcome using the invokeType that the engine returned last,
+ * except if it was a 'SYNC' invokeType, because 'SYNC' requests cannot move down outcomes
  */
 export const move = (outcome: any, flowKey: string)  => {
 
@@ -980,7 +981,8 @@ export const move = (outcome: any, flowKey: string)  => {
 
     const invokeRequest = Json.generateInvokeRequest(
         State.getState(flowKey),
-        'FORWARD',
+        // 'SYNC' requests would not be able to move down an outcome
+        Utils.isEqual(Model.getInvokeType(flowKey), 'SYNC', true) ? 'FORWARD' : Model.getInvokeType(flowKey),
         outcome.id,
         null,
         State.getPageComponentInputResponseRequests(flowKey),
