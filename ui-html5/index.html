@@ -90,8 +90,6 @@
         </div>
     </div>
 
-    <script src="${CDN_URL}/js/vendor/jquery-3.4.1.min.js"></script>
-
     <script>
         var manywho = {
             cdnUrl: '${CDN_URL}',
@@ -128,7 +126,8 @@
                         isWizard: false
                     },
                     callbacks: [],
-                    theme: queryParameters['theme']
+                    theme: queryParameters['theme'],
+                    disableScripting: true
                 };
 
                 var tenantId = queryParameters['tenant-id'];
