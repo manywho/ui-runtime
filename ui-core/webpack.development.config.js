@@ -1,20 +1,20 @@
-var path = require('path');
-var webpack = require('webpack');
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
+const path = require('path');
+const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 
-var config = {
+const config = {
     entry: {
-        'ui-core': './js/index.ts'
+        'ui-core': './js/index.ts',
     },
     output: {
         filename: 'flow-core.js',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
-        umdNamedDefine: true
+        umdNamedDefine: true,
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
     },
     devtool: 'source-map',
     module: {
@@ -26,53 +26,52 @@ var config = {
                 options: {
                     emitErrors: true,
                     failOnHint: true,
-                    fix: true
-                }
+                    fix: true,
+                },
             },
             {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader',
                 exclude: [/node_modules/, /dist_test/],
-                query: {
+                options: {
                     declaration: false,
-                }
-            }
-        ]
+                },
+            },
+        ],
     },
     plugins: [
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$|moment$/ }),
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
             abortOnUnacceptableLicense: true,
-        })
+        }),
     ],
     externals: {
-        'react': 'React',
-        'react-dom' : 'ReactDOM',
-        'jquery': 'jQuery',
-        'moment': 'moment',
-        'numbro': 'numbro',
-        'socket.io-client': 'io'
-    }
-}
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        jquery: 'jQuery',
+        moment: 'moment',
+        numbro: 'numbro',
+        'socket.io-client': 'io',
+    },
+};
 
-module.exports = function(env) {
-    var dir =  '../ui-html5/build';
+module.exports = function (env) {
+    let dir = '../ui-html5/build';
 
-    if (env && env.build)
-        dir = env.build;
+    if (env && env.build) dir = env.build;
 
-    if(env && env.watch) {
+    if (env && env.watch) {
         config.watch = true;
         config.watchOptions = {
-            poll: true
+            poll: true,
         };
     }
 
-    if(env && env.analyze) {
+    if (env && env.analyze) {
         config.plugins.push(
-            new BundleAnalyzerPlugin()
+            new BundleAnalyzerPlugin(),
         );
     }
 
