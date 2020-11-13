@@ -179,7 +179,7 @@ test('Get Outcomes', (t) => {
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
-test.cb.serial('Handle Event', (t) => {
+test.cb('Handle Event', (t) => {
     const model = {
         hasEvents: true,
     };

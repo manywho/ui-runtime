@@ -57,7 +57,7 @@ function decodeEntities(item, textArea) {
 
 function updateData(collection, item, key) {
 
-    Log.info('Updating item: ' + item.id);
+    Log.info(`Updating item: ${item.id}`);
 
     const data = Utils.get(collection, item.id, key);
 

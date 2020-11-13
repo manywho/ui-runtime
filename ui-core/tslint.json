@@ -17,6 +17,7 @@
             { "allowSingleLine": true }
         ],
         "no-parameter-reassignment": false,
-        "strict-boolean-expressions": false
+        "strict-boolean-expressions": false,
+        "import/no-cycle": 0
     }
 }

@@ -123,7 +123,7 @@ test.serial('Get Target Element', (t) => {
     t.is(Tours.getTargetElement(null), null);
 });
 
-test.cb.serial('Start 1', (t) => {
+test.cb('Start 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     t.is(tour.currentStep, 0);
     
@@ -275,7 +275,7 @@ test('Refresh 4', (t) => {
 });
 
 
-test.cb.serial('Watch', (t) => {
+test.cb('Watch', (t) => {
     const stub = sinon.stub().onFirstCall().returns({});
     stub.onSecondCall().returns({});
 

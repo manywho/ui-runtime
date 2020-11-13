@@ -7,6 +7,7 @@ const config = {
     entry: {
         'ui-core': './js/index.ts',
     },
+    mode: 'development',
     output: {
         filename: 'flow-core.js',
         libraryTarget: 'umd',

@@ -11,22 +11,23 @@ if (!PACKAGE_VERSION) {
 }
 
 const pathsToClean = [
-    'dist'
+    'dist',
 ];
 
 const config = {
     entry: {
-        'ui-core': './js/index.ts'
+        'ui-core': './js/index.ts',
     },
+    mode: 'production',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: `js/flow-core-${PACKAGE_VERSION}.js`,
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
-        umdNamedDefine: true
+        umdNamedDefine: true,
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
     },
     devtool: 'source-map',
     plugins: [
@@ -34,7 +35,7 @@ const config = {
         new webpack.DefinePlugin({
             VERSION: JSON.stringify(PACKAGE_VERSION),
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$|moment$/ }),
         new UglifyJSPlugin({
             minimize: true,
             sourceMap: true,
@@ -45,7 +46,7 @@ const config = {
             bundleKey: 'core',
             pathPrefix: '/',
             // remove sourcemaps from the bundle list
-            filenameFilter: filename => !filename.endsWith('.map'),
+            filenameFilter: (filename) => !filename.endsWith('.map'),
         }),
     ],
     module: {
@@ -57,8 +58,8 @@ const config = {
                 options: {
                     emitErrors: true,
                     failOnHint: true,
-                    fix: true
-                }
+                    fix: true,
+                },
             },
             {
                 test: /\.tsx?$/,
@@ -66,18 +67,18 @@ const config = {
                 exclude: [/node_modules/, /dist_test/],
                 query: {
                     declaration: false,
-                }
-            }
-        ]
+                },
+            },
+        ],
     },
     externals: {
-        'react': 'React',
+        react: 'React',
         'react-dom': 'ReactDOM',
-        'jquery': 'jQuery',
-        'numbro': 'numbro',
-        'moment': 'moment',
-        'socket.io-client': 'io'
-    }
-}
+        jquery: 'jQuery',
+        numbro: 'numbro',
+        moment: 'moment',
+        'socket.io-client': 'io',
+    },
+};
 
 module.exports = config;
