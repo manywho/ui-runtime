@@ -41,7 +41,7 @@ const expectedStateHeaders = Object.assign({}, expectedHeaders, {
     manywhostate: stateId,
 });
 
-test.cb('Login', (t) => {
+test.serial.cb('Login', (t) => {
     t.plan(4);
 
     const loginStateId = 'loginstateid';
@@ -72,7 +72,7 @@ test.cb('Login', (t) => {
     Ajax.login(expected.loginUrl, expected.username, expected.password, expected.sessionToken, expected.sessionUrl, loginStateId, tenantId);
 });
 
-test.cb('Initialize', (t) => {
+test.serial.cb('Initialize', (t) => {
     t.plan(4);
 
     const url = 'https://flow.manywho.com/api/run/1';
@@ -95,7 +95,7 @@ test.cb('Initialize', (t) => {
     Ajax.initialize(request, tenantId, token);
 });
 
-test.cb('Flow Out', (t) => {
+test.serial.cb('Flow Out', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/out/${stateId}/outcomeId`;
@@ -111,7 +111,7 @@ test.cb('Flow Out', (t) => {
     Ajax.flowOut(stateId, tenantId, 'outcomeId', token);
 });
 
-test.cb('Join', (t) => {
+test.serial.cb('Join', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}`;
@@ -127,7 +127,7 @@ test.cb('Join', (t) => {
     Ajax.join(stateId, tenantId, token);
 });
 
-test.cb('Invoke', (t) => {
+test.serial.cb('Invoke', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}`;
@@ -147,7 +147,7 @@ test.cb('Invoke', (t) => {
     Ajax.invoke(request, tenantId, token);
 });
 
-test.cb('Get Navigation', (t) => {
+test.serial.cb('Get Navigation', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/navigation/${stateId}`;
@@ -169,7 +169,7 @@ test.cb('Get Navigation', (t) => {
     Ajax.getNavigation(stateId, stateToken, request.navigationElementId, tenantId, token);
 });
 
-test.cb('Get Flow By Name', (t) => {
+test.serial.cb('Get Flow By Name', (t) => {
     t.plan(3);
 
     const flowName = 'myflow';
@@ -189,7 +189,7 @@ test.cb('Get Flow By Name', (t) => {
     Ajax.getFlowByName(flowName, tenantId, token);
 });
 
-test.cb('ObjectData Request', (t) => {
+test.serial.cb('ObjectData Request', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/service/data`;
@@ -225,7 +225,7 @@ test.cb('ObjectData Request', (t) => {
     );
 });
 
-test.cb('FileData Request', (t) => {
+test.serial.cb('FileData Request', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/service/file`;
@@ -261,7 +261,7 @@ test.cb('FileData Request', (t) => {
     );
 });
 
-test.cb('Session Authentication', (t) => {
+test.serial.cb('Session Authentication', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/authentication/${stateId}`;
@@ -282,7 +282,7 @@ test.cb('Session Authentication', (t) => {
     Ajax.sessionAuthentication(tenantId, stateId, expected, token);
 });
 
-test.cb('Ping', (t) => {
+test.serial.cb('Ping', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}/ping/${stateToken}`;
@@ -298,7 +298,7 @@ test.cb('Ping', (t) => {
     Ajax.ping(tenantId, stateId, stateToken, token);
 });
 
-test.cb('Get Execution Log', (t) => {
+test.serial.cb('Get Execution Log', (t) => {
     t.plan(3);
 
     const flowId = 'flowId';
@@ -315,7 +315,7 @@ test.cb('Get Execution Log', (t) => {
     Ajax.getExecutionLog(tenantId, flowId, stateId, token);
 });
 
-test.cb('Get Social Me', (t) => {
+test.serial.cb('Get Social Me', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
@@ -332,7 +332,7 @@ test.cb('Get Social Me', (t) => {
     Ajax.getSocialMe(tenantId, streamId, stateId, token);
 });
 
-test.cb('Get Social Followers', (t) => {
+test.serial.cb('Get Social Followers', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
@@ -349,7 +349,7 @@ test.cb('Get Social Followers', (t) => {
     Ajax.getSocialFollowers(tenantId, streamId, stateId, token);
 });
 
-test.cb('Get Social Messages', (t) => {
+test.serial.cb('Get Social Messages', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
@@ -368,7 +368,7 @@ test.cb('Get Social Messages', (t) => {
     Ajax.getSocialMessages(tenantId, streamId, stateId, page, pageSize, token);
 });
 
-test.cb('Send Social Message', (t) => {
+test.serial.cb('Send Social Message', (t) => {
     t.plan(4);
 
     const streamId = 'streamId';
@@ -390,7 +390,7 @@ test.cb('Send Social Message', (t) => {
     Ajax.sendSocialMessage(tenantId, streamId, stateId, expected, token);
 });
 
-test.cb('Follow', (t) => {
+test.serial.cb('Follow', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
@@ -407,7 +407,7 @@ test.cb('Follow', (t) => {
     Ajax.follow(tenantId, streamId, stateId, true, token);
 });
 
-test.cb('Get Social Users', (t) => {
+test.serial.cb('Get Social Users', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';

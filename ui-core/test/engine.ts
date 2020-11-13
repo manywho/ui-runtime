@@ -240,7 +240,7 @@ test.serial('Initialize', (t) => {
         });
 });
 
-test.cb('Initialize Failed', (t) => {
+test.serial.cb('Initialize Failed', (t) => {
     ajax.initialize.callsFake(() => {
         const deferred = $.Deferred();
         deferred.reject({
