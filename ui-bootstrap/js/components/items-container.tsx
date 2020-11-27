@@ -166,7 +166,6 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
             let result = 0;
             switch (l.contentType.toUpperCase()) {
             case manywho.component.contentTypes.datetime: // Fallthrough
-            case manywho.component.contentTypes.number: // Fallthrough
             case manywho.component.contentTypes.password: // Fallthrough
             case manywho.component.contentTypes.content: // Fallthrough
             case manywho.component.contentTypes.string:
@@ -175,8 +174,22 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
                 } else {
                     result = l.contentValue.localeCompare(r.contentValue);
                 }
-
+                
                 break;
+                
+            case manywho.component.contentTypes.number: {
+
+                const leftParsed = parseFloat(l.contentValue);
+                const rightParsed = parseFloat(r.contentValue);
+
+                if (isNaN(leftParsed) || isNaN(rightParsed)) {
+                    result = 0;
+                } else {
+                    result = leftParsed - rightParsed;
+                }
+                
+                break;
+            }
 
             case manywho.component.contentTypes.boolean:
                 if (checkBooleanString(l.contentValue) === checkBooleanString(r.contentValue)) {
