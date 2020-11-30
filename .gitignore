@@ -2,3 +2,4 @@
 node_modules/
 runtime_build/
 .env
+.vscode
