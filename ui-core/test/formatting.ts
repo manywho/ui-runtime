@@ -16,12 +16,12 @@ test.beforeEach((t) => {
     );
 });
 
-test('Initialize', (t) => {
+test.serial('Initialize', (t) => {
     Formatting.initialize(flowKey);
     t.pass();
 });
 
-test('Disabled', (t) => {
+test.serial('Disabled', (t) => {
     Settings.initialize(
         {
             formatting: {
@@ -33,15 +33,15 @@ test('Disabled', (t) => {
     t.is(Formatting.format('test', 'format', null, flowKey), 'test');
 });
 
-test('Unsupported ContentType', (t) => {
+test.serial('Unsupported ContentType', (t) => {
     t.is(Formatting.format('test', 'format', 'ContentObject', flowKey), 'test');
 });
 
-test('Moment Format, Empty', (t) => {
+test.serial('Moment Format, Empty', (t) => {
     t.is(Formatting.toMomentFormat(null), null);
 });
 
-test('Moment Format', (t) => {
+test.serial('Moment Format', (t) => {
     const mappings = [
         { format: 'd', moment: 'l' },
         { format: 'D', moment: 'dddd, MMMM DD, YYYY' },
@@ -67,7 +67,7 @@ test('Moment Format', (t) => {
     });
 });
 
-test('DateTime Disabled', (t) => {
+test.serial('DateTime Disabled', (t) => {
     Settings.initialize(
         {
             formatting: {
@@ -82,17 +82,17 @@ test('DateTime Disabled', (t) => {
     t.is(Formatting.dateTime(expected.format(), 'YYYY', flowKey), expected.format());
 });
 
-test('DateTime', (t) => {
+test.serial('DateTime', (t) => {
     const year = new Date().getFullYear();
     t.is(Formatting.format(moment().format(), 'YYYY', 'ContentDateTime', flowKey), year.toString());
 });
 
-test('DateTime Year', (t) => {
+test.serial('DateTime Year', (t) => {
     const year = new Date().getFullYear();
     t.is(Formatting.dateTime(moment().format(), 'YYYY', flowKey), year.toString());
 });
 
-test('Override Timezone Offset', (t) => {
+test.serial('Override Timezone Offset', (t) => {
     Settings.initialize(
         {
             i18n: {
@@ -109,11 +109,11 @@ test('Override Timezone Offset', (t) => {
     t.is(Formatting.dateTime(now.format(), 'G', flowKey), expected.format('L LTS'));
 });
 
-test('DateTime Invalid', (t) => {
+test.serial('DateTime Invalid', (t) => {
     t.is(Formatting.dateTime('not a date', 'YYYY', flowKey), 'not a date');
 });
 
-test('Timezone Offset', (t) => {
+test.serial('Timezone Offset', (t) => {
     Settings.initialize(
         {
             i18n: {
@@ -127,38 +127,38 @@ test('Timezone Offset', (t) => {
     t.is(Formatting.dateTime(moment().format(), 'Z', flowKey), '-08:00');
 });
 
-test('Number', (t) => {
+test.serial('Number', (t) => {
     t.is(Formatting.format(99, '000', 'ContentNumber', flowKey), '099');
 });
 
-test('Number Percentage', (t) => {
+test.serial('Number Percentage', (t) => {
     t.is(Formatting.number(0.99, '%', flowKey), '99%');
 });
 
-test('Number Decimal', (t) => {
+test.serial('Number Decimal', (t) => {
     t.is(Formatting.number(12.345678, '##.00##', flowKey), '12.3457');
 });
 
-test('Number Empty String', (t) => {
+test.serial('Number Empty String', (t) => {
     t.is(Formatting.number('', '##%', flowKey), '');
 });
 
-test('Number Currency', (t) => {
+test.serial('Number Currency', (t) => {
     t.plan(2);
     t.is(Formatting.number(99.9, 'c', flowKey), '$99.90');
     t.is(Formatting.number(99.9, 'C', flowKey), '$99.90');
 });
 
-test('Number Exponent', (t) => {
+test.serial('Number Exponent', (t) => {
     t.plan(2);
     t.is(Formatting.number(99.9, 'e', flowKey), '9.99e+1');
     t.is(Formatting.number(99.9, 'E', flowKey), '9.99e+1');
 });
 
-test('Number Unformatted', (t) => {
+test.serial('Number Unformatted', (t) => {
     t.is(Formatting.number(99.9, null, flowKey), '99.9');
 });
 
-test('Number Unsupported format', (t) => {
+test.serial('Number Unsupported format', (t) => {
     t.is(Formatting.number(99.9, '##.11', flowKey), '99.90');
 });
