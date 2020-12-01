@@ -2,6 +2,12 @@ import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
+import { ReactNode } from 'react';
+import * as Component from '../js/services/component';
+import * as Settings from '../js/services/settings';
+import * as Utils from '../js/services/utils';
+import * as State from '../js/services/state';
+
 const engine = {
     render: sinon.stub(),
     sync: sinon.stub().resolves(),
@@ -32,11 +38,6 @@ mockery.registerMock('./collaboration', collaboration);
 mockery.registerMock('react', react);
 mockery.registerMock('react-error-boundary', reactErrorBoundary);
 
-import * as Component from '../js/services/component';
-import * as Settings from '../js/services/settings';
-import * as Utils from '../js/services/utils';
-import { ReactNode } from 'react';
-
 const flowKey = 'key1_key2_key3_key4';
 
 test.beforeEach((t) => {
@@ -49,11 +50,11 @@ test.beforeEach((t) => {
 });
 
 test.after((t) => {
-    mockery.deregisterAll();
-    mockery.disable();
+    // mockery.deregisterAll();
+    // mockery.disable();
 });
 
-test('Register', (t) => {
+test.serial('Register', (t) => {
     const component = () => null;
 
     Component.register('component-1', component, ['alias-1']);
@@ -62,7 +63,7 @@ test('Register', (t) => {
     t.deepEqual(Component.getByName('alias-1'), component);
 });
 
-test('Register Items', (t) => {
+test.serial('Register Items', (t) => {
     const itemsContainer = () => null;
     const items = () => null;
 
@@ -73,7 +74,7 @@ test('Register Items', (t) => {
     t.deepEqual(Component.getByName('mw-items-1'), items);
 });
 
-test('Register Alias', (t) => {
+test.serial('Register Alias', (t) => {
     const component = () => null;
 
     Component.register('component-2', component, null);
@@ -82,7 +83,7 @@ test('Register Alias', (t) => {
     t.deepEqual(Component.getByName('alias-2'), component);
 });
 
-test('Register Container', (t) => {
+test.serial('Register Container', (t) => {
     const mwContainer = () => null;
     const container = () => null;
 
@@ -93,7 +94,7 @@ test('Register Container', (t) => {
     t.deepEqual(Component.getByName('mw-container-1'), container);
 });
 
-test('Get 1', (t) => {
+test.serial('Get 1', (t) => {
     const component = () => null;
 
     Component.register('component-1', component, ['alias-1']);
@@ -102,7 +103,7 @@ test('Get 1', (t) => {
     t.deepEqual(Component.get(model), component);
 });
 
-test('Get 2', (t) => {
+test.serial('Get 2', (t) => {
     const component = () => null;
 
     Component.register('component-1', component, ['alias-1']);
@@ -111,7 +112,7 @@ test('Get 2', (t) => {
     t.is(Component.get(model), component);
 });
 
-test('Get 3', (t) => {
+test.serial('Get 3', (t) => {
     const mwContainer = () => null;
     const container = () => null;
 
@@ -122,7 +123,7 @@ test('Get 3', (t) => {
     t.not(Component.get(model), null);
 });
 
-test('Get Child Components', (t) => {
+test.serial('Get Child Components', (t) => {
     const component = () => null;
 
     Component.register('component-1', component, null);
@@ -152,7 +153,7 @@ test('Get Child Components', (t) => {
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
-test('Get Outcomes', (t) => {
+test.serial('Get Outcomes', (t) => {
     const outcome = () => null;
 
     Component.register('outcome', outcome, null);
@@ -179,7 +180,7 @@ test('Get Outcomes', (t) => {
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
-test.serial.cb('Handle Event', (t) => {
+test.serial.cb('Handle Event', async (t) => {
     const model = {
         hasEvents: true,
     };
@@ -201,18 +202,16 @@ test.serial.cb('Handle Event', (t) => {
         t.end();
     };
 
+    await State.setState('id', 'token', 'mapElementId', flowKey);
+
     Component.handleEvent(component as React.Component, model, flowKey, callback);
 });
 
-test('Get Selected Rows 1', (t) => {
+test.serial('Get Selected Rows 1', (t) => {
     t.is(Component.getSelectedRows(null, null).length, 0);
 });
 
-test('Get Selected Rows 1', (t) => {
-    t.is(Component.getSelectedRows(null, null).length, 0);
-});
-
-test('Get Selected Rows 2', (t) => {
+test.serial('Get Selected Rows 2', (t) => {
     const model = {
         objectData: [
             {
@@ -240,11 +239,11 @@ test('Get Selected Rows 2', (t) => {
     t.deepEqual(Component.getSelectedRows(model, ids), expected);
 });
 
-test('Get Display Columns 1', (t) => {
+test.serial('Get Display Columns 1', (t) => {
     t.is(Component.getDisplayColumns(null), null);
 });
 
-test('Get Display Columns 2', (t) => {
+test.serial('Get Display Columns 2', (t) => {
     const columns = [
         {
             properties: [
@@ -258,7 +257,7 @@ test('Get Display Columns 2', (t) => {
     t.deepEqual(Component.getDisplayColumns(columns), []);
 });
 
-test('Get Display Columns 3', (t) => {
+test.serial('Get Display Columns 3', (t) => {
     const columns = [
         {
             properties: [
@@ -273,7 +272,7 @@ test('Get Display Columns 3', (t) => {
     t.is(Component.getDisplayColumns(columns).length, 1);
 });
 
-test('Get Display Columns 4', (t) => {
+test.serial('Get Display Columns 4', (t) => {
     const columns = [
         {
             isDisplayValue: true,
@@ -283,22 +282,22 @@ test('Get Display Columns 4', (t) => {
     t.is(Component.getDisplayColumns(columns).length, 1);
 });
 
-test('Append Flow Container', (t) => {
-    const lookUpKey = Utils.getLookUpKey(flowKey + '_modal');
+test.serial('Append Flow Container', (t) => {
+    const lookUpKey = Utils.getLookUpKey(`${flowKey}_modal`);
 
     const container = document.createElement('div');
     container.id = 'manywho';
     document.body.appendChild(container);
 
-    Component.appendFlowContainer(flowKey + '_modal');
+    Component.appendFlowContainer(`${flowKey}_modal`);
 
     const flowContainer = document.getElementById(lookUpKey);
     t.not(flowContainer, null);
     t.true(flowContainer.classList.contains('modal-container'));
 });
 
-test('Append Flow Container Modal', (t) => {
-    const modalFlowKey = flowKey + '_modal-standalone';
+test.serial('Append Flow Container Modal', (t) => {
+    const modalFlowKey = `${flowKey}_modal-standalone`;
 
     const container = document.createElement('div');
     container.id = 'manywho';
@@ -309,7 +308,7 @@ test('Append Flow Container Modal', (t) => {
     t.not(document.getElementById('manywho'), null);
 });
 
-test('Focus Input', (t) => {
+test.serial('Focus Input', (t) => {
     (window as any).innerWidth = 800;
 
     Settings.initializeFlow(
@@ -338,7 +337,7 @@ test('Focus Input', (t) => {
     t.pass();
 });
 
-test('Scroll To Top', (t) => {
+test.serial('Scroll To Top', (t) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     const container = document.createElement('div');
     container.id = lookUpKey;
@@ -370,7 +369,7 @@ test.serial('On Outcome 2', async (t) => {
         });
 });
 
-test('On Outcome 3', async (t) => {
+test.serial('On Outcome 3', async (t) => {
     const outcome = {
         attributes: {
             uri: 'https://manywho.com',
@@ -386,7 +385,7 @@ test('On Outcome 3', async (t) => {
     spy.restore();
 });
 
-test('On Outcome 3', async (t) => {
+test.serial('On Outcome 3', async (t) => {
     const outcome = {
         attributes: {
             uriTypeElementPropertyId: 'id',
@@ -411,7 +410,7 @@ test('On Outcome 3', async (t) => {
     spy.restore();
 });
 
-test('getPagesize from attribute (number)', (t) => {
+test.serial('getPagesize from attribute (number)', (t) => {
     const model = {
         objectDataRequest: null,
         componentType: 'comp-type',
@@ -425,7 +424,7 @@ test('getPagesize from attribute (number)', (t) => {
     t.is(result, 2);
 });
 
-test('getPagesize from attribute (string)', (t) => {
+test.serial('getPagesize from attribute (string)', (t) => {
     const model = {
         objectDataRequest: null,
         componentType: 'comp-type',
@@ -439,7 +438,7 @@ test('getPagesize from attribute (string)', (t) => {
     t.is(result, 12);
 });
 
-test('getPagesize from list filter', (t) => {
+test.serial('getPagesize from list filter', (t) => {
     const model = {
         objectDataRequest: {
             listFilter: {
@@ -454,7 +453,7 @@ test('getPagesize from list filter', (t) => {
     t.is(result, 5);
 });
 
-test('getPagesize from component type', (t) => {
+test.serial('getPagesize from component type', (t) => {
     const model = {
         objectDataRequest: null,
         componentType: 'TILES',
@@ -465,7 +464,7 @@ test('getPagesize from component type', (t) => {
     t.is(result, 20); // settings.ts > globals.paging.tiles = 20
 });
 
-test('getPagesize attributes priority', (t) => {
+test.serial('getPagesize attributes priority', (t) => {
     const model = {
         objectDataRequest: {
             listFilter: {
@@ -483,7 +482,7 @@ test('getPagesize attributes priority', (t) => {
     t.is(result, 40);
 });
 
-test('getPagesize list filter priority', (t) => {
+test.serial('getPagesize list filter priority', (t) => {
     const model = {
         objectDataRequest: {
             listFilter: {
@@ -498,7 +497,7 @@ test('getPagesize list filter priority', (t) => {
     t.is(result, 30);
 });
 
-test('getPagesize default', (t) => {
+test.serial('getPagesize default', (t) => {
     const model = {
         objectDataRequest: null,
         componentType: 'comp-type',

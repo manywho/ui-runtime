@@ -529,7 +529,7 @@ test.serial('FileDataRequest Fail', async (t) => {
         fileDataRequest: {},
     });
 
-    await t.throws(() => Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+    await t.throwsAsync(() => Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
 
     t.true((Engine.render as sinon.SinonStub).calledTwice);
     t.true(state.setComponentError.calledWith('id', 'error', flowKey));
