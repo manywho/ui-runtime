@@ -50,8 +50,8 @@ test.beforeEach((t) => {
 });
 
 test.after((t) => {
-    // mockery.deregisterAll();
-    // mockery.disable();
+    mockery.deregisterAll();
+    mockery.disable();
 });
 
 test.serial('Register', (t) => {
