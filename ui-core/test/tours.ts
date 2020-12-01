@@ -152,7 +152,7 @@ test.serial('Start 4', (t) => {
     t.true(log.error.calledWith('The Tour tour2 contains zero Steps'));
 });
 
-test.cb('Next 1', (t) => {
+test.serial.cb('Next 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
 
     setTimeout(
@@ -161,8 +161,8 @@ test.cb('Next 1', (t) => {
 
             setTimeout(
                 () => {
-                    t.is(ReactDOM.render.callCount, 3, 'Render');
-                    t.is(react.createElement.callCount, 3, 'Create Element');
+                    t.is(ReactDOM.render.callCount, 2, 'Render');
+                    t.is(react.createElement.callCount, 2, 'Create Element');
                     t.is(tour.currentStep, 1, 'Current Step');
                     t.end();
                 },
@@ -188,7 +188,7 @@ test.serial('Next 3', (t) => {
     t.true(ReactDOM.unmountComponentAtNode.calledOnce);
 });
 
-test.cb('Previous 1', (t) => {
+test.serial.cb('Previous 1', (t) => {
     Tours.start(null, '.container', flowKey);
 
     setTimeout(
@@ -201,8 +201,8 @@ test.cb('Previous 1', (t) => {
 
                     setTimeout(
                         () => {
-                            t.is(ReactDOM.render.callCount, 4, 'Render');
-                            t.is(react.createElement.callCount, 4, 'Creat Element');
+                            t.is(ReactDOM.render.callCount, 3, 'Render');
+                            t.is(react.createElement.callCount, 3, 'Create Element');
                             t.is(Tours.current.currentStep, 0, 'Current Step');
                             t.end();
                         },
