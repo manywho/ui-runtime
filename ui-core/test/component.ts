@@ -43,7 +43,6 @@ import { ReactNode } from 'react';
 import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';
 import * as Utils from '../js/services/utils';
-import * as State from '../js/services/state';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -187,7 +186,7 @@ test.serial('Get Outcomes', (t) => {
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
-test('Handle Event', async (t) => {
+test.serial('Handle Event', async (t) => {
     const model = {
         hasEvents: true,
     };
@@ -208,9 +207,7 @@ test('Handle Event', async (t) => {
         t.is(collaboration.sync.callCount, 1, 'Collaboration Sync Count');
     };
 
-    await State.setState('id', 'token', 'mapElementId', flowKey);
-
-    Component.handleEvent(component as React.Component, model, flowKey, callback);
+    await Component.handleEvent(component as React.Component, model, flowKey, callback);
 });
 
 test.serial('Get Selected Rows 1', (t) => {
