@@ -2,12 +2,6 @@ import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import { ReactNode } from 'react';
-import * as Component from '../js/services/component';
-import * as Settings from '../js/services/settings';
-import * as Utils from '../js/services/utils';
-import * as State from '../js/services/state';
-
 const engine = {
     render: sinon.stub(),
     sync: sinon.stub().resolves(),
@@ -23,6 +17,12 @@ const react = {
     createElement: sinon.stub(),
 };
 
+const ReactDOM = {
+    render: sinon.stub(),
+    unmountComponentAtNode: sinon.stub(),
+    ReactCurrentDispatcher: sinon.stub(),
+};
+
 const reactErrorBoundary = {
     withErrorBoundary: sinon.stub().returnsArg(0),
 };
@@ -36,7 +36,14 @@ mockery.enable({
 mockery.registerMock('./engine', engine);
 mockery.registerMock('./collaboration', collaboration);
 mockery.registerMock('react', react);
+mockery.registerMock('react-dom', ReactDOM);
 mockery.registerMock('react-error-boundary', reactErrorBoundary);
+
+import { ReactNode } from 'react';
+import * as Component from '../js/services/component';
+import * as Settings from '../js/services/settings';
+import * as Utils from '../js/services/utils';
+import * as State from '../js/services/state';
 
 const flowKey = 'key1_key2_key3_key4';
 
@@ -180,7 +187,7 @@ test.serial('Get Outcomes', (t) => {
     t.deepEqual(react.createElement.args[0][1], expected);
 });
 
-test.serial.cb('Handle Event', async (t) => {
+test('Handle Event', async (t) => {
     const model = {
         hasEvents: true,
     };
@@ -199,7 +206,6 @@ test.serial.cb('Handle Event', async (t) => {
         t.is(engine.render.callCount, 1, 'Engine Render Count');
         t.is(engine.sync.callCount, 1, 'Engine Sync Count');
         t.is(collaboration.sync.callCount, 1, 'Collaboration Sync Count');
-        t.end();
     };
 
     await State.setState('id', 'token', 'mapElementId', flowKey);
@@ -385,7 +391,7 @@ test.serial('On Outcome 3', async (t) => {
     spy.restore();
 });
 
-test.serial('On Outcome 3', async (t) => {
+test.serial('On Outcome 4', async (t) => {
     const outcome = {
         attributes: {
             uriTypeElementPropertyId: 'id',
