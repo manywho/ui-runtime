@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WriteBundleFilePlugin = require('./WriteBundleFilePlugin');
 
 const { PACKAGE_VERSION } = process.env;
@@ -86,9 +85,6 @@ const config = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new UglifyJsPlugin({
-            sourceMap: true,
-        }),
         new WriteBundleFilePlugin({
             filename: 'offline-bundle.json',
             bundleKey: 'offline',
