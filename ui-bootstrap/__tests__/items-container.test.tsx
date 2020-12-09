@@ -86,7 +86,7 @@ describe('ItemsContainer component behaviour', () => {
                     objectData: null,
                 },
                 {
-                    contentFormat: 'dd/MM/yyyy',
+                    contentFormat: null,
                     contentType: 'ContentDateTime',
                     contentValue: '2019-05-06T16:38:00+01:00',
                     developerName: 'datetime',
@@ -202,7 +202,7 @@ describe('ItemsContainer component behaviour', () => {
                 {
                     contentFormat: 'dd/MM/yyyy',
                     contentType: 'ContentDateTime',
-                    contentValue: '2019-10-06T16:38:00+01:00',
+                    contentValue: '06/10/2019',
                     developerName: 'datetime',
                     objectData: null,
                 },
@@ -314,9 +314,9 @@ describe('ItemsContainer component behaviour', () => {
                     objectData: null,
                 },
                 {
-                    contentFormat: 'dd/MM/yyyy',
+                    contentFormat: 'MM/dd/yyyy',
                     contentType: 'ContentDateTime',
-                    contentValue: '2020-05-06T16:38:00+01:00',
+                    contentValue: '05/06/2020',
                     developerName: 'datetime',
                     objectData: null,
                 },

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 // tslint:disable-next-line
@@ -165,18 +166,55 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
 
             let result = 0;
             switch (l.contentType.toUpperCase()) {
-            case manywho.component.contentTypes.datetime: // Fallthrough
-            case manywho.component.contentTypes.number: // Fallthrough
-            case manywho.component.contentTypes.password: // Fallthrough
-            case manywho.component.contentTypes.content: // Fallthrough
-            case manywho.component.contentTypes.string:
-                if (!l.contentValue || !r.contentValue) {
-                    result = 0;
+                case manywho.component.contentTypes.password: // Fallthrough
+                case manywho.component.contentTypes.content: // Fallthrough
+                case manywho.component.contentTypes.string:
+                    if (!l.contentValue || !r.contentValue) {
+                        result = 0;
+                    } else {
+                        result = l.contentValue.localeCompare(r.contentValue);
+                    }
+                    
+                    break;
+                    
+            case manywho.component.contentTypes.datetime: {
+                // moment will ignore a format supplied as an empty string
+                // if there is no format supplied contentValue will be a full datetime stamp eg. "2020-12-10T10:39:00+02:00"
+                // moment will correctly parse a string in this format with no format supplied as a second argument
+                // moment requires 'd' and 'y' characters in the format to be uppercase
+
+                const chars = {'d':'D','y':'Y'};
+
+                const leftFormat = (l.contentFormat || "").replace(/[dy]/g, key => chars[key]);
+                const rightFormat = (r.contentFormat || "").replace(/[dy]/g, key => chars[key]);
+
+                const leftParsed = moment(l.contentValue, leftFormat);
+                const rightParsed = moment(r.contentValue, rightFormat);
+
+                if (leftParsed.isBefore(rightParsed)) {
+                    result = -1;
+                } else if (leftParsed.isAfter(rightParsed)) {
+                    result = 1;
                 } else {
-                    result = l.contentValue.localeCompare(r.contentValue);
+                    result = 0;
                 }
 
                 break;
+            }
+
+            case manywho.component.contentTypes.number: {
+
+                const leftParsed = parseFloat(l.contentValue);
+                const rightParsed = parseFloat(r.contentValue);
+
+                if (isNaN(leftParsed) || isNaN(rightParsed)) {
+                    result = 0;
+                } else {
+                    result = leftParsed - rightParsed;
+                }
+                
+                break;
+            }
 
             case manywho.component.contentTypes.boolean:
                 if (checkBooleanString(l.contentValue) === checkBooleanString(r.contentValue)) {
