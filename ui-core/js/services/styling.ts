@@ -15,7 +15,7 @@ export const getClasses = (parentId: string, id: string, type: string, flowKey: 
     const model = Model.getItem(id, flowKey);
     let classes = [];
 
-    classes.push('mw-' + type.toLowerCase());
+    classes.push(`mw-${type.toLowerCase()}`);
 
     if (parent) {
         const containerType = parent.containerType.toLowerCase();

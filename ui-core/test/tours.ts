@@ -123,7 +123,7 @@ test.serial('Get Target Element', (t) => {
     t.is(Tours.getTargetElement(null), null);
 });
 
-test.cb.serial('Start 1', (t) => {
+test.serial.cb('Start 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     t.is(tour.currentStep, 0);
     
@@ -137,22 +137,22 @@ test.cb.serial('Start 1', (t) => {
     );
 });
 
-test('Start 2', (t) => {
+test.serial('Start 2', (t) => {
     Tours.start(null, '.container1', flowKey);
     t.true(log.error.calledWith('A Container matching the selector .container1 could not be found when attempting to start a Tour'));
 });
 
-test('Start 3', (t) => {
+test.serial('Start 3', (t) => {
     Tours.start('tour5', '.container', flowKey);
     t.true(log.error.calledWith('A Tour with the id tour5 could not be found'));
 });
 
-test('Start 4', (t) => {
+test.serial('Start 4', (t) => {
     Tours.start('tour2', '.container', flowKey);
     t.true(log.error.calledWith('The Tour tour2 contains zero Steps'));
 });
 
-test.cb('Next 1', (t) => {
+test.serial.cb('Next 1', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
 
     setTimeout(
@@ -161,8 +161,8 @@ test.cb('Next 1', (t) => {
 
             setTimeout(
                 () => {
-                    t.is(ReactDOM.render.callCount, 3, 'Render');
-                    t.is(react.createElement.callCount, 3, 'Create Element');
+                    t.is(ReactDOM.render.callCount, 2, 'Render');
+                    t.is(react.createElement.callCount, 2, 'Create Element');
                     t.is(tour.currentStep, 1, 'Current Step');
                     t.end();
                 },
@@ -173,12 +173,12 @@ test.cb('Next 1', (t) => {
     );
 });
 
-test('Next 2', (t) => {
+test.serial('Next 2', (t) => {
     Tours.next(null);
     t.false(ReactDOM.render.called);
 });
 
-test('Next 3', (t) => {
+test.serial('Next 3', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     Tours.next(tour);
     Tours.next(tour);
@@ -188,7 +188,7 @@ test('Next 3', (t) => {
     t.true(ReactDOM.unmountComponentAtNode.calledOnce);
 });
 
-test.cb('Previous 1', (t) => {
+test.serial.cb('Previous 1', (t) => {
     Tours.start(null, '.container', flowKey);
 
     setTimeout(
@@ -201,8 +201,8 @@ test.cb('Previous 1', (t) => {
 
                     setTimeout(
                         () => {
-                            t.is(ReactDOM.render.callCount, 4, 'Render');
-                            t.is(react.createElement.callCount, 4, 'Creat Element');
+                            t.is(ReactDOM.render.callCount, 3, 'Render');
+                            t.is(react.createElement.callCount, 3, 'Create Element');
                             t.is(Tours.current.currentStep, 0, 'Current Step');
                             t.end();
                         },
@@ -216,29 +216,29 @@ test.cb('Previous 1', (t) => {
     );
 });
 
-test('Previous 2', (t) => {
+test.serial('Previous 2', (t) => {
     Tours.previous(null);
     t.false(ReactDOM.render.called);
 });
 
-test('Render', (t) => {
+test.serial('Render', (t) => {
     Tours.render(null);
     t.false(ReactDOM.render.called);
 });
 
-test('Move 1', (t) => {
+test.serial('Move 1', (t) => {
     Tours.move(null, 0);
     t.false(ReactDOM.render.called);
 });
 
-test('Move 2', (t) => {
+test.serial('Move 2', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     Tours.move(tour, 10);
 
     t.true(log.warn.calledWith(`Cannot move Tour ${tour.id} to Step 10 as it is out of bounds`));
 });
 
-test('Move 3', (t) => {
+test.serial('Move 3', (t) => {
     const tour = Tours.start(null, '.container', flowKey);
     Tours.move(tour, 1);
 
@@ -247,18 +247,18 @@ test('Move 3', (t) => {
     t.is(tour.currentStep, 1, 'Current Step');
 });
 
-test('Refresh 1', (t) => {
+test.serial('Refresh 1', (t) => {
     Tours.refresh(null);
     t.false(ReactDOM.render.called);
 });
 
-test('Refresh 2', (t) => {
+test.serial('Refresh 2', (t) => {
     Tours.start(null, '.container', flowKey, sinon.stub().returns({}));
     Tours.refresh();
     t.true(ReactDOM.render.called);
 });
 
-test('Refresh 3', (t) => {
+test.serial('Refresh 3', (t) => {
     const stub = sinon.stub().onFirstCall().returns(null);
     stub.onSecondCall().returns(null);
     stub.onThirdCall().returns({});
@@ -268,14 +268,14 @@ test('Refresh 3', (t) => {
     t.is(Tours.current.currentStep, 1);
 });
 
-test('Refresh 4', (t) => {
+test.serial('Refresh 4', (t) => {
     Tours.start(null, '.container', flowKey);
     Tours.refresh();
     t.true(ReactDOM.unmountComponentAtNode.called);
 });
 
 
-test.cb.serial('Watch', (t) => {
+test.serial.cb('Watch', (t) => {
     const stub = sinon.stub().onFirstCall().returns({});
     stub.onSecondCall().returns({});
 

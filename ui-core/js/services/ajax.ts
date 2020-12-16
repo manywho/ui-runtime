@@ -3,8 +3,8 @@
  */
 
 /** workaround for a typedoc issue */
-import * as Connection from './connection';
 import * as Log from 'loglevel';
+import * as Connection from './connection';
 import * as Settings from './settings';
 
 /**
@@ -18,18 +18,18 @@ import * as Settings from './settings';
  * @param page Page offset for the list filter
  */
 export const dispatchDataRequest = (
-        url: string,
-        event: string,
-        request: any,
-        tenantId: string,
-        stateId: string,
-        authenticationToken: string,
-        limit: number,
-        search: string,
-        orderBy: string,
-        orderByDirection: string,
-        page: number,
-    ): JQueryXHR => {
+    url: string,
+    event: string,
+    request: any,
+    tenantId: string,
+    stateId: string,
+    authenticationToken: string,
+    limit: number,
+    search: string,
+    orderBy: string,
+    orderByDirection: string,
+    page: number,
+): JQueryXHR => {
 
     request.listFilter = request.listFilter || {};
     request.listFilter.search = search || null;
@@ -67,7 +67,7 @@ export const login = (
     tenantId: string,
 ): JQueryXHR => {
 
-    Log.info('Logging into Flow State: \n    Id: ' + stateId);
+    Log.info(`Logging into Flow State: \n    Id: ${stateId}`);
 
     const request = {
         loginUrl,
@@ -78,7 +78,7 @@ export const login = (
         sessionToken: sessionId,
     };
 
-    return Connection.request(null, 'login', '/api/run/1/authentication/' + stateId, 'POST', tenantId, null, null, request);
+    return Connection.request(null, 'login', `/api/run/1/authentication/${stateId}`, 'POST', tenantId, null, null, request);
 };
 
 /**
@@ -103,36 +103,34 @@ export const initializeSimple = (engineInitializationRequest: any, tenantId: str
 /**
  * POST to `/api/run/1/state/out/stateId/selectedOutcomeId` to flow out
  */
-export const flowOut = (stateId: string, tenantId: string, selectedOutcomeId: string, authenticationToken: string): JQueryXHR => {
-    return Connection.request(
-        null,
-        'flowOut',
-        '/api/run/1/state/out/' + stateId + '/' + selectedOutcomeId,
-        'POST',
-        tenantId,
-        stateId,
-        authenticationToken,
-        null,
-    );
-};
+export const flowOut = (stateId: string, tenantId: string, selectedOutcomeId: string, authenticationToken: string): JQueryXHR => Connection.request(
+    null,
+    'flowOut',
+    `/api/run/1/state/out/${stateId}/${selectedOutcomeId}`,
+    'POST',
+    tenantId,
+    stateId,
+    authenticationToken,
+    null,
+);
 
 /**
  * GET the state of currently executing flow at `/api/run/1/state/stateId`
  */
 export const join = (stateId: string, tenantId: string, authenticationToken: string): JQueryXHR => {
-    Log.info('Joining State: ' + stateId);
-    return Connection.request(null, 'join', '/api/run/1/state/' + stateId, 'GET', tenantId, stateId, authenticationToken, null);
+    Log.info(`Joining State: ${stateId}`);
+    return Connection.request(null, 'join', `/api/run/1/state/${stateId}`, 'GET', tenantId, stateId, authenticationToken, null);
 };
 
 /**
  * POST to `/api/run/1/state/engineInvokeRequest.stateId` to update the state of the flow
  */
 export const invoke = (engineInvokeRequest: any, tenantId: string, authenticationToken: string): JQueryXHR => {
-    Log.info('Invoking State: ' + engineInvokeRequest.stateId);
+    Log.info(`Invoking State: ${engineInvokeRequest.stateId}`);
     return Connection.request(
         null,
         'invoke',
-        '/api/run/1/state/' + engineInvokeRequest.stateId,
+        `/api/run/1/state/${engineInvokeRequest.stateId}`,
         'POST',
         tenantId,
         engineInvokeRequest.stateId,
@@ -152,15 +150,22 @@ export const getNavigation = (
     authenticationToken?: string,
 ): JQueryXHR => {
     const request = { stateId, stateToken, navigationElementId };
-    return Connection.request(null, 'navigation', '/api/run/1/navigation/' + stateId, 'POST', tenantId, stateId, authenticationToken, request);
+    return Connection.request(null, 'navigation', `/api/run/1/navigation/${stateId}`, 'POST', tenantId, stateId, authenticationToken, request);
 };
 
 /**
  * GET at `/api/run/1/flow/name/name`
  */
-export const getFlowByName = (name: string, tenantId: string, authenticationToken: string): JQueryXHR => {
-    return Connection.request(null, 'getFlowByName', '/api/run/1/flow/name/' + name, 'GET', tenantId, null, authenticationToken, null);
-};
+export const getFlowByName = (name: string, tenantId: string, authenticationToken: string): JQueryXHR => Connection.request(
+    null,
+    'getFlowByName',
+    `/api/run/1/flow/name/${name}`,
+    'GET',
+    tenantId,
+    null,
+    authenticationToken,
+    null,
+);
 
 /**
  * POST to `/api/run/1/service/data` to make an objectdata request
@@ -242,9 +247,7 @@ export const uploadFile = (
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
-): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/run/1/service/file/content', formData, tenantId, authenticationToken, onProgress);
-};
+): JQueryXHR => Connection.upload(null, 'fileData', '/api/run/1/service/file/content', formData, tenantId, authenticationToken, onProgress);
 
 /**
  * POST to `/api/run/1/service/file/content` to upload a file to a 3rd party service (offline supported)
@@ -257,19 +260,17 @@ export const uploadFiles = (
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
     stateId: string,
-): JQueryXHR => {
-    return Connection.uploadFiles(
-        null,
-        'fileData',
-        '/api/run/1/service/file/content',
-        files,
-        request,
-        tenantId,
-        authenticationToken,
-        onProgress,
-        stateId,
-    );
-};
+): JQueryXHR => Connection.uploadFiles(
+    null,
+    'fileData',
+    '/api/run/1/service/file/content',
+    files,
+    request,
+    tenantId,
+    authenticationToken,
+    onProgress,
+    stateId,
+);
 
 /**
  * POST to `/api/run/1/social/stream/streamId/file` to upload a file to a 3rd party social stream
@@ -281,9 +282,7 @@ export const uploadSocialFile = (
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
-): JQueryXHR => {
-    return Connection.upload(null, 'fileData', '/api/run/1/social/stream/' + streamId + '/file', formData, tenantId, authenticationToken, onProgress);
-};
+): JQueryXHR => Connection.upload(null, 'fileData', `/api/run/1/social/stream/${streamId}/file`, formData, tenantId, authenticationToken, onProgress);
 
 /**
  * POST to `/api/run/1/authentication/stateId`
@@ -293,7 +292,7 @@ export const sessionAuthentication = (tenantId: string, stateId: string, request
     return Connection.request(
         null,
         'sessionAuthentication',
-        '/api/run/1/authentication/' + stateId,
+        `/api/run/1/authentication/${stateId}`,
         'POST',
         tenantId,
         stateId,
@@ -310,7 +309,7 @@ export const ping = (tenantId: string, stateId: string, stateToken: string, auth
     return Connection.request(
         null,
         'ping',
-        '/api/run/1/state/' + stateId + '/ping/' + stateToken,
+        `/api/run/1/state/${stateId}/ping/${stateToken}`,
         'GET',
         tenantId,
         stateId,
@@ -326,7 +325,7 @@ export const getHistoricalNavigation = (
     tenantId: string,
     stateId: string,
     authenticationToken: string,
-    onlyUIMapElements: boolean = true,
+    onlyUIMapElements = true,
 ): JQueryXHR => {
     Log.info('Getting Historical Navigation');
     return Connection.request(
@@ -346,7 +345,7 @@ export const getHistoricalNavigation = (
  */
 export const getExecutionLog = (tenantId: string, flowId: string, stateId: string, authenticationToken: string): JQueryXHR => {
     Log.info('Getting Execution Log');
-    return Connection.request(null, 'log', '/api/run/1/state/' + stateId + '/log', 'GET', tenantId, stateId, authenticationToken, null);
+    return Connection.request(null, 'log', `/api/run/1/state/${stateId}/log`, 'GET', tenantId, stateId, authenticationToken, null);
 };
 
 /**
@@ -357,7 +356,7 @@ export const getSocialMe = (tenantId: string, streamId: string, stateId: string,
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '/user/me',
+        `/api/run/1/social/stream/${streamId}/user/me`,
         'GET',
         tenantId,
         stateId,
@@ -374,7 +373,7 @@ export const getSocialFollowers = (tenantId: string, streamId: string, stateId: 
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '/follower',
+        `/api/run/1/social/stream/${streamId}/follower`,
         'GET',
         tenantId,
         stateId,
@@ -398,7 +397,7 @@ export const getSocialMessages = (
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '?page=' + page + '&pageSize=' + pageSize,
+        `/api/run/1/social/stream/${streamId}?page=${page}&pageSize=${pageSize}`,
         'GET',
         tenantId,
         stateId,
@@ -415,7 +414,7 @@ export const sendSocialMessage = (tenantId: string, streamId: string, stateId: s
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '/message',
+        `/api/run/1/social/stream/${streamId}/message`,
         'POST',
         tenantId,
         stateId,
@@ -432,7 +431,7 @@ export const follow = (tenantId: string, streamId: string, stateId: string, isFo
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '?follow=' + isFollowing.toString(),
+        `/api/run/1/social/stream/${streamId}?follow=${isFollowing.toString()}`,
         'POST',
         tenantId,
         stateId,
@@ -449,7 +448,7 @@ export const getSocialUsers = (tenantId: string, streamId: string, stateId: stri
     return Connection.request(
         null,
         'social',
-        '/api/run/1/social/stream/' + streamId + '/user?name=' + name,
+        `/api/run/1/social/stream/${streamId}/user?name=${name}`,
         'GET',
         tenantId,
         stateId,

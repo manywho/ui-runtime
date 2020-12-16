@@ -15,35 +15,35 @@ function emit(flowKey, kind, data?) {
     const stateId = Utils.extractStateId(flowKey);
 
     if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
-        data = data || {};
-        data.stateId = stateId;
-        data.id = socket.id;
-        data.owner = socket.id;
+        const newData = data || {};
+        newData.stateId = stateId;
+        newData.id = socket.id;
+        newData.owner = socket.id;
 
         if (socket.connected) {
-            socket.emit(kind, data);
+            socket.emit(kind, newData);
         }
         else {
-            socket.on('connect', socket.emit.bind(socket, kind, data));
+            socket.on('connect', socket.emit.bind(socket, kind, newData));
         }
     }
 }
 
 function onDisconnect() {
-    for (const stateId in rooms) {
-        socket.emit('left', {
+    Object.keys(rooms).forEach(
+        stateId => socket.emit('left', {
             stateId,
             user: rooms[stateId].user,
-        });
-    }
+        }),
+    );
 }
 
 function onJoined(data) {
     if (rooms[data.stateId]) {
-        Log.info(data.user + ' has joined ' + data.stateId + '. Users in Flow: ' + data.users);
+        Log.info(`${data.user} has joined ${data.stateId}. Users in Flow: ${data.users}`);
 
         Model.addNotification(rooms[data.stateId].flowKey, {
-            message: data.user + ' has joined. Users currently in Flow: ' + data.users,
+            message: `${data.user} has joined. Users currently in Flow: ${data.users}`,
             position: 'right',
             type: 'success',
             timeout: 2000,
@@ -54,10 +54,10 @@ function onJoined(data) {
 
 function onLeft(data) {
     if (rooms[data.stateId]) {
-        Log.info(data.user + ' has left ' + data.stateId + '. Users in Flow: ' + data.users);
+        Log.info(`${data.user} has left ${data.stateId}. Users in Flow: ${data.users}`);
 
         Model.addNotification(rooms[data.stateId].flowKey, {
-            message: data.user + ' has left. Users in Flow: ' + data.users,
+            message: `${data.user} has left. Users in Flow: ${data.users}`,
             position: 'right',
             type: 'danger',
             timeout: 2000,
@@ -67,16 +67,16 @@ function onLeft(data) {
 }
 
 function onChange(data) {
-    Log.info('change to: ' + data.component + ' in ' + data.stateId);
+    Log.info(`change to: ${data.component} in ${data.stateId}`);
 
     State.setComponent(data.component, data.values, rooms[data.stateId].flowKey, false);
     Engine.render(rooms[data.stateId].flowKey);
 }
 
 function onMove(data) {
-    Log.info('re-joining ' + data.stateId);
+    Log.info(`re-joining ${data.stateId}`);
 
-    const flowKey = rooms[data.stateId].flowKey;
+    const { flowKey } = rooms[data.stateId];
 
     const tenantId = Utils.extractTenantId(flowKey);
     const flowId = Utils.extractFlowId(flowKey);
@@ -92,7 +92,7 @@ function onMove(data) {
 }
 
 function onFlowOut(data) {
-    Log.info('joining subflow ' + data.subStateId);
+    Log.info(`joining subflow ${data.subStateId}`);
 
     const element = Utils.extractElement(data.parentFlowKey);
     const tenantId = Utils.extractTenantId(data.parentFlowKey);
@@ -108,7 +108,7 @@ function onFlowOut(data) {
 }
 
 function onReturnToParent(data) {
-    Log.info('returning to parent ' + data.parentStateId);
+    Log.info(`returning to parent ${data.parentStateId}`);
 
     const tenantId = Utils.extractTenantId(data.subFlowKey);
     const element = Utils.extractElement(data.subFlowKey);
@@ -129,25 +129,25 @@ function onReturnToParent(data) {
 }
 
 function onSync(data) {
-    Log.info('syncing ' + data.stateId);
+    Log.info(`syncing ${data.stateId}`);
     Engine.sync(rooms[data.stateId].flowKey);
 }
 
 function onGetValues(data) {
     const stateId = data.subStateId || data.stateId;
 
-    Log.info('get values from: ' + data.owner + ' in ' + stateId);
+    Log.info(`get values from: ${data.owner} in ${stateId}`);
     socket.emit('setValues', { stateId, id: data.id, components: State.getComponents(rooms[stateId].flowKey) });
 }
 
 function onSetValues(data) {
-    Log.info('setting values in ' + data.stateId);
+    Log.info(`setting values in ${data.stateId}`);
     State.setComponents(data.components, rooms[data.stateId].flowKey);
     Engine.render(rooms[data.stateId].flowKey);
 }
 
 function onSyncFeed(data) {
-    Log.info('syncing feed in ' + data.stateId);
+    Log.info(`syncing feed in ${data.stateId}`);
     Social.refreshMessages(rooms[data.stateId].flowKey);
 }
 
@@ -175,7 +175,7 @@ export const initialize = (flowKey: string) => {
         socket.on('setValues', onSetValues);
         socket.on('syncFeed', onSyncFeed);
 
-        window.addEventListener('beforeunload', (event) => {
+        window.addEventListener('beforeunload', () => {
             onDisconnect();
         });
     }
@@ -191,9 +191,7 @@ export const initialize = (flowKey: string) => {
 /**
  * Has `initialize` been called for this state
  */
-export const isInitialized = (flowKey: string): boolean => {
-    return rooms.hasOwnProperty(Utils.extractStateId(flowKey));
-};
+export const isInitialized = (flowKey: string): boolean => Object.prototype.hasOwnProperty.call(rooms, Utils.extractStateId(flowKey));
 
 /**
  * Set `isEnabled` to true for this state, if we have initialized a socket yet then `initialize` will also be called
@@ -212,25 +210,6 @@ export const enable = (flowKey: string) => {
  */
 export const disable = (flowKey: string) => {
     rooms[Utils.extractStateId(flowKey)].isEnabled = false;
-};
-
-/**
- * Emit a `join` event to the collaboration server, then call `getValues`
- */
-export const join = (user, flowKey) => {
-    const stateId = Utils.extractStateId(flowKey);
-
-    if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
-        rooms[stateId].user = user;
-        emit(flowKey, 'join', { user });
-
-        if (!socket.connected) {
-            socket.on('connect', this.getValues.bind(null, flowKey));
-        }
-        else {
-            getValues(flowKey);
-        }
-    }
 };
 
 /**
@@ -284,6 +263,25 @@ export const getValues = (flowKey: string) => {
 };
 
 /**
+ * Emit a `join` event to the collaboration server, then call `getValues`
+ */
+export const join = (user, flowKey) => {
+    const stateId = Utils.extractStateId(flowKey);
+
+    if (socket && rooms[stateId] && rooms[stateId].isEnabled) {
+        rooms[stateId].user = user;
+        emit(flowKey, 'join', { user });
+
+        if (!socket.connected) {
+            socket.on('connect', this.getValues.bind(null, flowKey));
+        }
+        else {
+            getValues(flowKey);
+        }
+    }
+};
+
+/**
  * Emit a `syncFeed` event to the collaboration server
  */
 export const syncFeed = (flowKey: string) => {
@@ -296,6 +294,5 @@ export const syncFeed = (flowKey: string) => {
  */
 export const remove = (flowKey: string) => {
     const stateId = Utils.extractStateId(flowKey);
-    rooms[stateId] == null;
     delete rooms[stateId];
 };

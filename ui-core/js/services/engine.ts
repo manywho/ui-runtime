@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 import * as numbro from 'numbro';
 
+import * as Log from 'loglevel';
 import * as Ajax from './ajax';
 import * as Authorization from './authorization';
 import * as Callbacks from './callbacks';
@@ -10,7 +11,6 @@ import * as Collaboration from './collaboration';
 import * as Component from './component';
 import * as Formatting from './formatting';
 import * as Json from './json';
-import * as Log from 'loglevel';
 import * as Model from './model';
 import * as Settings from './settings';
 import * as Social from './social';
@@ -20,8 +20,8 @@ import * as Utils from './utils';
 import * as Validation from './validation';
 import { ohCanada } from './localisation';
 
-declare var manywho: any;
-declare var window: any;
+declare let manywho: any;
+declare let window: any;
 
 function processObjectDataRequests(components, flowKey) {
 
@@ -93,15 +93,15 @@ function loadNavigation(flowKey, stateToken, navigationId, currentMapElementId?)
     if (navigationId) {
 
         return Ajax.getNavigation(Utils.extractStateId(flowKey), stateToken, navigationId, Utils.extractTenantId(flowKey))
-                .then((navigation) => {
+            .then((navigation) => {
 
-                    if (navigation) {
+                if (navigation) {
 
-                        Model.parseNavigationResponse(navigationId, navigation, flowKey, currentMapElementId);
+                    Model.parseNavigationResponse(navigationId, navigation, flowKey, currentMapElementId);
 
-                    }
+                }
 
-                });
+            });
 
     }
 
@@ -131,15 +131,15 @@ function loadHistoricalNavigation(flowKey, stateId, authenticationToken) {
 function loadExecutionLog(flowKey, authenticationToken) {
 
     return Ajax.getExecutionLog(Utils.extractTenantId(flowKey), Utils.extractFlowId(flowKey), Utils.extractStateId(flowKey), authenticationToken)
-            .then((executionLog) => {
+        .then((executionLog) => {
 
-                if (executionLog) {
+            if (executionLog) {
 
-                    Model.setExecutionLog(flowKey, executionLog);
+                Model.setExecutionLog(flowKey, executionLog);
 
-                }
+            }
 
-            });
+        });
 
 }
 
@@ -349,7 +349,7 @@ function initializeSimpleWithAuthorization(
 
 function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken, stateId) {
 
-    let flowKey = callback.flowKey;
+    let { flowKey } = callback;
     let streamId = null;
 
     stateId = stateId !== undefined
@@ -382,7 +382,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         .then(
             (response) => {
 
-                window.sessionStorage.setItem('oauth-' + response.stateId, JSON.stringify({
+                window.sessionStorage.setItem(`oauth-${response.stateId}`, JSON.stringify({
                     tenantId,
                     flowId,
                     flowVersionId,
@@ -487,13 +487,14 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             },
             // Is NOT authorized
-            response => onAuthorizationFailed(response, flowKey, callback))
+            response => onAuthorizationFailed(response, flowKey, callback),
+        )
 
         .then(
             // Invoke call was successful
             (response) => {
 
-                window.sessionStorage.removeItem('oauth-' + response.stateId);
+                window.sessionStorage.removeItem(`oauth-${response.stateId}`);
 
                 parseResponse(response, Model.parseEngineResponse, 'initialize', flowKey);
 
@@ -534,11 +535,12 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
             },
             // Invoke call failed
-            response => notifyError(flowKey, response))
-            .always(() => renderAndProcessRequests(flowKey))
-            .then(() => startTours(flowKey))
-            .always(() => showLoader(flowKey))
-            .then(() => flowKey);
+            response => notifyError(flowKey, response),
+        )
+        .always(() => renderAndProcessRequests(flowKey))
+        .then(() => startTours(flowKey))
+        .always(() => showLoader(flowKey))
+        .then(() => flowKey);
 
 }
 
@@ -585,7 +587,7 @@ function joinWithAuthorization(callback, flowKey) {
         .then((response) => {
 
             isAuthenticated = true;
-            window.sessionStorage.removeItem('oauth-' + response.stateId);
+            window.sessionStorage.removeItem(`oauth-${response.stateId}`);
 
             Model.initializeModel(flowKey);
             parseResponse(response, Model.parseEngineResponse, 'join', flowKey);
@@ -666,7 +668,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
     const authenticationToken = State.getAuthenticationToken(flowKey);
     let moveResponse = null;
     let outcome = null;
-    const selectedOutcomeId = invokeRequest.mapElementInvokeRequest.selectedOutcomeId;
+    const { selectedOutcomeId } = invokeRequest.mapElementInvokeRequest;
 
     if (selectedOutcomeId) {
         outcome = Model.getOutcome(invokeRequest.mapElementInvokeRequest.selectedOutcomeId, flowKey);
@@ -783,11 +785,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
 
             }
         })
-        .always(() => {
-
-            return processObjectDataRequests(Model.getComponents(flowKey), flowKey);
-
-        })
+        .always(() => processObjectDataRequests(Model.getComponents(flowKey), flowKey))
         .then(() => {
 
             if (moveResponse) {
@@ -867,7 +865,7 @@ export const initialize = (
         manywho.theming.apply(options.theme);
     }
 
-    const storedConfig = window.sessionStorage.getItem('oauth-' + stateId);
+    const storedConfig = window.sessionStorage.getItem(`oauth-${stateId}`);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
 
@@ -887,30 +885,27 @@ export const initialize = (
             stateId,
             authenticationToken,
             config.options,
-       );
-
-    }
-    else {
-
-        return initializeWithAuthorization.call(
-            this,
-            {
-                execute: initializeWithAuthorization.bind(this),
-                args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
-                name: 'initialize',
-                type: 'done',
-                context: this,
-            },
-            config.tenantId,
-            config.flowId,
-            config.flowVersionId,
-            config.container,
-            config.options,
-            authenticationToken,
-            stateId,
         );
 
     }
+
+    return initializeWithAuthorization.call(
+        this,
+        {
+            execute: initializeWithAuthorization.bind(this),
+            args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
+            name: 'initialize',
+            type: 'done',
+            context: this,
+        },
+        config.tenantId,
+        config.flowId,
+        config.flowVersionId,
+        config.container,
+        config.options,
+        authenticationToken,
+        stateId,
+    );
 
 };
 
@@ -953,7 +948,7 @@ export const initializeSimple = (
  * Invoke down a specified outcome using the invokeType that the engine returned last,
  * except if it was a 'SYNC' invokeType, because 'SYNC' requests cannot move down outcomes
  */
-export const move = (outcome: any, flowKey: string)  => {
+export const move = (outcome: any, flowKey: string) => {
 
     if (outcome
         && Utils.isEqual(outcome.pageActionBindingType, 'SAVE', true)
@@ -1017,18 +1012,18 @@ export const flowOut = (outcome: any, flowKey: string) => {
     const authenticationToken = State.getAuthenticationToken(flowKey);
 
     return Ajax.flowOut(Utils.extractStateId(flowKey), tenantId, outcome.id, authenticationToken)
-            .then((response) => {
+        .then((response) => {
 
-                const options = State.getOptions(flowKey);
-                const subFlowKey = Utils.getFlowKey(tenantId, null, null, response.stateId, Utils.extractElement(flowKey));
+            const options = State.getOptions(flowKey);
+            const subFlowKey = Utils.getFlowKey(tenantId, null, null, response.stateId, Utils.extractElement(flowKey));
 
-                Collaboration.flowOut(flowKey, response.stateId, subFlowKey);
+            Collaboration.flowOut(flowKey, response.stateId, subFlowKey);
 
-                Utils.removeFlow(flowKey);
+            Utils.removeFlow(flowKey);
 
-                join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
+            join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
 
-            });
+        });
 
 };
 
@@ -1076,17 +1071,17 @@ export const sync = (flowKey: string) => {
 
     return Ajax.invoke(invokeRequest, Utils.extractTenantId(flowKey), State.getAuthenticationToken(flowKey))
         .then((response) => {
-
             if (Utils.isEqual(response.invokeType, 'wait', true)) {
-
                 // The engine is currently busy (processing a parallel request on this state), try again
-                setTimeout(() => { sync(flowKey); }, 100);
-
+                setTimeout(
+                    () => {
+                        sync(flowKey);
+                    },
+                    100,
+                );
             }
             else {
-
                 return parseSyncResponse(response, flowKey);
-
             }
 
         })
@@ -1179,7 +1174,7 @@ export const join = (
 
     Component.appendFlowContainer(flowKey);
 
-    window.sessionStorage.setItem('oauth-' + stateId, JSON.stringify({
+    window.sessionStorage.setItem(`oauth-${stateId}`, JSON.stringify({
         tenantId,
         flowId,
         flowVersionId,
@@ -1256,11 +1251,7 @@ export const objectDataRequest = (
             State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr: any, status, error: string) => {
-
-            return handleDataRequestError(id, flowKey, xhr, status, error);
-
-        })
+        .fail((xhr: any, status, error: string) => handleDataRequestError(id, flowKey, xhr, status, error))
         .always(() => {
 
             State.setComponentLoading(id, null, flowKey);
@@ -1312,17 +1303,13 @@ export const fileDataRequest = (
             State.setComponentError(id, null, flowKey);
 
         })
-        .fail((xhr: JQuery.jqXHR, status, error: string) => {
-
-            return handleDataRequestError(id, flowKey, xhr, status, error);
-
-        })
+        .fail((xhr: JQuery.jqXHR, status, error: string) => handleDataRequestError(id, flowKey, xhr, status, error))
         .always((error) => {
 
             State.setComponentLoading(id, null, flowKey);
             render(flowKey);
 
-            if (error) {
+            if (error !== null) {
                 return error;
             }
         });
@@ -1394,7 +1381,9 @@ export const ping = (flowKey: string) => {
                 }
                 else {
 
-                    setTimeout(() => { ping(flowKey); }, 10000);
+                    setTimeout(() => {
+                        ping(flowKey);
+                    },         10000);
 
                 }
 

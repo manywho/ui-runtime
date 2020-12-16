@@ -65,7 +65,7 @@ export const register = (name: string, component: React.Component | React.SFC, a
  * @param component
  */
 export const registerItems = (name: string, component: React.Component | React.SFC) => {
-    components['mw-' + name.toLowerCase()] = component;
+    components[`mw-${name.toLowerCase()}`] = component;
     aliases[name.toLowerCase()] = 'mw-items-container';
 };
 
@@ -84,7 +84,7 @@ export const registerAlias = (alias: string, name: string) => {
  * @param component
  */
 export const registerContainer = (name: string, component: React.Component | React.SFC) => {
-    components['mw-' + name.toLowerCase()] = component;
+    components[`mw-${name.toLowerCase()}`] = component;
     aliases[name.toLowerCase()] = 'mw-container';
 };
 
@@ -99,11 +99,11 @@ export const get = (model: any) => {
         componentType = aliases[componentType];
     }
 
-    if (components.hasOwnProperty(componentType)) {
+    if (Object.prototype.hasOwnProperty.call(components, componentType)) {
         return components[componentType];
     }
 
-    Log.error('Component of type: ' + componentType + ' could not be found');
+    Log.error(`Component of type: ${componentType} could not be found`);
 
     return components['not-found-placeholder'](componentType);
 };
@@ -114,11 +114,13 @@ export const get = (model: any) => {
  */
 export const getByName: any = (name: string) => {
 
+    let componentName = name;
+
     if (name && aliases[name.toLowerCase()]) {
-        name = aliases[name.toLowerCase()];
+        componentName = aliases[name.toLowerCase()];
     }
 
-    return components[name.toLowerCase()];
+    return components[componentName.toLowerCase()];
 };
 
 /**
@@ -127,22 +129,18 @@ export const getByName: any = (name: string) => {
  * @param id
  * @param flowKey
  */
-export const getChildComponents = (children: any[], id: string, flowKey: string) => {
-    return children
-        .sort((a, b) => a.order - b.order)
-        .map(item => React.createElement(this.get(item), { flowKey, id: item.id, parentId: id, key: item.id }));
-};
+export const getChildComponents = (children: any[], id: string, flowKey: string) => children
+    .sort((a, b) => a.order - b.order)
+    .map(item => React.createElement(this.get(item), { flowKey, id: item.id, parentId: id, key: item.id }));
 
 /**
  * Transform the outcome models into outcome components
  * @param outcomes
  * @param flowKey
  */
-export const getOutcomes = (outcomes: any[], flowKey: string): any[] => {
-    return outcomes
-        .sort((a, b) => a.order - b.order)
-        .map(item => React.createElement(components['outcome'], { flowKey, id: item.id, key: item.id }));
-};
+export const getOutcomes = (outcomes: any[], flowKey: string): any[] => outcomes
+    .sort((a, b) => a.order - b.order)
+    .map(item => React.createElement(getByName('outcome'), { flowKey, id: item.id, key: item.id }));
 
 /**
  * If the model `hasEvents = true` perform an `Engine.sync` then re-render the flow and `forceUpdate` on the component
@@ -183,11 +181,11 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
             if (!Utils.isNullOrWhitespace(selectedId)) {
                 selectedObjectData = selectedObjectData.concat(
                     model.objectData.filter(item => Utils.isEqual(item.internalId, selectedId, true))
-                                    .map((item) => {
-                                        const clone = JSON.parse(JSON.stringify(item));
-                                        clone.isSelected = true;
-                                        return clone;
-                                    }),
+                        .map((item) => {
+                            const clone = JSON.parse(JSON.stringify(item));
+                            clone.isSelected = true;
+                            return clone;
+                        }),
                 );
             }
         });
@@ -303,13 +301,13 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
     if (outcome.attributes) {
         if (outcome.attributes.uri) {
             window.open(outcome.attributes.uri, '_blank');
-            return;
+            return null;
         }
 
         if (outcome.attributes.uriTypeElementPropertyId && objectData) {
-            const property = objectData[0].properties.find((prop) => {
-                return Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true);
-            });
+            const property = objectData[0].properties.find(
+                prop => Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true),
+            );
 
             // The following contentValue change is only necessary because of the Flows (Flow Tiles) System Flow
             // If a runtime uri has been specified, then change the Flow tiles Run link to use it
@@ -327,7 +325,7 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
             }
             if (property) {
                 window.open(property.contentValue, '_blank');
-                return;
+                return null;
             }
         }
     }
@@ -349,7 +347,7 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
 export const getPageSize = (model, flowKey) => {
 
     const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
-    const pageLimitFromAttributesIsValid = pageLimitFromAttributes && !isNaN(Number(pageLimitFromAttributes));
+    const pageLimitFromAttributesIsValid = pageLimitFromAttributes && !Number.isNaN(Number(pageLimitFromAttributes));
 
     const usePaginationAttribute =
         pageLimitFromAttributesIsValid &&
