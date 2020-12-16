@@ -1,25 +1,11 @@
 {
-  "name": "@manywho/ui-core",
-  "version": "3.10.0",
-  "description": "Core JavaScript services used by the Boomi Flow UI framework to do the heavy lifting.",
-  "author": "ManyWho",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/manywho/ui-core.git"
-  },
   "scripts": {
     "docs": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./js/services",
-    "start": "webpack --config webpack.development.config.js --env watch",
-    "dev": "webpack --config webpack.development.config.js",
-    "dist": "webpack -p --config webpack.production.config.js",
     "test": "tsc -p tsconfig.test.json && nyc --reporter=html --reporter=lcov ava \"dist_test/test/*.js\" --timeout=10s --color --fail-fast -v",
     "test:coverage": "nyc check-coverage --lines 80 --functions 80 --branches 60",
     "test:report": "npm test -- --tap | tap-xunit > test-report.xml",
     "test:watch": "chokidar \"test/**/*.ts\" -c \"npm run test\""
   },
-  "files": [
-    "publish/"
-  ],
   "devDependencies": {
     "@types/jquery": "3.5.4",
     "@types/mockery": "1.4.29",
