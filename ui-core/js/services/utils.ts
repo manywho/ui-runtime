@@ -140,7 +140,7 @@ export const replaceBrowserUrl = (response: any) => {
 
         for (const queryParameter in queryParameters) {
             if (ignoreParameters.indexOf(queryParameter) === -1) {
-                newJoinUri += '&' + queryParameter + '=' + queryParameters[queryParameter];
+                newJoinUri += `&${queryParameter}=${queryParameters[queryParameter]}`;
             }
         }
 

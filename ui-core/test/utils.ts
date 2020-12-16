@@ -59,7 +59,7 @@ test('Is Not Placeholder Objectdata 1', (t) => {
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
 
-test('Is Not Placeholder Objectdata 1', (t) => {
+test('Is Not Placeholder Objectdata 2', (t) => {
     const objectData = ['item1', 'item2'];
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
