@@ -10,7 +10,7 @@ if [ "$BRANCH_NAME" = "" ]; then
 fi
 
 if [ "$BRANCH_NAME" = "develop" ]; then
-  # We're building the master branch, so we want to push the "latest" tag
+  # We're building the base branch, so we want to push the "latest" tag
   docker build -t quay.io/manywho/ui-runtime:latest .
   docker push quay.io/manywho/ui-runtime:latest
 fi
