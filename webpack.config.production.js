@@ -17,9 +17,7 @@ module.exports = (env) => {
             new CopyPlugin([
                 // copy the production vendor scripts
                 {
-                    context: './ui-vendor/',
-                    from: 'vendor/**/*.*',
-                    to: 'js/',
+                    from: 'js/vendor/**/*.*',
                 },
                 {
                     // placeholders substituted during deployment

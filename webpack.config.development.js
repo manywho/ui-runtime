@@ -1,5 +1,4 @@
 const path = require('path');
-const { repoPaths } = require('./config/paths');
 const configCommon = require('./webpack.config.common');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -23,8 +22,7 @@ module.exports = (env) => {
             new CopyPlugin([
                 // copy the development vendor scripts
                 {
-                    context: './ui-vendor/',
-                    from: 'vendor-dev/**/*.*',
+                    from: 'js/vendor-dev/**/*.*',
                     to: 'js/vendor',
                     flatten: true,
                 },
@@ -39,7 +37,7 @@ module.exports = (env) => {
                 },
             ]),
             new HtmlWebpackPlugin({
-                template: path.resolve(repoPaths.uiHtml5, 'index.html'),
+                template: 'index.html',
                 filename: 'index.html',
                 inject: false,
             }),

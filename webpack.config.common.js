@@ -12,7 +12,7 @@ module.exports = (env) => ({
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
         'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
-        'js/loader.min': `${repoPaths.uiHtml5}/js/loader.js`, // using loader.min so we get loader.min.js as output
+        'js/loader.min': './js/loader.js', // using loader.min so we get loader.min.js as output
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
     },
 
@@ -47,13 +47,11 @@ module.exports = (env) => ({
         new CopyPlugin([
             // copy the favicons
             {
-                context: repoPaths.uiHtml5,
                 from: 'img/**/*.*',
                 // to: defaults to the output.path
             },
             // copy the index.html
             {
-                context: repoPaths.uiHtml5,
                 from: 'index.html',
                 to: 'players/',
             },

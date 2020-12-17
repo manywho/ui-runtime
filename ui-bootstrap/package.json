@@ -1,18 +1,7 @@
 {
-    "name": "manywho-ui-bootstrap",
-    "version": "3.10.0",
-    "description": "Boomi Flow HTML5 React Bootstrap components",
-    "author": "Boomi Flow",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/manywho/ui-bootstrap.git"
-    },
     "scripts": {
         "check-types": "tsc",
         "docs": "typedoc js --out docs --ignoreCompilerErrors --mode modules & start docs/index.html",
-        "start": "webpack --config webpack.development.config.js --env.build=../ui-html5/build --env.assets=local --env.watch --env.sourcemaps",
-        "dev": "webpack --config webpack.development.config.js",
-        "dist": "webpack -p --config webpack.production.config.js",
         "test": "jest"
     },
     "devDependencies": {
