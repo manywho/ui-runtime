@@ -4,3 +4,6 @@ runtime_build/
 .env
 .vscode
 coverage
+.nyc_output
+dist_test
+test-report.xml
