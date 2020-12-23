@@ -1,0 +1,1841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite id="0" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/rules.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/rules.test.ts" hostname="localhost" tests="132" failures="0" time="1.678" timestamp="2020-12-23T12:17:15">
+    <properties>
+    </properties>
+    <testcase classname="Rules service Outcomes" name="No Outcomes returns null" time="0">
+    </testcase>
+    <testcase classname="Rules service Outcomes" name="Empty Outcomes returns null" time="0">
+    </testcase>
+    <testcase classname="Rules service Outcomes" name="Outcomes without comparison returns first outcome" time="0">
+    </testcase>
+    <testcase classname="Rules service Outcomes" name="Outcomes with a comparison returns first outcome that evaluates true" time="0">
+    </testcase>
+    <testcase classname="Rules service Outcomes" name="Outcomes with a mixture of comparisons returns first without a comparison" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="No comparisons returns false" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="No rules returns false" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That a Rule is evaluated" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That a single Rule is evaluated with the AND comparison" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That only the first Rule is evaluated with an OR" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That both the Rules are evaluated with an OR, first Rule evaluates to false" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That false is returned if all Rules are false" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That false is returned if all Rules are false with AND comparisonType" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That true is returned if all Rules are true with AND comparisonType" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That false is returned if the first Rule evaluates false with AND comparisonType" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That false is returned if the second Rule evaluates false with AND comparisonType" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That the last rule is not evaluated due to AND short-circuit" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That all four Rules are evaluated" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That nested comparisons are evaluated" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That inner nested false AND comparisons are honoured" time="0">
+    </testcase>
+    <testcase classname="Rules service Comparisons" name="That inner nested true OR comparisons are honoured" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Empty rules returns false" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Single rule EQUAL with AND returns true" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Single rule EQUAL with OR returns true" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Multiple rules honour OR comparison" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Multiple rules honour OR comparison when false" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Multiple rules honour AND comparison when false" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Multiple rules honour AND comparison when false" time="0">
+    </testcase>
+    <testcase classname="Rules service Rules" name="Multiple rules honour AND comparison when true" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="The IS_EMPTY criteria for an empty Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="The IS_EMPTY criteria for a null Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="The IS_EMPTY criteria for a Content Object with no objectData" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="The IS_EMPTY criteria for a non-empty Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="Invalid criteria for a non-empty Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="Invalid criteria for an empty Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="EQUAL criteria for a Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="NOT_EQUAL criteria for a Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Object expected behaviour" name="Unsupported criteria for a Content Object" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="The IS_EMPTY criteria for an empty Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="The IS_EMPTY criteria for a null Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="The IS_EMPTY criteria for a Content List with no objectData" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="The IS_EMPTY criteria for a non-empty Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="Invalid criteria for a non-empty Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="Invalid criteria for an empty Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content List expected behaviour" name="Unsupported criteria for a Content List" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="Invalid criteria for an empty string" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content String expected behaviour" name="String Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Invalid criteria for an empty content" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Content expected behaviour" name="Content Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Invalid criteria for an empty password" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Password expected behaviour" name="Password Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Invalid criteria for an empty string" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Encrypted expected behaviour" name="Encrypted Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Invalid criteria for an empty number" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Number expected behaviour" name="Number Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Invalid criteria for an empty boolean" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Boolean expected behaviour" name="Boolean Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Invalid criteria for an empty datetime" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Not Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Greater Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Less Than" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Greater Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Less Than Or Equal" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Starts With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Ends With" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Contains" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Is Empty" time="0">
+    </testcase>
+    <testcase classname="Rules service Content Datetime expected behaviour" name="Datetime Is Not Empty" time="0">
+    </testcase>
+    <testcase classname="Miscellaneous tests for coverage" name="Invalid contentType" time="0">
+    </testcase>
+    <testcase classname="Miscellaneous tests for coverage" name="Invalid criteriaType" time="0">
+    </testcase>
+    <testcase classname="Miscellaneous tests for coverage" name="Invalid IS_EMPTY contentType" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="1" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/items-container.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/items-container.test.tsx" hostname="localhost" tests="41" failures="0" time="0.808" timestamp="2020-12-23T12:17:17">
+    <properties>
+    </properties>
+    <testcase classname="ItemsContainer component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="areBulkActionsDefined returns true when bulk actions present" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="areBulkActionsDefined returns false when bulk actions aren&apos;t present" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Correct child component gets rendered" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Empty items element is rendered when objectData is empty array" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Error element is rendered when no display columns have been defined" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Error element is rendered when state has error" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Pagination size is passed to child component" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Pagination size is retreived from settings" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="id, parentId, flowKey, isDesignTime are passed directly to child component" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="isLoading is correctly passed to child component" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Page number is correctly passed to child component" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="sort method updates state.sortedBy property" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="sort method toggles state.sortedIsAscending property" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="sort method toggles state.sortedIsAscending property when ObjectDataRequest is null" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="search method resets sorting state" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="search method clears selection when clearSelection param is true" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="search is cleared when clearSelection is called with true param" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="objectData gets filtered when search query is in state" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="objectData set to null when searching on empty table" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="component.onOutcome gets called within instance onOutcome method" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="load method calls manywho.engine.objectDataRequest if model.objectDataRequest is present" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="load method calls manywho.engine.fileDataRequest if model.fileDataRequest is present" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="load method forces update if model.objectDataRequest and model.fileDataRequest are falsy" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="onNext calls onPaginate with next page number" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="onPrev calls onPaginate with previous page number" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="onFirstPage calls onPaginate with 1" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Check sorting empty array does not crash" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Check sorting a single item does nothing" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Sanity check for our test sorting data" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Unknown sort key leaves order intact" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:string" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:password" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:datetime" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:number" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:boolean" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:encrypted" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:list" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method handles contentType:object" time="0">
+    </testcase>
+    <testcase classname="ItemsContainer component behaviour" name="Verify sort method not called on null objectData" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="2" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/operation.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/operation.test.ts" hostname="localhost" tests="17" failures="0" time="0.868" timestamp="2020-12-23T12:17:18">
+    <properties>
+    </properties>
+    <testcase classname="Operation service" name="No operation resolves" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Invalid command for toReference returns original state" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Invalid command for toApply returns original state" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Commands SET_EQUAL and VALUE_OF checking assignment" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Commands ADD and VALUE_OF to insert a new list item" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Commands ADD and VALUE_OF does not insert a new duplicate list item" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command REMOVE deletes a list item" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command REMOVE ignores non-matching id" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command REMOVE operates correctly on an empty list" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command NEW creates a new value based on the Type of the applied value" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_FIRST returns null on an empty list" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_NEXT returns null on an empty list" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_FIRST returns first list item" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_FIRST returns first list item even when called twice" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_NEXT returns first list item if GET_FIRST has not been called" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_NEXT returns second list item if GET_FIRST has been called" time="0">
+    </testcase>
+    <testcase classname="Operation service" name="Command GET_NEXT returns second list item if GET_FIRST has been called" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="3" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/select.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/select.test.tsx" hostname="localhost" tests="29" failures="0" time="1.846" timestamp="2020-12-23T12:17:19">
+    <properties>
+    </properties>
+    <testcase classname="Select input component behaviour" name="Select component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="Select component gets registered" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="Refresh button gets rendered when model object has objectDataRequest" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="Refresh button gets rendered when model object has fileDataRequest" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="Refresh button does not get rendered" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="Model classes get rendered in mark-up" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="component has hidden class if configured to not be visible" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="component has error class if server state has error" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="renders server state error response in mark-up" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="renders server state validation error response in mark-up" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="component has correct styles" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="component renders help info" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="label gets rendered" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="asterisk gets rendered if field is required" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="options are set to component state" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="onValuesChange method invokes select method" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="onValuesChange method invokes clearSelection method when no options are passed" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="onValueChange method invokes select method and sets state" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="onValueChange method invokes select method when no option is passed and sets state" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="search string updates component state" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="open state changes when component is loading" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="open state changes when component focus event is triggered" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="open state changes when component blur event is triggered" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="is on page 1 select options get generated" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="on next page that additional options are appended to option state" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="filterOptions always return options passed as argument" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="getUid always returns an external ID" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="when isScrollLimit is called that onNext is then invoked" time="0">
+    </testcase>
+    <testcase classname="Select input component behaviour" name="when addOptions is called with items selected, selected items are reversed and prepended" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="4" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-container.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-container.test.tsx" hostname="localhost" tests="23" failures="0" time="0.701" timestamp="2020-12-23T12:17:21">
+    <properties>
+    </properties>
+    <testcase classname="Table component behaviour" name="Table component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Table component gets registered" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Initial state properties are set with expected values" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Table Large gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Table Small gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Table Large gets rendered below 768px if any table columns are editable" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="if window inner width is less than 768px then small tables class gets applied to rendered markup" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="File Upload gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Items Header gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Pagination gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="Loader gets rendered as a child component" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="hidden class gets applied to rendered markup" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="help block gets rendered" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="label gets rendered" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="model class attribute get rendered as html classes" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="table columns to be displayed are returned" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="if outcomes with property isBulkAction then add mw-outcomes to disply column array" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="footer renders with pagination" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="footer renders with no pagination" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="header click calls sort function from component props" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="onSelect calls select function from component props" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="window resize updates component state to window inner width" time="0">
+    </testcase>
+    <testcase classname="Table component behaviour" name="manyWho core function gets called when file has finished uploading" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="5" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageConditions.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageConditions.test.ts" hostname="localhost" tests="8" failures="0" time="0.756" timestamp="2020-12-23T12:17:22">
+    <properties>
+    </properties>
+    <testcase classname="Page conditions expected behaviour" name="Should throw error if criteria type is not found" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="Should throw error if the triggering page component is not found in snapshot metadata" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If trigger component value is found in state then return its content value" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If trigger component value is not found in state then return its default content value from snapshot" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If trigger component value has objectdata then return the expected property content value" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If a value comparable is not found that an error is thrown" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If no errors are thrown then a page rule is executed" time="0">
+    </testcase>
+    <testcase classname="Page conditions expected behaviour" name="If no errors are thrown then page operations are executed" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="6" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-large.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-large.test.tsx" hostname="localhost" tests="11" failures="0" time="0.671" timestamp="2020-12-23T12:17:22">
+    <properties>
+    </properties>
+    <testcase classname="Table Large input component behaviour" name="Table Large component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Table Large component gets registered" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Table has table-invalid CSS class when props.model.isValid is false" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Table has table-bordered CSS class when props.model.attributes.borderless is not true" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Table has table-striped CSS class when props.model.attributes.striped is true" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Table has table-hover CSS class when props.isSelectionEnabled is true" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="setPropertyValue sets the correct property as the given value on each objectData" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="isTableEditable returns true when any column.isEditable is true" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="onOutcomeClick is passed to outcomes in outcome column" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Download anchor tags are rendered in rows when props.isFiles is true" time="0">
+    </testcase>
+    <testcase classname="Table Large input component behaviour" name="Checkbox column is rendered when model.isMultiSelect is true" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="7" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tour.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tour.test.tsx" hostname="localhost" tests="19" failures="0" time="0.956" timestamp="2020-12-23T12:17:23">
+    <properties>
+    </properties>
+    <testcase classname="Tour component behaviour" name="Tour component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="Tour props are set" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="wait half a second before onInterval is called" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="unmounting component clears setInterval" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="simulating clicking close button" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="simulating clicking back button" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="simulating clicking next button" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="step positioning for top of element" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="step positioning for bottom of element" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="step positioning for right of element" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="step positioning for left of element" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="arrow positioning for when offset is null/undefined" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="arrow positioning for right/left placement" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="arrow positioning for top/bottom placement and align left" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="arrow positioning for top/bottom placement and align right" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="for no popover title if title is null" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="for no next button if showNext is false" time="0">
+    </testcase>
+    <testcase classname="Tour component behaviour" name="for no back button if showBack is false" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="8" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/login.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/login.test.tsx" hostname="localhost" tests="7" failures="0" time="1.073" timestamp="2020-12-23T12:17:24">
+    <properties>
+    </properties>
+    <testcase classname="Login component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="When OnSubmit login is called without username or password, an error is shown" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="When OnSubmit login succeeds, manywho state, auth and callback is updated to auth details" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="When OnSubmit login fails, and the error responseJSON is a string, the string is displayed" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="When OnSubmit login fails, and the error responseJSON is not a string, but responseJSON.message is, then responseJSON.message is displayed" time="0">
+    </testcase>
+    <testcase classname="Login component behaviour" name="When OnSubmit login fails, and the error responseJSON is not a string, and responseJSON.message also isn&apos;t, then responseText is displayed" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="9" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-small.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-small.test.tsx" hostname="localhost" tests="12" failures="0" time="0.748" timestamp="2020-12-23T12:17:25">
+    <properties>
+    </properties>
+    <testcase classname="Table Small input component behaviour" name="Table Small component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="Table Small component gets registered" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="Outcome column gets rendered when there are multiple outcomes" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="renderRows gets called with objectData, outcomes and displayColumns" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="table-invalid CSS class is appended when isValid prop is false" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="Matched selected row gets selected" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="internalId gets added to node as id attribute" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="internalId gets added to node as data-item attribute" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="onClick gets added to rows when there is a single, non-destructive outcome" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="glyphicon-chevron-right gets added to rows when there is a single, non-destructive outcome" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="props.onRowClicked gets added to rows when there isn&apos;t a single outcome" time="0">
+    </testcase>
+    <testcase classname="Table Small input component behaviour" name="Download anchor tags are rendered in rows when props.isFiles is true" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="10" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageOperation.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageOperation.test.ts" hostname="localhost" tests="7" failures="0" time="0.663" timestamp="2020-12-23T12:17:26">
+    <properties>
+    </properties>
+    <testcase classname="Page operation expected behaviour" name="If there is now assignor value that an error is thrown" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is equal to the assignor value that visibility property is true" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is not equal to the assignor value that visibility property is false" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is equal to the assignor value that required property is true" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is not equal to the assignor value that required property is false" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is equal to the assignor value that enabled property is true" time="0">
+    </testcase>
+    <testcase classname="Page operation expected behaviour" name="That when page rule result is not equal to the assignor value that enabled property is false" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="11" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-input.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-input.test.tsx" hostname="localhost" tests="21" failures="0" time="0.628" timestamp="2020-12-23T12:17:26">
+    <properties>
+    </properties>
+    <testcase classname="Table input component behaviour" name="Table input component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="Table input component gets registered" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="isEmptyDate identifies 01/01/0001 as empty date string" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="isEmptyDate identifies 1/1/0001 as empty date string" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="isEmptyDate identifies 0001-01-01 as empty date string" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="isEmptyDate identifies null date" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="isEmptyDate identifies valid date" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTSTRING" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTPASSWORD" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTOBJECT" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTNUMBER" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTLIST" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTDATETIME" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTCONTENT" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="getInputType returns the correct type for CONTENTBOOLEAN" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="change event on boolean input toggles value between true and false" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="change event on text input sets value on state" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="Pressing enter on input calls onCommit" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="Focussing on input sets isFocused on state to true" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="Blurring focus on input sets isFocused on state to false" time="0">
+    </testcase>
+    <testcase classname="Table input component behaviour" name="input value is set to props.value" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="12" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/cache/ObjectDataCaching.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/cache/ObjectDataCaching.test.ts" hostname="localhost" tests="9" failures="0" time="0.878" timestamp="2020-12-23T12:17:27">
+    <properties>
+    </properties>
+    <testcase classname="Object data response caching behaviour" name="Generating object data requests should return empty if there are no data actions/page component objectdatarequest in snapshot" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="Generating object data requests should return an array of object data requests" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="A single object data requests list filter limit should be equal to globally defined limit" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="A single object data requests typeElementBindingId should be equal to the associated type elements binding id" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="A single object data requests objectDataTypes typeElementId should be equal to the associated type elements typeElementId" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="A single object data requests objectDataTypes developerName should be equal to the associated type elements developerName" time="0">
+    </testcase>
+    <testcase classname="Object data response caching behaviour" name="A single object data requests objectDataTypes properties should map to the associated type elements properties" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="13" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input.test.tsx" hostname="localhost" tests="14" failures="0" time="1.137" timestamp="2020-12-23T12:17:28">
+    <properties>
+    </properties>
+    <testcase classname="Input component behaviour" name="Input component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Input props are set" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Default input gets rendered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Datetime input gets rendered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Boolean input gets rendered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Number input gets rendered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Visible Password input gets rendered as password type" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Invisible Password input gets rendered as hidden type" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Password input set as autocomplete=&quot;new-password&quot; by default" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="Can override Password input autocomplete" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="MaskedInput input gets rendered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="on text input that onChange is triggered" time="0">
+    </testcase>
+    <testcase classname="Input component behaviour" name="on input blur that onBlur is triggered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="14" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroUtils.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroUtils.test.ts" hostname="localhost" tests="8" failures="0" time="0.709" timestamp="2020-12-23T12:17:29">
+    <properties>
+    </properties>
+    <testcase classname="Macro utilities behaviour" name="If property is found then returns the property contentValue" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If property is found but is incorrect contentType then error is thrown" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If objectdata has no properties key throw an error" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If objectdata properties key is null then throw an error" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If value is found in state then return values in state" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If value is not found in snapshot then throw an error" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="If value is not found in state then throw an error" time="0">
+    </testcase>
+    <testcase classname="Macro utilities behaviour" name="State should get modified with passed value" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="15" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tile-item.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tile-item.test.tsx" hostname="localhost" tests="4" failures="0" time="0.87" timestamp="2020-12-23T12:17:30">
+    <properties>
+    </properties>
+    <testcase classname="Tile Item component behaviour" name="Tile Item component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Tile Item component behaviour" name="Tile Item component gets registered" time="0">
+    </testcase>
+    <testcase classname="Tile Item component behaviour" name="Blank label uses developer name" time="0">
+    </testcase>
+    <testcase classname="Tile Item component behaviour" name="Label is used in preference to developer name" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="16" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/navigation.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/navigation.test.tsx" hostname="localhost" tests="6" failures="0" time="1.633" timestamp="2020-12-23T12:17:31">
+    <properties>
+    </properties>
+    <testcase classname="Navigation component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Navigation component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Navigation component behaviour" name="Dropdown menu gets rendered" time="0">
+    </testcase>
+    <testcase classname="Navigation component behaviour" name="Dropdown sub-menu gets rendered" time="0">
+    </testcase>
+    <testcase classname="Navigation component behaviour" name="Dropdown button displays sub menu when clicked" time="0">
+    </testcase>
+    <testcase classname="Navigation component behaviour" name="Dropdown disappears once navigation complete" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="17" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/outcome.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/outcome.test.tsx" hostname="localhost" tests="14" failures="0" time="0.795" timestamp="2020-12-23T12:17:32">
+    <properties>
+    </properties>
+    <testcase classname="Outcome component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives correct type CSS classes" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives correct size CSS class" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives correct pageActionType CSS classes" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives CSS classes from attributes" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives btn-nobackground CSS class when required" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Use anchor element when uri supplied" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Use target attribute when supplied" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Component receives CSS classes from props" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="On click manywho.component.onOutcome gets called by default" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="On click props.onClick gets called when supplied" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="Icon is rendered when required" time="0">
+    </testcase>
+    <testcase classname="Outcome component behaviour" name="glyphicon type is not rendered when pageActionType and pageActionBindingType are null" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="18" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/models/flow.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/models/flow.test.ts" hostname="localhost" tests="4" failures="0" time="0.867" timestamp="2020-12-23T12:17:33">
+    <properties>
+    </properties>
+    <testcase classname="Flow model expected behaviour" name="Object data gets replaced with new data for the correct typeElement key" time="0">
+    </testcase>
+    <testcase classname="Flow model expected behaviour" name="Object data returned should get updated if object with matching internalId exists" time="0">
+    </testcase>
+    <testcase classname="Flow model expected behaviour" name="Unmodified objectdata should be returned if object with no matching internal id exists" time="0">
+    </testcase>
+    <testcase classname="Flow model expected behaviour" name="Last requests assoc data property should get updated" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="19" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroMethods.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroMethods.test.ts" hostname="localhost" tests="6" failures="0" time="0.74" timestamp="2020-12-23T12:17:34">
+    <properties>
+    </properties>
+    <testcase classname="Macro value methods behaviour" name="get datetime value returns a datetime string" time="0">
+    </testcase>
+    <testcase classname="Macro value methods behaviour" name="get number value returns a number" time="0">
+    </testcase>
+    <testcase classname="Macro value methods behaviour" name="get object value returns an object" time="0">
+    </testcase>
+    <testcase classname="Macro value methods behaviour" name="get array value returns an array" time="0">
+    </testcase>
+    <testcase classname="Macro value methods behaviour" name="Setter functions insert passed value into macro state" time="0">
+    </testcase>
+    <testcase classname="Macro value methods behaviour" name="Binding property methods should return an object with values mapping to property methods" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="20" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroPropertyMethods.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroPropertyMethods.test.ts" hostname="localhost" tests="16" failures="0" time="0.732" timestamp="2020-12-23T12:17:35">
+    <properties>
+    </properties>
+    <testcase classname="Macro value property methods behaviour" name="get string property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get content property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get password property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get number property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get date time property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get boolean property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get array property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="get object property calls getProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set string property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set content property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set password property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set number property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set date time property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set boolean property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set array property calls setProperty" time="0">
+    </testcase>
+    <testcase classname="Macro value property methods behaviour" name="set object property calls setProperty" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="21" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-number.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-number.test.tsx" hostname="localhost" tests="11" failures="0" time="0.811" timestamp="2020-12-23T12:17:36">
+    <properties>
+    </properties>
+    <testcase classname="Number input component behaviour" name="Number input component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="Number input component gets registered" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="Value is set in local state on mount" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="Attributes are in input props" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="Correct maxWidth style is in input props" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="Correct default min, max, step based on maxsize in input props" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="on number field input that onChange is triggered" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="that state is updated with input value" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="if input value is empty that container change function is called" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="that container change function is called" time="0">
+    </testcase>
+    <testcase classname="Number input component behaviour" name="if input value is NaN server validity stae is set to false" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="22" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/items-header.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/items-header.test.tsx" hostname="localhost" tests="12" failures="0" time="0.72" timestamp="2020-12-23T12:17:36">
+    <properties>
+    </properties>
+    <testcase classname="ItemsHeader component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Component renders search when isSearchable is true" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Clicking search button calls props.onSearch" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Search is not rendered when props.onSearch is false" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Outcome section is not rendered when props.outcomes is null" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Pressing enter calls props.onSearch" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Pressing non-enter keys in search does not call props.onSearch" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Changing search input value calls setState with new value" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Clicking refresh button calls props.refresh" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="If isRefreshable is falsey then no refresh button is displayed" time="0">
+    </testcase>
+    <testcase classname="ItemsHeader component behaviour" name="Component renders bulk outcomes only" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="23" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-datetime.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-datetime.test.tsx" hostname="localhost" tests="9" failures="0" time="0.776" timestamp="2020-12-23T12:17:37">
+    <properties>
+    </properties>
+    <testcase classname="InputDateTime component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="The datepicker plugin gets instantiated" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="If value prop is a date that datepicker plugin gets called" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="utility function is called to determine if the datepicker plugin should default to the current date" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="datepicker plugin uses datetime format from model attributes" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="setPickerDate is called with correct null value" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="make sure backspace doesn&apos;t clear input" time="0">
+    </testcase>
+    <testcase classname="InputDateTime component behaviour" name="setPickerDate is called with correct date value" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="24" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart.test.tsx" hostname="localhost" tests="9" failures="0" time="1.027" timestamp="2020-12-23T12:17:38">
+    <properties>
+    </properties>
+    <testcase classname="Chart component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Component renders validation message when chart is invalid" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Chart is hidden when isVisible is model.false" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Chart has receives classes from model" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Chart renders label when required" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="ItemsHeader renders when not design time" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="Wait renders when loading" time="0">
+    </testcase>
+    <testcase classname="Chart component behaviour" name="ChartBase receives width, height and onClick props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="25" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/dataactions.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/dataactions.test.ts" hostname="localhost" tests="3" failures="0" time="0.783" timestamp="2020-12-23T12:17:39">
+    <properties>
+    </properties>
+    <testcase classname="Data action behaviour" name="Offline state should always be returned" time="0">
+    </testcase>
+    <testcase classname="Data action behaviour" name="When objectdata is existing then the objectdata memory cache should be updated" time="0">
+    </testcase>
+    <testcase classname="Data action behaviour" name="When objectdata is not existing then new object is concatenated to objectdata cache" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="26" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/extractexternalid.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/extractexternalid.test.ts" hostname="localhost" tests="4" failures="0" time="0.688" timestamp="2020-12-23T12:17:40">
+    <properties>
+    </properties>
+    <testcase classname="Page service expected behaviour" name="If a request is not associated to any object data no call to the state values endpoint is made" time="0">
+    </testcase>
+    <testcase classname="Page service expected behaviour" name="if a request is associated to objectdata then a call to the state values endpoint is made" time="0">
+    </testcase>
+    <testcase classname="Page service expected behaviour" name="Requests associated to objectdata should get an external id assigned" time="0">
+    </testcase>
+    <testcase classname="Page service expected behaviour" name="When internal id does not match then the external id is not modified" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="27" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-container.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-container.test.tsx" hostname="localhost" tests="7" failures="0" time="0.955" timestamp="2020-12-23T12:17:41">
+    <properties>
+    </properties>
+    <testcase classname="ChartContainer component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="Container renders an empty div when in design time" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="Refresh button renders when not in design time" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="Refresh is called when refresh button is clicked" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="Wait renders when any children are loading" time="0">
+    </testcase>
+    <testcase classname="ChartContainer component behaviour" name="ChartBase is given the correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="28" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/historical-navigation.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/historical-navigation.test.tsx" hostname="localhost" tests="5" failures="0" time="0.843" timestamp="2020-12-23T12:17:42">
+    <properties>
+    </properties>
+    <testcase classname="HistoricalNavigation component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="HistoricalNavigation component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="HistoricalNavigation component behaviour" name="navigate is called with correct entry path" time="0">
+    </testcase>
+    <testcase classname="HistoricalNavigation component behaviour" name="Current map element name is displayed when historical navigation entries is empty" time="0">
+    </testcase>
+    <testcase classname="HistoricalNavigation component behaviour" name="Current map element name is displayed at end of navigation list" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="29" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/page.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/page.test.ts" hostname="localhost" tests="3" failures="0" time="0.701" timestamp="2020-12-23T12:17:42">
+    <properties>
+    </properties>
+    <testcase classname="Page service expected behaviour" name="If the page element has page conditions then call the page condition service" time="0">
+    </testcase>
+    <testcase classname="Page service expected behaviour" name="If the page element does not have page conditions then page condition service is not called" time="0">
+    </testcase>
+    <testcase classname="Page service expected behaviour" name="If page condition service throws an error then console error is called" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="30" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/modal-container.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/modal-container.test.tsx" hostname="localhost" tests="8" failures="0" time="0.834" timestamp="2020-12-23T12:17:43">
+    <properties>
+    </properties>
+    <testcase classname="ModalContainer component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Clicking cancel calls onCancel" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Clicking confirm calls onConfirm" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Supplied labels are rendered in buttons" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Global modal property is set to null when escape is pressed" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Supplied content is rendered" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Header is conditionally rendered" time="0">
+    </testcase>
+    <testcase classname="ModalContainer component behaviour" name="Footer and footer buttons are conditionally rendered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="31" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-input-datetime.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/table-input-datetime.test.tsx" hostname="localhost" tests="7" failures="0" time="0.653" timestamp="2020-12-23T12:17:44">
+    <properties>
+    </properties>
+    <testcase classname="Table Input Datetime component behaviour" name="Table Input Datetime component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="Table Input Datetime component gets registered" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="The datepicker plugin gets instantiated" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="A default date gets set" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="A default date does not get set" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="Date gets formatted on change event" time="0">
+    </testcase>
+    <testcase classname="Table Input Datetime component behaviour" name="Date format function gets called with no args if no format is defined" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="32" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/image.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/image.test.tsx" hostname="localhost" tests="11" failures="0" time="0.85" timestamp="2020-12-23T12:17:45">
+    <properties>
+    </properties>
+    <testcase classname="Image component behaviour" name="Image component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image props are set" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image component should have hidden class" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image component should not have hidden class if model.isVisible is true" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Label is equal to model label property" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Label element should not exist if model.label is blank" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image src attribute is equal to model imageUri property" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image alt attribute is equal to model developerName property" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image width attribute is equal to model width property" time="0">
+    </testcase>
+    <testcase classname="Image component behaviour" name="Image height attribute is equal to model height property" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="33" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/request.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/request.test.tsx" hostname="localhost" tests="6" failures="0" time="1.107" timestamp="2020-12-23T12:17:45">
+    <properties>
+    </properties>
+    <testcase classname="Request component behaviour" name="Request component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Request component behaviour" name="File is uploaded on replay" time="0">
+    </testcase>
+    <testcase classname="Request component behaviour" name="Replay is cancelled and flow is rejoined if replay request is unauthorised" time="0">
+    </testcase>
+    <testcase classname="Request component behaviour" name="The external id extraction method is called on replay" time="0">
+    </testcase>
+    <testcase classname="Request component behaviour" name="Request gets auto replayed" time="0">
+    </testcase>
+    <testcase classname="Request component behaviour" name="Request does not get auto replayed" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="34" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/file-upload.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/file-upload.test.tsx" hostname="localhost" tests="4" failures="0" time="0.717" timestamp="2020-12-23T12:17:47">
+    <properties>
+    </properties>
+    <testcase classname="FileUpload component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="FileUpload component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="FileUpload component behaviour" name="Component sends the correct information from the File Uploader to uploadFiles" time="0">
+    </testcase>
+    <testcase classname="FileUpload component behaviour" name="Component uploadComplete function marks items as selected and calls setComponent and handleEvent" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="35" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/banner.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/banner.test.tsx" hostname="localhost" tests="7" failures="0" time="0.867" timestamp="2020-12-23T12:17:47">
+    <properties>
+    </properties>
+    <testcase classname="Banner component behaviour" name="Banner component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner is hidden initially" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner shows online text" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner shows offline text" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner is hidden initally when there are requests to be replayed" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner switches when network status changes" time="0">
+    </testcase>
+    <testcase classname="Banner component behaviour" name="Banner does not switch when network status remains the same" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="36" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageRule.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/pageconditions/pageRule.test.ts" hostname="localhost" tests="8" failures="0" time="0.649" timestamp="2020-12-23T12:17:48">
+    <properties>
+    </properties>
+    <testcase classname="Page rule expected behaviour" name="When testing for equality that rule returns true when values are equal" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing for equality that rule returns false when values are not equal" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing for inequality that rule returns true when values are not equal" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing for inequality that rule returns false when values are equal" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing is empty that rule returns false when values are null/empty string/no object data" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing is empty that rule returns true when values are not null/empty string/no object data" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing is not empty that rule returns false when values are null/empty string/no object data" time="0">
+    </testcase>
+    <testcase classname="Page rule expected behaviour" name="When testing is not empty that rule returns true when values are not null/empty string/no object data" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="37" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/reducer.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/reducer.test.ts" hostname="localhost" tests="9" failures="0" time="0.65" timestamp="2020-12-23T12:17:49">
+    <properties>
+    </properties>
+    <testcase classname="Offline reducer behaviour" name="When there is network" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When there is no network" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When going into offline mode" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When coming out of offline mode" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When going into offline mode with network available" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When the flow is replaying requests" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When the flow is incrementing caching progress" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When saving flow information in the store" time="0">
+    </testcase>
+    <testcase classname="Offline reducer behaviour" name="When ac flow information in the store" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="38" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/iframe.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/iframe.test.tsx" hostname="localhost" tests="7" failures="0" time="0.792" timestamp="2020-12-23T12:17:50">
+    <properties>
+    </properties>
+    <testcase classname="Iframe component behaviour" name="iframe component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="iframe props are set" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="Component should have manywho classes" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="iframe element src should equal model imageUri" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="iframe element width should equal model width" time="0">
+    </testcase>
+    <testcase classname="Iframe component behaviour" name="iframe element height should equal model height" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="39" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/feed-input.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/feed-input.test.tsx" hostname="localhost" tests="6" failures="0" time="0.953" timestamp="2020-12-23T12:17:50">
+    <properties>
+    </properties>
+    <testcase classname="FeedInput component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="FeedInput component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="FeedInput component behaviour" name="Component does not render file upload if attachments are disabled" time="0">
+    </testcase>
+    <testcase classname="FeedInput component behaviour" name="Component renders file upload if attachments are enabled" time="0">
+    </testcase>
+    <testcase classname="FeedInput component behaviour" name="Send is called with correct arguments when enter is pressed" time="0">
+    </testcase>
+    <testcase classname="FeedInput component behaviour" name="Send is called with correct arguments when the &quot;Send&quot; button is clicked" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="40" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/inline.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/inline.test.tsx" hostname="localhost" tests="7" failures="0" time="0.749" timestamp="2020-12-23T12:17:51">
+    <properties>
+    </properties>
+    <testcase classname="Inline component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="Component styling gets registered" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="getInline returns Inline component" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="Children get rendered" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="model.getChildren is called with correct id and flowKey" time="0">
+    </testcase>
+    <testcase classname="Inline component behaviour" name="component.getChildComponents is called with correct childData, id and flowKey" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="41" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/presentation.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/presentation.test.tsx" hostname="localhost" tests="5" failures="0" time="1.141" timestamp="2020-12-23T12:17:52">
+    <properties>
+    </properties>
+    <testcase classname="Presentation component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Presentation component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Presentation component behaviour" name="Simple render" time="0">
+    </testcase>
+    <testcase classname="Presentation component behaviour" name="DOMPurify removes dangerous scripting" time="0">
+    </testcase>
+    <testcase classname="Presentation component behaviour" name="DOMPurify leaves dangerous scripting with option disabled" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="42" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/goOnline.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/goOnline.test.tsx" hostname="localhost" tests="4" failures="0" time="1.037" timestamp="2020-12-23T12:17:53">
+    <properties>
+    </properties>
+    <testcase classname="GoOnline component behaviour" name="GoOnline component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="GoOnline component behaviour" name="The request component always gets an auth token from state passed as a prop" time="0">
+    </testcase>
+    <testcase classname="GoOnline component behaviour" name="When auto replay setting is switched on" time="0">
+    </testcase>
+    <testcase classname="GoOnline component behaviour" name="When auto replay setting is switched off" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="43" name="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/CoreUtils.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/CoreUtils.test.tsx" hostname="localhost" tests="5" failures="0" time="0.629" timestamp="2020-12-23T12:17:54">
+    <properties>
+    </properties>
+    <testcase classname="Core utilities expected functionality" name="No inline outcome displays just the component" time="0">
+    </testcase>
+    <testcase classname="Core utilities expected functionality" name="An inline outcome marked as to appear at the top of the component" time="0">
+    </testcase>
+    <testcase classname="Core utilities expected functionality" name="An inline outcome not marked as to appear at the top of the component" time="0">
+    </testcase>
+    <testcase classname="Core utilities expected functionality" name="Multiple inline outcomes with different positioning" time="0">
+    </testcase>
+    <testcase classname="Core utilities expected functionality" name="If the component is not visible then the outcomes don&apos;t render" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="44" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/horizontal.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/horizontal.test.tsx" hostname="localhost" tests="6" failures="0" time="0.763" timestamp="2020-12-23T12:17:55">
+    <properties>
+    </properties>
+    <testcase classname="Horizontal component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Horizontal component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Horizontal component behaviour" name="Component styling callback gets registered" time="0">
+    </testcase>
+    <testcase classname="Horizontal component behaviour" name="Children get rendered if supplied" time="0">
+    </testcase>
+    <testcase classname="Horizontal component behaviour" name="getChildComponents gets called if no children supplied" time="0">
+    </testcase>
+    <testcase classname="Horizontal component behaviour" name="model.getChildren gets called if no children supplied" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="45" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/footer.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/footer.test.tsx" hostname="localhost" tests="5" failures="0" time="0.806" timestamp="2020-12-23T12:17:56">
+    <properties>
+    </properties>
+    <testcase classname="Footer component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Footer component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Footer component behaviour" name="Container div should not exist when there are no children" time="0">
+    </testcase>
+    <testcase classname="Footer component behaviour" name="Component should have container-fluid class if settings.isFullWidth is true" time="0">
+    </testcase>
+    <testcase classname="Footer component behaviour" name="Component should not have container-fluid class if settings.isFullWidth is false" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="46" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/vertical.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/vertical.test.tsx" hostname="localhost" tests="6" failures="0" time="0.77" timestamp="2020-12-23T12:17:57">
+    <properties>
+    </properties>
+    <testcase classname="Vertical component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Vertical component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Vertical component behaviour" name="Component styling callback gets registered" time="0">
+    </testcase>
+    <testcase classname="Vertical component behaviour" name="Children get rendered if supplied" time="0">
+    </testcase>
+    <testcase classname="Vertical component behaviour" name="getChildComponents gets called if no children supplied" time="0">
+    </testcase>
+    <testcase classname="Vertical component behaviour" name="model.getChildren gets called if no children supplied" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="47" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/cache/StateCaching.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/cache/StateCaching.test.ts" hostname="localhost" tests="4" failures="0" time="0.664" timestamp="2020-12-23T12:17:57">
+    <properties>
+    </properties>
+    <testcase classname="State caching service behaviour" name="Every value returned gets injected into offline state when polling periodically" time="0">
+    </testcase>
+    <testcase classname="State caching service behaviour" name="Every value returned gets injected into offline state when polling" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="48" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/actions.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/actions.test.ts" hostname="localhost" tests="2" failures="0" time="0.663" timestamp="2020-12-23T12:17:58">
+    <properties>
+    </properties>
+    <testcase classname="Actions behaviour " name="The activatePollingValues activate set isPollingValues to true" time="0">
+    </testcase>
+    <testcase classname="Actions behaviour " name="The cache progress to be updated to 100%" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="49" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroExecution.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/services/macros/MacroExecution.test.ts" hostname="localhost" tests="3" failures="0" time="0.654" timestamp="2020-12-23T12:17:59">
+    <properties>
+    </properties>
+    <testcase classname="Macro execution behaviour" name="Values in state are always set to macro state context" time="0">
+    </testcase>
+    <testcase classname="Macro execution behaviour" name="Macro state context is always returned" time="0">
+    </testcase>
+    <testcase classname="Macro execution behaviour" name="Modified macro state context is returned" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="50" name="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/TableUtils.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/TableUtils.test.ts" hostname="localhost" tests="4" failures="0" time="0.584" timestamp="2020-12-23T12:17:59">
+    <properties>
+    </properties>
+    <testcase classname="Table utilities expected functionality" name="Returns true if external IDs match" time="0">
+    </testcase>
+    <testcase classname="Table utilities expected functionality" name="Returns false if external IDs do not match" time="0">
+    </testcase>
+    <testcase classname="Table utilities expected functionality" name="Returns true if internal IDs match" time="0">
+    </testcase>
+    <testcase classname="Table utilities expected functionality" name="Returns false if internal IDs no not match" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="51" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-line.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-line.test.tsx" hostname="localhost" tests="3" failures="0" time="0.833" timestamp="2020-12-23T12:18:00">
+    <properties>
+    </properties>
+    <testcase classname="Chart Line component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart Line component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart Line component behaviour" name="Chart gets called with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="52" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/outcomes.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/outcomes.test.tsx" hostname="localhost" tests="4" failures="0" time="0.798" timestamp="2020-12-23T12:18:01">
+    <properties>
+    </properties>
+    <testcase classname="Outcomes component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Outcomes component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Outcomes component behaviour" name="Dummy outcome elements get rendered if in design time" time="0">
+    </testcase>
+    <testcase classname="Outcomes component behaviour" name=".btn-group element gets rendered if group is horizontal" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="53" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-bar.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-bar.test.tsx" hostname="localhost" tests="3" failures="0" time="0.791" timestamp="2020-12-23T12:18:02">
+    <properties>
+    </properties>
+    <testcase classname="Chart Bar component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart Bar component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart Bar component behaviour" name="Chart gets called with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="54" name="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/DataUtils.test.ts" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/js/components/utils/__tests__/DataUtils.test.ts" hostname="localhost" tests="4" failures="0" time="0.603" timestamp="2020-12-23T12:18:03">
+    <properties>
+    </properties>
+    <testcase classname="Data utilities expected functionality" name="Returns true if passed any capitalization of the word true" time="0">
+    </testcase>
+    <testcase classname="Data utilities expected functionality" name="Returns false if passed any capitalization of the word false" time="0">
+    </testcase>
+    <testcase classname="Data utilities expected functionality" name="Returns false if passed any other word" time="0">
+    </testcase>
+    <testcase classname="Data utilities expected functionality" name="Returns boolean value when provided one" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="55" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-base.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-base.test.tsx" hostname="localhost" tests="2" failures="0" time="0.772" timestamp="2020-12-23T12:18:03">
+    <properties>
+    </properties>
+    <testcase classname="ChartBase component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ChartBase component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="56" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-boolean.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/input-boolean.test.tsx" hostname="localhost" tests="2" failures="0" time="0.682" timestamp="2020-12-23T12:18:04">
+    <properties>
+    </properties>
+    <testcase classname="Boolean input component behaviour" name="Boolean input component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Boolean input component behaviour" name="Boolean input component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="57" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tiles.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/tiles.test.tsx" hostname="localhost" tests="2" failures="0" time="0.807" timestamp="2020-12-23T12:18:05">
+    <properties>
+    </properties>
+    <testcase classname="Tiles component behaviour" name="Tiles component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Tiles component behaviour" name="Tiles component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="58" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/wait.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/wait.test.tsx" hostname="localhost" tests="3" failures="0" time="0.67" timestamp="2020-12-23T12:18:05">
+    <properties>
+    </properties>
+    <testcase classname="Wait component behaviour" name="Wait component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Wait component behaviour" name="Wait props are set" time="0">
+    </testcase>
+    <testcase classname="Wait component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="59" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-doughnut.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-doughnut.test.tsx" hostname="localhost" tests="3" failures="0" time="0.797" timestamp="2020-12-23T12:18:06">
+    <properties>
+    </properties>
+    <testcase classname="Chart Doughnut component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart Doughnut component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart Doughnut component behaviour" name="Chart gets called with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="60" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-polar.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-polar.test.tsx" hostname="localhost" tests="3" failures="0" time="0.85" timestamp="2020-12-23T12:18:07">
+    <properties>
+    </properties>
+    <testcase classname="Chart Polar component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart Polar component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart Polar component behaviour" name="Chart gets called with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="61" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-pie.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/chart-pie.test.tsx" hostname="localhost" tests="3" failures="0" time="0.81" timestamp="2020-12-23T12:18:08">
+    <properties>
+    </properties>
+    <testcase classname="Chart Pie component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Chart Pie component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Chart Pie component behaviour" name="Chart gets called with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="62" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/debug.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/debug.test.tsx" hostname="localhost" tests="2" failures="0" time="0.877" timestamp="2020-12-23T12:18:09">
+    <properties>
+    </properties>
+    <testcase classname="Debug component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Debug component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="63" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/notification.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/notification.test.tsx" hostname="localhost" tests="2" failures="0" time="0.708" timestamp="2020-12-23T12:18:10">
+    <properties>
+    </properties>
+    <testcase classname="Notification component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Notification component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="64" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/main.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/main.test.tsx" hostname="localhost" tests="3" failures="0" time="1.086" timestamp="2020-12-23T12:18:10">
+    <properties>
+    </properties>
+    <testcase classname="Main component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Main component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Main component behaviour" name="Modal renders with correct props" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="65" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/hidden.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/hidden.test.tsx" hostname="localhost" tests="4" failures="0" time="0.688" timestamp="2020-12-23T12:18:11">
+    <properties>
+    </properties>
+    <testcase classname="Hidden component behaviour" name="Hidden component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Hidden component behaviour" name="Hidden props are set" time="0">
+    </testcase>
+    <testcase classname="Hidden component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <testcase classname="Hidden component behaviour" name="Component should render an empty div element" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="66" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/modal.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/modal.test.tsx" hostname="localhost" tests="2" failures="0" time="0.73" timestamp="2020-12-23T12:18:12">
+    <properties>
+    </properties>
+    <testcase classname="Modal component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Modal component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="67" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/returnToParent.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/returnToParent.test.tsx" hostname="localhost" tests="2" failures="0" time="0.706" timestamp="2020-12-23T12:18:13">
+    <properties>
+    </properties>
+    <testcase classname="ReturnParent component behaviour" name="ReturnParent component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="ReturnParent component behaviour" name="ReturnParent component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="68" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/radio.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/radio.test.tsx" hostname="localhost" tests="2" failures="0" time="1.051" timestamp="2020-12-23T12:18:14">
+    <properties>
+    </properties>
+    <testcase classname="Radio component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Radio component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="69" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/offline.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/offline.test.tsx" hostname="localhost" tests="1" failures="0" time="1.745" timestamp="2020-12-23T12:18:15">
+    <properties>
+    </properties>
+    <testcase classname="Offline component behaviour" name="Offline component renders without crashing" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="70" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/container.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/container.test.tsx" hostname="localhost" tests="2" failures="0" time="0.773" timestamp="2020-12-23T12:18:16">
+    <properties>
+    </properties>
+    <testcase classname="Container component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Container component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="71" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/list.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/list.test.tsx" hostname="localhost" tests="2" failures="0" time="0.891" timestamp="2020-12-23T12:18:17">
+    <properties>
+    </properties>
+    <testcase classname="List component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="List component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="72" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/status.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/status.test.tsx" hostname="localhost" tests="2" failures="0" time="0.606" timestamp="2020-12-23T12:18:18">
+    <properties>
+    </properties>
+    <testcase classname="Status input component behaviour" name="Status component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Status input component behaviour" name="Status component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="73" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/feed.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/feed.test.tsx" hostname="localhost" tests="2" failures="0" time="0.66" timestamp="2020-12-23T12:18:19">
+    <properties>
+    </properties>
+    <testcase classname="Feed component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Feed component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="74" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/notifications.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/notifications.test.tsx" hostname="localhost" tests="2" failures="0" time="0.981" timestamp="2020-12-23T12:18:19">
+    <properties>
+    </properties>
+    <testcase classname="Notifications component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Notifications component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="75" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/pagination.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/pagination.test.tsx" hostname="localhost" tests="2" failures="0" time="0.683" timestamp="2020-12-23T12:18:20">
+    <properties>
+    </properties>
+    <testcase classname="Pagination component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Pagination component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="76" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/content.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/content.test.tsx" hostname="localhost" tests="2" failures="0" time="0.672" timestamp="2020-12-23T12:18:21">
+    <properties>
+    </properties>
+    <testcase classname="Content component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Content component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="77" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/history.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/history.test.tsx" hostname="localhost" tests="2" failures="0" time="0.652" timestamp="2020-12-23T12:18:22">
+    <properties>
+    </properties>
+    <testcase classname="History component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="History component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="78" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/group.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/group.test.tsx" hostname="localhost" tests="2" failures="0" time="0.874" timestamp="2020-12-23T12:18:22">
+    <properties>
+    </properties>
+    <testcase classname="Group component behaviour" name="Component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Group component behaviour" name="Component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="79" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/textarea.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/textarea.test.tsx" hostname="localhost" tests="2" failures="0" time="0.796" timestamp="2020-12-23T12:18:23">
+    <properties>
+    </properties>
+    <testcase classname="Textarea component behaviour" name="Textarea component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Textarea component behaviour" name="Textarea component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="80" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/toggle.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/toggle.test.tsx" hostname="localhost" tests="2" failures="0" time="0.82" timestamp="2020-12-23T12:18:24">
+    <properties>
+    </properties>
+    <testcase classname="Toggle component behaviour" name="Toggle component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Toggle component behaviour" name="Toggle component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="81" name="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/voting.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-bootstrap/__tests__/voting.test.tsx" hostname="localhost" tests="2" failures="0" time="0.689" timestamp="2020-12-23T12:18:25">
+    <properties>
+    </properties>
+    <testcase classname="Voting component behaviour" name="Voting component renders without crashing" time="0">
+    </testcase>
+    <testcase classname="Voting component behaviour" name="Voting component gets registered" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="82" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/requestFault.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/requestFault.test.tsx" hostname="localhost" tests="1" failures="0" time="0.766" timestamp="2020-12-23T12:18:26">
+    <properties>
+    </properties>
+    <testcase classname="RequestFault component behaviour" name="RequestFault component renders without crashing" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite id="83" name="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/noNetwork.test.tsx" errors="0" package="/home/dale/Code/ui-runtime/ui-offline/__tests__/components/noNetwork.test.tsx" hostname="localhost" tests="1" failures="0" time="0.66" timestamp="2020-12-23T12:18:27">
+    <properties>
+    </properties>
+    <testcase classname="NoNetwork component behaviour" name="NoNetwork component renders without crashing" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

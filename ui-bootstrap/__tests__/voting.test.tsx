@@ -12,9 +12,6 @@ describe('Voting component behaviour', () => {
     const globalAny:any = global;
 
     function manyWhoMount() {
-        globalAny.window.manywho['model'] = {
-            getInvokeType: jest.fn(),
-        };
         return mount(<Voting />);
     }
 

@@ -1,3 +1,4 @@
+const Utils = require('./ui-core/js/services/utils');
 
 /**
  * A setup files used by jest for adding
@@ -11,8 +12,30 @@ const obj = () => ({});
 const arr = () => [];
 const noop = () => {};
 const str = () => 'xxx';
- 
-// The global ManyWho object
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+window.moment = require('moment');
+
+window.metaData = {};
+
+jest.mock('localforage', () => ({
+    setDriver: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    removeItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    getItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    setItem: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+    createInstance: jest.fn(() => new Promise((resolve) => {
+        resolve(true);
+    })),
+}));
+
 window.manywho = {
     adminTenantId: 'test',
     cdnUrl: '',
@@ -33,6 +56,17 @@ window.manywho = {
                 onEnter: jest.fn(),
             },
         },
+        contentTypes: {
+            string: 'CONTENTSTRING',
+            number: 'CONTENTNUMBER',
+            boolean: 'CONTENTBOOLEAN',
+            password: 'CONTENTPASSWORD',
+            encrypted: 'CONTENTENCRYPTED',
+            datetime: 'CONTENTDATETIME',
+            content: 'CONTENTCONTENT',
+            object: 'CONTENTOBJECT',
+            list: 'CONTENTLIST',
+        },
     },
     log: {
         info: jest.fn(),
@@ -43,6 +77,7 @@ window.manywho = {
         getClasses: jest.fn(arr),
     },
     model: {
+        addNotification: jest.fn(),
         getChildren: jest.fn(arr),
         getComponent: jest.fn(obj),
         getContainer: jest.fn(() => ({
@@ -50,7 +85,7 @@ window.manywho = {
         })),
         getAttributes: jest.fn(obj),
         getDefaultNavigationId: jest.fn(str),
-        getInvokeType: jest.fn(str),
+        getInvokeType: jest.fn(() => 'xxx'),
         getOutcomes: jest.fn(),
         getModal: jest.fn(),
         getLabel: jest.fn(),
@@ -68,17 +103,24 @@ window.manywho = {
         getComponent: jest.fn(),
         setComponent: jest.fn(obj),
         getComponents: jest.fn(obj),
+        getAuthenticationToken: jest.fn(),
+        getState: jest.fn(() => ({ token: 'test' })),
     },
     utils: {
         convertToArray: jest.fn(arr),
-        isNullOrWhitespace: jest.fn(),
         isNullOrUndefined: jest.fn(t),
-        isNullOrEmpty: jest.fn(t),
-        isEqual: jest.fn(),
         extractElement: jest.fn(),
         removeLoadingIndicator: jest.fn(),
         guid: jest.fn(str),
         extend: jest.fn(),
+        extractFlowId: jest.fn(),
+        extractStateId: jest.fn(),
+        extractFlowVersionId: jest.fn(),
+        extractTenantId: jest.fn(),
+        getFlowKey: jest.fn(),
+        isNullOrEmpty: jest.fn((input) => typeof input === 'undefined' || input === null || input === ''),
+        isNullOrWhitespace: jest.fn((input) => typeof input === 'undefined' || input === null || input.replace(/\s/g, '').length < 1),
+        isEqual: jest.fn(Utils.isEqual),
     },
     tours: {
         getTargetElement: jest.fn(() => ({
@@ -86,9 +128,33 @@ window.manywho = {
         })),
     },
     settings: {
-        global: jest.fn(arr),
+        // global: jest.fn(arr),
         isDebugEnabled: jest.fn(f),
         flow: jest.fn(),
+        initialize: jest.fn(),
+        global: jest.fn((a) => {
+            if (a === 'offline.cache.requests.limit') {
+                return 250;
+            }
+
+            if (a === 'offline.cache.requests.pageSize') {
+                return 10;
+            }
+
+            if (a === 'platform.uri') {
+                return 'https://flow.manywho.com';
+            }
+
+            if (a === 'components.static') {
+                return [];
+            }
+
+            if (a === 'files.downloadUriPropertyId') {
+                return 'aaa';
+            }
+
+            return 'https://example.com';
+        }),
     },
     social: {
         getStream: jest.fn(),
@@ -102,4 +168,9 @@ window.manywho = {
         fileDataRequest: jest.fn(),
         navigate: jest.fn(),
     },
+    ajax: {
+        dispatchObjectDataRequest: jest.fn(() => Promise.resolve({ objectData: [] })),
+        invoke: jest.fn(),
+    },
+    pollInterval: 1000,
 };
