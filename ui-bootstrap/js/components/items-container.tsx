@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 // tslint:disable-next-line
@@ -104,12 +105,7 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         const state = manywho.state.getComponent(this.props.id, this.props.flowKey);
 
-        let limit: number = manywho.settings.global(`paging.${model.componentType.toLowerCase()}`);
-        const paginationSize: number = parseInt(model.attributes.paginationSize, 10);
-
-        if (!isNaN(paginationSize)) {
-            limit = paginationSize;
-        }
+        const limit = this.getPageSize(model, this.props.flowKey);
 
         let orderByDirection = null;
         if (!manywho.utils.isNullOrUndefined(this.state.sortedIsAscending)) {
@@ -170,13 +166,55 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
 
             let result = 0;
             switch (l.contentType.toUpperCase()) {
-            case manywho.component.contentTypes.datetime: // Fallthrough
-            case manywho.component.contentTypes.number: // Fallthrough
-            case manywho.component.contentTypes.password: // Fallthrough
-            case manywho.component.contentTypes.content: // Fallthrough
-            case manywho.component.contentTypes.string:
-                result = l.contentValue.localeCompare(r.contentValue);
+                case manywho.component.contentTypes.password: // Fallthrough
+                case manywho.component.contentTypes.content: // Fallthrough
+                case manywho.component.contentTypes.string:
+                    if (!l.contentValue || !r.contentValue) {
+                        result = 0;
+                    } else {
+                        result = l.contentValue.localeCompare(r.contentValue);
+                    }
+                    
+                    break;
+                    
+            case manywho.component.contentTypes.datetime: {
+                // moment will ignore a format supplied as an empty string
+                // if there is no format supplied contentValue will be a full datetime stamp eg. "2020-12-10T10:39:00+02:00"
+                // moment will correctly parse a string in this format with no format supplied as a second argument
+                // moment requires 'd' and 'y' characters in the format to be uppercase
+
+                const chars = {'d':'D','y':'Y'};
+
+                const leftFormat = (l.contentFormat || "").replace(/[dy]/g, key => chars[key]);
+                const rightFormat = (r.contentFormat || "").replace(/[dy]/g, key => chars[key]);
+
+                const leftParsed = moment(l.contentValue, leftFormat);
+                const rightParsed = moment(r.contentValue, rightFormat);
+
+                if (leftParsed.isBefore(rightParsed)) {
+                    result = -1;
+                } else if (leftParsed.isAfter(rightParsed)) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+
                 break;
+            }
+
+            case manywho.component.contentTypes.number: {
+
+                const leftParsed = parseFloat(l.contentValue);
+                const rightParsed = parseFloat(r.contentValue);
+
+                if (isNaN(leftParsed) || isNaN(rightParsed)) {
+                    result = 0;
+                } else {
+                    result = leftParsed - rightParsed;
+                }
+                
+                break;
+            }
 
             case manywho.component.contentTypes.boolean:
                 if (checkBooleanString(l.contentValue) === checkBooleanString(r.contentValue)) {
@@ -312,6 +350,10 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         );
     }
 
+    getPageSize(model, flowKey) {
+        return manywho.component.getPageSize(model, flowKey);
+    }
+
     render() {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         const state =
@@ -325,12 +367,12 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
             (model.objectDataRequest && model.objectDataRequest.hasMoreResults) ||
             (model.fileDataRequest && model.fileDataRequest.hasMoreResults);
         let objectData = null;
-        let limit = 0;
+        const limit = this.getPageSize(model, this.props.flowKey);
 
         if (!model.objectDataRequest && !model.fileDataRequest) {
 
             if (!manywho.utils.isNullOrWhitespace(state.search)) {
-                objectData = model.objectData.filter(
+                objectData = model.objectData ? model.objectData.filter(
                     item => item.properties.filter((prop) => {
                         const matchingColumns = columns.filter(
                             column => column.typeElementPropertyId === prop.typeElementPropertyId && column.isDisplayValue,
@@ -347,13 +389,13 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
 
                         return false;
                     }).length > 0,
-                );
+                ) : model.objectData;
             } else {
                 objectData = model.objectData;
             }
 
             // Sort the filtered list before slicing
-            if (this.state.sortedBy) {
+            if (this.state.sortedBy && Array.isArray(objectData)) {
                 objectData.sort(this.compare(this.state.sortedBy, this.state.sortedIsAscending));
             }
 
@@ -363,18 +405,6 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
                 objectData
             ) {
                 const page = (state.page - 1) || 0;
-                const paginationSize = parseInt(model.attributes.paginationSize, 10);
-
-                limit = parseInt(
-                    manywho.settings.flow(
-                        `paging.${model.componentType.toLowerCase()}`, this.props.flowKey,
-                    ) || 10,
-                    10,
-                );
-
-                if (!isNaN(paginationSize)) {
-                    limit = paginationSize;
-                }
 
                 if (limit > 0) {
                     hasMoreResults = (page * limit) + limit + 1 <= objectData.length;
@@ -384,12 +414,6 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
 
         } else if (model.objectDataRequest || model.fileDataRequest) {
             objectData = model.objectData;
-            limit = parseInt(
-                manywho.settings.flow(
-                    `paging.${model.componentType.toLowerCase()}`, this.props.flowKey,
-                ) || 10,
-                10,
-            );
         }
 
         let contentElement = null;
@@ -452,7 +476,7 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         if (state.error) {
             contentElement = (
                 <div className="mw-items-error">
-                    <p className="lead">{state.error.message}</p>
+                    <p className="lead alert alert-danger text-left">{state.error.message}</p>
                     <button className="btn btn-danger" onClick={this.refresh}>Retry</button>
                 </div>
             );

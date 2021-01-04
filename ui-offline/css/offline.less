@@ -1,4 +1,51 @@
 .mw-bs {
+
+    .offline-banner {
+        top: 0;
+        left: 0;
+        width: 100%;
+        position: absolute;
+        pointer-events: initial;
+        color: #212121;
+        display: flex;
+    }
+
+    .offline-banner svg {
+        position: absolute;
+    }
+
+    // The two wifi icons have slightly differing heights
+    // so the positioning rules need to be adjusted for each
+    .offline-banner.alert-offline .network-icon {
+        top: 12px;
+    }
+
+    .offline-banner.alert-online .network-icon {
+        top: 15px;
+    }
+
+    .offline-banner.alert-offline .network-icon {
+        position: absolute;
+        top: 12px;
+    }
+
+    .offline-banner .format-pre-line {
+        flex-grow: 1;
+        margin-left: 3em;
+    }
+
+    .offline-banner button.close {
+        color: #212121;
+    }
+
+    .offline-banner.alert-online {
+        background: #D2EDEC;
+    }
+
+    .offline-banner.alert-offline {
+        background: #E5E5E5;
+    }
+
     .offline {
         background: transparent;
         bottom: 0;
@@ -158,10 +205,12 @@
     }
 
     .caching-spinner .wait-spinner {
-        width: 70px;
-        height: 70px;
+        position: absolute;
+        width: 30px;
+        height: 30px;
         margin: 0;
-        left: 0
+        left: 20px;
+        top: 22px;
     }
 
     .caching-spinner .wait-message {

@@ -14,7 +14,7 @@ test.before((t) => {
             platform: {
                 uri: 'https://flow.manywho.com',
             },
-        },                  
+        },
         null,
     );
 
@@ -41,7 +41,7 @@ const expectedStateHeaders = Object.assign({}, expectedHeaders, {
     manywhostate: stateId,
 });
 
-test.cb.serial('Login', (t) => {
+test.serial.cb('Login', (t) => {
     t.plan(4);
 
     const loginStateId = 'loginstateid';
@@ -72,7 +72,7 @@ test.cb.serial('Login', (t) => {
     Ajax.login(expected.loginUrl, expected.username, expected.password, expected.sessionToken, expected.sessionUrl, loginStateId, tenantId);
 });
 
-test.cb.serial('Initialize', (t) => {
+test.serial.cb('Initialize', (t) => {
     t.plan(4);
 
     const url = 'https://flow.manywho.com/api/run/1';
@@ -95,7 +95,7 @@ test.cb.serial('Initialize', (t) => {
     Ajax.initialize(request, tenantId, token);
 });
 
-test.cb.serial('Flow Out', (t) => {
+test.serial.cb('Flow Out', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/out/${stateId}/outcomeId`;
@@ -111,7 +111,7 @@ test.cb.serial('Flow Out', (t) => {
     Ajax.flowOut(stateId, tenantId, 'outcomeId', token);
 });
 
-test.cb.serial('Join', (t) => {
+test.serial.cb('Join', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}`;
@@ -127,7 +127,7 @@ test.cb.serial('Join', (t) => {
     Ajax.join(stateId, tenantId, token);
 });
 
-test.cb.serial('Invoke', (t) => {
+test.serial.cb('Invoke', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}`;
@@ -147,7 +147,7 @@ test.cb.serial('Invoke', (t) => {
     Ajax.invoke(request, tenantId, token);
 });
 
-test.cb.serial('Get Navigation', (t) => {
+test.serial.cb('Get Navigation', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/navigation/${stateId}`;
@@ -169,7 +169,7 @@ test.cb.serial('Get Navigation', (t) => {
     Ajax.getNavigation(stateId, stateToken, request.navigationElementId, tenantId, token);
 });
 
-test.cb.serial('Get Flow By Name', (t) => {
+test.serial.cb('Get Flow By Name', (t) => {
     t.plan(3);
 
     const flowName = 'myflow';
@@ -189,10 +189,10 @@ test.cb.serial('Get Flow By Name', (t) => {
     Ajax.getFlowByName(flowName, tenantId, token);
 });
 
-test.cb.serial('ObjectData Request', (t) => {
+test.serial.cb('ObjectData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/data`;
+    const url = `https://flow.manywho.com/api/run/1/service/data`;
     const expected = {
         listFilter: {
             search: 'search',
@@ -219,16 +219,16 @@ test.cb.serial('ObjectData Request', (t) => {
         token,
         expected.listFilter.limit,
         expected.listFilter.search,
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
 
-test.cb.serial('FileData Request', (t) => {
+test.serial.cb('FileData Request', (t) => {
     t.plan(4);
 
-    const url = `https://flow.manywho.com/api/service/1/file`;
+    const url = `https://flow.manywho.com/api/run/1/service/file`;
     const expected = {
         listFilter: {
             search: 'search',
@@ -250,18 +250,18 @@ test.cb.serial('FileData Request', (t) => {
 
     Ajax.dispatchFileDataRequest(
         {},
-        tenantId, 
-        stateId, 
-        token, 
-        null, 
-        expected.listFilter.search, 
-        expected.listFilter.orderByPropertyDeveloperName, 
-        expected.listFilter.orderByDirectionType, 
+        tenantId,
+        stateId,
+        token,
+        null,
+        expected.listFilter.search,
+        expected.listFilter.orderByPropertyDeveloperName,
+        expected.listFilter.orderByDirectionType,
         3,
     );
 });
 
-test.cb.serial('Session Authentication', (t) => {
+test.serial.cb('Session Authentication', (t) => {
     t.plan(4);
 
     const url = `https://flow.manywho.com/api/run/1/authentication/${stateId}`;
@@ -282,7 +282,7 @@ test.cb.serial('Session Authentication', (t) => {
     Ajax.sessionAuthentication(tenantId, stateId, expected, token);
 });
 
-test.cb.serial('Ping', (t) => {
+test.serial.cb('Ping', (t) => {
     t.plan(3);
 
     const url = `https://flow.manywho.com/api/run/1/state/${stateId}/ping/${stateToken}`;
@@ -298,11 +298,11 @@ test.cb.serial('Ping', (t) => {
     Ajax.ping(tenantId, stateId, stateToken, token);
 });
 
-test.cb.serial('Get Execution Log', (t) => {
+test.serial.cb('Get Execution Log', (t) => {
     t.plan(3);
 
     const flowId = 'flowId';
-    const url = `https://flow.manywho.com/api/log/${flowId}/${stateId}`;
+    const url = `https://flow.manywho.com/api/run/1/state/${stateId}/log`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -315,11 +315,11 @@ test.cb.serial('Get Execution Log', (t) => {
     Ajax.getExecutionLog(tenantId, flowId, stateId, token);
 });
 
-test.cb.serial('Get Social Me', (t) => {
+test.serial.cb('Get Social Me', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/user/me`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/user/me`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -332,11 +332,11 @@ test.cb.serial('Get Social Me', (t) => {
     Ajax.getSocialMe(tenantId, streamId, stateId, token);
 });
 
-test.cb.serial('Get Social Followers', (t) => {
+test.serial.cb('Get Social Followers', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/follower`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/follower`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -349,13 +349,13 @@ test.cb.serial('Get Social Followers', (t) => {
     Ajax.getSocialFollowers(tenantId, streamId, stateId, token);
 });
 
-test.cb.serial('Get Social Messages', (t) => {
+test.serial.cb('Get Social Messages', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
     const page = 1;
     const pageSize = 10;
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?page=${page}&pageSize=${pageSize}`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}?page=${page}&pageSize=${pageSize}`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);
@@ -368,11 +368,11 @@ test.cb.serial('Get Social Messages', (t) => {
     Ajax.getSocialMessages(tenantId, streamId, stateId, page, pageSize, token);
 });
 
-test.cb.serial('Send Social Message', (t) => {
+test.serial.cb('Send Social Message', (t) => {
     t.plan(4);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/message`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/message`;
 
     const expected = {
         message: 'hello',
@@ -390,11 +390,11 @@ test.cb.serial('Send Social Message', (t) => {
     Ajax.sendSocialMessage(tenantId, streamId, stateId, expected, token);
 });
 
-test.cb.serial('Follow', (t) => {
+test.serial.cb('Follow', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}?follow=true`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}?follow=true`;
 
     mock.post(url, (req, res) => {
         t.is(req._url, url);
@@ -407,12 +407,12 @@ test.cb.serial('Follow', (t) => {
     Ajax.follow(tenantId, streamId, stateId, true, token);
 });
 
-test.cb.serial('Get Social Users', (t) => {
+test.serial.cb('Get Social Users', (t) => {
     t.plan(3);
 
     const streamId = 'streamId';
     const name = 'name';
-    const url = `https://flow.manywho.com/api/social/1/stream/${streamId}/user?name=${name}`;
+    const url = `https://flow.manywho.com/api/run/1/social/stream/${streamId}/user?name=${name}`;
 
     mock.get(url, (req, res) => {
         t.is(req._url, url);

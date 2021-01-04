@@ -69,6 +69,18 @@ const reactErrorBoundary = {
     removeItem: sinon.stub(),
 };
 
+(window as any)['numbro'] = {
+    cultures: sinon.stub().returns({
+        'en-US': { languageTag: 'en-US' },
+        'en-GB': { languageTag: 'en-GB' },
+        'de-DE': { languageTag: 'en-DE' },
+        'fr-FR': { languageTag: 'en-FR' },
+        'es-ES': { languageTag: 'en-ES' },
+        'it-IT': { languageTag: 'en-IT' },
+    }),
+    culture: sinon.spy(),
+};
+
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
@@ -228,7 +240,7 @@ test.serial('Initialize', (t) => {
         });
 });
 
-test.cb.serial('Initialize Failed', (t) => {
+test.serial.cb('Initialize Failed', (t) => {
     ajax.initialize.callsFake(() => {
         const deferred = $.Deferred();
         deferred.reject({
@@ -429,6 +441,16 @@ test.serial('Render Login', (t) => {
     sinon.stub(Engine, 'render');
 });
 
+test.serial('Don\'t render if there is no container', (t) => {
+    (Engine.render as sinon.SinonStub).restore();
+
+    Engine.render(flowKey);
+
+    t.false(ReactDOM.render.calledOnce);
+
+    sinon.stub(Engine, 'render');
+});
+
 test.serial('Ping', (t) => {
     model.getInvokeType.returns('WAIT');
 
@@ -455,7 +477,7 @@ test.serial('Parse Response', (t) => {
     Engine.parseResponse(response, parser, response.invokeType, flowKey);
 
     t.true(state.setState.calledWith(response.stateId, response.stateToken, response.currentMapElementId));
-    t.true(state.refreshComponents.calledWith([], response.invokeType, flowKey));
+    t.true(state.refreshComponents.calledWith([], flowKey));
     t.true(ping.calledOnce);
 });
 
@@ -489,7 +511,7 @@ test.serial('FileDataRequest Success', (t) => {
     return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
         .then(() => {
             t.true((Engine.render as sinon.SinonStub).calledTwice);
-            t.false(state.setComponentError.called);
+            t.true(state.setComponentError.calledWith('id', null, flowKey));
             t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
             t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
         });
@@ -497,7 +519,7 @@ test.serial('FileDataRequest Success', (t) => {
 
 test.serial('FileDataRequest Fail', async (t) => {
     ajax.dispatchFileDataRequest.callsFake(() => {
-        const deferred =  $.Deferred();
+        const deferred = $.Deferred();
         deferred.reject('xhr', 'status', 'error');
         return deferred;
     });
@@ -507,12 +529,32 @@ test.serial('FileDataRequest Fail', async (t) => {
         fileDataRequest: {},
     });
 
-    await t.throws(Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+    return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
+        t.true((Engine.render as sinon.SinonStub).calledTwice);
+        t.true(state.setComponentError.calledWith('id', 'error', flowKey));
+        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+    });
+});
 
-    t.true((Engine.render as sinon.SinonStub).calledTwice);
-    t.true(state.setComponentError.calledWith('id', 'error', flowKey));
-    t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
-    t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+test.serial('FileDataRequest Fail extended error response', async (t) => {
+    ajax.dispatchFileDataRequest.callsFake(() => {
+        const deferred = $.Deferred();
+        deferred.reject({ responseJSON: { message: 'API error message returned' } }, 'status', '');
+        return deferred;
+    });
+
+    model.getComponent.returns({
+        objectData: null,
+        fileDataRequest: {},
+    });
+
+    return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
+        t.true((Engine.render as sinon.SinonStub).calledTwice);
+        t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
+        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+    });
 });
 
 test.serial('ObjectDataRequest Success', (t) => {
@@ -551,12 +593,32 @@ test.serial('ObjectDataRequest Fail', async (t) => {
         objectDataRequest: {},
     });
 
-    await t.throws(Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1));
+    return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
+        t.true((Engine.render as sinon.SinonStub).calledTwice);
+        t.true(state.setComponentError.calledWith('id', 'error', flowKey));
+        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+    });
+});
 
-    t.true((Engine.render as sinon.SinonStub).calledTwice);
-    t.true(state.setComponentError.calledWith('id', 'error', flowKey));
-    t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
-    t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+test.serial('ObjectDataRequest Fail extended error response', async (t) => {
+    ajax.dispatchObjectDataRequest.callsFake(() => {
+        const deferred =  $.Deferred();
+        deferred.reject({ responseJSON: { message: 'API error message returned' } }, 'status', '');
+        return deferred;
+    });
+
+    model.getComponent.returns({
+        objectData: null,
+        objectDataRequest: {},
+    });
+
+    return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
+        t.true((Engine.render as sinon.SinonStub).calledTwice);
+        t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
+        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+    });
 });
 
 test.serial('Sync', (t) => {
@@ -570,11 +632,13 @@ test.serial('Sync', (t) => {
 
     model.getComponents.returns([
         {
+            componentType: 'comp-type',
             attributes: {
                 isExecuteRequestOnRenderDisabled: true,
             },
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
@@ -582,6 +646,7 @@ test.serial('Sync', (t) => {
             isVisible: true,
         },
         {
+            componentType: 'comp-type',
             attributes: {
                 paginationSize: 10,
             },
@@ -631,4 +696,52 @@ test.serial('Flow Out', (t) => {
             t.true((Collaboration.flowOut as sinon.SinonStub).calledWith(flowKey, 'stateId', 'key1___stateId_'));
             t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, 'main', 'stateId', 'authenticationToken', 'options'));
         });
+});
+
+test('Check Locale with undefined navigator.language', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: null, configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-US'), true);
+    spy.reset();
+});
+
+test('Check Locale with supported navigator.language', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'en-GB', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-GB'), true);
+    spy.reset();
+});
+
+test('Check Locale with un-supported navigator.language variant', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'de-XX', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('de-DE'), true);
+    spy.reset();
+});
+
+test('Check Locale with navigator.language as en-CA', (t) => {
+    // force specific language
+    Object.defineProperty(window.navigator, 'language', { value: 'en-CA', configurable: true });
+    const spy = window['numbro'].culture;
+
+    Engine.checkLocale();
+
+    t.is(spy.called, true);
+    t.is(spy.calledWith('en-CA'), true);
+    spy.reset();
 });

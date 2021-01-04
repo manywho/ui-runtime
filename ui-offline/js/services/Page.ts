@@ -1,5 +1,5 @@
 import { getStateValue } from '../models/State';
-import { clone, parseContent } from '../services/Utils';
+import { clone, parseContent } from './Utils';
 import { IState } from '../interfaces/IModels';
 import PageCondition from './pageconditions/PageCondition';
 
@@ -49,18 +49,16 @@ export const flattenContainers = (containers: any[], parent: any, result: any[],
  * @param snapshot
  * @param tenantId
  */
-export const generatePage = function (request: any, mapElement: any, state: IState, snapshot: any, tenantId: String) {
-    const pageElement = snapshot.metadata.pageElements.find(page => mapElement.pageElementId === page.id);
+export const generatePage = (request: any, mapElement: any, state: IState, snapshot: any) => {
+    const pageElement = snapshot.metadata.pageElements.find((page) => mapElement.pageElementId === page.id);
     let pageContainerDataResponses = [];
     if (pageElement.pageContainers) {
-        pageContainerDataResponses = flattenContainers(pageElement.pageContainers, null, [], 'pageContainers').map((container) => {
-            return {
-                isEditable: true,
-                isEnabled: true,
-                isVisible: true,
-                pageContainerId: container.id,
-            };
-        });
+        pageContainerDataResponses = flattenContainers(pageElement.pageContainers, null, [], 'pageContainers').map((container) => ({
+            isEditable: true,
+            isEnabled: true,
+            isVisible: true,
+            pageContainerId: container.id,
+        }));
     }
 
     const pageComponentDataResponses = (pageElement.pageComponents || []).map((component) => {
@@ -79,18 +77,13 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
 
         let selectedValue = null;
         let sourceValue = null;
-        let selectedSnapshotValue = undefined;
+        let selectedSnapshotValue;
 
         if (component.valueElementValueBindingReferenceId) {
             selectedSnapshotValue = snapshot.getValue(component.valueElementValueBindingReferenceId);
             selectedValue = selectedSnapshotValue;
             value.contentType = snapshot.getContentTypeForValue(component.valueElementValueBindingReferenceId);
-            const stateValue = getStateValue(
-                component.valueElementValueBindingReferenceId,
-                selectedValue.typeElementId,
-                selectedValue.contentType,
-                '',
-            );
+            const stateValue = getStateValue(component.valueElementValueBindingReferenceId);
             if (stateValue) {
                 selectedValue = stateValue;
             }
@@ -104,42 +97,32 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
                 sourceValue = snapshot.getValue(component.valueElementDataBindingReferenceId);
                 typeElementId = sourceValue.typeElementId;
 
-                const stateValue = getStateValue(
-                    component.valueElementDataBindingReferenceId,
-                    sourceValue.typeElementId,
-                    sourceValue.contentType,
-                    '',
-                );
+                const stateValue = getStateValue(component.valueElementDataBindingReferenceId);
                 if (stateValue) {
                     sourceValue = stateValue;
                 }
             }
 
-            const orderColumns = (a, b) => {
-                return a.order - b.order;
-            };
+            const orderColumns = (a, b) => a.order - b.order;
 
             if (typeElementId) {
                 component.columns = component.columns.map((column) => {
-                    const typeElement = snapshot.metadata.typeElements.find((element) => {
-                        return element.properties.find((property) => {
-                            return property.id === column.typeElementPropertyId;
-                        });
-                    });
-                    column.developerName = typeElement.properties.find(prop => prop.id === column.typeElementPropertyId).developerName;
+                    const typeElement = snapshot.metadata.typeElements
+                        .find((element) => element.properties
+                            .find((property) => property.id === column.typeElementPropertyId));
+                    column.developerName = typeElement.properties.find((prop) => prop.id === column.typeElementPropertyId).developerName;
                     return column;
                 }).sort(orderColumns);
             }
         }
 
         if (selectedValue) {
-            if (!selectedValue.hasOwnProperty('contentValue') ||
-            typeof (selectedValue.contentValue) === undefined || selectedValue.contentValue === null) {
+            if (!selectedValue.contentValue) {
 
                 // If there is no contentValue then use the default value
                 value.contentValue = selectedSnapshotValue.defaultContentValue === null ?
-                selectedSnapshotValue.defaultContentValue :
-                String(selectedSnapshotValue.defaultContentValue);
+                    selectedSnapshotValue.defaultContentValue :
+                    String(selectedSnapshotValue.defaultContentValue);
 
                 // If there is object data then assign it to the values object data key
                 if (selectedValue.objectData) {
@@ -148,8 +131,8 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
 
             } else {
                 value.contentValue = selectedValue.contentValue === null ?
-                selectedValue.contentValue :
-                String(selectedValue.contentValue);
+                    selectedValue.contentValue :
+                    String(selectedValue.contentValue);
             }
         }
 
@@ -159,7 +142,7 @@ export const generatePage = function (request: any, mapElement: any, state: ISta
                 if (selectedValue.objectData && (sourceValue.objectData || sourceValue.defaultObjectData)) {
                     value.objectData = (sourceValue.objectData || sourceValue.defaultObjectData).map((objectData) => {
                         objectData.isSelected = !!selectedValue.objectData.find(
-                            item => item.externalId === objectData.externalId && item.isSelected,
+                            (item) => item.externalId === objectData.externalId && item.isSelected,
                         );
                         return objectData;
                     });

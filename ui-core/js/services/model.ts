@@ -7,6 +7,23 @@ import * as Settings from './settings';
 import * as State from './state';
 import * as Utils from './utils';
 
+interface Icontainer {
+    attributes?: any[];
+    childCount: number;
+    containerType: string;
+    developerName: string;
+    id: string;
+    isEditable: boolean;
+    isEnabled: boolean;
+    isVisible: boolean;
+    label: string;
+    order: number;
+    pageContainerId: string;
+    pageContainerResponses?: any[];
+    parent?: string;
+    tags?: any[];
+}
+
 const flowModel = {};
 
 function decodeEntities(item, textArea) {
@@ -40,7 +57,7 @@ function decodeEntities(item, textArea) {
 
 function updateData(collection, item, key) {
 
-    Log.info('Updating item: ' + item.id);
+    Log.info(`Updating item: ${item.id}`);
 
     const data = Utils.get(collection, item.id, key);
 
@@ -128,6 +145,67 @@ function hideContainer(container, containers, components, outcomes) {
     }
 }
 
+/**
+ *
+ * @param invokeType e.g SYNC, FORWARD etc
+ * @param flowKey
+ * @description Initiates a check to determine which component to auto focus
+ */
+const checkToAutoFocus = (invokeType: string, flowKey: string) => {
+
+    // A Component should only auto focus if the flow
+    // has either moved forward or navigated
+    if (invokeType !== 'SYNC' && Settings.flow('autofocusinput', flowKey) && window.innerWidth > 768) {
+        let foundFirstComponent = false;
+
+        const validFieldsToFocus = ['INPUT', 'INPUT_DATETIME', 'INPUT_NUMBER', 'TEXTAREA'];
+        const lookUpKey = Utils.getLookUpKey(flowKey);
+
+        // Always need to start with the root container
+        const mainContainer: Icontainer = Object.keys(flowModel[lookUpKey].containers).map((key) => {
+            return flowModel[lookUpKey].containers[key];
+        }).find(c => c.developerName.toUpperCase() === 'MAIN CONTAINER' && !c.parent);
+
+        /**
+         *
+         * @param container
+         * @param flowKey
+         * @description Finds the very first component to be rendered in the flow
+         * and sets a flag for it to either autofocus or not
+         */
+        const findFirstComponent = (container: Icontainer, flowKey: string) => {
+            const children = getChildren(container.id, flowKey);
+            for (const child of children) {
+
+                // If the container has nested elements...
+                if (child.childCount && child.childCount > 0) {
+                    findFirstComponent(child, flowKey);
+                }
+
+                const isValidField = child.componentType ?
+                    validFieldsToFocus.some(component => component === child.componentType.toUpperCase()) : false;
+
+                // We have hit a component
+                if (child.componentType && isValidField) {
+                    if (foundFirstComponent) {
+                        flowModel[lookUpKey].components[child.id]['autoFocus'] = false;
+                    }
+                    else {
+                        flowModel[lookUpKey].components[child.id]['autoFocus'] = true;
+                        foundFirstComponent = true;
+                    }
+                }
+            }
+        };
+
+        // If theres no main container then it must be a step
+        // element, so no need to bother
+        if (mainContainer) {
+            findFirstComponent(mainContainer, flowKey);
+        }
+    }
+};
+
 export interface INotification {
     timeout: number | string;
     message: string;
@@ -153,6 +231,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
     flowModel[lookUpKey].notifications = [];
     flowModel[lookUpKey].stateValues = [];
     flowModel[lookUpKey].preCommitStateValues = [];
+    flowModel[lookUpKey].mapElement = {};
 
     flowModel[lookUpKey].rootFaults = [];
 
@@ -174,6 +253,17 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
 
             flowModel[lookUpKey].label = engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.label;
 
+            const mapElementName = !Utils.isNullOrWhitespace(engineInvokeResponse.mapElementInvokeResponses[0].label) ?
+                engineInvokeResponse.mapElementInvokeResponses[0].label :
+                engineInvokeResponse.mapElementInvokeResponses[0].developerName;
+
+            const mapElement = {
+                name: mapElementName,
+                id: engineInvokeResponse.mapElementInvokeResponses[0].mapElementId,
+            };
+
+            setMapElement(flowKey, mapElement);
+
             setAttributes(flowKey, engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.attributes || null);
 
             setContainers(flowKey,
@@ -184,6 +274,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentResponses,
                           engineInvokeResponse.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses);
 
+            checkToAutoFocus(engineInvokeResponse.invokeType, flowKey);
         }
 
         if (engineInvokeResponse.mapElementInvokeResponses[0].outcomeResponses) {
@@ -621,6 +712,22 @@ export const getStateValues = (flowKey: string) => {
 /**
  * @ignore
  */
+export const getHistoricalNavigation = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    return flowModel[lookUpKey].historicalNavigation;
+};
+
+/**
+ * @ignore
+ */
+export const setHistoricalNavigation = (flowKey: string, historicalNavigation) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flowModel[lookUpKey].historicalNavigation = historicalNavigation;
+};
+
+/**
+ * @ignore
+ */
 export const getExecutionLog = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].executionLog;
@@ -747,6 +854,22 @@ export const initializeModel = (flowKey: string) => {
     if (!flowModel[lookUpKey]) {
         flowModel[lookUpKey] = {};
     }
+};
+
+/**
+ * @ignore
+ */
+export const getMapElement = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    return flowModel[lookUpKey].mapElement;
+};
+
+/**
+ * @ignore
+ */
+export const setMapElement = (flowKey: string, mapElement: any) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    flowModel[lookUpKey].mapElement = mapElement;
 };
 
 /**

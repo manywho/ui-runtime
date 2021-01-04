@@ -32,7 +32,7 @@ test.beforeEach((t) => {
     t.pass();
 });
 
-test('Validate String', (t) => {
+test.serial('Validate String', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -42,7 +42,7 @@ test('Validate String', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate String, required', (t) => {
+test.serial('Validate String, required', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -52,7 +52,7 @@ test('Validate String, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate String, regex valid', (t) => {
+test.serial('Validate String, regex valid', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -62,7 +62,7 @@ test('Validate String, regex valid', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate String, regex invalid', (t) => {
+test.serial('Validate String, regex invalid', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This value is invalid',
@@ -72,7 +72,17 @@ test('Validate String, regex invalid', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Boolean', (t) => {
+test.serial('Validate String, regex invalid, optional', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+    const actual = Validation.validateString('', '.{3,}', null, false, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Validate Boolean', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -82,7 +92,7 @@ test('Validate Boolean', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Boolean, required', (t) => {
+test.serial('Validate Boolean, required', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -92,7 +102,7 @@ test('Validate Boolean, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number', (t) => {
+test.serial('Validate Number', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -102,7 +112,7 @@ test('Validate Number', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number, required', (t) => {
+test.serial('Validate Number, required', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -112,7 +122,17 @@ test('Validate Number, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number, required and not defined', (t) => {
+test.serial('Validate Number, regex invalid, optional', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+    const actual = Validation.validateNumber('', '.{3,}', null, false, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Validate Number, required and not defined', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -122,7 +142,7 @@ test('Validate Number, required and not defined', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number, NaN', (t) => {
+test.serial('Validate Number, NaN', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This value is invalid',
@@ -132,7 +152,7 @@ test('Validate Number, NaN', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number, regex valid', (t) => {
+test.serial('Validate Number, regex valid', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -142,7 +162,7 @@ test('Validate Number, regex valid', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Number, regex invalid', (t) => {
+test.serial('Validate Number, regex invalid', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This value is invalid',
@@ -152,7 +172,7 @@ test('Validate Number, regex invalid', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Object', (t) => {
+test.serial('Validate Object', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -162,7 +182,7 @@ test('Validate Object', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate Object, required', (t) => {
+test.serial('Validate Object, required', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -172,7 +192,7 @@ test('Validate Object, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate List', (t) => {
+test.serial('Validate List', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -182,7 +202,7 @@ test('Validate List', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate List, required', (t) => {
+test.serial('Validate List, required', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -192,13 +212,13 @@ test('Validate List, required', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validation Disabled', (t) => {
+test.serial('Validation Disabled', (t) => {
     Settings.initialize(
         {
             validation: {
                 isEnabled: false,
             },
-        }, 
+        },
         null,
     );
 
@@ -211,7 +231,7 @@ test('Validation Disabled', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Invalid Model', (t) => {
+test.serial('Invalid Model', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -221,7 +241,7 @@ test('Invalid Model', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate State String', (t) => {
+test.serial('Validate State String', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -240,7 +260,7 @@ test('Validate State String', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate State String with attributes', (t) => {
+test.serial('Validate State String with attributes', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'custom message',
@@ -263,7 +283,7 @@ test('Validate State String with attributes', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate State Number', (t) => {
+test.serial('Validate State Number', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -282,7 +302,7 @@ test('Validate State Number', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate State Boolean (true)', (t) => {
+test.serial('Validate State Boolean (true)', (t) => {
     const expected = {
         isValid: true,
         validationMessage: null,
@@ -301,7 +321,7 @@ test('Validate State Boolean (true)', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Validate State Boolean (false)', (t) => {
+test.serial('Validate State Boolean (false)', (t) => {
     const expected = {
         isValid: false,
         validationMessage: 'This field is required',
@@ -320,11 +340,7 @@ test('Validate State Boolean (false)', (t) => {
     t.deepEqual(actual, expected);
 });
 
-test('Should Validate', (t) => {
-    t.true(Validation.shouldValidate('MOVE', null));
-});
-
-test('Scroll to invalid element', (t) => {
+test.serial('Scroll to invalid element', (t) => {
     const invalidElement = document.createElement('div');
     invalidElement.classList.add('has-error');
     document.body.appendChild(invalidElement);
@@ -333,20 +349,20 @@ test('Scroll to invalid element', (t) => {
         Validation.scrollToInvalidElement(null);
     }
     catch (e) {
-        
+
     }
 
     t.pass();
 });
 
-test('Add Notification', (t) => {
+test.serial('Add Notification', (t) => {
     const flowKey = 'flowKey';
     const expected = {
         dismissible: true,
         message: 'Page contains invalid values',
         position: 'center',
         timeout: '0',
-        type: 'danger', 
+        type: 'danger',
     };
 
     Validation.addNotification(flowKey);
@@ -354,4 +370,112 @@ test('Add Notification', (t) => {
     t.true(model.addNotification.calledOnce);
     t.is(model.addNotification.firstCall.args[0], flowKey);
     t.deepEqual(model.addNotification.firstCall.args[1], expected);
+});
+
+test.serial('Non-visible components validate as true - same as back-end rules', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isVisible: false,
+    };
+    const actual = Validation.validate(model, null, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Visible components validate false when required but empty', (t) => {
+    const expected = {
+        isValid: false,
+        validationMessage: 'This field is required',
+    };
+
+    const model = {
+        isVisible: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: '',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Visible components validate true when required but non-empty', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isVisible: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: 'OK',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Disabled components validate as true - same as back-end rules', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isEnabled: false,
+    };
+    const actual = Validation.validate(model, null, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Enabled components validate false when required but empty', (t) => {
+    const expected = {
+        isValid: false,
+        validationMessage: 'This field is required',
+    };
+
+    const model = {
+        isEnabled: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: '',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
+});
+
+test.serial('Enabled components validate true when required but non-empty', (t) => {
+    const expected = {
+        isValid: true,
+        validationMessage: null,
+    };
+
+    const model = {
+        isEnabled: true,
+        isRequired: true,
+        contentType: 'ContentString',
+    };
+    const state = {
+        contentValue: 'OK',
+    };
+
+    const actual = Validation.validate(model, state, null);
+
+    t.deepEqual(actual, expected);
 });

@@ -1,21 +1,24 @@
 import test from 'ava'; // tslint:disable-line:import-name
 import * as Callbacks from '../js/services/callbacks';
 
-test('Register', (t) => {
+test.serial('Register', (t) => {
     Callbacks.register('key1_key2_key3_key4', {} as Callbacks.ICallback);
     t.pass();
 });
 
-test('Remove', (t) => {
+test.serial('Remove', (t) => {
     const flowKey = 'key1_key2_key3_key4';
     Callbacks.register(flowKey, {} as Callbacks.ICallback);
     Callbacks.remove(flowKey);
     t.pass();
 });
 
-test('Execute', (t) => {
+test.serial.cb('Execute', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => t.pass();
+    const execute = (response, t) => {
+        t.pass();
+        t.end();
+    };
 
     Callbacks.register(flowKey, {
         execute,
@@ -28,7 +31,7 @@ test('Execute', (t) => {
     Callbacks.execute(flowKey, 'done', 'name', null, null);
 });
 
-test('Execute filter by name', (t) => {
+test.serial('Execute filter by name', (t) => {
     const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
@@ -45,7 +48,7 @@ test('Execute filter by name', (t) => {
     t.pass();
 });
 
-test('Execute filter by type', (t) => {
+test.serial('Execute filter by type', (t) => {
     const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
@@ -62,7 +65,7 @@ test('Execute filter by type', (t) => {
     t.pass();
 });
 
-test('Execute filter by map element', (t) => {
+test.serial('Execute filter by map element', (t) => {
     const flowKey = 'key1_key2_key3_key4';
     const execute = (response, t) => t.fail();
 
@@ -80,9 +83,12 @@ test('Execute filter by map element', (t) => {
     t.pass();
 });
 
-test('Execute no args', (t) => {
+test.serial.cb('Execute no args', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => t.pass();
+    const execute = (response, t) => {
+        t.pass();
+        t.end();
+    };
 
     Callbacks.register(flowKey, {
         execute,

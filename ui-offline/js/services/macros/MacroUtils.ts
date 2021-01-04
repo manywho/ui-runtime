@@ -1,5 +1,5 @@
 import { CONTENT_TYPES } from '../../constants';
-import { clone } from '../../services/Utils';
+import { clone } from '../Utils';
 import { getMacroState, setMacroState } from './MacroState';
 
 /**
@@ -11,7 +11,7 @@ import { getMacroState, setMacroState } from './MacroState';
 export const getProperty = (typeElementPropertyId, contentType, objectData) => {
     if (objectData) {
         if (objectData.properties || objectData.properties !== null) {
-            const specifiedProperty = objectData.properties.find(property => property.typeElementPropertyId === typeElementPropertyId);
+            const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
             if (specifiedProperty.contentType !== contentType) {
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of ${contentType}`);
             }
@@ -19,10 +19,11 @@ export const getProperty = (typeElementPropertyId, contentType, objectData) => {
                 return specifiedProperty.objectData;
             }
             return specifiedProperty.contentValue;
-        } else {
-            throw new Error(`${objectData.developerName} has no object data properties`);
         }
+        throw new Error(`${objectData.developerName} has no object data properties`);
     }
+
+    return null;
 };
 
 /**
@@ -35,7 +36,7 @@ export const getProperty = (typeElementPropertyId, contentType, objectData) => {
 export const setProperty = (typeElementPropertyId, contentType, newValue, objectData) => {
     if (objectData) {
         if (objectData.properties || objectData.properties !== null) {
-            const specifiedProperty = objectData.properties.find(property => property.typeElementPropertyId === typeElementPropertyId);
+            const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
             if (specifiedProperty.contentType !== contentType) {
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of ${contentType}`);
             }
@@ -61,7 +62,7 @@ export const setProperty = (typeElementPropertyId, contentType, newValue, object
  */
 export const getValueByName = (name: string, metadata: any) => {
     const MacroState = getMacroState();
-    const value =  metadata.valueElements.find(element => element.developerName === name);
+    const value = metadata.valueElements.find((element) => element.developerName === name);
 
     if (!value) {
         throw new Error(`A value with name: ${name}, cannot be found in the flow snapshot`);
@@ -83,7 +84,7 @@ export const getValueByName = (name: string, metadata: any) => {
  * @description return object data based on type properties
  */
 export const generateNewObjectData = (typeId: string, metadata: any) => {
-    const typeElement = clone(metadata.typeElements.find(type => type.id === typeId));
+    const typeElement = clone(metadata.typeElements.find((type) => type.id === typeId));
 
     typeElement.properties = typeElement.properties.map((property) => {
         property.typeElementPropertyId = property.id;
@@ -111,11 +112,11 @@ export const setStateValue = (id: string, value: any) => {
  * @param dateValue a date time object
  * @description returns a UTC formatted datetime with timezone offset
  */
-export const toEngineUTCStringFormat = (dateValue) => {
+export const toEngineUTCStringFormat = (dateValue: Date) => {
     // Partially stolen from https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript
     const pad = (num) => {
         const norm = Math.floor(Math.abs(num));
-        return (norm < 10 ? '0' : '') + norm;
+        return (norm < 10 ? '0' : '') + String(norm);
     };
     return `${dateValue.getUTCFullYear()}\
         -${pad(dateValue.getUTCMonth() + 1)}\

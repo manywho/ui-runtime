@@ -23,18 +23,6 @@ class InputDateTime extends React.Component<IInputProps, null> {
         this.setPickerDate = this.setPickerDate.bind(this);
     }
 
-    isEmptyDate(date) {
-        if (date === null
-            || date === undefined
-            || date === ''
-            || date.indexOf('01/01/0001') !== -1
-            || date.indexOf('1/1/0001') !== -1
-            || date.indexOf('0001-01-01') !== -1)
-            return true;
-
-        return false;
-    }
-
     format(date) {
         if (this.isDateOnly) {
             return moment({
@@ -49,15 +37,15 @@ class InputDateTime extends React.Component<IInputProps, null> {
         ) {
             return date.local().format();
         }
-            
+
         return date.utc().format();
     }
 
     onChange = (e) => {
         if (!this.props.isDesignTime) {
-            if (!e.date)
-                this.props.onChange(null);
-            else if (e.date.isValid())
+            if (!e.date) {
+                this.props.onChange('');
+            } else if (e.date.isValid()) {
 
                 // This check is happening as, if just the timepicker is being used
                 // the expected behaviour is that the page components default value
@@ -65,7 +53,7 @@ class InputDateTime extends React.Component<IInputProps, null> {
                 if (this.isTimeOnly &&
                     this.props.value !== null &&
                     !(e.date.isSame(this.props.value))) {
-    
+
                     const defaultDate: any = this.props.value;
                     const defaultMomentDate = moment(
                         defaultDate,
@@ -81,8 +69,9 @@ class InputDateTime extends React.Component<IInputProps, null> {
                 } else {
                     this.props.onChange(this.format(e.date));
                 }
-            else
+            } else {
                 this.props.onChange(e.target.value);
+            }
         }
     }
 
@@ -91,16 +80,16 @@ class InputDateTime extends React.Component<IInputProps, null> {
         const datepickerInstance = $(datepickerElement).data('DateTimePicker');
 
         let date = moment(
-            newDate, 
+            newDate,
             [
-                'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ', 
+                'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ',
                 moment.ISO_8601,
             ],
         );
         let UTCdate = moment.utc(
             newDate,
             [
-                'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ', 
+                'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ',
                 moment.ISO_8601,
             ],
         );
@@ -134,8 +123,8 @@ class InputDateTime extends React.Component<IInputProps, null> {
 
         if (model.attributes) {
             if (model.attributes.useCurrent !== undefined)
-                useCurrent = manywho.utils.isEqual(model.attributes.useCurrent, 'true', true) ? 
-                    true : 
+                useCurrent = manywho.utils.isEqual(model.attributes.useCurrent, 'true', true) ?
+                    true :
                     false;
 
             if (model.attributes.dateTimeFormat)
@@ -143,13 +132,13 @@ class InputDateTime extends React.Component<IInputProps, null> {
         }
 
         if (customFormat) {
-            this.isDateOnly = 
-                customFormat.toLowerCase().indexOf('h') === -1 && 
+            this.isDateOnly =
+                customFormat.toLowerCase().indexOf('h') === -1 &&
                 customFormat.indexOf('m') === -1 && // minute is always lower case, M is always month
                 customFormat.toLowerCase().indexOf('s') === -1;
 
-            if (!this.isDateOnly) { 
-                this.isTimeOnly = 
+            if (!this.isDateOnly) {
+                this.isTimeOnly =
                     (customFormat.toLowerCase().indexOf('h') > -1 &&
                     customFormat.indexOf('m') > -1 ||
                     customFormat.toLowerCase().indexOf('s') > -1)
@@ -166,24 +155,20 @@ class InputDateTime extends React.Component<IInputProps, null> {
             useCurrent,
             locale: model.attributes.dateTimeLocale || 'en-us',
             focusOnShow: false,
-            format: customFormat || 
-                manywho.formatting.toMomentFormat(model.contentFormat) || 
+            format: customFormat ||
+                manywho.formatting.toMomentFormat(model.contentFormat) ||
                 'MM/DD/YYYY',
             timeZone: 'UTC',
         })
-        .on('dp.change', !this.props.isDesignTime && this.onChange);
+            .on('dp.change', !this.props.isDesignTime && this.onChange);
 
-        if (!this.props.isDesignTime) {
-            if (this.isEmptyDate(this.props.value)) {
-                
-                manywho.state.setComponent(
-                    this.props.id, { contentValue: null }, this.props.flowKey, true,
-                );
-
-            } else {
-                this.setPickerDate(this.props.value);
-            }
+        // Seems that the Bootstrap datepicker ignores Reacts
+        // autoFocus attribute... so will have to manually open the picker
+        if (model.autoFocus) {
+            $(datepickerElement).data('DateTimePicker').show();
         }
+
+        this.setPickerDate(this.props.value);
     }
 
     componentWillUnmount() {
@@ -199,6 +184,7 @@ class InputDateTime extends React.Component<IInputProps, null> {
     }
 
     render() {
+        const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         return <input id={this.props.id}
             placeholder={this.props.placeholder}
             className="form-control datepicker"
@@ -209,7 +195,9 @@ class InputDateTime extends React.Component<IInputProps, null> {
             disabled={this.props.disabled}
             required={this.props.required}
             onBlur={this.props.onBlur}
-            autoComplete={this.props.autoComplete} />;
+            autoComplete={this.props.autoComplete}
+            autoFocus={model.autoFocus}
+        />;
     }
 
 }

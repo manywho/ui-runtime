@@ -9,13 +9,12 @@ import Step from './Step';
 import { StateUpdate } from '../models/State';
 import { getOfflineData, setOfflineData } from './Storage';
 import { IFlow } from '../interfaces/IModels';
-import { flatten, guid } from '../services/Utils';
+import { flatten, guid } from './Utils';
 import { DEFAULT_POLL_INTERVAL, DEFAULT_OBJECTDATA_CACHING_INTERVAL } from '../constants';
 
 declare const manywho: any;
 // This is the gloabl metaData object generated when building offline project
 declare const metaData: any;
-declare const localforage: any;
 declare const $: any;
 
 enum EventTypes {
@@ -39,7 +38,7 @@ const OfflineCore = {
      */
     initialize(tenantId: string, stateId: string, stateToken: string, authenticationToken: string) {
         if (!metaData) {
-            return;
+            return null;
         }
 
         const flow = {
@@ -101,7 +100,7 @@ const OfflineCore = {
 
         // Lets get the entry in indexDB for this state
         return getOfflineData(flowStateId, flowId, event)
-            .then((response) => {
+            .then((response:IFlow) => {
 
                 // When a flow has entered offline mode for the first time
                 // there will be no entry in indexDB, there will however
@@ -112,7 +111,7 @@ const OfflineCore = {
                     const flow = FlowInit({
                         tenantId,
                         state: {
-                            currentMapElementId: metaData.mapElements.find(element => element.elementType === 'START').id,
+                            currentMapElementId: metaData.mapElements.find((element) => element.elementType === 'START').id,
                             id: stateId,
                             token: guid(),
                         },
@@ -168,16 +167,17 @@ const OfflineCore = {
 
         // Pull the current offline data from local storage
         getOfflineData(stateId)
-        .then(
-            (offlineData) => {
+            .then(
+                (offlineData:IFlow) => {
                 // Add the requests from the Flow repository
                 // to the offline data object
-                offlineData.requests = getRequests();
+                    offlineData.requests = getRequests();
 
-                // Push the updated offline data back into local storage
-                setOfflineData(offlineData);
-            },
-        );
+                    // Push the updated offline data back into local storage
+                    return setOfflineData(offlineData);
+                },
+            )
+            .catch((e) => console.error(e));
 
         return {
             objectData: [],
@@ -187,9 +187,8 @@ const OfflineCore = {
     /**
      * @param request
      * @param flow
-     * @param context
      */
-    getInitializationResponse(request: any, flow: IFlow, context: any) {
+    getInitializationResponse(request: any, flow: IFlow) {
         const snapshot: any = Snapshot(metaData);
 
         // TODO - this will only ever get called when a flow is initialized
@@ -197,9 +196,9 @@ const OfflineCore = {
         // currently an unsupported scenario. A service worker will need to be
         // implemented to cache assets
         return {
-            currentMapElementId: metaData.mapElements.find(element => element.elementType === 'START').id,
+            currentMapElementId: metaData.mapElements.find((element) => element.elementType === 'START').id,
             currentStreamId: null,
-            navigationElementReferences : snapshot.getNavigationElementReferences(),
+            navigationElementReferences: snapshot.getNavigationElementReferences(),
             stateId: flow.state.id,
             stateToken: flow.state.token,
             statusCode: '200',
@@ -215,49 +214,54 @@ const OfflineCore = {
      */
     getMapElementResponse(request: any, flow: IFlow, context: any) {
         if (!metaData) {
-            return;
+            return null;
         }
 
-        const deferred = $.Deferred();
-
         const mapElement: any = request.currentMapElementId ?
-            metaData.mapElements.find(element => element.id === request.currentMapElementId) :
-            metaData.mapElements.find(element => element.elementType === 'START');
+            metaData.mapElements.find((element) => element.id === request.currentMapElementId) :
+            metaData.mapElements.find((element) => element.elementType === 'START');
         let nextMapElement = null;
 
         switch (request.invokeType.toUpperCase()) {
-        case 'FORWARD':
-            let nextMapElementId = null;
-            let outcome = null;
+            case 'FORWARD': {
+                let nextMapElementId = null;
+                let outcome = null;
 
-            if (request.mapElementInvokeRequest.selectedOutcomeId) {
-                outcome = mapElement.outcomes.find(item => item.id === request.mapElementInvokeRequest.selectedOutcomeId);
-            } else if (request.selectedMapElementId) {
-                nextMapElementId = request.selectedMapElementId;
-            } else {
-                outcome = mapElement.outcomes[0];
+                if (request.mapElementInvokeRequest.selectedOutcomeId) {
+                    outcome = mapElement.outcomes.find((item) => item.id === request.mapElementInvokeRequest.selectedOutcomeId);
+                } else if (request.selectedMapElementId) {
+                    nextMapElementId = request.selectedMapElementId;
+                } else {
+                    // eslint-disable-next-line prefer-destructuring
+                    outcome = mapElement.outcomes[0];
+                }
+
+                if (outcome) {
+                    nextMapElementId = outcome.nextMapElementId;
+                }
+
+                nextMapElement = metaData.mapElements.find((element) => element.id === nextMapElementId);
+                break;
             }
 
-            if (outcome) {
-                nextMapElementId = outcome.nextMapElementId;
+            case 'NAVIGATE': {
+                const navigation = metaData.navigationElements.find((element) => element.id === request.navigationElementId);
+                const navigationItem = navigation.navigationItems.find((item) => item.id === request.selectedNavigationItemId);
+                nextMapElement = metaData.mapElements.find((element) => element.id === navigationItem.locationMapElementId);
+                break;
             }
 
-            nextMapElement = metaData.mapElements.find(element => element.id === nextMapElementId);
-            break;
+            case 'JOIN':
+                nextMapElement = mapElement;
+                break;
 
-        case 'NAVIGATE':
-            const navigation = metaData.navigationElements.find(element => element.id === request.navigationElementId);
-            const navigationItem = navigation.navigationItems.find(item => item.id === request.selectedNavigationItemId);
-            nextMapElement = metaData.mapElements.find(element => element.id === navigationItem.locationMapElementId);
-            break;
+            case 'SYNC':
+                nextMapElement = mapElement;
+                break;
 
-        case 'JOIN':
-            nextMapElement = mapElement;
-            break;
-
-        case 'SYNC':
-            nextMapElement = mapElement;
-            break;
+            default:
+                // TODO - Raise error ?
+                break;
         }
 
         const snapshot: any = Snapshot(metaData);
@@ -278,7 +282,7 @@ const OfflineCore = {
 
         if (nextMapElement.dataActions) {
             nextMapElement.dataActions
-                .filter(action => !action.disabled)
+                .filter((action) => !action.disabled)
                 .sort((a, b) => a.order - b.order)
                 .forEach((action) => {
                     DataActions(action, flow, snapshot);
@@ -297,10 +301,12 @@ const OfflineCore = {
                     if (operation.macroElementToExecuteId) {
 
                         // Execute a macro
+                        // eslint-disable-next-line no-await-in-loop
                         await invokeMacroWorker(operation, flow.state, snapshot);
                     } else {
 
                         // Execute an operation
+                        // eslint-disable-next-line no-await-in-loop
                         await executeOperation(operation, flow.state, snapshot);
                     }
                 }
@@ -339,7 +345,6 @@ const OfflineCore = {
                 nextMapElement,
                 flow.state,
                 snapshot,
-                flow.tenantId,
             );
         } else if (!nextMapElement.outcomes || nextMapElement.outcomes.length === 0) {
             pageResponse = {
@@ -350,25 +355,23 @@ const OfflineCore = {
 
         if (nextMapElement.outcomes && !pageResponse) {
             return setOfflineData(flow)
-                .then(() => {
-                    return OfflineCore.getResponse(
-                        context, null, null,
-                        {
-                            currentMapElementId: nextMapElement.id,
-                            mapElementInvokeRequest: {
-                                selectedOutcomeId: Rules.getOutcome(nextMapElement.outcomes, flow.state, snapshot).id,
-                            },
-                            invokeType: 'FORWARD',
-                            stateId: request.stateId,
+                .then(() => OfflineCore.getResponse(
+                    context, null, null,
+                    {
+                        currentMapElementId: nextMapElement.id,
+                        mapElementInvokeRequest: {
+                            selectedOutcomeId: Rules.getOutcome(nextMapElement.outcomes, flow.state, snapshot).id,
                         },
-                        request.tenantId,
-                        request.stateId,
-                    );
-                });
+                        invokeType: 'FORWARD',
+                        stateId: request.stateId,
+                    },
+                    request.tenantId,
+                    request.stateId,
+                ));
         }
 
         flow.state.currentMapElementId = nextMapElement.id;
-        setOfflineData(flow);
+        setOfflineData(flow).catch((e) => console.error(e));
 
         return {
             currentMapElementId: nextMapElement.id,
@@ -383,45 +386,44 @@ const OfflineCore = {
 
     /**
      * @param request
-     * @param flow
-     * @param context
      */
-    getObjectDataResponse(request: any, flow: IFlow, context: any) {
+    getObjectDataResponse(request: any) {
         return ObjectData.filter(
             getObjectData(request.objectDataType ? request.objectDataType.typeElementId : request.typeElementId),
             request.listFilter,
-            request.objectDataType ? request.objectDataType.typeElementId : request.typeElementId,
         );
     },
 
     /**
      * @param request
      * @param flow
-     * @param context
      */
-    getNavigationResponse(request: any, flow: IFlow, context: any) {
+    getNavigationResponse(request: any, flow: IFlow) {
         if (!metaData) {
-            return;
+            return null;
         }
 
         const navigation = metaData.navigationElements[0];
+
+        const navigationItems = navigation.navigationItems
+            ? navigation.navigationItems
+            : [];
+
         return {
             developerName: navigation.developerName,
             isEnabled: true,
             isVisible: true,
             label: navigation.label,
-            navigationItemResponses: navigation.navigationItems.sort((a, b) => a.order - b.order),
-            navigationItemDataResponses: flatten(navigation.navigationItems, null, [], 'navigationItems', null).map((item) => {
-                return {
-                    navigationItemId: item.id,
-                    navigationItemDeveloperName: item.developerName,
-                    isActive: false,
-                    isCurrent: item.locationMapElementId === flow.state.currentMapElementId,
-                    isEnabled: true,
-                    isVisible: true,
-                    locationMapElementId: item.locationMapElementId,
-                };
-            }),
+            navigationItemResponses: navigationItems.sort((a, b) => a.order - b.order),
+            navigationItemDataResponses: flatten(navigation.navigationItems, null, [], 'navigationItems', null).map((item) => ({
+                navigationItemId: item.id,
+                navigationItemDeveloperName: item.developerName,
+                isActive: false,
+                isCurrent: item.locationMapElementId === flow.state.currentMapElementId,
+                isEnabled: true,
+                isVisible: true,
+                locationMapElementId: item.locationMapElementId,
+            })),
         };
     },
 };
@@ -430,6 +432,7 @@ export default OfflineCore;
 
 manywho.settings.initialize({
     offline: {
+        instantReplay: false,
         cache: {
             pollInterval: DEFAULT_POLL_INTERVAL,
             objectDataCachingInterval: DEFAULT_OBJECTDATA_CACHING_INTERVAL,

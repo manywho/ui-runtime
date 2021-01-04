@@ -6,8 +6,9 @@ declare const manywho: any;
 
 // Holds the refs for each dropdown navigation item
 // so that their open/closed state can be altered
-const menuRefs = [];
+let menuRefs = [];
 const toggleRef = React.createRef<HTMLButtonElement>();
+
 
 /**
  * @description The navigation component renders a Bootstrap 3
@@ -36,7 +37,7 @@ class Navigation extends React.Component<INavigationProps, null> {
 
     // This is for ensuring dropdown navigation is hidden when
     // parts of the document other than the dropdown are clicked
-    onDocumentClick = (e) => {
+    onDocumentClick = (e: Event) => {
         menuRefs.forEach((item) => {
             if (item.current && !item.current.contains(e.target) && item.current.classList.contains('open')) {
                 item.current.classList.toggle('open');
@@ -46,7 +47,7 @@ class Navigation extends React.Component<INavigationProps, null> {
 
     // Concerns navigating the Flow if the navigation
     // item clicked has not got a sub menu
-    onClick(item: { isEnabled: boolean; id: string; }) {
+    onClick(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item: { isEnabled: boolean; id: string; }) {
 
         if (!item.isEnabled) {
             return false;
@@ -59,7 +60,14 @@ class Navigation extends React.Component<INavigationProps, null> {
             toggleRef.current.click();
         }
 
+        menuRefs.forEach((i) => {
+            if (i.current && i.current.classList.contains('open')) {
+                i.current.classList.toggle('open');
+            }
+        });
+
         manywho.engine.navigate(this.props.id, item.id, null, this.props.flowKey);
+
         return true;
     }
 
@@ -144,7 +152,7 @@ class Navigation extends React.Component<INavigationProps, null> {
             } else {
                 element = (
                     <li className={classNames.join(' ')} key={item.id}>
-                        <a href="#" onClick={this.onClick.bind(this, item)} id={item.id}>
+                        <a href="#" onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick(e, item)} id={item.id}>
                             {item.label}
                         </a>
                     </li>
@@ -157,6 +165,10 @@ class Navigation extends React.Component<INavigationProps, null> {
     }
 
     render() {
+
+        // We need to empty the menu refs, otherwise we are holding onto stale refs
+        menuRefs = [];
+
         const navigation = manywho.model.getNavigation(this.props.id, this.props.flowKey);
 
         if (navigation && navigation.isVisible) {
@@ -235,8 +247,8 @@ class Navigation extends React.Component<INavigationProps, null> {
                                     // TODO: Use more accessible elements for navigation items
                                     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
                                     <li
-                                        onClick={this.onClick.bind(this, item)}
-                                        onKeyDown={this.onClick.bind(this, item)}
+                                        onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick(e, item)}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => this.onClick(e, item)}
                                         key={item.id}
                                         id={item.id}
                                         className={className}

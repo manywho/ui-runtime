@@ -1,0 +1,74 @@
+{
+    "plugins": [
+        "@typescript-eslint",
+        "react",
+        "import"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "airbnb-typescript",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "globals": {
+        "manywho": false,
+        "$": false,
+        "ga": false,
+        "module": false,
+        "jest": false,
+        "expect": false,
+        "test": false,
+        "beforeEach": false,
+        "describe": false
+    },
+    "rules": {
+        // "off" or 0 - turn the rule off
+        // "warn" or 1 - turn the rule on as a warning (doesn't affect exit code)
+        // "error" or 2 - turn the rule on as an error (exit code will be 1)
+
+        "semi": 2,
+        "indent": [2, 4],
+        "max-len": [2, 150],
+        "no-trailing-spaces": 0,
+        "brace-style": [ 2, "1tbs", { "allowSingleLine": true }],
+        "import/order": 0,
+        "padded-blocks": 0,
+        "class-methods-use-this": 0,
+        "operator-linebreak": 0,
+        "no-confusing-arrow": 0,
+        "object-curly-newline": 0,
+        "no-param-reassign": ["error", { "props": false }],
+        "linebreak-style": 0,
+        "no-nested-ternary": 0,
+
+        "import/prefer-default-export": 0,
+        "import/no-named-as-default": 0,
+
+        "react/jsx-uses-vars": [2],
+        "react/jsx-no-undef": [2, { "allowGlobals": true }],
+        "react/prop-types": [0],
+        "react/destructuring-assignment": 0,
+        "react/jsx-filename-extension": 0,
+        "react/jsx-indent": [2, 4],
+        "react/jsx-indent-props": [2, 4],
+        "react/no-unescaped-entities": 0,
+        "react/no-access-state-in-setstate": 0,
+        "react/button-has-type": 0,
+        "react/no-array-index-key": 0,
+        "react/no-string-refs": 0,
+
+        "@typescript-eslint/indent": [2, 4, { "SwitchCase":  1 }],
+        "@typescript-eslint/no-unused-vars": 2,
+
+        "jsx-a11y/label-has-associated-control": 0,
+        "jsx-a11y/label-has-for": 0
+    }
+}

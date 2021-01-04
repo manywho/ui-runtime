@@ -59,7 +59,7 @@ test('Is Not Placeholder Objectdata 1', (t) => {
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
 
-test('Is Not Placeholder Objectdata 1', (t) => {
+test('Is Not Placeholder Objectdata 2', (t) => {
     const objectData = ['item1', 'item2'];
     t.is(Utils.isPlaceholderObjectData(objectData), false);
 });
@@ -297,4 +297,26 @@ test('Extend Objectdata', (t) => {
     ];
 
     t.deepEqual(Utils.extendObjectData(mergedObjectData, objectData), expected);
+});
+
+test('Return a fallback for unknown cultures', (t) => {
+    const testCulture = ['en-XX', 'de-XX', 'fr-XX', 'es-XX', 'it-XX', 'xx-XX'];
+    const expected = ['en-US', 'de-DE', 'fr-FR', 'es-ES', 'it-IT', 'en-US'];
+
+    testCulture.forEach((culture, i) => {
+        const testCultureParts = culture.split('-');
+        const fallbackCulture = Utils.fallbackCulture(testCultureParts[0]);
+        t.is(fallbackCulture, expected[i]);
+    });
+});
+
+test('Return the current culture based on navigator language', (t) => {
+    const navigatorLanguage = ['en-US', 'en-us', 'bg', 'de-XX', null];
+    const supportedCultures = ['en-US', 'de-DE', 'fr-FR', 'es-ES', 'it-IT', 'bg'];
+    const expected = ['en-US', 'en-US', 'bg', 'de-DE', 'en-US'];
+
+    navigatorLanguage.forEach((navLang, i) => {
+        const currentCulture = Utils.currentCulture(navLang, supportedCultures);
+        t.is(currentCulture, expected[i]);
+    });
 });

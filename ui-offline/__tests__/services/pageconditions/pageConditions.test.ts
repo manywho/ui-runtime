@@ -1,7 +1,7 @@
 import PageRule from '../../../js/services/pageconditions/PageRule';
 import PageOperation from '../../../js/services/pageconditions/PageOperation';
 import { getStateValue } from '../../../js/models/State';
-import { default as PageCondition, getTriggerComponentContentValue } from '../../../js/services/pageconditions/PageCondition';
+import PageCondition, { getTriggerComponentContentValue } from '../../../js/services/pageconditions/PageCondition';
 
 jest.mock('../../../js/services/pageconditions/PageRule');
 jest.mock('../../../js/services/pageconditions/PageOperation');
@@ -52,7 +52,7 @@ describe('Page conditions expected behaviour', () => {
                             },
                         },
                     ],
-                    pageRules: [{ left: { pageObjectReferenceId : 'test' } }],
+                    pageRules: [{ left: { pageObjectReferenceId: 'test' } }],
                 },
             ],
             pageElements: [],
@@ -63,9 +63,7 @@ describe('Page conditions expected behaviour', () => {
     });
 
     test('Should throw error if the triggering page component is not found in snapshot metadata', () => {
-        mockSnaphot.getValue.mockImplementation(() => {
-            return undefined;
-        });
+        mockSnaphot.getValue.mockImplementation(() => undefined);
         const mockPageElement = {
             pageConditions: [
                 {
@@ -78,7 +76,7 @@ describe('Page conditions expected behaviour', () => {
                             },
                         },
                     ],
-                    pageRules: [{ left: { pageObjectReferenceId : 'foo' }, criteriaType: 'EQUAL' }],
+                    pageRules: [{ left: { pageObjectReferenceId: 'foo' }, criteriaType: 'EQUAL' }],
                 },
             ],
             pageComponents: [],
@@ -91,11 +89,9 @@ describe('Page conditions expected behaviour', () => {
     test('If trigger component value is found in state then return its content value', () => {
         const mockContentValue = 'test';
 
-        mockgetStateValue.mockImplementation(() => {
-            return {
-                contentValue: mockContentValue,
-            };
-        });
+        mockgetStateValue.mockImplementation(() => ({
+            contentValue: mockContentValue,
+        }));
 
         const mockTriggerComponent = {
             valueElementValueBindingReferenceId: {
@@ -110,15 +106,11 @@ describe('Page conditions expected behaviour', () => {
     test('If trigger component value is not found in state then return its default content value from snapshot', () => {
         const mockDefaultContentValue = 'test default value';
 
-        mockgetStateValue.mockImplementation(() => {
-            return undefined;
-        });
+        mockgetStateValue.mockImplementation(() => undefined);
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: mockDefaultContentValue,
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: mockDefaultContentValue,
+        }));
 
         const mockTriggerComponent = {
             valueElementValueBindingReferenceId: {
@@ -135,20 +127,18 @@ describe('Page conditions expected behaviour', () => {
         const mockPropContentValue = 'content value';
         const mockDefaultContentValue = 'test default value';
 
-        mockgetStateValue.mockImplementation(() => {
-            return {
-                objectData: [
-                    {
-                        properties: [
-                            {
-                                typeElementPropertyId: mockTypePropId,
-                                contentValue: mockPropContentValue,
-                            },
-                        ],
-                    },
-                ],
-            };
-        });
+        mockgetStateValue.mockImplementation(() => ({
+            objectData: [
+                {
+                    properties: [
+                        {
+                            typeElementPropertyId: mockTypePropId,
+                            contentValue: mockPropContentValue,
+                        },
+                    ],
+                },
+            ],
+        }));
 
         const mockPageRule = {
             left: {
@@ -158,11 +148,9 @@ describe('Page conditions expected behaviour', () => {
             },
         };
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                defaultContentValue: mockDefaultContentValue,
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            defaultContentValue: mockDefaultContentValue,
+        }));
 
         const mockTriggerComponent = {
             valueElementValueBindingReferenceId: {
@@ -178,15 +166,11 @@ describe('Page conditions expected behaviour', () => {
 
         const mockContentValue = 'test';
 
-        mockgetStateValue.mockImplementation(() => {
-            return {
-                contentValue: mockContentValue,
-            };
-        });
+        mockgetStateValue.mockImplementation(() => ({
+            contentValue: mockContentValue,
+        }));
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return undefined;
-        });
+        mockSnaphot.getValue.mockImplementation(() => undefined);
 
         const mockPageElement = {
             pageConditions: [
@@ -201,7 +185,8 @@ describe('Page conditions expected behaviour', () => {
                         },
                     ],
                     pageRules: [{
-                        left: { pageObjectReferenceId : 'test' }, criteriaType: 'EQUAL',
+                        left: { pageObjectReferenceId: 'test' },
+                        criteriaType: 'EQUAL',
                         right: { valueElementToReferenceId: { id: 'test' } },
                     }],
                 },
@@ -224,17 +209,13 @@ describe('Page conditions expected behaviour', () => {
     test('If no errors are thrown then a page rule is executed', () => {
         const mockContentValue = 'test';
 
-        mockgetStateValue.mockImplementation(() => {
-            return {
-                contentValue: mockContentValue,
-            };
-        });
+        mockgetStateValue.mockImplementation(() => ({
+            contentValue: mockContentValue,
+        }));
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                contentValue: 'test',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            contentValue: 'test',
+        }));
 
         const mockPageElement = {
             pageConditions: [
@@ -249,7 +230,8 @@ describe('Page conditions expected behaviour', () => {
                         },
                     ],
                     pageRules: [{
-                        left: { pageObjectReferenceId : 'test' }, criteriaType: 'EQUAL',
+                        left: { pageObjectReferenceId: 'test' },
+                        criteriaType: 'EQUAL',
                         right: { valueElementToReferenceId: { id: 'test' } },
                     }],
                 },
@@ -271,17 +253,13 @@ describe('Page conditions expected behaviour', () => {
     test('If no errors are thrown then page operations are executed', () => {
         const mockContentValue = 'test';
 
-        mockgetStateValue.mockImplementation(() => {
-            return {
-                contentValue: mockContentValue,
-            };
-        });
+        mockgetStateValue.mockImplementation(() => ({
+            contentValue: mockContentValue,
+        }));
 
-        mockSnaphot.getValue.mockImplementation(() => {
-            return {
-                contentValue: 'test',
-            };
-        });
+        mockSnaphot.getValue.mockImplementation(() => ({
+            contentValue: 'test',
+        }));
 
         const mockPageElement = {
             pageConditions: [
@@ -303,7 +281,8 @@ describe('Page conditions expected behaviour', () => {
                         },
                     ],
                     pageRules: [{
-                        left: { pageObjectReferenceId : 'test' }, criteriaType: 'EQUAL',
+                        left: { pageObjectReferenceId: 'test' },
+                        criteriaType: 'EQUAL',
                         right: { valueElementToReferenceId: { id: 'test' } },
                     }],
                 },

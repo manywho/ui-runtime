@@ -1,5 +1,5 @@
 import { getMacroState, setMacroState } from './MacroState';
-import { default as MacroMethods, extractContentValue, settingContentValue } from './MacroMethods';
+import MacroMethods, { extractContentValue, settingContentValue } from './MacroMethods';
 
 /**
  * @param macro the stringified macro

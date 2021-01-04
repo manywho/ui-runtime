@@ -3,26 +3,28 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-const { repoPaths, mapPublicPath } = require('./config/paths');
+const { repoPaths } = require('./config/paths');
+const dotenv = require('dotenv').config({path: __dirname + '/.env'});
 
 module.exports = (env) => ({
 
-    mode: (env && env.development) ? 'development' : 'production',
-
     entry: {
-        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-ui-bootstrap': `${repoPaths.uiBootstrap}/js/index.js`,
+        'js/flow-ui-core': `${repoPaths.uiCore}/js/index.ts`,
         'js/flow-offline': `${repoPaths.uiOffline}/js/index.js`,
+        'js/loader.min': './js/loader.js', // using loader.min so we get loader.min.js as output
         'ui-themes': `${repoPaths.uiThemes}/ui-themes.js`,
     },
 
     output: {
         // virtual path on the dev-server
-        publicPath: (env && env.assets) ? mapPublicPath(env.assets) : 'debug/',
+        publicPath: '/',
         libraryTarget: 'umd',
         library: ['manywho', 'core'],
         umdNamedDefine: true,
+        filename: '[name].js',
+        // path on the disk
+        path: path.resolve(__dirname, repoPaths.build),
     },
 
     resolve: {
@@ -30,6 +32,9 @@ module.exports = (env) => ({
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(dotenv.parsed),
+        }),
         new LicenseWebpackPlugin({
             pattern: /.*/,
             unacceptablePattern: /GPL|MPL|CC|EPL|CDDL|Artistic|OFL|Ms-RL|BSL|AFL|APSL|FDL|CPOL|AML|IPL|W3C|QPL/gi,
@@ -40,17 +45,15 @@ module.exports = (env) => ({
             contextRegExp: /moment$/
         }),
         new CopyPlugin([
-            // copy the vendor scripts
-            {
-                context: './ui-vendor/',
-                from: 'vendor/**/*.*',
-                to: 'js/',
-            },
             // copy the favicons
             {
-                context: './ui-html5/',
                 from: 'img/**/*.*',
                 // to: defaults to the output.path
+            },
+            // copy the index.html
+            {
+                from: 'index.html',
+                to: 'players/',
             },
         ]),
         new BundleAnalyzerPlugin({
@@ -103,8 +106,8 @@ module.exports = (env) => ({
                         loader: 'file-loader',
                         options: {
                             name: '[name].css',
-                            outputPath: 'themes/',
-                            publicPath: 'themes/',
+                            outputPath: 'css/themes/',
+                            publicPath: 'css/themes/',
                         },
                     },
                     { loader: 'extract-loader' },
@@ -120,7 +123,7 @@ module.exports = (env) => ({
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'fonts/',
+                            outputPath: 'css/fonts/',
                             publicPath: 'fonts/',
                         }
                     }
@@ -140,6 +143,57 @@ module.exports = (env) => ({
                     }
                 ]
             },
+            // bundle bootstrap styles
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-bootstrap.less`),
+                ],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: `flow-ui-bootstrap.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
+                        },
+                    },
+                    { loader: 'extract-loader' },
+                    // Change all instances of `.mw-bs html` and `.mw-bs body`
+                    // to `.mw-bs` because we are nesting the entire
+                    // bootstrap.css file within mw-bootstrap.less.
+                    {
+                        loader: 'string-replace-loader',
+                        options: {
+                            search: '\.mw-bs html|\.mw-bs body',
+                            replace: '.mw-bs',
+                            flags: 'g',
+                        }
+                    },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ]
+            },
+            // bundle components styles
+            {
+                test: /\.less$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-components.less`),
+                ],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: `flow-ui-bootstrap-components.css`,
+                            outputPath: 'css/',
+                            publicPath: 'css/',
+                        },
+                    },
+                    { loader: 'extract-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ],
+            },
         ],
     },
 
@@ -153,8 +207,6 @@ module.exports = (env) => ({
         'bootstrap': 'bootstrap',
         'socket.io-client': 'io',
     },
-
-    devtool: (env && env.development) ? 'inline-source-map' : 'source-map',
 
     stats: {
         // add asset Information

@@ -2,7 +2,7 @@
  * A collection of helpers for generating request bodies for the various ajax requests
  */
 
- /**
+/**
   * @ignore
   */
 export const generateFlowInputs = (inputsData: any) => {
@@ -22,18 +22,18 @@ export const generateFlowInputs = (inputsData: any) => {
                     typeElementDeveloperName: input[property].typeElementDeveloperName,
                 };
             }
-            else if (input[property].contentType && input[property].developerName) {
+            if (input[property].contentType && input[property].developerName) {
                 return input[property];
             }
-            else {
-                return {
-                    contentType: 'Content' + (typeof input[property]).charAt(0).toUpperCase() + (typeof input[property]).substring(1).toLowerCase(),
-                    contentValue: input[property],
-                    developerName: property,
-                    objectData: null,
-                    typeElementDeveloperName: null,
-                };
-            }
+
+            return {
+                contentType: `Content${(typeof input[property]).charAt(0).toUpperCase()}${(typeof input[property]).substring(1).toLowerCase()}`,
+                contentValue: input[property],
+                developerName: property,
+                objectData: null,
+                typeElementDeveloperName: null,
+            };
+
         }
     });
 };
@@ -56,22 +56,19 @@ export const generateInitializationRequest = (
     joinUrl?: string,
     mode?: string,
     reportingMode?: string,
-) => {
-
-    return {
-        flowId: {
-            id: flowId.id,
-            versionId: flowId.versionid || flowId.versionId || null,
-        },
-        stateId: stateId || null,
-        annotations: annotations || null,
-        inputs: inputs || null,
-        playerUrl: playerUrl || null,
-        joinPlayerUrl: joinUrl || null,
-        mode: mode || '',
-        reportingMode: reportingMode || '',
-    };
-};
+) => ({
+    flowId: {
+        id: flowId.id,
+        versionId: flowId.versionid || flowId.versionId || null,
+    },
+    stateId: stateId || null,
+    annotations: annotations || null,
+    inputs: inputs || null,
+    playerUrl: playerUrl || null,
+    joinPlayerUrl: joinUrl || null,
+    mode: mode || '',
+    reportingMode: reportingMode || '',
+});
 
 /**
   * @ignore
@@ -87,27 +84,24 @@ export const generateInvokeRequest = (
     annotations?,
     location?: any,
     mode?: string,
-) => {
-
-    return {
-        invokeType,
-        stateId: stateData.id,
-        stateToken: stateData.token,
-        currentMapElementId: stateData.currentMapElementId,
-        annotations: annotations || null,
-        geoLocation: location || null,
-        mapElementInvokeRequest: {
-            pageRequest: {
-                pageComponentInputResponses: pageComponentInputResponses || null,
-            },
-            selectedOutcomeId: selectedOutcomeId || null,
+) => ({
+    invokeType,
+    stateId: stateData.id,
+    stateToken: stateData.token,
+    currentMapElementId: stateData.currentMapElementId,
+    annotations: annotations || null,
+    geoLocation: location || null,
+    mapElementInvokeRequest: {
+        pageRequest: {
+            pageComponentInputResponses: pageComponentInputResponses || null,
         },
-        mode: mode || '',
-        selectedMapElementId: selectedMapElementId || null,
-        navigationElementId: navigationElementId || null,
-        selectedNavigationElementId: selectedNavigationElementId || null,
-    };
-};
+        selectedOutcomeId: selectedOutcomeId || null,
+    },
+    mode: mode || '',
+    selectedMapElementId: selectedMapElementId || null,
+    navigationElementId: navigationElementId || null,
+    selectedNavigationElementId: selectedNavigationElementId || null,
+});
 
 /**
   * @ignore
@@ -120,26 +114,25 @@ export const generateNavigateRequest = (
     pageComponentInputResponses?: any[],
     annotations?: any,
     location?: any,
-) => {
-
-    return {
-        stateId: stateData.id,
-        stateToken: stateData.token,
-        currentMapElementId: stateData.currentMapElementId,
-        invokeType: 'NAVIGATE',
-        navigationElementId: navigationId,
-        selectedMapElementId: mapElementId,
-        selectedNavigationItemId: navigationElementId,
-        annotations: annotations || null,
-        geoLocation: location || null,
-        mapElementInvokeRequest: {
-            pageRequest: {
-                pageComponentInputResponses: pageComponentInputResponses || null,
-            },
-            selectedOutcomeId: null,
+    selectedStateEntryId?: string,
+) => ({
+    selectedStateEntryId: selectedStateEntryId || null,
+    stateId: stateData.id,
+    stateToken: stateData.token,
+    currentMapElementId: stateData.currentMapElementId,
+    invokeType: 'NAVIGATE',
+    navigationElementId: navigationId,
+    selectedMapElementId: mapElementId,
+    selectedNavigationItemId: navigationElementId,
+    annotations: annotations || null,
+    geoLocation: location || null,
+    mapElementInvokeRequest: {
+        pageRequest: {
+            pageComponentInputResponses: pageComponentInputResponses || null,
         },
-    };
-};
+        selectedOutcomeId: null,
+    },
+});
 
 /**
   * @ignore
@@ -151,14 +144,11 @@ export const generateSessionRequest = (
     username?: string,
     password?: string,
     token?: string,
-) => {
-
-    return {
-        loginUrl,
-        sessionUrl,
-        sessionToken: sessionId,
-        username: username || null,
-        password: password || null,
-        token: token || null,
-    };
-};
+) => ({
+    loginUrl,
+    sessionUrl,
+    sessionToken: sessionId,
+    username: username || null,
+    password: password || null,
+    token: token || null,
+});

@@ -5,7 +5,6 @@ import * as sinon from 'sinon';
 
 const validation = {
     validate: sinon.stub(),
-    shouldValidate: sinon.stub().returns(true),
 };
 
 const model = {
@@ -48,7 +47,7 @@ test.after((t) => {
     mockery.disable();
 });
 
-test('Set Component Loading', (t) => {
+test.serial('Set Component Loading', (t) => {
     const expected = {
         loading: {
             message: 'loading',
@@ -60,7 +59,7 @@ test('Set Component Loading', (t) => {
     t.deepEqual(State.getComponent('id', flowKey), expected);
 });
 
-test('Set Component Error String', (t) => {
+test.serial('Set Component Error String', (t) => {
     const expected = {
         error: {
             id: 'id',
@@ -73,7 +72,7 @@ test('Set Component Error String', (t) => {
     t.deepEqual(State.getComponent('id', flowKey), expected);
 });
 
-test('Set Component Error Object', (t) => {
+test.serial('Set Component Error Object', (t) => {
     const expected = {
         error: {
             message: 'error message',
@@ -86,7 +85,7 @@ test('Set Component Error Object', (t) => {
     t.deepEqual(State.getComponent('id', flowKey), expected);
 });
 
-test('Set Component Error Remove', (t) => {
+test.serial('Set Component Error Remove', (t) => {
     const expected = {
         error: null,
     };
@@ -97,7 +96,7 @@ test('Set Component Error Remove', (t) => {
     t.deepEqual(State.getComponent('id', flowKey), expected);
 });
 
-test('Set Session Data', (t) => {
+test.serial('Set Session Data', (t) => {
     const expected = {
         id: 'id',
         url: 'url',
@@ -108,17 +107,17 @@ test('Set Session Data', (t) => {
     t.deepEqual(State.getSessionData(flowKey), expected);
 });
 
-test('Set Login', (t) => {
+test.serial('Set Login', (t) => {
     State.setLogin('login', flowKey);
     t.is(State.getLogin(flowKey), 'login');
 });
 
-test('Set Options', (t) => {
+test.serial('Set Options', (t) => {
     State.setOptions('options', flowKey);
     t.is(State.getOptions(flowKey), 'options');
 });
 
-test('Set State', (t) => {
+test.serial('Set State', (t) => {
     const expected = {
         id: 'id',
         token: 'token',
@@ -129,12 +128,12 @@ test('Set State', (t) => {
     t.deepEqual(State.getState(flowKey), expected);
 });
 
-test('Set User Time', (t) => {
+test.serial('Set User Time', (t) => {
     State.setUserTime(flowKey);
     t.not(State.getLocation(flowKey).time, null);
 });
 
-test('Set User Time With Offset', (t) => {
+test.serial('Set User Time With Offset', (t) => {
     t.plan(2);
 
     Settings.initialize(
@@ -169,7 +168,7 @@ test.serial('Input Responses', (t) => {
     t.deepEqual(State.getPageComponentInputResponseRequests(flowKey), [components['dd5b8fd9-1f25-4e57-a53e-135d94faf7a6']]);
 });
 
-test('Set Location', (t) => {
+test.serial('Set Location', (t) => {
     Settings.initialize(
         {
             trackLocation: true,
@@ -202,7 +201,7 @@ test('Set Location', (t) => {
     t.deepEqual(State.getLocation(flowKey), expected);
 });
 
-test('Refresh Components', (t) => {
+test.serial('Refresh Components', (t) => {
 
     const id = '73d2bbeb-c45e-44af-bd14-163c83fdbd83';
     const models = {};
@@ -231,18 +230,13 @@ test('Refresh Components', (t) => {
         ],
     };
 
-    State.refreshComponents(models, 'wait', flowKey);
+    State.refreshComponents(models, flowKey);
     t.deepEqual(State.getComponents(flowKey), expected);
 });
 
-test('Set Component', (t) => {
-    validation.validate
-        .onFirstCall()
-        .returns({
-            isValid: false,
-            validationMessage: 'message',
-        });
+test.serial('Set Component with client-side validation disabled', (t) => {
 
+    // Mock the validate() method guarded by 'validation.isEnabled' as if disabled.
     validation.validate
         .returns({
             isValid: true,
@@ -254,7 +248,7 @@ test('Set Component', (t) => {
             isValid: false,
         },
     };
-    State.refreshComponents(models, 'move', flowKey);
+    State.refreshComponents(models, flowKey);
 
     const values = {
         contentValue: 'value',
@@ -275,7 +269,42 @@ test('Set Component', (t) => {
     validation.validate.resetBehavior();
 });
 
-test('Validation', (t) => {
+test.serial('Set Component with client-side validation enabled', (t) => {
+
+    // Mock the validate() method guarded by 'validation.isEnabled' as if enabled.
+    validation.validate
+        .returns({
+            isValid: false,
+            validationMessage: 'not valid',
+        });
+
+    const models = {
+        id: {
+            isValid: false,
+        },
+    };
+    State.refreshComponents(models, flowKey);
+
+    const values = {
+        contentValue: 'value',
+        objectData: [],
+    };
+    State.setComponent('id', values, flowKey, true);
+
+    const expected = {
+        contentValue: 'value',
+        isValid: false,
+        objectData: [],
+        validationMessage: 'not valid',
+    };
+
+    t.deepEqual(State.getComponent('id', flowKey), expected);
+    t.is(collaboration.push.callCount, 1);
+
+    validation.validate.resetBehavior();
+});
+
+test.serial('Validation', (t) => {
     validation.validate.returns({
         isValid: false,
         validationMessage: 'message',
@@ -284,11 +313,11 @@ test('Validation', (t) => {
     const models = {
         id: {},
     };
-    State.refreshComponents(models, 'move', flowKey);
+    State.refreshComponents(models, flowKey);
 
     const expected = {
         contentValue: null,
-        objectData: undefined,
+        objectData: null,
         isValid: false,
         validationMessage: 'message',
     };

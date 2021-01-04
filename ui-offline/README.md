@@ -16,7 +16,7 @@ online the list of saved requests is displayed, the user can choose to replay al
 out of sequence, or delete the requests.
 
 If the flow is protected with an authentication mechanism and the user's previous session has timed out they will be asked
-to re-authenticate before they can replay the saved requests. 
+to re-authenticate before they can replay the saved requests.
 
 ### Data Caching
 
@@ -38,7 +38,7 @@ limitByType: {
 
 The keys are the type ID associated to that data load and the values are the limits.
 
-In addition, whilst the flow is online, state values are being cached in memory every 30 seconds. This is so that values persist 
+In addition, whilst the flow is online, state values are being cached in memory every 30 seconds. This is so that values persist
 in the flow even when network connectivity is suddenly lost. This can be overridden by modifying the `offline.cache.pollInterval` setting which
 excepts a numerical value in milliseconds.
 
@@ -58,7 +58,7 @@ some caveats/unsupported features.
 
 Currently, offline flows can support any page condition created with the basic page condition tool inside the Toolings page editor.
 Page conditions with multiple page operations are also supported.
-The only page condition metadatatypes that are supported at present are: 
+The only page condition metadatatypes that are supported at present are:
 
 - Visibility
 - Required
@@ -78,11 +78,11 @@ was simulated offline.
 
 ## Unsupported Functionality
 
-- Referencing system values e.g. `$State` in a step/presentation components text content 
+- Referencing system values e.g. `$State` in a step/presentation components text content
 - Message Actions
 - Swimlanes
 - Delete map elements
-- Listners
+- Listeners
 - Realtime collaboration
 - Scenarios where you want to set the isBound property on a page components column to equal true (e.g. when you have a object property of type string which is set based on the list value selection)
 
@@ -135,7 +135,7 @@ To include the offline components you will need to add the following references 
 
 ```
 <script src="build/js/metadata.js"></script>
-<script src="build/js/ui-offline.js"></script>
+<script src="build/js/flow-offline.js"></script>
 ```
 
 ### Running Unit Tests
@@ -148,7 +148,7 @@ npm run test
 
 ## Contributing
 
-Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to 
+Contributions are welcome to the project - whether they are feature requests, improvements or bug fixes! Refer to
 [CONTRIBUTING.md](CONTRIBUTING.md) for our contribution requirements.
 
 ## License

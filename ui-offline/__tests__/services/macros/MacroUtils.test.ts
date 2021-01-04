@@ -113,7 +113,6 @@ describe('Macro utilities behaviour', () => {
         };
 
         const mockValueName = 'noname';
-        const mockValueId = 'test2';
 
         setMacroState(mockState);
 
@@ -150,7 +149,7 @@ describe('Macro utilities behaviour', () => {
 
         expect(() => {
             getValueByName(mockValueName, mockMetaData);
-        }).toThrow('A value with name: ' + expectedResult.developerName + ', has not been set in state');
+        }).toThrow(`A value with name: ${expectedResult.developerName}, has not been set in state`);
     });
 
     // setStateValue tests

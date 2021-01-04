@@ -1,12 +1,13 @@
-import { setStateValue } from '../../models/State';
 import Snapshot from '../Snapshot';
 import store from '../../stores/store';
+
+import { hasNoNetwork, hasNetwork } from '../../actions';
+import { setStateValue } from '../../models/State';
 
 declare const manywho: any;
 declare const metaData: any;
 
-let authenticationToken = undefined;
-let timer = undefined;
+let timer;
 
 const snapshot: any = Snapshot(metaData);
 
@@ -21,7 +22,7 @@ const injectValuesIntoState = (values: any) => {
             objectData: value.objectData,
         };
         setStateValue(
-            { id: value.valueElementId },
+            { id: value.valueElementId, typeElementPropertyId: null },
             value.typeElementId,
             snapshot,
             valueProps,
@@ -29,44 +30,64 @@ const injectValuesIntoState = (values: any) => {
     });
 };
 
-/**
- * @param stateId
- * @param tenantId
- * @param token
- * @description making a GET call to the states value endpoint
- */
-export const pollForStateValues = (stateId: string, tenantId: string, token: string) => {
-    authenticationToken = token;
+export const pollForStateValues = () => {
+    const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${store.getState().flowInformation.stateId}/values`;
 
+    const request = {
+        headers: {
+            ManyWhoTenant: store.getState().flowInformation.tenantId,
+            // Public flows have no Authorization header. Supplying the header with a null value does not work.
+        },
+    };
+
+    if (store.getState().flowInformation.token) {
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        request.headers['Authorization'] = store.getState().flowInformation.token;
+    }
+    return fetch(url, request)
+        .then((response) => {
+            if (response.status === 204) {
+                return null;
+            }
+            return response.json();
+        })
+        .then((response) => {
+            if (response !== null) {
+                injectValuesIntoState(response);
+            }
+
+            if (!store.getState().hasNetwork) {
+                store.dispatch<any>(hasNetwork());
+            }
+            return response;
+        })
+        .catch(() => {
+            if (!store.getState().isOffline && store.getState().hasNetwork) {
+                store.dispatch<any>(hasNoNetwork());
+            }
+        });
+};
+
+/**
+ * @description Polling the states value endpoint.
+ * We do this so that the offline value state is kept up to date
+ * ready for when network connectivity is lost.
+ * This polling of the values endpoint is also used as a continuous
+ * network check that allows us to notify users when they have
+ * lost or regained network connectivity.
+ */
+export const periodicallyPollForStateValues = () => {
     // This needs to be set in the player manually
     // or injected in when generating a Cordova app
     const pollInterval = manywho.settings.global('offline.cache.pollInterval');
 
     clearTimeout(timer);
 
-    if (!store.getState().isOffline) { // only poll api whilst online
-        const url = `${manywho.settings.global('platform.uri')}/api/run/1/state/${stateId}/values`;
-        const request = {
-            headers: {
-                ManyWhoTenant: tenantId,
-            },
-        };
-        if (authenticationToken) {
-            request.headers['Authorization'] = authenticationToken;
-        }
-        return fetch(url, request)
-            .then((response) => {
-                return response.json();
-            })
-            .then((response) => {
-                injectValuesIntoState(response);
+    timer = setTimeout(
+        () => { periodicallyPollForStateValues().catch((e) => console.error(e)); }, pollInterval,
+    );
 
-                // This is so the flow can perioically poll for the latest values
-                // in case values have changed from a user joining the state
-                timer = setTimeout(
-                    () => { pollForStateValues(stateId, tenantId, authenticationToken); }, pollInterval,
-                );
-            })
-            .catch(response => console.error(response));
-    }
+    return pollForStateValues()
+        .then((response) => response)
+        .catch((e) => console.error(e));
 };

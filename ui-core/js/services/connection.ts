@@ -20,8 +20,8 @@ export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authentication
         xhr.setRequestHeader('Authorization', authenticationToken);
     }
 
-    if (Settings.event(event + '.beforeSend')) {
-        Settings.event(event + '.beforeSend').call(this, xhr, request);
+    if (Settings.event(`${event}.beforeSend`)) {
+        Settings.event(`${event}.beforeSend`).call(this, xhr, request);
     }
 };
 
@@ -66,9 +66,9 @@ export const request = (context,
             }
         },
     })
-    .done(Settings.event(event + '.done'))
-    .fail(onError)
-    .fail(Settings.event(event + '.fail'));
+        .done(Settings.event(`${event}.done`))
+        .fail(onError)
+        .fail(Settings.event(`${event}.fail`));
 };
 
 /**
@@ -90,27 +90,24 @@ export const upload = (
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
-) => {
-
-    return $.ajax({
-        url: Settings.global('platform.uri') + url,
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        xhr: () => {
-            const xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', onProgress, false);
-            return xhr;
-        },
-        beforeSend: (xhr) => {
-            beforeSend.call(this, xhr, tenantId, authenticationToken, event);
-        },
-    })
-    .done(Settings.event(event + '.done'))
+) => $.ajax({
+    url: Settings.global('platform.uri') + url,
+    type: 'POST',
+    data: formData,
+    contentType: false,
+    processData: false,
+    xhr: () => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', onProgress, false);
+        return xhr;
+    },
+    beforeSend: (xhr) => {
+        beforeSend.call(this, xhr, tenantId, authenticationToken, event);
+    },
+})
+    .done(Settings.event(`${event}.done`))
     .fail(onError)
-    .fail(Settings.event(event + '.fail'));
-};
+    .fail(Settings.event(`${event}.fail`));
 
 /**
  * Upload a file to the Boomi Flow platform

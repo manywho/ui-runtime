@@ -1,28 +1,8 @@
 {
-    "name": "manywho-ui-bootstrap",
-    "version": "3.10.0",
-    "description": "Boomi Flow HTML5 React Bootstrap components",
-    "author": "Boomi Flow",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/manywho/ui-bootstrap.git"
-    },
     "scripts": {
         "check-types": "tsc",
         "docs": "typedoc js --out docs --ignoreCompilerErrors --mode modules & start docs/index.html",
-        "start": "webpack --config webpack.development.config.js --env.build=../ui-html5/build --env.assets=local --env.watch --env.sourcemaps",
-        "dev": "webpack --config webpack.development.config.js",
-        "dist": "webpack -p --config webpack.production.config.js",
-        "test": "jest",
-        "lint": "eslint js/**"
-    },
-    "lint-staged": {
-        "*.ts": "eslint",
-        "*.tsx": [
-            "eslint",
-            "git add",
-            "jest --findRelatedTests --bail"
-        ]
+        "test": "jest"
     },
     "devDependencies": {
         "@babel/core": "7.4.0",
@@ -31,11 +11,10 @@
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-typescript": "7.3.3",
         "@types/enzyme": "3.1.10",
-        "@types/jest": "21.1.10",
+        "@types/jest": "^26.0.18",
         "@types/lodash": "4.14.123",
         "@types/react": "16.9.2",
-        "@typescript-eslint/eslint-plugin": "1.5.0",
-        "babel-jest": "24.8.0",
+        "babel-jest": "^26.6.3",
         "babel-preset-es2015": "6.24.1",
         "babel-preset-react": "6.24.1",
         "chart.js": "2.7.2",
@@ -44,21 +23,14 @@
         "enzyme": "3.9.0",
         "enzyme-adapter-react-14": "1.4.0",
         "enzyme-adapter-react-16": "1.12.1",
-        "eslint": "5.16.0",
-        "eslint-config-airbnb-typescript": "1.1.0",
-        "eslint-plugin-import": "2.16.0",
-        "eslint-plugin-jsx-a11y": "6.2.1",
-        "eslint-plugin-react": "7.12.4",
         "file-loader": "4.2.0",
         "husky": "0.14.3",
         "identity-obj-proxy": "3.0.0",
-        "jest": "24.8.0",
+        "jest": "^26.6.3",
         "jest-junit-reporter": "1.1.0",
-        "jquery-textcomplete": "1.8.5",
         "less": "3.9.0",
         "less-loader": "5.0.0",
         "license-webpack-plugin": "2.1.2",
-        "lint-staged": "5.0.0",
         "react-addons-test-utils": "0.14.8",
         "react-collapse": "4.0.3",
         "react-dom-factories": "1.0.0",
@@ -70,8 +42,8 @@
         "script-loader": "0.7.2",
         "string-replace-loader": "2.2.0",
         "style-loader": "0.19.1",
-        "ts-jest": "24.0.2",
-        "typedoc": "0.14.2",
+        "ts-jest": "^26.4.4",
+        "typedoc": "^0.19.2",
         "typescript": "3.3.4000",
         "webpack": "4.26.1",
         "webpack-bundle-analyzer": "3.3.2",
@@ -79,6 +51,9 @@
         "write-file": "1.0.0"
     },
     "jest": {
+        "testPathIgnorePatterns": [
+            "/fixtures/"
+        ],
         "collectCoverage": true,
         "collectCoverageFrom": [
             "**/js/components/*.{ts,tsx}"
@@ -112,12 +87,15 @@
     },
     "dependencies": {
         "@babel/plugin-transform-react-jsx": "7.3.0",
-        "@boomi/react-file-upload": "^0.2.0",
+        "@boomi/react-file-upload": "^0.4.0",
         "@types/react-maskedinput": "4.0.3",
         "babel-loader": "8.0.5",
-        "create-react-class": "15.6.3",
+        "core-js": "^3.6.4",
+        "create-react-class": "^15.7.0",
+        "dompurify": "^2.1.1",
         "extract-text-webpack-plugin": "4.0.0-beta.0",
-        "jquery": "3.4.1",
+        "jquery": "^3.5.1",
+        "jquery-textcomplete": "1.8.5",
         "lint": "1.1.2",
         "mini-css-extract-plugin": "0.5.0",
         "promise-polyfill": "8.1.3",
@@ -125,6 +103,7 @@
         "react": "16.8.6",
         "react-dom": "16.8.6",
         "react-selectize": "3.0.1",
+        "regenerator-runtime": "^0.13.3",
         "tinymce": "^4.8.5"
     }
 }

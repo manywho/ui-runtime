@@ -3,11 +3,17 @@ import 'script-loader!./lib/010-pollyfills.js';
 // Polyfill for Promises in IE - Can be removed when when support for IE is dropped
 import 'promise-polyfill/src/polyfill';
 
+// polyfills for IE https://github.com/zloirock/core-js#babel
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import './createClassPatch.ts';
 
 // Styles
-import '../css/mw-bootstrap.less';
 import '../css/mw-components.less';
+
+// Themes
+import '../css/mw-bootstrap.less';
 
 // Services
 import './services/theming.ts';
@@ -33,6 +39,7 @@ import './components/flip.tsx';
 import './components/footer.tsx';
 import './components/group.tsx';
 import './components/hidden.tsx';
+import './components/historical-navigation.tsx';
 import './components/history.tsx';
 import './components/horizontal.tsx';
 import './components/iframe.tsx';

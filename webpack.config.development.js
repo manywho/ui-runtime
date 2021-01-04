@@ -1,6 +1,8 @@
 const path = require('path');
-const { repoPaths } = require('./config/paths');
 const configCommon = require('./webpack.config.common');
+const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackStringReplacePlugin = require('html-webpack-string-replace-plugin');
 
 module.exports = (env) => {
     // generate the common config object
@@ -13,111 +15,58 @@ module.exports = (env) => {
     // without accidentally overwriting any properties and to add new custom
     // ones down the line)
     return {
-        mode: common.mode,
-
-        entry: {
-            ...common.entry,
-        },
-
-        output: {
-            filename: '[name].js',
-            ...common.output,
-        },
-
-        resolve: {
-            ...common.resolve,
-        },
+        ...common,
 
         plugins: [
             ...common.plugins,
+            new CopyPlugin([
+                // copy the development vendor scripts
+                {
+                    from: 'js/vendor-dev/**/*.*',
+                    to: 'js/vendor',
+                    flatten: true,
+                },
+                {
+                    from: 'bundles.template.json',
+                    to: 'bundles.json',
+                    // The `content` argument is a [`Buffer`](https://nodejs.org/api/buffer.html) object, it could be converted to a `String` to be processed using `content.toString()`
+                    // The `absoluteFrom` argument is a `String`, it is absolute path from where the file is being copied
+                    transform(content) {
+                        return content.toString().replace(/\$\{PATH_PREFIX\}/g, '');
+                    },
+                },
+            ]),
+            new HtmlWebpackPlugin({
+                template: 'index.html',
+                filename: 'index.html',
+                inject: false,
+            }),
+            new HtmlWebpackStringReplacePlugin({
+                '\\$\\{CDN_URL\\}': process.env.CDN_URL,
+                '\\$\\{PLATFORM_URI\\}': process.env.PLATFORM_URI,
+            }),
         ],
 
         module: {
             rules: [
                 ...common.module.rules,
-                // bundle bootstrap styles
-                {
-                    test: /\.less$/,
-                    include: [
-                        path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-bootstrap.less`),
-                    ],
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'flow-ui-bootstrap.css',
-                                outputPath: 'css/',
-                                publicPath: 'css/',
-                            },
-                        },
-                        { loader: 'extract-loader' },
-                        // Change all instances of `.mw-bs html` and `.mw-bs body`
-                        // to `.mw-bs` because we are nesting the entire
-                        // bootstrap.css file within mw-bootstrap.less.
-                        {
-                            loader: 'string-replace-loader',
-                            options: {
-                                search: '\.mw-bs html|\.mw-bs body',
-                                replace: '.mw-bs',
-                                flags: 'g',
-                            }
-                        },
-                        { loader: 'css-loader' },
-                        { loader: 'less-loader' },
-                    ]
-                },
-                // bundle components styles
-                {
-                    test: /\.less$/,
-                    include: [
-                        path.resolve(__dirname, `${repoPaths.uiBootstrap}/css/mw-components.less`),
-                    ],
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'flow-ui-bootstrap-components.css',
-                                outputPath: 'css/',
-                                publicPath: 'css/',
-                            },
-                        },
-                        { loader: 'extract-loader' },
-                        { loader: 'css-loader' },
-                        { loader: 'less-loader' },
-                    ],
-                },
+                { test: /\.html$/, loader: 'html-loader' },
             ],
         },
 
-        externals: {
-            ...common.externals,
-        },
-
-        devtool: common.devtool,
-
-        stats: {
-            ...common.stats,
-        },
-
-        performance: {
-            ...common.performance,
-        },
+        devtool: 'eval-source-map',
 
         devServer: {
             hot: true,
-            open: true,
             inline: true,
             overlay: true,
-            stats: 'normal',
             // if no HOST is defined it will default to localhost
             host: process.env.HOST,
             port: process.env.PORT || 3000,
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
-            // since we are not creating an index page fallback
-            // and load debug.html
-            historyApiFallback: { index: `${repoPaths.uiHtml5}/debug.html`},
+            historyApiFallback: true,
         },
         // NOTE: To see a list of all the files built and loaded by the
         // dev server go to the following url in the browser:

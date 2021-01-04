@@ -1,7 +1,4 @@
-import {
-    default as ObjectDataCaching,
-    generateObjectData,
-    getObjectDataRequest } from '../../../js/services/cache/ObjectDataCaching';
+import ObjectDataCaching, { generateObjectData, getObjectDataRequest } from '../../../js/services/cache/ObjectDataCaching';
 import { cacheObjectData } from '../../../js/models/Flow';
 import OnCached from '../../../js/services/cache/OnCached';
 

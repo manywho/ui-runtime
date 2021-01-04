@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { str } from '../test-utils';
+import { objectDataFixture } from './fixtures/objectData.test.fixture';
+import { columnsFixture } from './fixtures/columns.test.fixture';
 
 import ItemsContainer from '../js/components/items-container';
 import Dynamic from '../js/components/dynamic';
@@ -23,6 +25,8 @@ describe('ItemsContainer component behaviour', () => {
         objectDataRequest = null,
         fileDataRequest = null,
         componentType = str(),
+        search = null,
+        pagination = true,
     } = {}) {
 
         const props = {
@@ -36,12 +40,12 @@ describe('ItemsContainer component behaviour', () => {
             componentType,
             attributes: {
                 paginationSize,
-                pagination: true,
+                pagination,
             },
         });
 
         globalAny.window.manywho.state.getComponent = () => ({
-            loading, page,
+            loading, page, search,
         });
 
         globalAny.window.manywho.component.contentTypes = {
@@ -82,7 +86,7 @@ describe('ItemsContainer component behaviour', () => {
                     objectData: null,
                 },
                 {
-                    contentFormat: 'dd/MM/yyyy',
+                    contentFormat: null,
                     contentType: 'ContentDateTime',
                     contentValue: '2019-05-06T16:38:00+01:00',
                     developerName: 'datetime',
@@ -198,7 +202,7 @@ describe('ItemsContainer component behaviour', () => {
                 {
                     contentFormat: 'dd/MM/yyyy',
                     contentType: 'ContentDateTime',
-                    contentValue: '2019-10-06T16:38:00+01:00',
+                    contentValue: '06/10/2019',
                     developerName: 'datetime',
                     objectData: null,
                 },
@@ -310,9 +314,9 @@ describe('ItemsContainer component behaviour', () => {
                     objectData: null,
                 },
                 {
-                    contentFormat: 'dd/MM/yyyy',
+                    contentFormat: 'MM/dd/yyyy',
                     contentType: 'ContentDateTime',
-                    contentValue: '2020-05-06T16:38:00+01:00',
+                    contentValue: '05/06/2020',
                     developerName: 'datetime',
                     objectData: null,
                 },
@@ -419,6 +423,10 @@ describe('ItemsContainer component behaviour', () => {
             ],
         },
     ];
+
+    beforeEach(() => {
+        globalAny.window.manywho.component.getPageSize = () => 10;
+    });
 
     afterEach(() => {
         componentWrapper.unmount();
@@ -534,6 +542,7 @@ describe('ItemsContainer component behaviour', () => {
     test('Pagination size is passed to child component', () => {
 
         globalAny.window.manywho.utils.isEqual = () => true;
+        globalAny.window.manywho.component.getPageSize = () => 23;
 
         componentWrapper = manyWhoMount({
             objectData: [],
@@ -552,6 +561,7 @@ describe('ItemsContainer component behaviour', () => {
 
         globalAny.window.manywho.utils.isEqual = () => true;
         globalAny.window.manywho.settings.flow = () => 16;
+        globalAny.window.manywho.component.getPageSize = () => 16;
 
         componentWrapper = manyWhoMount({
             objectData: [],
@@ -698,6 +708,41 @@ describe('ItemsContainer component behaviour', () => {
             }),
             expect.anything(),
             expect.anything(),
+        );
+    });
+
+    test('objectData gets filtered when search query is in state', () => {
+        globalAny.window.manywho.component.getDisplayColumns = () => columnsFixture;
+        globalAny.window.manywho.formatting.format = contentValue => contentValue;
+
+        componentWrapper = manyWhoMount({
+            objectDataRequest: null,
+            objectData: objectDataFixture,
+            search: 'x',
+            pagination: false,
+        });
+
+        expect(componentWrapper.find(Dynamic).prop('props')).toEqual(
+            expect.objectContaining({
+                objectData: [objectDataFixture[2]],
+            }),
+        );
+    });
+
+    test('objectData set to null when searching on empty table', () => {
+        globalAny.window.manywho.component.getDisplayColumns = () => columnsFixture;
+
+        componentWrapper = manyWhoMount({
+            objectDataRequest: null,
+            objectData: null,
+            search: 'x',
+            pagination: false,
+        });
+
+        expect(componentWrapper.find(Dynamic).prop('props')).toEqual(
+            expect.objectContaining({
+                objectData: null,
+            }),
         );
     });
 
@@ -953,4 +998,11 @@ describe('ItemsContainer component behaviour', () => {
         objectData.sort(componentWrapper.instance().compare('object', true));
         expect(objectData).toEqual(sortingTestData);
     });
+
+    test('Verify sort method not called on null objectData', () => {
+        globalAny.window.manywho.utils.isNullOrWhitespace = () => true;
+        componentWrapper = manyWhoMount({ objectData: null });
+        expect(() => componentWrapper.setState({ search: null, sortedBy: 'test', sortedIsAscending: true })).not.toThrow();
+    });
+
 });

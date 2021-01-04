@@ -28,7 +28,7 @@ test('Is Authorized', (t) => {
     t.is(Authorization.isAuthorized({}, flowKey), true);
 });
 
-test('Is Not Authorized', (t) => {
+test.serial('Is Not Authorized', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'test',
@@ -38,7 +38,7 @@ test('Is Not Authorized', (t) => {
     t.is(Authorization.isAuthorized(response, flowKey), false);
 });
 
-test('Invoke Authorization', (t) => {
+test.serial('Invoke Authorization', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'id',
@@ -62,7 +62,7 @@ test('Invoke Authorization', (t) => {
     t.deepEqual(State.getLogin(flowKey), expected);
 });
 
-test('Invoke Authorization OAuth2', (t) => {
+test.serial('Invoke Authorization OAuth2', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'id',
@@ -76,7 +76,7 @@ test('Invoke Authorization OAuth2', (t) => {
     t.is(State.getLogin(flowKey), null);
 });
 
-test('Invoke Authorization OAuth1', (t) => {
+test.serial('Invoke Authorization OAuth1', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'id',
@@ -90,7 +90,7 @@ test('Invoke Authorization OAuth1', (t) => {
     t.is(State.getLogin(flowKey), null);
 });
 
-test('Invoke Authorization SAML', (t) => {
+test.serial('Invoke Authorization SAML', (t) => {
     const response = {
         authorizationContext: {
             directoryId: 'id',

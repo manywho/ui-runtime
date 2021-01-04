@@ -10,7 +10,7 @@ declare const manywho: any;
 
 class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
 
-    constructor(props: any) {
+    constructor(props: IRequestProps) {
         super(props);
         this.state = {
             isCollapsed: true,
@@ -23,10 +23,22 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
         this.onProgress = this.onProgress.bind(this);
     }
 
+    componentDidMount() {
+        if (this.props.replayNow) {
+            this.onReplay();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.replayNow && nextProps.replayNow) {
+            this.onReplay();
+        }
+    }
+
     onProgress({ lengthComputable, loaded, total }) {
         if (lengthComputable) {
             this.setState({
-                progress: parseInt((loaded / total * 100).toString(), 10),
+                progress: parseInt(((loaded / total) * 100).toString(), 10),
             });
         }
     }
@@ -56,19 +68,19 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
             authenticationToken,
         } = this.props;
 
-        if (this.props.cachedRequest.type === 'fileData') {
+        if (this.props.cachedRequest.request.type === 'fileData') {
             return manywho.ajax.uploadFiles(
-                cachedRequest.files,
-                cachedRequest,
+                cachedRequest.request.files,
+                cachedRequest.request,
                 tenantId,
                 authenticationToken,
                 this.onProgress,
-                cachedRequest.stateId,
+                cachedRequest.request.stateId,
             )
-            .then(this.onReplayResponse)
-            .fail((response) => {
-                this.setState({ response, isReplaying: false });
-            });
+                .then(this.onReplayResponse)
+                .fail((response) => {
+                    this.setState({ response, isReplaying: false });
+                });
         }
 
         const stateId = manywho.utils.extractStateId(this.props.flowKey);
@@ -78,34 +90,28 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
             tenantId,
             authenticationToken,
         )
-        .then((resp) => {
+            .then((resp) => {
 
-            // This is to accomodate the scenario of
-            // modifying objectdata that had been created whilst offline
-            // that then needs to be saved to a service
-            extractExternalId(cachedRequest, tenantId, authenticationToken, stateId)
-                .then(() => {
-                    this.onReplayResponse(resp);
-                });
-        })
-        .fail((response) => {
-            this.setState({ response: response.statusText, isReplaying: false });
-        });
-    }
+                // This is to accomodate the scenario of
+                // modifying objectdata that had been created whilst offline
+                // that then needs to be saved to a service
+                extractExternalId(cachedRequest, tenantId, authenticationToken, stateId)
+                    .then(() => {
+                        this.onReplayResponse(resp);
+                    }, (e) => console.error('extractExternalId:', e));
+            })
+            .fail((response) => {
+                this.setState({ response: response.statusText, isReplaying: false });
+            });
+    };
 
     onDelete = () => {
         this.props.onDelete(this.props.cachedRequest);
-    }
+    };
 
     onToggleDetails = () => {
         this.setState({ isCollapsed: !this.state.isCollapsed });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.replayNow && nextProps.replayNow) {
-            this.onReplay();
-        }
-    }
+    };
 
     render() {
         let replaying = null;
@@ -120,39 +126,43 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
 
         let cachedRequest = null;
         if (!this.state.isCollapsed && !this.state.isReplaying && !this.state.response) {
-            cachedRequest = <div className="pending-request-json">
-                <pre>{JSON.stringify(this.props.cachedRequest.request, null, 4)}</pre>
-            </div>;
+            cachedRequest = (
+                <div className="pending-request-json">
+                    <pre>{JSON.stringify(this.props.cachedRequest.request, null, 4)}</pre>
+                </div>
+            );
         }
 
         const isDisabled = this.props.isDisabled || this.state.isReplaying;
 
-        return <li className="list-group-item">
-            <div className="pending-request-header">
-                <div>
-                    {
-                        this.props.cachedRequest.request.type === 'fileData'
-                        ? (
-                            <div>
-                                <span>{ `Upload File${this.props.cachedRequest.request.files.length > 0 ? 's' : ''}:` }</span>
-                                <FileList files={this.props.cachedRequest.request.files} />
-                                <Progress progress={this.state.progress} />
-                            </div>
-                        )
-                        : <span>{this.props.cachedRequest.request.currentMapElementDeveloperName}</span>
-                    }
-                    <small>{this.props.cachedRequest.request.invokeType}</small>
+        return (
+            <li className="list-group-item">
+                <div className="pending-request-header">
+                    <div>
+                        {
+                            this.props.cachedRequest.request.type === 'fileData'
+                                ? (
+                                    <div>
+                                        <span>{ `Upload File${this.props.cachedRequest.request.files.length > 0 ? 's' : ''}:` }</span>
+                                        <FileList files={this.props.cachedRequest.request.files} />
+                                        <Progress progress={this.state.progress} />
+                                    </div>
+                                )
+                                : <span>{this.props.cachedRequest.request.currentMapElementDeveloperName}</span>
+                        }
+                        <small>{this.props.cachedRequest.request.invokeType}</small>
+                    </div>
+                    <button className="btn btn-info btn-sm" onClick={this.onToggleDetails} disabled={isDisabled}>
+                        {this.state.isCollapsed ? 'Show' : 'Hide'}
+                    </button>
+                    <button className="btn btn-primary btn-sm" onClick={this.onReplay} disabled={isDisabled}>Replay</button>
+                    <button className="btn btn-danger btn-sm" onClick={this.onDelete} disabled={isDisabled}>Delete</button>
                 </div>
-                <button className="btn btn-info btn-sm" onClick={this.onToggleDetails} disabled={isDisabled}>
-                    {this.state.isCollapsed ? 'Show' : 'Hide'}
-                </button>
-                <button className="btn btn-primary btn-sm" onClick={this.onReplay} disabled={isDisabled}>Replay</button>
-                <button className="btn btn-danger btn-sm" onClick={this.onDelete} disabled={isDisabled}>Delete</button>
-            </div>
-            {replaying}
-            {response}
-            {cachedRequest}
-        </li>;
+                {replaying}
+                {response}
+                {cachedRequest}
+            </li>
+        );
     }
 }
 
