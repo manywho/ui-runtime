@@ -20,8 +20,8 @@ describe('Table Large input component behaviour', () => {
             flowKey = 'string',
             model = {
                 attributes: {
-                    borderless: false,
-                    striped: false,
+                    borderless: 'false',
+                    striped: 'false',
                 },
                 isValid: true,
                 isMultiSelect: false,
@@ -73,7 +73,7 @@ describe('Table Large input component behaviour', () => {
     }
 
     afterEach(() => {
-        if (tableLargeWrapper && !tableLargeWrapper.isEmpty()) {
+        if (tableLargeWrapper && !tableLargeWrapper.exists()) {
             tableLargeWrapper.unmount();
         }
     });
@@ -93,8 +93,8 @@ describe('Table Large input component behaviour', () => {
         tableLargeWrapper = manyWhoMount({
             model: {
                 attributes: {
-                    borderless: true,
-                    striped: true,
+                    borderless: 'true',
+                    striped: 'true',
                 },
                 isValid: false,
                 isMultiSelect: false,
@@ -105,14 +105,12 @@ describe('Table Large input component behaviour', () => {
     });
 
     test('Table has table-bordered CSS class when props.model.attributes.borderless is not true', () => {
-        
-        globalAny.window.manywho.utils.isEqual = (a, b) => a === true && b === 'true';
-        
+
         tableLargeWrapper = manyWhoMount({
             model: {
                 attributes: {
-                    borderless: false,
-                    striped: true,
+                    borderless: 'false',
+                    striped: 'true',
                 },
                 isValid: true,
                 isMultiSelect: false,
@@ -124,13 +122,11 @@ describe('Table Large input component behaviour', () => {
 
     test('Table has table-striped CSS class when props.model.attributes.striped is true', () => {
         
-        globalAny.window.manywho.utils.isEqual = (a, b) => a === true && b === 'true';
-        
         tableLargeWrapper = manyWhoMount({
             model: {
                 attributes: {
-                    borderless: true,
-                    striped: true,
+                    borderless: 'true',
+                    striped: 'true',
                 },
                 isValid: false,
                 isMultiSelect: false,
@@ -154,8 +150,6 @@ describe('Table Large input component behaviour', () => {
         const b = str();
         const c = str();
         const d = str();
-
-        globalAny.window.manywho.utils.isEqual = (a, b) => a === b;
         
         const objectData = [
             {
@@ -230,10 +224,12 @@ describe('Table Large input component behaviour', () => {
         const objectData = [
             {
                 externalId: str(),
+                internalId: str(),
                 typeElementPropertyId: str(),
             },
             {
                 externalId: str(),
+                internalId: str(),
                 typeElementPropertyId: str(),
             },
         ];
@@ -258,7 +254,7 @@ describe('Table Large input component behaviour', () => {
     test('Download anchor tags are rendered in rows when props.isFiles is true', () => {
 
         const contentValue = str();
-        const typeElementPropertyId = str();
+        const typeElementPropertyId = 'aaa';
         const internalId1 = str();
         const internalId2 = str();
         
@@ -268,12 +264,6 @@ describe('Table Large input component behaviour', () => {
                 typeElementPropertyId,
                 objectData: [],
             }),
-        };
-
-        globalAny.window.manywho.utils.isEqual = (a) => {
-            if (a === typeElementPropertyId) {
-                return true;
-            }
         };
         
         tableLargeWrapper = manyWhoMount({
@@ -319,8 +309,8 @@ describe('Table Large input component behaviour', () => {
             {
                 model: {
                     attributes: {
-                        borderless: false,
-                        striped: false,
+                        borderless: 'false',
+                        striped: 'false',
                     },
                     isValid: true,
                     isMultiSelect: true,
@@ -335,10 +325,12 @@ describe('Table Large input component behaviour', () => {
                     {
                         properties,
                         externalId: externalId1,
+                        internalId: str(),
                     },
                     {
                         properties,
                         externalId: externalId2,
+                        internalId: str(),
                     },
                 ],
             },

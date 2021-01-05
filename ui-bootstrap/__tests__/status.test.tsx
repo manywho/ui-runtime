@@ -18,9 +18,6 @@ describe('Status input component behaviour', () => {
     };
 
     function manyWhoMount() {
-        globalAny.window.manywho['model'] = {
-            getInvokeType: jest.fn(),
-        };
         return mount(<Status {...props} />);
     }
 

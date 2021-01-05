@@ -34,7 +34,7 @@ describe('Table Input Datetime component behaviour', () => {
     let tableInputDatetimeWrapper;
     let props;
 
-    function manyWhoMount(value = null, isShallow = false, format = str(10)) {
+    function manyWhoMount(value = null, isShallow = false, format = str(10), contentFormat = null) {
         props = {
             value,
             format,
@@ -44,7 +44,7 @@ describe('Table Input Datetime component behaviour', () => {
             onChange: jest.fn(() => {
                 return true;
             }),
-            contentFormat: null,
+            contentFormat,
         };
 
         if (isShallow === false)
@@ -74,8 +74,9 @@ describe('Table Input Datetime component behaviour', () => {
     test('A default date gets set', () => {
         const testDate = moment(
             '07-12-1986', 
-            ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, ''],
+            ['MM-DD-YYYY', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
         );
+
         const expectedArgs = {
             defaultDate: testDate,
             inline: true,
@@ -83,7 +84,7 @@ describe('Table Input Datetime component behaviour', () => {
             useCurrent: false,
         };
 
-        tableInputDatetimeWrapper = manyWhoMount('07-12-1986', true);
+        tableInputDatetimeWrapper = manyWhoMount('07-12-1986', true, null, 'MM-DD-YYYY');
         expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(
             expectedArgs,
         ); 
