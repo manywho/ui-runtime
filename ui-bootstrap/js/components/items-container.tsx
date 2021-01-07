@@ -276,15 +276,22 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         const state = manywho.state.getComponent(this.props.id, this.props.flowKey);
 
+        // We use the externalId when possible,
+        // because for service data, the internalId is randomly generated
+        // and not a reliable indicator of what is selected
+        const getId = (anItem): string => anItem.externalId || anItem.internalId;
+
         let selectedItems = (state.objectData || [])
-            .filter(anItem => anItem.isSelected)
-            .map(anItem => anItem);
+            .filter((anItem) => anItem.isSelected)
+            .map((anItem) => anItem);
 
         let selectedItem = null;
 
         if (typeof item === 'string') {
+            // In this case 'item' is the internalId of the selected item
+            // So we need to filter by this to find the selected actual selected item
             [selectedItem] = model.objectData.filter(
-                objectData => manywho.utils.isEqual(objectData.internalId, item, true),
+                (objectData) => manywho.utils.isEqual(objectData.internalId, item, true),
             );
         } else if (typeof item === 'object') {
             selectedItem = item;
@@ -294,7 +301,7 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         selectedItem = JSON.parse(JSON.stringify(selectedItem));
 
         const isSelected = selectedItems.filter(
-            anItem => anItem.internalId === selectedItem.internalId,
+            (anItem) => getId(anItem) === getId(selectedItem),
         ).length > 0;
 
         selectedItem.isSelected = !isSelected;
@@ -303,7 +310,7 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
             if (selectedItem.isSelected) {
                 selectedItems.push(selectedItem);
             } else {
-                selectedItems = selectedItems.filter(anItem => !manywho.utils.isEqual(anItem.internalId, selectedItem.internalId, true));
+                selectedItems = selectedItems.filter((anItem) => !manywho.utils.isEqual(getId(anItem), getId(selectedItem), true));
             }
         } else if (selectedItem.isSelected) {
             selectedItems = [selectedItem];
