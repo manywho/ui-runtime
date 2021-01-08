@@ -118,6 +118,10 @@ module.exports = (env) => ({
             // bundle fonts
             {
                 test: /\.(woff|woff2|eot|ttf|svg|otf)$/,
+                exclude: [
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Offline.svg`),
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Online.svg`),
+                ],
                 use: [
                     {
                         loader: 'file-loader',
@@ -132,6 +136,10 @@ module.exports = (env) => ({
             // bundle images
             {
                 test: /\.(png|svg|jpg|gif)$/,
+                exclude: [
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Offline.svg`),
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Online.svg`),
+                ],
                 use: [
                     {
                         loader: 'file-loader',
@@ -192,6 +200,19 @@ module.exports = (env) => ({
                     { loader: 'extract-loader' },
                     { loader: 'css-loader' },
                     { loader: 'less-loader' },
+                ],
+            },
+            // bundle offline icons
+            {
+                test: /\.svg$/,
+                include: [
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Offline.svg`),
+                    path.resolve(__dirname, `${repoPaths.uiOffline}/icons/Online.svg`),
+                ],
+                use: [
+                    {
+                        loader: 'react-svg-loader',
+                    },
                 ],
             },
         ],
