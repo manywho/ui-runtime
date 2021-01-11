@@ -288,8 +288,8 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
         let selectedItem = null;
 
         if (typeof item === 'string') {
-            // In this case 'item' is the internalId of the selected item
-            // So we need to filter by this to find the selected actual selected item
+            // In this case the string 'item' is the internalId of the selected item
+            // so we have to use internalId to find the selected item
             [selectedItem] = model.objectData.filter(
                 (objectData) => manywho.utils.isEqual(objectData.internalId, item, true),
             );
