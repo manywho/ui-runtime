@@ -8,5 +8,9 @@
     "lib": ["dom", "es6", "es2015"],
     "moduleResolution": "node",
     "noUnusedLocals": true
-  }
+  },
+  "include": [
+      "ui-offline/js",
+      "ui-bootstrap/js"
+  ]
 }

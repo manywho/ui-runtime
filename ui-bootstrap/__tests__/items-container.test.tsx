@@ -26,7 +26,8 @@ describe('ItemsContainer component behaviour', () => {
         fileDataRequest = null,
         componentType = str(),
         search = null,
-        pagination = true,
+        pagination = 'true',
+        error = false,
     } = {}) {
 
         const props = {
@@ -45,7 +46,7 @@ describe('ItemsContainer component behaviour', () => {
         });
 
         globalAny.window.manywho.state.getComponent = () => ({
-            loading, page, search,
+            loading, page, search, error,
         });
 
         globalAny.window.manywho.component.contentTypes = {
@@ -519,12 +520,9 @@ describe('ItemsContainer component behaviour', () => {
 
     test('Error element is rendered when state has error', () => {
 
-        globalAny.window.manywho.state.getComponent = () => ({
-            error: true,
-        });
-
         componentWrapper = manyWhoMount({
             objectData: [],
+            error: true,
         });
 
         expect(componentWrapper.find(Dynamic).prop('props')).toEqual(
