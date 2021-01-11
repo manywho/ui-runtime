@@ -856,7 +856,7 @@ export const initialize = (
 
     if (!tenantId && (!stateId || (!flowId && !flowVersionId))) {
 
-        Log.error('tenantId & stateId, or tenatntId & flowId & flowVersionId must be specified');
+        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId must be specified');
         return;
 
     }

@@ -31,7 +31,7 @@ class TableInputDateTime extends React.Component<ITableInputDateTimeProps, null>
             this.props.value ? 
             moment(
                 this.props.value, 
-                ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, this.props.contentFormat || ''],
+                [this.props.contentFormat || '', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
             ) : 
             null;
 

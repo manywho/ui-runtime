@@ -10,8 +10,8 @@
         "skipLibCheck": true
     },
     "include": [
-        "test/*.ts",
-        "js/lib/*.ts",
-        "test/helpers/setup-browser-env.ts"
+        "ui-core/test/*.ts",
+        "ui-core/js/lib/*.ts",
+        "ui-core/test/helpers/setup-browser-env.ts"
     ]
 }
