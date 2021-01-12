@@ -1003,4 +1003,79 @@ describe('ItemsContainer component behaviour', () => {
         expect(() => componentWrapper.setState({ search: null, sortedBy: 'test', sortedIsAscending: true })).not.toThrow();
     });
 
+    // test('Single selection adds and removes an item by internalId correctly to the list of selections', () => {
+    //     // test adding by string
+
+    //     // test selecting another item by object
+
+    //     // test removing by string
+
+    //     // test removing by object
+    //     componentWrapper = manyWhoMount();
+
+    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
+    //         { isBulkAction: false },
+    //         { isBulkAction: false },
+    //     ]);
+
+    //     expect(hasBulkActions).toBe(false);
+    // });
+
+    // test('Single selection adds and removes an item by externalId correctly to the list of selections', () => {
+    //     // test adding by string
+
+    //     // test selecting another item by object
+
+    //     // test removing by string
+
+    //     // test removing by object
+        
+    //     componentWrapper = manyWhoMount();
+
+    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
+    //         { isBulkAction: false },
+    //         { isBulkAction: false },
+    //     ]);
+
+    //     expect(hasBulkActions).toBe(false);
+    // });
+
+    // test('Multiselect selection adds and removes an item by internalId correctly to the list of selections', () => {
+    //     // test adding by string
+
+    //     // test selecting another item by object
+
+    //     // test removing by string
+
+    //     // test removing by object
+        
+    //     componentWrapper = manyWhoMount();
+
+    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
+    //         { isBulkAction: false },
+    //         { isBulkAction: false },
+    //     ]);
+
+    //     expect(hasBulkActions).toBe(false);
+    // });
+
+    // test('Multiselect selection adds and removes an item by externalId correctly to the list of selections', () => {
+    //     // test adding by string
+
+    //     // test selecting another item by object
+
+    //     // test removing by string
+
+    //     // test removing by object
+        
+    //     componentWrapper = manyWhoMount();
+
+    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
+    //         { isBulkAction: false },
+    //         { isBulkAction: false },
+    //     ]);
+
+    //     expect(hasBulkActions).toBe(false);
+    // });
+
 });

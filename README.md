@@ -5,15 +5,11 @@
 ## Installing dependencies
 
 If dependencies have not been installed yet, install them in the top level 
-monorepo `ui-runtime` and in each of the subrepos (`ui-core`, `ui-bootstrap`, ...)
+monorepo `ui-runtime`
 with:
 
 ```shell script
 # top level monorepo
-npm install
-
-# for each subrepo
-cd <subrepo>
 npm install
 ```
 
@@ -58,17 +54,11 @@ To run tests on all subrepos use:
 npm test
 ```
 
-To run tests on individual subrepos use:
+To run tests on ui-core only use:
 
 ```shell script
-# ui-bootstrap
-npm run test:bootstrap
-
 # ui-core
-npm run test:core
-
-# ui-offline
-npm run test:offline
+npm test:core
 ```
 
 All listed commands are defined in the top-level `package.json` and should be 
