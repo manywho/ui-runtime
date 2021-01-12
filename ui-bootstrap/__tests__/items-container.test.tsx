@@ -19,6 +19,7 @@ describe('ItemsContainer component behaviour', () => {
         flowKey = str(),
         isDesignTime = false,
         objectData = [],
+        selectedData = null,
         paginationSize = null,
         loading = null,
         page = null,
@@ -28,6 +29,7 @@ describe('ItemsContainer component behaviour', () => {
         search = null,
         pagination = 'true',
         error = false,
+        isMultiSelect = false,
     } = {}) {
 
         const props = {
@@ -43,10 +45,11 @@ describe('ItemsContainer component behaviour', () => {
                 paginationSize,
                 pagination,
             },
+            isMultiSelect,
         });
 
         globalAny.window.manywho.state.getComponent = () => ({
-            loading, page, search, error,
+            objectData: selectedData, loading, page, search, error,
         });
 
         globalAny.window.manywho.component.contentTypes = {
@@ -422,6 +425,32 @@ describe('ItemsContainer component behaviour', () => {
                     objectData: null,
                 },
             ],
+        },
+    ];
+
+    // Minimal objectData for selection tests
+    // Has items containing externalIds that aren't GUIDs and items that don't have externalIds
+    const minimalSelectionTestData = [
+        {
+            developerName: 'HasBothExternalAndInternal',
+            externalId: 'bcff857c-63fb-4c87-b878-b51cfdda28bb',
+            internalId: 'bcff857c-63fb-4c87-b878-b51cfdda28bb',
+            isSelected: false,
+            order: 0,
+        },
+        {
+            developerName: 'HasMismatchingInternalAndExternal',
+            externalId: 'NotAGuid',
+            internalId: 'ab3326fa-5897-4019-a78b-9048951ab7ec',
+            isSelected: false,
+            order: 1,
+        },
+        {
+            developerName: 'HasNoExternal',
+            externalId: null,
+            internalId: '4b5658de-bebd-4217-8bb4-78edeb350af9',
+            isSelected: false,
+            order: 2,
         },
     ];
 
@@ -1003,61 +1032,89 @@ describe('ItemsContainer component behaviour', () => {
         expect(() => componentWrapper.setState({ search: null, sortedBy: 'test', sortedIsAscending: true })).not.toThrow();
     });
 
-    // test('Single selection adds and removes an item by internalId correctly to the list of selections', () => {
-    //     // test adding by string
+    test('Single selection adds and removes an item by internalId or externalId correctly to the list of selections', () => {
+        globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
 
-    //     // test selecting another item by object
+        const setComponentSpy = jest.fn();
+        globalAny.window.manywho.state.setComponent = setComponentSpy;
 
-    //     // test removing by string
+        // Loop over the 3 selection test cases to ensure each selects and deselects correctly by both string and object
+        minimalSelectionTestData.forEach(
+            (item) => {
+                let mockEntry = JSON.parse(JSON.stringify(item));
+                mockEntry.isSelected = true;
+                mockEntry = [mockEntry];
 
-    //     // test removing by object
-    //     componentWrapper = manyWhoMount();
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData });
+    
+                // test adding by string
+                componentWrapper.instance().select(item.internalId, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry });
+    
+                // test removing by string
+                componentWrapper.instance().select(item.internalId, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: [] }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData });
+    
+                // test selecting another item by object
+                componentWrapper.instance().select(item, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry });
+    
+                // test removing by object
+                componentWrapper.instance().select(item, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: [] }, expect.anything(), expect.anything());
+            },
+        );
 
-    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
-    //         { isBulkAction: false },
-    //         { isBulkAction: false },
-    //     ]);
+        expect.assertions(12);
+    });
 
-    //     expect(hasBulkActions).toBe(false);
-    // });
+    test('Multiselect selection selecting one at a time adds and removes an item by internalId or externalId correctly to the list of selections', () => {
+        globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
 
-    // test('Single selection adds and removes an item by externalId correctly to the list of selections', () => {
-    //     // test adding by string
+        const setComponentSpy = jest.fn();
+        globalAny.window.manywho.state.setComponent = setComponentSpy;
 
-    //     // test selecting another item by object
+        // Loop over the 3 selection test cases to ensure each selects and deselects correctly by both string and object
+        minimalSelectionTestData.forEach(
+            (item) => {
+                let mockEntry = JSON.parse(JSON.stringify(item));
+                mockEntry.isSelected = true;
+                mockEntry = [mockEntry];
 
-    //     // test removing by string
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, isMultiSelect: true });
+    
+                // test adding by string
+                componentWrapper.instance().select(item.internalId, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry, isMultiSelect: true });
+    
+                // test removing by string
+                componentWrapper.instance().select(item.internalId, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: [] }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, isMultiSelect: true });
+    
+                // test selecting another item by object
+                componentWrapper.instance().select(item, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry }, expect.anything(), expect.anything());
+    
+                componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry, isMultiSelect: true });
+    
+                // test removing by object
+                componentWrapper.instance().select(item, false);
+                expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: [] }, expect.anything(), expect.anything());
+            },
+        );
 
-    //     // test removing by object
-        
-    //     componentWrapper = manyWhoMount();
-
-    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
-    //         { isBulkAction: false },
-    //         { isBulkAction: false },
-    //     ]);
-
-    //     expect(hasBulkActions).toBe(false);
-    // });
-
-    // test('Multiselect selection adds and removes an item by internalId correctly to the list of selections', () => {
-    //     // test adding by string
-
-    //     // test selecting another item by object
-
-    //     // test removing by string
-
-    //     // test removing by object
-        
-    //     componentWrapper = manyWhoMount();
-
-    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
-    //         { isBulkAction: false },
-    //         { isBulkAction: false },
-    //     ]);
-
-    //     expect(hasBulkActions).toBe(false);
-    // });
+        expect.assertions(12);
+    });
 
     // test('Multiselect selection adds and removes an item by externalId correctly to the list of selections', () => {
     //     // test adding by string
