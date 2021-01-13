@@ -1088,9 +1088,10 @@ describe('ItemsContainer component behaviour', () => {
         mockEntry2.isSelected = true;
         mockEntry2 = [mockEntry2];
 
+        // start off with mock entry 1 selected
         componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry1 });
 
-        // test selecting a different entry
+        // test selecting a different entry and that selection is swapped to entry 2
         componentWrapper.instance().select(mockEntry2[0].internalId, false);
         expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry2 }, expect.anything(), expect.anything());
     });
@@ -1137,23 +1138,28 @@ describe('ItemsContainer component behaviour', () => {
         expect.assertions(12);
     });
 
-    // test('Multiselect selection adds and removes an item by externalId correctly to the list of selections', () => {
-    //     // test adding by string
+    test('Multiselect selection selecting another item adds to the list of selected items', () => {
+        globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
 
-    //     // test selecting another item by object
+        const setComponentSpy = jest.fn();
+        globalAny.window.manywho.state.setComponent = setComponentSpy;
 
-    //     // test removing by string
+        let mockEntry1 = JSON.parse(JSON.stringify(minimalSelectionTestData[0]));
+        mockEntry1.isSelected = true;
+        mockEntry1 = [mockEntry1];
 
-    //     // test removing by object
-        
-    //     componentWrapper = manyWhoMount();
+        let mockEntry2 = JSON.parse(JSON.stringify(minimalSelectionTestData[1]));
+        mockEntry2.isSelected = true;
+        mockEntry2 = [mockEntry2];
 
-    //     const hasBulkActions = ItemsContainer.prototype.areBulkActionsDefined([
-    //         { isBulkAction: false },
-    //         { isBulkAction: false },
-    //     ]);
+        const mockBothEntries = [mockEntry1[0], mockEntry2[0]];
 
-    //     expect(hasBulkActions).toBe(false);
-    // });
+        // start off with mock entry 1 selected
+        componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry1, isMultiSelect: true });
+
+        // test selecting a different entry and that is gets appended
+        componentWrapper.instance().select(mockEntry2[0].internalId, false);
+        expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockBothEntries }, expect.anything(), expect.anything());
+    });
 
 });
