@@ -1032,7 +1032,7 @@ describe('ItemsContainer component behaviour', () => {
         expect(() => componentWrapper.setState({ search: null, sortedBy: 'test', sortedIsAscending: true })).not.toThrow();
     });
 
-    test('Single selection adds and removes an item by internalId or externalId correctly to the list of selections', () => {
+    test('Single selection adds and removes a selected item by internalId or externalId', () => {
         globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
 
         const setComponentSpy = jest.fn();
@@ -1074,7 +1074,28 @@ describe('ItemsContainer component behaviour', () => {
         expect.assertions(12);
     });
 
-    test('Multiselect selection selecting one at a time adds and removes an item by internalId or externalId correctly to the list of selections', () => {
+    test('Single selection selecting another item changes the selected item to that', () => {
+        globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
+
+        const setComponentSpy = jest.fn();
+        globalAny.window.manywho.state.setComponent = setComponentSpy;
+
+        let mockEntry1 = JSON.parse(JSON.stringify(minimalSelectionTestData[0]));
+        mockEntry1.isSelected = true;
+        mockEntry1 = [mockEntry1];
+
+        let mockEntry2 = JSON.parse(JSON.stringify(minimalSelectionTestData[1]));
+        mockEntry2.isSelected = true;
+        mockEntry2 = [mockEntry2];
+
+        componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry1 });
+
+        // test selecting a different entry
+        componentWrapper.instance().select(mockEntry2[0].internalId, false);
+        expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockEntry2 }, expect.anything(), expect.anything());
+    });
+
+    test('Multiselect selection selecting one at a time adds and removes a selected item by internalId or externalId', () => {
         globalAny.window.manywho.utils.isEqual = (item1, item2): boolean => item1 === item2;
 
         const setComponentSpy = jest.fn();
