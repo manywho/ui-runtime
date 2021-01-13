@@ -1157,7 +1157,7 @@ describe('ItemsContainer component behaviour', () => {
         // start off with mock entry 1 selected
         componentWrapper = manyWhoMount({ objectData: minimalSelectionTestData, selectedData: mockEntry1, isMultiSelect: true });
 
-        // test selecting a different entry and that is gets appended
+        // test selecting a different entry and that it gets appended
         componentWrapper.instance().select(mockEntry2[0].internalId, false);
         expect(setComponentSpy).toHaveBeenCalledWith(expect.anything(), { objectData: mockBothEntries }, expect.anything(), expect.anything());
     });
