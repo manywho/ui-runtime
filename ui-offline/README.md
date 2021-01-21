@@ -131,11 +131,16 @@ npm run offline -- --username=example@example.com --password=example --flow=abc1
 
 This will create a metadata.js file in `../ui-html5/build/js`.
 
-To include the offline components you will need to add the following references to debug.html in the ui-html5 repo:
+To include the offline components you will need to add the following references to index.html in the parent ui-runtime repo:
 
 ```
 <script src="build/js/metadata.js"></script>
-<script src="build/js/flow-offline.js"></script>
+```
+
+And add 'offline' to the requires list to become:
+
+```
+requires: ['core', 'bootstrap3', 'offline'],
 ```
 
 ### Running Unit Tests
