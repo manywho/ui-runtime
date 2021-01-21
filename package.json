@@ -112,7 +112,7 @@
     "script-loader": "^0.7.2",
     "sinon": "3.2.1",
     "string-replace-loader": "^2.2.0",
-    "style-loader": "^1.0.0",
+    "style-loader": "^2.0.0",
     "stylelint": "^13.0.0",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-standard": "^19.0.0",
