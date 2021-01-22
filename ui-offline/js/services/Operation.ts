@@ -3,7 +3,7 @@
 import { getStateValue, setStateValue } from '../models/State';
 import { clone, guid } from './Utils';
 import { IState } from '../interfaces/IModels';
-import Worker from 'worker-loader?inline=true&name=js/worker.js!../workers/Worker';
+import * as Worker from 'worker-loader?inline=true&name=js/worker.js!../workers/Worker';
 
 declare let manywho: any;
 
