@@ -163,7 +163,7 @@ class ChartBase extends React.Component<IChartBaseProps, null> {
         this.updateChart();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         if (!equals(this.props, prevProps)) {
             this.updateChart();
         }
