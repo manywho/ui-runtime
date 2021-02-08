@@ -20,6 +20,7 @@ describe('ChartBase component behaviour', () => {
     let componentWrapper;
 
     const globalAny: any = global;
+    globalAny.window.manywho.settings.global = jest.fn();
 
     function manyWhoMount(
         // props
@@ -62,6 +63,34 @@ describe('ChartBase component behaviour', () => {
         componentWrapper = manyWhoMount();
         expect(globalAny.window.manywho.component.register)
             .toHaveBeenCalledWith('mw-chart-base', ChartBase);
+    });
+
+    test('Component runs updateChart on load', () => {
+        globalAny.window.manywho.settings.global.mockClear();
+        componentWrapper = manyWhoMount({ isVisible: true });
+
+        expect(globalAny.window.manywho.settings.global)
+            .toHaveBeenCalledTimes(4);
+    });
+
+    test('Component doesn\'t run updateChart when turning invisible', () => {
+        componentWrapper = manyWhoMount({ isVisible: true });
+
+        globalAny.window.manywho.settings.global.mockClear();
+        componentWrapper.setProps({ isVisible: false });
+
+        expect(globalAny.window.manywho.settings.global)
+            .toHaveBeenCalledTimes(0);
+    });
+
+    test('Component runs updateChart when turning visible', () => {
+        componentWrapper = manyWhoMount({ isVisible: false });
+
+        globalAny.window.manywho.settings.global.mockClear();
+        componentWrapper.setProps({ isVisible: true });
+        
+        expect(globalAny.window.manywho.settings.global)
+            .toHaveBeenCalledTimes(4);
     });
 
 });
