@@ -147,7 +147,7 @@ class Tour extends React.Component<ITourProps, ITourState> {
             let top = '50%';
             if (manywho.utils.isEqual(step.align, 'top', true))
                 top = `calc(0% + ${offset.toString()}px)`;
-            else if (manywho.utils.isEqual(step.align, 'top', true))
+            else if (manywho.utils.isEqual(step.align, 'bottom', true))
                 top = `calc(100% - ${offset.toString()}px)`;
 
             arrowStyle = { top };

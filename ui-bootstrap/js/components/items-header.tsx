@@ -68,7 +68,7 @@ class ItemsHeader extends React.Component<IItemsHeaderProps, IItemsHeaderState> 
             </div>;
         }
 
-        this.props.isRefreshable ? refresh = (
+        refresh = this.props.isRefreshable ? (
             <button className="btn btn-sm btn-default" 
                 onClick={this.props.refresh} 
                 disabled={this.props.isDisabled}>
