@@ -84,7 +84,7 @@ const Snapshot = (meta: any) => {
             // This is a $JoinUri reference
             valueElement = createValue('E2063196-3C75-4388-8B00-1005B8CD59AD', '$JoinUri', manywho.component.contentTypes.string);
             valueElement.defaultContentValue = '';
-        } else if (manywho.utils.isEqual('03DC41DD-1C6B-4B33-BF61-CBD1D0778FFF', id, true)) {
+        } else if (manywho.utils.isEqual('4FA61B42-A370-455E-85ED-D9A0A8723A43', id, true)) {
             // This is a $Location reference
             valueElement = createValue('4FA61B42-A370-455E-85ED-D9A0A8723A43', '$Location', manywho.component.contentTypes.object);
             valueElement.defaultObjectData = [
