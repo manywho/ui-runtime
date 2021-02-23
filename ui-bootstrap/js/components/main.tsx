@@ -131,7 +131,9 @@ class Main extends React.Component<any, any> {
                             {manywho.model.getLabel(this.props.flowKey)}
                         </h2>
                         {componentElements}
-                        {outcomeElements}
+                        <div className="outcomes-container">
+                            {outcomeElements}
+                        </div>
                         {
                             <Status flowKey={ this.props.flowKey } />
                         }
