@@ -770,12 +770,14 @@ test.serial('Parse Navigation Response', (t) => {
                 isCurrent: false,
             },
         ],
+        persistState: true,
     };
 
     const expected = {
         culture: 'culture',
         developerName: 'developerName',
         label: 'label',
+        persistState: true,
         tags: 'tags',
         isVisible: true,
         isEnabled: true,
