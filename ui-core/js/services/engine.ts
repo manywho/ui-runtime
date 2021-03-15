@@ -1103,6 +1103,7 @@ export const navigate = (
     navigationElementId: string,
     mapElementId: string,
     flowKey: string,
+    persistState: boolean,
     selectedStateEntryId?: string,
 ): JQueryDeferred<any> => {
 
@@ -1114,7 +1115,8 @@ export const navigate = (
         navigationId,
         navigationElementId,
         mapElementId,
-        State.getPageComponentInputResponseRequests(flowKey),
+        // Optionally throw away any user selections/input to reduce the payload size.
+        persistState ? State.getPageComponentInputResponseRequests(flowKey) : null,
         Settings.flow('annotations', flowKey),
         State.getLocation(flowKey),
         selectedStateEntryId,

@@ -414,6 +414,7 @@ export const parseNavigationResponse = (id: string, response, flowKey: string, c
         developerName: response.developerName,
         label: response.label,
         tags: response.tags,
+        persistState: response.persistState,
     };
 
     flowModel[lookUpKey].navigation[id].items = getNavigationItems(response.navigationItemResponses, response.navigationItemDataResponses);
