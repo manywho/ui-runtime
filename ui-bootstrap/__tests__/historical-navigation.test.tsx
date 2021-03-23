@@ -49,7 +49,7 @@ describe('HistoricalNavigation component behaviour', () => {
         expect(componentWrapper.find('ul').childAt(1).text()).toBe("Step 2");
 
         componentWrapper.find('ul').childAt(1).find('button').simulate('click');
-        expect(navigateSpy).toBeCalledWith(null, null, null, flowKey, entries[1].stateEntryId);
+        expect(navigateSpy).toBeCalledWith(null, null, null, flowKey, true, entries[1].stateEntryId);
     });
 
     test('Current map element name is displayed when historical navigation entries is empty', () => {
@@ -112,4 +112,3 @@ describe('HistoricalNavigation component behaviour', () => {
         expect(wrapper2.find('li').length).toBe(3);
         expect(wrapper2.find('ul').childAt(2).text()).toBe('abc');
     });
-});
