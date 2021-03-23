@@ -6,7 +6,7 @@ import { isNil, isEmpty } from 'ramda';
 declare const manywho: any;
 
 const navigateToStateEntry = (flowKey, stateEntryId) => {
-    manywho.engine.navigate(null, null, null, flowKey, stateEntryId);
+    manywho.engine.navigate(null, null, null, flowKey, true, stateEntryId);
 };
 
 /**
