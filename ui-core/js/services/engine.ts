@@ -446,14 +446,18 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
                 // Ensure the url has no authorization or join information
                 // if settings.replaceUrl is false
-                // and authentication type is oauth2
+                // and authentication type is oauth2 or SAML
                 const isOauth2 = response.authorizationContext
                     && response.authorizationContext.authenticationType
                     && response.authorizationContext.authenticationType.toLowerCase() === 'oauth2';
 
+                const isSAML = response.authorizationContext
+                    && response.authorizationContext.authenticationType
+                    && response.authorizationContext.authenticationType.toLowerCase() === 'saml';
+
                 const replaceUrl = Settings.flow('replaceUrl', flowKey);
 
-                if (flowKey && replaceUrl === false && isOauth2) {
+                if (flowKey && replaceUrl === false && (isOauth2 || isSAML)) {
 
                     const flowId = manywho.utils.extractFlowId(flowKey);
 
