@@ -1348,8 +1348,6 @@ export const parseResponse = (
     State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
     State.refreshComponents(Model.getComponents(flowKey), flowKey);
 
-    // TODO: Could this be the place the model is processed and passed into its component?
-    // TODO: Run validation in 'refreshComponents'?
     if (Settings.global('validation.isEnabled', flowKey)) {
         const isValid = State.isAllValid(flowKey);
         if (!isValid) {
