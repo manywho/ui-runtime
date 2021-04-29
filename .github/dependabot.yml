@@ -1,0 +1,41 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: typedoc
+    versions:
+    - 0.20.19
+    - 0.20.20
+    - 0.20.23
+    - 0.20.25
+    - 0.20.27
+    - 0.20.28
+    - 0.20.29
+    - 0.20.30
+    - 0.20.32
+    - 0.20.33
+    - 0.20.34
+    - 0.20.35
+  - dependency-name: license-webpack-plugin
+    versions:
+    - 2.3.11
+    - 2.3.13
+    - 2.3.14
+    - 2.3.15
+    - 2.3.16
+  - dependency-name: "@types/sinon"
+    versions:
+    - 9.0.10
+    - 9.0.11
+  - dependency-name: webpack-bundle-analyzer
+    versions:
+    - 4.4.0
+  - dependency-name: html-webpack-plugin
+    versions:
+    - 4.5.1
