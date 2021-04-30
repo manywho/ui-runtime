@@ -20,16 +20,9 @@ import * as ReactDOM from 'react-dom';
                 && (e.target.className && e.target.className.indexOf('prevent-submit-on-enter') === -1)
                 && manywho.settings.global('shortcuts.progressOnEnter', this.props.flowKey, true)) {
 
-                const outcome = manywho.model.getOutcomes(null, this.props.flowKey)
-                    .sort(function (a, b) {
-
-                        return a.order - b.order;
-
-                    })
+                const outcome = manywho.model.getAllOutcomes(this.props.flowKey)
                     .filter(function (outcome) {
-
                         return manywho.utils.isEqual(outcome.pageActionBindingType, 'save', true);
-
                     })[0];
 
                 if (outcome) {

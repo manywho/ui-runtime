@@ -543,11 +543,9 @@ export const getOutcome = (id: string, flowKey: string) => {
 };
 
 /**
- * Get all the outcomes for a container / component
- * @param id Id of the component or container that the outcomes are associated with
+ * Gets all the outcomes in the current state
  */
-export const getOutcomes = (id: string, flowKey: string): any[] => {
-
+export const getAllOutcomes = (flowKey: string): any[] => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     if (flowModel[lookUpKey] === undefined || flowModel[lookUpKey].outcomes === undefined) {
@@ -556,7 +554,16 @@ export const getOutcomes = (id: string, flowKey: string): any[] => {
 
     const outcomesArray = Utils.convertToArray(flowModel[lookUpKey].outcomes) || [];
 
-    outcomesArray.sort((a, b) => a.order - b.order);
+    return outcomesArray.sort((a, b) => a.order - b.order);
+};
+
+/**
+ * Get all the outcomes for a container / component
+ * @param id Id of the component or container that the outcomes are associated with
+ */
+export const getOutcomes = (id: string, flowKey: string): any[] => {
+
+    const outcomesArray = getAllOutcomes(flowKey);
 
     return outcomesArray.filter((outcome) => {
         return (!Utils.isNullOrWhitespace(id) && Utils.isEqual(outcome.pageObjectBindingId, id, true))
