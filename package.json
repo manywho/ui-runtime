@@ -41,7 +41,7 @@
     "tinymce": "^4.8.5",
     "typescript": "^3.9.5",
     "write-file": "1.0.0",
-    "yargs": "^15.3.1"
+    "yargs": "^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
