@@ -965,3 +965,72 @@ test('We use the developerName if the invoke response has no label', (t) => {
     });
 
 });
+
+test('Outcomes are sorted by order', (t) => {
+    const response = {
+        invokeType: 'FORWARD',
+        mapElementInvokeResponses: [
+            {
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'container-1',
+                        order: 1,
+                    },
+                    {
+                        id: 'outcome-2',
+                        pageContainerId: 'container-1',
+                        order: 0,
+                    },
+                ],
+            },
+        ],
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+    const allOutcomes = Model.getAllOutcomes(flowKey);
+
+    t.is(allOutcomes.length, 2);
+    t.is(allOutcomes[0].id, 'outcome-2');
+    t.is(allOutcomes[1].id, 'outcome-1');
+});
+
+test('Outcomes are empty if an invalid flowkey is specified', (t) => {
+    const response = {
+        invokeType: 'FORWARD',
+        mapElementInvokeResponses: [
+            {
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'container-1',
+                        order: 1,
+                    },
+                    {
+                        id: 'outcome-2',
+                        pageContainerId: 'container-1',
+                        order: 0,
+                    },
+                ],
+            },
+        ],
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+    const allOutcomes = Model.getAllOutcomes('SOME_INCORRECT_FLOWKEY');
+    t.is(allOutcomes.length, 0);
+});
+
+test('Outcomes are empty if no outcomes were parsed in api response', (t) => {
+    const response = {
+        invokeType: 'FORWARD',
+        mapElementInvokeResponses: [
+            {
+            },
+        ],
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+    const allOutcomes = Model.getAllOutcomes(flowKey);
+    t.is(allOutcomes.length, 0);
+});
