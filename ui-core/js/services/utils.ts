@@ -508,8 +508,10 @@ export const isEmptyObjectData = (model): boolean => {
 export const isPlaceholderObjectData = (objectData: any[]): boolean => {
     if (objectData.length === 1) {
         for (const prop in objectData[0].properties) {
-            if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue)) {
-                return false;
+            if(objectData[0].properties.hasOwnProperty(prop)){
+                if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue)) {
+                    return false;
+                }
             }
         }
         return true;
