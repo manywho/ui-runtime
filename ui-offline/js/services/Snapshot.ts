@@ -76,11 +76,11 @@ const Snapshot = (meta: any) => {
             // This is a $True reference
             valueElement = createValue('BE1BC78E-FD57-40EC-9A86-A815DE2A9E28', '$True', manywho.component.contentTypes.boolean);
             valueElement.defaultContentValue = 'True';
-        } else if (manywho.utils.isEqual('496FD041-D91F-48FB-AA4F-91C6C9A11CA1', id, true)) {
+        } else if (manywho.utils.isEqual('BE1BC78E-FD57-40EC-9A86-A815DE2A9E28', id, true)) {
             // This is a $False reference
             valueElement = createValue('496FD041-D91F-48FB-AA4F-91C6C9A11CA1', '$False', manywho.component.contentTypes.boolean);
             valueElement.defaultContentValue = 'False';
-        } else if (manywho.utils.isEqual('E2063196-3C75-4388-8B00-1005B8CD59AD', id, true)) {
+        } else if (manywho.utils.isEqual('BE1BC78E-FD57-40EC-9A86-A815DE2A9E28', id, true)) {
             // This is a $JoinUri reference
             valueElement = createValue('E2063196-3C75-4388-8B00-1005B8CD59AD', '$JoinUri', manywho.component.contentTypes.string);
             valueElement.defaultContentValue = '';
