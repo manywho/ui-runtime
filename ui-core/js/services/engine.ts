@@ -872,9 +872,29 @@ export const initialize = (
     const storedConfig = window.sessionStorage.getItem(`oauth-${stateId}`);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
-
         config = { tenantId, flowId, flowVersionId, container, options };
+    }
 
+    /**
+     * React component instances stored in browser session storage as
+     * part of the navigation.components player settings should always be overidden
+     * by the "fresh" navigation.components generated on flow invocation,
+     * as component instances cannot be serialized to and from a string.
+     */
+    if (options.navigation.components && options.navigation.components.length > 0) {
+        const { options: mergedOptions } = config;
+        const { navigation } = mergedOptions;
+        const { components } = options.navigation;
+
+        const updatedOptions = {
+            ...mergedOptions,
+            navigation: {
+                ...navigation,
+                components,
+            },
+        };
+
+        config = { ...config, options: updatedOptions };
     }
 
     checkLocale();
