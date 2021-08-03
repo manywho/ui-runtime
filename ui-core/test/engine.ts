@@ -214,6 +214,7 @@ test.serial('Initialize', (t) => {
 
     const options = {
         navigationElementId: 'navigationId',
+        navigation: {},
     };
 
     return Engine.initialize('key1', 'key2', 'key3', null, null, 'authenticationToken', options, 'true')
@@ -251,6 +252,7 @@ test.serial.cb('Initialize Failed', (t) => {
 
     const options = {
         navigationElementId: 'navigationId',
+        navigation: {},
     };
 
     Engine.initialize('tenantId', 'flowId', 'flowVersionId', null, null, null, options, null)
