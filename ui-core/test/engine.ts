@@ -241,6 +241,38 @@ test.serial('Initialize', (t) => {
         });
 });
 
+test.serial('Navigation componet player options get passed through into state', (t) => {
+    const initializeResponse = {
+        stateId: 'key4',
+        stateToken: 'stateToken',
+        currentMapElementId: 'currentMapElementId',
+        currentStreamId: 'currentStreamId',
+        navigationElementReferences: [
+            {
+                id: 'navigationId',
+            },
+        ],
+    };
+
+    ajax.initialize.callsFake(() => {
+        const deferred = $.Deferred();
+        deferred.resolve(initializeResponse);
+        return deferred;
+    });
+
+    const options = {
+        navigationElementId: 'navigationId',
+        navigation: {
+            components: ['foo'],
+        },
+    };
+
+    return Engine.initialize('key1', 'key2', 'key3', null, null, 'authenticationToken', options, 'true')
+        .always((flowKey) => {
+            t.true(state.setOptions.calledWith(options, flowKey));
+        });
+});
+
 test.serial.cb('Initialize Failed', (t) => {
     ajax.initialize.callsFake(() => {
         const deferred = $.Deferred();
