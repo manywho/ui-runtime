@@ -35,12 +35,39 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
     isEmptyDate(date) {
 
         if (date == null
+            || manywho.utils.isNullOrEmpty(date)
             || date.indexOf('01/01/0001') !== -1
             || date.indexOf('1/1/0001') !== -1
             || date.indexOf('0001-01-01') !== -1)
             return true;
 
         return false;
+    }
+
+    renderDataTimeModal(error: string = null): void {
+        const TableInputDateTime = getTableInputDateTime();
+        manywho.model.setModal(
+            this.props.flowKey, 
+            {
+                content: (
+                    <>
+                        {error ? (
+                            <div className="notification alert alert-danger">
+                                <span>{error}</span>
+                            </div>
+                        ) : null}
+                        <TableInputDateTime 
+                            value={this.state.value} 
+                            onChange={this.onChange} 
+                            format={manywho.formatting.toMomentFormat(this.props.contentFormat)} 
+                        />
+                    </>
+                ),
+                onConfirm: this.onCommit,
+                onCancel: this.onCloseModal,
+                flowKey: this.props.flowKey,
+            },
+        );
     }
 
     onChange = (e) => {
@@ -94,8 +121,6 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
     onClick = (e) => {
         e.stopPropagation();
 
-        const TableInputDateTime = getTableInputDateTime();
-
         if (
             manywho.utils.isEqual(
                 this.props.contentType, 
@@ -104,21 +129,9 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             )
         ) {
             this.setState({ currentValue: this.state.value });
-            manywho.model.setModal(
-                this.props.flowKey, 
-                {
-                    content: <TableInputDateTime 
-                        value={this.state.value} 
-                        onChange={this.onChange} 
-                        format={manywho.formatting.toMomentFormat(this.props.contentFormat)} 
-                    />,
-                    onConfirm: this.onCommit,
-                    onCancel: this.onCloseModal,
-                    flowKey: this.props.flowKey,
-                },
-            );
+            this.renderDataTimeModal();
         }
-    }
+    };
 
     onCommit = () => {
         if (
@@ -137,9 +150,10 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
             manywho.model.setModal(this.props.flowKey, null);
         } else {
+            this.renderDataTimeModal('Please select a date');
             this.props.onCommitted(this.props.id, this.props.propertyId, this.state.value);
         }
-    }
+    };
 
     onCloseModal = (e) => {
         this.setState({ value: this.state.currentValue, currentValue: null });
