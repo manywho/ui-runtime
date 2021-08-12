@@ -134,14 +134,15 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
     };
 
     onCommit = () => {
-        if (
-            manywho.utils.isEqual(
-                this.props.contentType, 
-                manywho.component.contentTypes.datetime, 
-                true,
-            ) && 
-            !this.isEmptyDate(this.state.value)
-        ) {
+        const isDateTimeInput = manywho.utils.isEqual(
+            this.props.contentType, 
+            manywho.component.contentTypes.datetime, 
+            true,
+        );
+
+        const isEmptyDate = this.isEmptyDate(this.state.value);
+
+        if (isDateTimeInput && !isEmptyDate) {
             const dateTime = moment(
                 this.state.value, 
                 ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, this.props.contentFormat || ''],
@@ -149,8 +150,10 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
 
             this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
             manywho.model.setModal(this.props.flowKey, null);
-        } else {
+
+        } else if (isDateTimeInput && isEmptyDate) {
             this.renderDateTimeModal('Please select a date');
+        } else {
             this.props.onCommitted(this.props.id, this.props.propertyId, this.state.value);
         }
     };
