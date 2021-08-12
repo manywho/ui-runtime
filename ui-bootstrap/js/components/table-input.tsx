@@ -44,7 +44,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
         return false;
     }
 
-    renderDataTimeModal(error: string = null): void {
+    renderDateTimeModal(error: string = null): void {
         const TableInputDateTime = getTableInputDateTime();
         manywho.model.setModal(
             this.props.flowKey, 
@@ -129,7 +129,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             )
         ) {
             this.setState({ currentValue: this.state.value });
-            this.renderDataTimeModal();
+            this.renderDateTimeModal();
         }
     };
 
@@ -150,7 +150,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
             manywho.model.setModal(this.props.flowKey, null);
         } else {
-            this.renderDataTimeModal('Please select a date');
+            this.renderDateTimeModal('Please select a date');
             this.props.onCommitted(this.props.id, this.props.propertyId, this.state.value);
         }
     };
