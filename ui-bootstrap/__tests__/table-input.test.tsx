@@ -258,6 +258,8 @@ describe('Table input component behaviour', () => {
     test('Clicking datetime input renders modal', () => {
         const value1 = str();
 
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => true);
+
         tableInputWrapper = manyWhoMount({
             contentType: 'CONTENTDATETIME',
             value: value1,
