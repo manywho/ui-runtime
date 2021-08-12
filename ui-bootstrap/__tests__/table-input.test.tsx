@@ -44,6 +44,8 @@ describe('Table input component behaviour', () => {
             password: 'CONTENTPASSWORD',
             string: 'CONTENTSTRING',
         };
+
+        globalAny.window.manywho.model.setModal = jest.fn();
         return shallow(<TableInput {...props} />);
     }
 
@@ -85,6 +87,13 @@ describe('Table input component behaviour', () => {
     test('isEmptyDate identifies null date', () => {
         tableInputWrapper = manyWhoMount();
         const date = null;
+
+        expect(TableInput.prototype.isEmptyDate(date)).toBe(true);
+    });
+
+    test('isEmptyDate identifies empty date', () => {
+        tableInputWrapper = manyWhoMount();
+        const date = '';
 
         expect(TableInput.prototype.isEmptyDate(date)).toBe(true);
     });
@@ -244,5 +253,21 @@ describe('Table input component behaviour', () => {
         });
 
         expect(tableInputWrapper.find('input').first().props().value).toBe(value1);
+    });
+
+    test('Clicking datetime input renders modal', () => {
+        const value1 = str();
+
+        tableInputWrapper = manyWhoMount({
+            contentType: 'CONTENTDATETIME',
+            value: value1,
+        });
+
+        tableInputWrapper.simulate('click', {
+            stopPropagation: () => {
+            },
+        });
+
+        expect(globalAny.window.manywho.model.setModal).toHaveBeenCalled();
     });
 });
