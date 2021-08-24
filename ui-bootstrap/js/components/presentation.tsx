@@ -71,7 +71,8 @@ class Presentation extends React.Component<IComponentProps, null> {
             // By default, do not strip any dangerous Javascript, to avoid breaking existing Flows without this Player setting
             // The default player, for new customers/flows, will have this setting enabled by default.
             // Allow an optional DOMPurify config to allow/disallow certain tags or attributes.
-            if (manywho.settings.global('disableScripting', this.props.flowKey, false)) {
+            // Always strip dangerous JavaScript when in debug mode.
+            if (manywho.settings.global('disableScripting', this.props.flowKey, false) || manywho.settings.isDebugEnabled(this.props.flowKey)) {
                 this.html = DOMPurify.sanitize(this.html, manywho.settings.global('disableScriptingConfiguration', this.props.flowKey, null));
                 if (DOMPurify.removed && DOMPurify.removed.length > 0) {
                     // Notify someone so we can identify Flows that have been affected, which
