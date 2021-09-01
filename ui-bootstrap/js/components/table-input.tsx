@@ -140,19 +140,20 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             true,
         );
 
-        const isEmptyDate = this.isEmptyDate(this.state.value);
+        if (isDateTimeInput) {
+            const isEmptyDate = this.isEmptyDate(this.state.value);
 
-        if (isDateTimeInput && !isEmptyDate) {
-            const dateTime = moment(
-                this.state.value, 
-                ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, this.props.contentFormat || ''],
-            );
-
-            this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
-            manywho.model.setModal(this.props.flowKey, null);
-
-        } else if (isDateTimeInput && isEmptyDate) {
-            this.renderDateTimeModal('Please select a date');
+            if (isEmptyDate) {
+                this.renderDateTimeModal('Please select a date');
+            } else {
+                const dateTime = moment(
+                    this.state.value, 
+                    ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, this.props.contentFormat || ''],
+                );
+    
+                this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
+                manywho.model.setModal(this.props.flowKey, null);
+            }
         } else {
             this.props.onCommitted(this.props.id, this.props.propertyId, this.state.value);
         }
