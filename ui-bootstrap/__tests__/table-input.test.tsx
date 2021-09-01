@@ -16,6 +16,8 @@ describe('Table input component behaviour', () => {
 
     const globalAny:any = global;
 
+    const mockOnCommitted = jest.fn();
+
     function manyWhoMount(
         {
             contentType = 'string',
@@ -31,7 +33,7 @@ describe('Table input component behaviour', () => {
             flowKey: 'string',
             contentFormat: 'string',
             propertyId: 'string',
-            onCommitted: jest.fn(),
+            onCommitted: mockOnCommitted,
         };
 
         globalAny.window.manywho.component['contentTypes'] = {
@@ -271,5 +273,85 @@ describe('Table input component behaviour', () => {
         });
 
         expect(globalAny.window.manywho.model.setModal).toHaveBeenCalled();
+    });
+
+    test('Committing content boolean commits successfully', () => {
+        // This must be false so that the isDateTimeInput fails
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+
+        const value = true;
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.boolean,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
+    });
+
+    test('Committing content string commits successfully', () => {
+        // This must be false so that the isDateTimeInput fails
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+
+        const value = 'true';
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.string,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
+    });
+
+    test('Committing content number commits successfully', () => {
+        // This must be false so that the isDateTimeInput fails
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+
+        const value = 37;
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.number,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
+    });
+
+    test('Committing content password commits successfully', () => {
+        // This must be false so that the isDateTimeInput fails
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+
+        const value = 'password';
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.password,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
+    });
+
+    test('Committing content datetime commits successfully', () => {
+        // This must be true so that the isDateTimeInput succeeds
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+
+        const value = '02/02/0002';
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.datetime,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
     });
 });
