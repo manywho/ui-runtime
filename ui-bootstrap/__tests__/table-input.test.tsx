@@ -6,6 +6,7 @@ import { shallow } from 'enzyme';
 
 import TableInput from '../js/components/table-input';
 
+import * as moment from 'moment';
 
 
 describe('Table input component behaviour', () => {
@@ -53,6 +54,7 @@ describe('Table input component behaviour', () => {
 
     afterEach(() => {
         tableInputWrapper.unmount();
+        mockOnCommitted.mockClear();
     });
 
     test('Table input component renders without crashing', () => {
@@ -341,7 +343,7 @@ describe('Table input component behaviour', () => {
 
     test('Committing content datetime commits successfully', () => {
         // This must be true so that the isDateTimeInput succeeds
-        globalAny.window.manywho.utils.isEqual = jest.fn(() => false);
+        globalAny.window.manywho.utils.isEqual = jest.fn(() => true);
 
         const value = '02/02/0002';
 
@@ -352,6 +354,11 @@ describe('Table input component behaviour', () => {
 
         tableInputWrapper.instance().onCommit();
 
-        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', value);
+        const expectedDate = moment(
+            value, 
+            ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, 'string' || ''],
+        ).format();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', expectedDate);
     });
 });
