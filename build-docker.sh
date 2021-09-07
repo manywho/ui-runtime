@@ -5,7 +5,7 @@ set -e
 FLOW_ECR_REGISTRY="093652424831.dkr.ecr.eu-west-2.amazonaws.com"
 BRANCH_NAME="${bamboo_planRepository_branchName}"
 
-docker login --username AWS --password "${bamboo.custom.aws.ecr.password}" "${FLOW_ECR_REGISTRY}"
+docker login --username AWS --password "${PASS}" "${FLOW_ECR_REGISTRY}"
 
 if [ "$BRANCH_NAME" = "" ]; then
   echo "No bamboo_planRepository_branchName environment variable is set" 1>&2
