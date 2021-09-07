@@ -2,6 +2,7 @@
 
 set -e
 
+FLOW_ECR_REGISTRY="093652424831.dkr.ecr.eu-west-2.amazonaws.com"
 BRANCH_NAME="${bamboo_planRepository_branchName}"
 
 if [ "$BRANCH_NAME" = "" ]; then
@@ -11,14 +12,14 @@ fi
 
 if [ "$BRANCH_NAME" = "develop" ]; then
   # We're building the base branch, so we want to push the "latest" tag
-  docker build -t quay.io/manywho/ui-runtime:latest .
-  docker push quay.io/manywho/ui-runtime:latest
+  docker build -t "${FLOW_ECR_REGISTRY}"/ui-runtime:latest .
+  docker push "${FLOW_ECR_REGISTRY}"/ui-runtime:latest
 fi
 
 # Replace the slashes in branch names with dashes, so we can use it as an image tag
-IMAGE_TAG=`echo ${BRANCH_NAME} | sed -e "s/\//-/g"`
-IMAGE="quay.io/manywho/ui-runtime:${IMAGE_TAG}"
+IMAGE_TAG=$(echo "${BRANCH_NAME}" | sed -e "s/\//-/g")
+IMAGE="${FLOW_ECR_REGISTRY}/ui-runtime:${IMAGE_TAG}"
 
 # We always want to push the "branched" image tag too
-docker build -t ${IMAGE} .
-docker push ${IMAGE}
+docker build -t "${IMAGE}" .
+docker push "${IMAGE}"
