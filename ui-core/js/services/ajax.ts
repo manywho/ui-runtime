@@ -456,3 +456,15 @@ export const getSocialUsers = (tenantId: string, streamId: string, stateId: stri
         null,
     );
 };
+
+export const downloadPdf = (stateId: string, filename: string, tenantId: string, authenticationToken: string): JQueryXHR => {
+    Log.info(`Downloading pdf ${filename}`);
+    Connection.downloadPdf(
+        'download',
+        `/api/run/1/state/${stateId}/download/pdf/${filename}`,
+        tenantId,
+        authenticationToken,
+        stateId,
+        null,
+    );
+}
