@@ -1368,6 +1368,15 @@ export const parseResponse = (
     State.setState(response.stateId, response.stateToken, response.currentMapElementId, flowKey);
     State.refreshComponents(Model.getComponents(flowKey), flowKey);
 
+    if (Settings.global('validation.isEnabled', flowKey)) {
+        const isValid = State.isAllValid(flowKey);
+        if (!isValid) {
+            requestAnimationFrame(() => {
+                Validation.scrollToInvalidElement(flowKey);
+            });
+        }
+    }
+
     if (Settings.flow('replaceUrl', flowKey)) {
         Utils.replaceBrowserUrl(response);
     }
