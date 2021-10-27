@@ -1372,13 +1372,26 @@ export const parseResponse = (
         Utils.replaceBrowserUrl(response);
     }
 
-    if (Utils.isEqual(response.invokeType, 'wait', true) ||
-        Utils.isEqual(response.invokeType, 'status', true)) {
+    if ((Utils.isEqual(response.invokeType, 'wait', true) ||
+        Utils.isEqual(response.invokeType, 'status', true)) &&
+        Utils.isNullOrUndefined(response.waitExpiresAt)) {
 
         ping(flowKey);
     }
 
+    if (!Utils.isNullOrUndefined(response.waitExpiresAt)) {
+        wait(new Date(response.waitExpiresAt));
+    }
 };
+
+/**
+ * Wait until the current time exceeds the passed in date, then call back into the engine.
+ */
+export const wait = (until: Date) => {
+    setTimeout(() => {
+        location.reload();
+    }, until as any - Date.now())
+}
 
 /**
  * Call `Ajax.ping` on a success re-join the flow with `Engine.join` otherwise set a timeout and call `ping` again in 10 seconds

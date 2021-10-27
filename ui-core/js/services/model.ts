@@ -248,6 +248,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
         flowModel[lookUpKey].invokeType = engineInvokeResponse.invokeType;
         flowModel[lookUpKey].waitMessage = engineInvokeResponse.notAuthorizedMessage || engineInvokeResponse.waitMessage;
         flowModel[lookUpKey].vote = engineInvokeResponse.voteResponse || null;
+        flowModel[lookUpKey].waitExpiresAt = engineInvokeResponse.waitExpiresAt || null;
 
         if (engineInvokeResponse.mapElementInvokeResponses[0].pageResponse) {
 
@@ -699,6 +700,20 @@ export const getInvokeType = (flowKey: string) => {
 export const getWaitMessage = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].waitMessage;
+};
+
+/**
+ * @ignore
+ */
+ export const getWaitMapElementMessage = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    const waitExpiry = flowModel[lookUpKey].waitExpiresAt;
+
+    if (Utils.isNullOrEmpty(waitExpiry)) {
+        return null;
+    }
+
+    return `Waiting until ${new Date(waitExpiry)}`;
 };
 
 /**
