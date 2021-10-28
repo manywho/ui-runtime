@@ -1380,16 +1380,25 @@ export const parseResponse = (
     }
 
     if (!Utils.isNullOrUndefined(response.waitExpiresAt)) {
-        wait(new Date(response.waitExpiresAt));
+        wait(new Date(response.waitExpiresAt), flowKey);
     }
 };
 
 /**
  * Wait until the current time exceeds the passed in date, then call back into the engine.
  */
-export const wait = (until: Date) => {
+export const wait = (until: Date, flowKey: string) => {
     setTimeout(() => {
-        location.reload();
+        const state = State.getState(flowKey);
+        const options = State.getOptions(flowKey);
+
+        join(Utils.extractTenantId(flowKey),
+             Utils.extractFlowId(flowKey),
+             Utils.extractFlowVersionId(flowKey),
+             Utils.extractElement(flowKey),
+             state.id,
+             State.getAuthenticationToken(flowKey),
+             options);
     }, until as any - Date.now())
 }
 
