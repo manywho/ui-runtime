@@ -7,7 +7,7 @@ import tableContainer from './table-container';
 import fileUpload from './file-upload';
 
 /* eslint import/no-webpack-loader-syntax: off */
-import rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
+import * as rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
 import 'tinymce/themes/modern';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/autolink';
@@ -174,6 +174,8 @@ class Content extends React.Component<IComponentProps, IContentState> {
         iframe.body.style.fontSize = manywho.settings.global('richtext.fontsize', this.props.flowKey, '13px');
 
         const content_css = manywho.settings.global('richtext.content_css', this.props.flowKey, []);
+        console.log(content_css);
+        console.log(css);
 
         /**
          * Hacking the TinyMCE content CSS into the editor iframe
@@ -184,6 +186,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
         tinyMceContentStyleTag.type = 'text/css';
         tinyMceContentStyleTag.appendChild(document.createTextNode(rawTinyMceContentStyles));
         iframe.head.appendChild(tinyMceContentStyleTag);
+        console.log(rawTinyMceContentStyles);
 
         for (const uri of content_css) {
             const css = document.createElement("link");
