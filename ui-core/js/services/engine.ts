@@ -1456,10 +1456,10 @@ export const render = (flowKey: string) => {
     }
 };
 
-export const getPdf = (flowKey: string, filename: string) => {
+export const getPdf = (flowKey: string, fileId: string, filename: string) => {
     const tenantId = Utils.extractTenantId(flowKey);
     const stateId = Utils.extractStateId(flowKey);
     const authenticationToken = State.getAuthenticationToken(flowKey);
 
-    Ajax.downloadPdf(stateId, filename, tenantId, authenticationToken);
-}
+    Ajax.downloadPdf(stateId, fileId, filename, tenantId, authenticationToken);
+};

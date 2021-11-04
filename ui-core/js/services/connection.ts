@@ -158,7 +158,7 @@ export const downloadPdf = (
     tenantId: string,
     authenticationToken: string,
     stateId: string,
-    data: object,
+    filename: string,
 ) => {
     $.ajax({
         type: 'GET',
@@ -167,7 +167,7 @@ export const downloadPdf = (
             responseType: 'blob',
         },
         beforeSend: (xhr) => {
-            beforeSend.call(this, xhr, tenantId, authenticationToken, event, data);
+            beforeSend.call(this, xhr, tenantId, authenticationToken, event, null);
 
             if (!Utils.isNullOrWhitespace(stateId)) {
                 xhr.setRequestHeader('ManyWhoState', stateId);
@@ -178,10 +178,14 @@ export const downloadPdf = (
             const downloadUrl = window.URL || window.webkitURL;
             const link = downloadUrl.createObjectURL(blob);
             const a = $('<a />');
-            a.attr('download', 'downloaded_pdf.pdf');
+            a.attr('download', filename);
             a.attr('href', link);
             $('body').append(a);
             a[0].click();
+
+            return null;
         },
     });
+
+    return null;
 };

@@ -457,14 +457,14 @@ export const getSocialUsers = (tenantId: string, streamId: string, stateId: stri
     );
 };
 
-export const downloadPdf = (stateId: string, filename: string, tenantId: string, authenticationToken: string): JQueryXHR => {
-    Log.info(`Downloading pdf ${filename}`);
-    Connection.downloadPdf(
+export const downloadPdf = (stateId: string, fileId: string, filename: string, tenantId: string, authenticationToken: string): JQueryXHR => {
+    Log.info(`Downloading pdf ${fileId}`);
+    return Connection.downloadPdf(
         'download',
-        `/api/run/1/state/${stateId}/download/pdf/${filename}`,
+        `/api/run/1/state/${stateId}/download/pdf/${fileId}`,
         tenantId,
         authenticationToken,
         stateId,
-        null,
+        filename,
     );
-}
+};

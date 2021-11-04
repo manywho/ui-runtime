@@ -16,8 +16,8 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
         }
     }
 
-    downloadPdf(e: any, flowKey: string, fileId: string) {
-        manywho.engine.getPdf(flowKey, fileId); 
+    downloadPdf(e: any, flowKey: string, fileId: string, filename: string) {
+        manywho.engine.getPdf(flowKey, fileId, filename); 
     }
 
     render() {
@@ -26,8 +26,9 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
             const model = manywho.model.getComponent(this.props.id, this.props.flowKey); 
             const file = model.objectData.find((item) => item.developerName === '$File');
             const fileId = file.properties.find((prop) => prop.developerName === 'Id').contentValue;
+            const filename = file.properties.find((prop) => prop.developerName === 'Name').contentValue;
 
-            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId)} className="btn btn-primary">{model.label}</button>;  
+            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId, filename)} className="btn btn-primary">{model.label}</button>;  
         }
         
         return <button>Download Pdf</button>;
