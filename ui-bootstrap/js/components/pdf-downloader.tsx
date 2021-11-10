@@ -28,10 +28,18 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
             const fileId = file.properties.find((prop) => prop.developerName === 'Id').contentValue;
             const filename = file.properties.find((prop) => prop.developerName === 'Name').contentValue;
 
-            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId, filename)} className="btn btn-primary">{model.label}</button>;  
+            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId, filename)} className="btn-link">{model.label}</button>;  
         }
-        
-        return <button>Download Pdf</button>;
+
+        let displayName = 'Download Pdf';
+        if (this.props && this.props.id && this.props.flowKey) {
+            const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
+            if (model && model.label) {
+                displayName = model.label;
+            }
+        }
+
+        return <button className="btn-link">{displayName}</button>;
     }
 }
 
