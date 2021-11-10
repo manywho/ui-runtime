@@ -713,7 +713,7 @@ export const getWaitMessage = (flowKey: string) => {
         return null;
     }
 
-    return `Waiting until ${new Date(waitExpiry)}`;
+    return `Waiting`;
 };
 
 /**
