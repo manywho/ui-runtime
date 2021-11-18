@@ -173,15 +173,18 @@ export const downloadPdf = (
                 xhr.setRequestHeader('ManyWhoState', stateId);
             }
         },
-        success(responseData) {
+        success(responseData) {            
             const blob = new Blob([responseData], { type: 'application/octetstream' });
-            const downloadUrl = window.URL || window.webkitURL;
-            const link = downloadUrl.createObjectURL(blob);
-            const a = $('<a />');
-            a.attr('download', filename);
-            a.attr('href', link);
-            $('body').append(a);
-            a[0].click();
+            const objectUrl: string = URL.createObjectURL(blob);
+            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        
+            a.href = objectUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+        
+            document.body.removeChild(a);
+            URL.revokeObjectURL(objectUrl);
 
             return null;
         },
