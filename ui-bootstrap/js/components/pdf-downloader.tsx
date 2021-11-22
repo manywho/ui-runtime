@@ -17,7 +17,11 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
     }
 
     downloadPdf(e: any, flowKey: string, fileId: string, filename: string) {
-        manywho.engine.getPdf(flowKey, fileId, filename); 
+        const tenantId = manywho.utils.extractTenantId(flowKey);
+        const stateId = manywho.utils.extractStateId(flowKey);
+        const authenticationToken = manywho.state.getAuthenticationToken(flowKey);
+
+        manywho.ajax.downloadPdf(stateId, fileId, filename, tenantId, authenticationToken);
     }
 
     render() {

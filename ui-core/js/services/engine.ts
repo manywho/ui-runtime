@@ -1455,11 +1455,3 @@ export const render = (flowKey: string) => {
         ReactDOM.render(React.createElement(Component.getByName(Utils.extractElement(flowKey)), { flowKey, container }), container);
     }
 };
-
-export const getPdf = (flowKey: string, fileId: string, filename: string) => {
-    const tenantId = Utils.extractTenantId(flowKey);
-    const stateId = Utils.extractStateId(flowKey);
-    const authenticationToken = State.getAuthenticationToken(flowKey);
-
-    Ajax.downloadPdf(stateId, fileId, filename, tenantId, authenticationToken);
-};
