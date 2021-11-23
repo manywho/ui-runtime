@@ -424,3 +424,26 @@ test.serial.cb('Get Social Users', (t) => {
 
     Ajax.getSocialUsers(tenantId, streamId, stateId, name, token);
 });
+
+test.serial.cb('Download Pdf', (t) => {
+    t.plan(3);
+
+    const url = 'https://flow.manywho.com/api/run/1/state/stateId/download/pdf/fileId';
+
+    const expectedDownloadHeaders = {
+        accept: '*/*',
+        authorization: 'token',
+        manywhostate: 'stateId',
+        manywhotenant: 'tenantId',
+    }; 
+
+    mock.get(url, (req, res) => {
+        t.is(req._method, 'GET');
+        t.is(req._url, url);
+        t.deepEqual(req._headers, expectedDownloadHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Ajax.downloadPdf('stateId', 'fileId', 'filename', 'tenantId', 'token');
+});

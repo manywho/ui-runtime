@@ -160,7 +160,7 @@ export const downloadPdf = (
     stateId: string,
     filename: string,
 ) => {
-    $.ajax({
+    return $.ajax({
         type: 'GET',
         url: Settings.global('platform.uri') + url,
         xhrFields: {
@@ -188,7 +188,8 @@ export const downloadPdf = (
 
             return null;
         },
-    });
-
-    return null;
+    })
+        .done(Settings.event(`${event}.done`))
+        .fail(onError)
+        .fail(Settings.event(`${event}.fail`));
 };
