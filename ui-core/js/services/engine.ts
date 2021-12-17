@@ -1388,18 +1388,22 @@ export const parseResponse = (
  * Wait until the current time exceeds the passed in date, then call back into the engine.
  */
 export const wait = (until: Date, flowKey: string) => {
-    setTimeout(() => {
-        const state = State.getState(flowKey);
-        const options = State.getOptions(flowKey);
+    const interval = setInterval(() => {
+        if(Date.now() > until.getTime())
+        {
+            const state = State.getState(flowKey);
+            const options = State.getOptions(flowKey);
 
-        join(Utils.extractTenantId(flowKey),
-             Utils.extractFlowId(flowKey),
-             Utils.extractFlowVersionId(flowKey),
-             Utils.extractElement(flowKey),
-             state.id,
-             State.getAuthenticationToken(flowKey),
-             options);
-    }, until as any - Date.now())
+            join(Utils.extractTenantId(flowKey),
+                Utils.extractFlowId(flowKey),
+                Utils.extractFlowVersionId(flowKey),
+                Utils.extractElement(flowKey),
+                state.id,
+                State.getAuthenticationToken(flowKey),
+                options);
+            clearInterval(interval);
+        }
+    }, 1000)//every second
 }
 
 /**
