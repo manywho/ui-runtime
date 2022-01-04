@@ -461,7 +461,7 @@ export const downloadPdf = (stateId: string, fileId: string, filename: string, t
     Log.info(`Downloading pdf ${fileId}`);
     return Connection.downloadPdf(
         'download',
-        `/api/run/1/state/${stateId}/download/pdf/${fileId}`,
+        `/api/run/1/state/${stateId}/download/${fileId}/${filename}`,
         tenantId,
         authenticationToken,
         stateId,
