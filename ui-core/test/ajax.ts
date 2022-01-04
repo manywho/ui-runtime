@@ -428,7 +428,7 @@ test.serial.cb('Get Social Users', (t) => {
 test.serial.cb('Download Pdf', (t) => {
     t.plan(3);
 
-    const url = 'https://flow.manywho.com/api/run/1/state/stateId/download/pdf/fileId';
+    const url = 'https://flow.manywho.com/api/run/1/state/stateId/download/fileId/filename';
 
     const expectedDownloadHeaders = {
         accept: '*/*',
