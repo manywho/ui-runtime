@@ -45,6 +45,15 @@ module.exports = (env) => ({
             contextRegExp: /moment$/
         }),
         new CopyPlugin([
+            //Copy the necessary tinymce files
+            {
+                from: 'node_modules/tinymce/skins/**/*.*',
+                to: 'js/vendor',
+            },
+            {
+                from: 'node_modules/tinymce/plugins/**/*.*',
+                to: 'js/vendor',
+            },
             // copy the favicons
             {
                 from: 'img/**/*.*',

@@ -7,7 +7,7 @@ import tableContainer from './table-container';
 import fileUpload from './file-upload';
 
 /* eslint import/no-webpack-loader-syntax: off */
-import rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
+import * as rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
 import 'tinymce/themes/modern';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/autolink';

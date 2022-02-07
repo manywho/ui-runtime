@@ -7,7 +7,7 @@ declare var manywho: any;
 class Status extends React.Component<IComponentProps, null> {
 
     render () {
-
+        
         const isVisible: boolean = 
             manywho.utils.isEqual(
                 manywho.model.getInvokeType(this.props.flowKey), 'wait', true)
@@ -20,6 +20,7 @@ class Status extends React.Component<IComponentProps, null> {
             const message: string = 
                 manywho.settings.global('localization.status', this.props.flowKey, null)
                 || manywho.model.getWaitMessage(this.props.flowKey) 
+                || manywho.model.getWaitMapElementMessage(this.props.flowKey)
                 || '';
 
             let content = <p className="lead status-message status-content">{message}</p>;

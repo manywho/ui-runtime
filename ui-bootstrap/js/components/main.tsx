@@ -96,7 +96,7 @@ class Main extends React.Component<any, any> {
             isFixedFooter = manywho.utils.isEqual(attributes.outcomes, 'fixed', false);
 
         if (isFixedFooter) {
-            fixedFooter = <Footer flowKey={ this.props.flowKey}>
+            fixedFooter = <Footer flowKey={ this.props.flowKey }>
                 {outcomeElements}
             </Footer>;
             outcomeElements = null;

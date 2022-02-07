@@ -110,6 +110,7 @@ test.serial('Parse Response', (t) => {
         ],
         preCommitStateValues: 'preCommitStateValues',
         stateValues: 'stateValues',
+        waitExpiresAt: '2021-12-08T11:23:31+00:00'
     };
 
     Model.parseEngineResponse(response, flowKey);
@@ -139,6 +140,7 @@ test.serial('Parse Response', (t) => {
     t.is(Model.getLabel(flowKey), 'label');
     t.is(Model.getInvokeType(flowKey), 'FORWARD');
     t.is(Model.getWaitMessage(flowKey), 'waitMessage');
+    t.is(Model.getWaitMapElementMessage(flowKey), 'Waiting');
     t.is(Model.getPreCommitStateValues(flowKey), 'preCommitStateValues');
     t.is(Model.getStateValues(flowKey), 'stateValues');
 
