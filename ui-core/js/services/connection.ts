@@ -151,3 +151,45 @@ export const uploadFiles = (
         onProgress,
     );
 };
+
+export const downloadPdf = (
+    event: string,
+    url: string,
+    tenantId: string,
+    authenticationToken: string,
+    stateId: string,
+    filename: string,
+) => {
+    return $.ajax({
+        type: 'GET',
+        url: Settings.global('platform.uri') + url,
+        xhrFields: {
+            responseType: 'blob',
+        },
+        beforeSend: (xhr) => {
+            beforeSend.call(this, xhr, tenantId, authenticationToken, event, null);
+
+            if (!Utils.isNullOrWhitespace(stateId)) {
+                xhr.setRequestHeader('ManyWhoState', stateId);
+            }
+        },
+        success(responseData) {            
+            const blob = new Blob([responseData], { type: 'application/octetstream' });
+            const objectUrl: string = URL.createObjectURL(blob);
+            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        
+            a.href = objectUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+        
+            document.body.removeChild(a);
+            URL.revokeObjectURL(objectUrl);
+
+            return null;
+        },
+    })
+        .done(Settings.event(`${event}.done`))
+        .fail(onError)
+        .fail(Settings.event(`${event}.fail`));
+};
