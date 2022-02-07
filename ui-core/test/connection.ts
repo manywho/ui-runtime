@@ -52,3 +52,26 @@ test.cb('Request', (t) => {
 
     Connection.request(null, 'myevent', 'testurl', 'POST', 'tenantId', 'stateId', 'token', payload);
 });
+
+test.cb('Download Pdf', (t) => {
+    t.plan(3);
+
+    const url = 'https://flow.manywho.com/downloadpdf';
+
+    const expectedHeaders = {
+        accept: '*/*',
+        authorization: 'token',
+        manywhostate: 'stateId',
+        manywhotenant: 'tenantId',
+    };    
+
+    mock.get(url, (req, res) => {
+        t.is(req._method, 'GET');
+        t.is(req._url, url);
+        t.deepEqual(req._headers, expectedHeaders);
+        t.end();
+        return res.status(200).body();
+    });
+
+    Connection.downloadPdf('myevent', 'downloadpdf', 'tenantId', 'token', 'stateId', 'filename');
+});

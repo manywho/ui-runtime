@@ -62,6 +62,7 @@ import './components/not-found.tsx';
 import './components/outcome.tsx';
 import './components/outcomes.tsx';
 import './components/pagination.tsx';
+import './components/pdf-downloader.tsx';
 import './components/presentation.tsx';
 import './components/radio.tsx';
 import './components/returnToParent.tsx';

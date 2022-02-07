@@ -43,6 +43,7 @@ export default {
     OUTCOME: 'outcome',
     OUTCOMES: 'outcomes',
     PAGINATION: 'mw-pagination',
+    PDF_DOWNLOADER: 'pdf-downloader',
     PRESENTATION: 'presentation',
     RADIO: 'radio',
     RETURN_TO_PARENT: 'returnToParent',
