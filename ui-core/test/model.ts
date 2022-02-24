@@ -127,6 +127,7 @@ test.serial('Parse Response', (t) => {
         {},
         response.mapElementInvokeResponses[0].pageResponse.pageComponentResponses[0],
         response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0],
+        { autoFocus: true },
     );
     t.deepEqual(Model.getComponent('component-1', flowKey), expectedComponent);
     t.deepEqual(Model.getComponentByName('component-1', flowKey), expectedComponent);
@@ -702,6 +703,189 @@ test.serial('Auto focus gets applied to elements nested in child containers', (t
     t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
     t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
     t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to first input in first container, regardless of name', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'container-2',
+                            order: 1,
+                            pageContainerResponses: [],
+                        },
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'first container',
+                            id: 'container-1',
+                            order: 0,
+                            pageContainerResponses: [],
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-2',
+                        },
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-1',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'container-1',
+                            pageContainerDeveloperName: 'container-1',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'container-2',
+                            pageContainerDeveloperName: 'container-2',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+});
+
+test.serial('Auto focus gets applied to first input, even when it\'s not in the first container', (t) => {
+    const response = {
+        parentStateId: 'parentStateId',
+        invokeType: 'FORWARD',
+        waitMessage: 'waitMessage',
+        voteResponse: 'vote',
+        mapElementInvokeResponses: [
+            {
+                pageResponse: {
+                    label: 'label',
+                    attributes: {
+                        key: 'value',
+                    },
+                    pageContainerResponses: [
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'main container',
+                            id: 'container-2',
+                            order: 0,
+                            pageContainerResponses: [],
+                        },
+                        {
+                            containerType: 'VERTICAL_FLOW',
+                            developerName: 'second container',
+                            id: 'container-1',
+                            order: 1,
+                            pageContainerResponses: [],
+                        },
+                    ],
+                    pageContainerDataResponses: [
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-2',
+                        },
+                        {
+                            isEditable: true,
+                            isEnabled: true,
+                            isVisible: true,
+                            pageContainerId: 'container-1',
+                        },
+                    ],
+                    pageComponentResponses: [
+                        {
+                            componentType: 'INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-1',
+                            id: 'component-1',
+                            pageContainerId: 'container-1',
+                            pageContainerDeveloperName: 'container-1',
+                            isVisible: true,
+                        },
+                        {
+                            componentType: 'NOT_AN_INPUT',
+                            contentType: 'ContentString',
+                            developerName: 'component-2',
+                            id: 'component-2',
+                            pageContainerId: 'container-2',
+                            pageContainerDeveloperName: 'container-2',
+                            isVisible: true,
+                        },
+                    ],
+                    pageComponentDataResponses: [
+                        {
+                            contentValue: 'value',
+                            pageComponentId: 'component-1',
+                        },
+                    ],
+                },
+                outcomeResponses: [
+                    {
+                        id: 'outcome-1',
+                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    },
+                ],
+                rootFaults: {
+                    fault: 'fault message',
+                },
+            },
+        ],
+        preCommitStateValues: 'preCommitStateValues',
+        stateValues: 'stateValues',
+    };
+
+    Model.parseEngineResponse(response, flowKey);
+
+    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+    // non-inputs should not get autofocus
+    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, undefined);
 });
 
 test.serial('Notifications', (t) => {
