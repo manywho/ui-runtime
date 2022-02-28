@@ -161,25 +161,24 @@ const checkToAutoFocus = (invokeType: string, flowKey: string) => {
         const validFieldsToFocus = ['INPUT', 'INPUT_DATETIME', 'INPUT_NUMBER', 'TEXTAREA'];
         const lookUpKey = Utils.getLookUpKey(flowKey);
 
-        // Always need to start with the root container
-        const mainContainer: Icontainer = Object.keys(flowModel[lookUpKey].containers).map((key) => {
+        // Always need to start with the root containers
+        const rootContainers: Icontainer[] = Object.keys(flowModel[lookUpKey].containers).map((key) => {
             return flowModel[lookUpKey].containers[key];
-        }).find(c => c.developerName.toUpperCase() === 'MAIN CONTAINER' && !c.parent);
+        }).filter(c => !c.parent).sort((a, b) => a.order - b.order);
 
         /**
          *
          * @param container
-         * @param flowKey
-         * @description Finds the very first component to be rendered in the flow
-         * and sets a flag for it to either autofocus or not
+         * @description Sets an autofocus flag on the very first component to be rendered in the flow
+         * and sets the flag to false for all other components
          */
-        const findFirstComponent = (container: Icontainer, flowKey: string) => {
+        const setAutoFocus = (container: Icontainer) => {
             const children = getChildren(container.id, flowKey);
             for (const child of children) {
 
                 // If the container has nested elements...
                 if (child.childCount && child.childCount > 0) {
-                    findFirstComponent(child, flowKey);
+                    setAutoFocus(child);
                 }
 
                 const isValidField = child.componentType ?
@@ -198,10 +197,11 @@ const checkToAutoFocus = (invokeType: string, flowKey: string) => {
             }
         };
 
-        // If theres no main container then it must be a step
+        // If theres no root containers then it must be a step
         // element, so no need to bother
-        if (mainContainer) {
-            findFirstComponent(mainContainer, flowKey);
+        if (rootContainers.length > 0) {
+            // Set the autoFocus flag on the containers and components
+            rootContainers.forEach(container => setAutoFocus(container));
         }
     }
 };
