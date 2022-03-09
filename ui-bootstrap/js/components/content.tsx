@@ -55,6 +55,34 @@ class Content extends React.Component<IComponentProps, IContentState> {
     editor: any;
     id: string;
 
+    componentDidMount() {
+        this.initializeEditor();
+    }
+
+    componentDidUpdate() {
+        const state = manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
+
+        // If the given content is the same, we don't want to set anything
+        if (state.contentValue === this.editor.getContent()) {
+            return;
+        }
+
+        // Otherwise, we want to update the editor with the given content
+        if (this.editor && state.contentValue) {
+            this.editor.setContent(state.contentValue);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.editor) {
+            try {
+                this.editor.remove();
+            } catch (ex) {
+                manywho.log.error(ex);
+            }
+        }
+    }
+
     initializeEditor = () => {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
@@ -116,6 +144,24 @@ class Content extends React.Component<IComponentProps, IContentState> {
                     }
 
                     editor.on('nodechange', this.onChange);
+                    editor.on('KeyDown', (e) => { 
+
+                        const getChars = (): number => {
+                            const body = tinymce.get(this.id).getBody();
+                            const text: string = tinymce.trim(body.innerText || body.textContent);
+                            return text.length;
+                        };
+
+                        const max = model.maxSize;
+                        const count: number = getChars();
+                        if (count >= max) {
+
+                            // Allow for hitting backspace and delete keys
+                            if (e.keyCode !== 8 && e.keyCode !== 46) {
+                                tinymce.dom.Event.cancel(e);
+                            }
+                        }
+                    });
 
                     if (model.hasEvents) {
                         editor.on('blur', this.onEvent);
@@ -125,34 +171,6 @@ class Content extends React.Component<IComponentProps, IContentState> {
                 editor.on('init', this.onInit);
             },
         });
-    }
-
-    componentDidMount() {
-        this.initializeEditor();
-    }
-
-    componentDidUpdate() {
-        const state = manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
-
-        // If the given content is the same, we don't want to set anything
-        if (state.contentValue === this.editor.getContent()) {
-            return;
-        }
-
-        // Otherwise, we want to update the editor with the given content
-        if (this.editor && state.contentValue) {
-            this.editor.setContent(state.contentValue);
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.editor) {
-            try {
-                this.editor.remove();
-            } catch (ex) {
-                manywho.log.error(ex);
-            }
-        }
     }
 
     /**
@@ -380,6 +398,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
 
 
         return <div className={className} id={this.props.id}>
+            <div id="character_count" />
             <label>
                 {model.label}
                 {
