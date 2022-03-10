@@ -9,18 +9,6 @@ describe('Content component behaviour', () => {
 
     const globalAny:any = global;
 
-    window.tinymce = {
-        get: () => {
-            return true;
-        },
-        trim: (): string => 'abc123',
-        dom: {
-            Event: {
-                cancel: (): Function => jest.fn(),
-            },
-        },
-    };
-
     function manyWhoMount(label = null) {
 
         return shallow(<Content />);
