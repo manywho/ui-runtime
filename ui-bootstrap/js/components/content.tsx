@@ -409,7 +409,6 @@ class Content extends React.Component<IComponentProps, IContentState> {
 
 
         return <div className={className} id={this.props.id}>
-            <div id="character_count" />
             <label>
                 {model.label}
                 {
