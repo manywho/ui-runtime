@@ -39,6 +39,26 @@ interface IContentState {
     isImageUploadOpen: boolean;
 }
 
+export const checkCharacterLength = (keyCode: string, maxSize: number, text: string): boolean => {
+    const validKeyCodes = [
+        'Backspace',
+        'Delete',
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight',
+    ];
+
+    const count: number = text.length;
+    if (count >= maxSize) {
+        if (!(validKeyCodes.indexOf(keyCode) > -1)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 class Content extends React.Component<IComponentProps, IContentState> {
 
     constructor(props) {
@@ -144,22 +164,13 @@ class Content extends React.Component<IComponentProps, IContentState> {
                     }
 
                     editor.on('nodechange', this.onChange);
-                    editor.on('KeyDown', (e) => { 
+                    editor.on('KeyDown', (e: KeyboardEvent) => {
+                        const body = tinymce.get(this.id).getBody();
+                        const text: string = tinymce.trim(body.innerText || body.textContent);
+                        const hasExceededMaxCharLengh = checkCharacterLength(e.code, model.maxSize, text);
 
-                        const getChars = (): number => {
-                            const body = tinymce.get(this.id).getBody();
-                            const text: string = tinymce.trim(body.innerText || body.textContent);
-                            return text.length;
-                        };
-
-                        const max = model.maxSize;
-                        const count: number = getChars();
-                        if (count >= max) {
-
-                            // Allow for hitting backspace and delete keys
-                            if (e.keyCode !== 8 && e.keyCode !== 46) {
-                                tinymce.dom.Event.cancel(e);
-                            }
+                        if (hasExceededMaxCharLengh) {
+                            tinymce.dom.Event.cancel(e);
                         }
                     });
 
