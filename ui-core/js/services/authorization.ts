@@ -47,6 +47,11 @@ export const invokeAuthorization = (response: any, flowKey, onAuthenticated: Cal
             return;
         }
 
+        if (Utils.isEqual(response.authorizationContext.authenticationType, 'oidc', true)) {
+            window.location.href = response.authorizationContext.loginUrl;
+            return;
+        }
+
         State.setLogin({
             isVisible: true,
             directoryId: response.authorizationContext.directoryId,
