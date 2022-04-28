@@ -106,6 +106,31 @@ export const generateInvokeRequest = (
 /**
   * @ignore
   */
+ export const generateMessageActionInvokeRequest = (
+    stateData: any,
+    invokeType: string,
+    selectedOutcomeId?: string,
+    annotations?,
+    location?: any,
+    mode?: string,
+) => ({
+    invokeType,
+    stateId: stateData.id,
+    stateToken: stateData.token,
+    currentMapElementId: stateData.currentMapElementId,
+    annotations: annotations || null,
+    geoLocation: location || null,
+    mapElementInvokeRequest: {
+        messageActionRequest: {
+            selectedOutcomeId: selectedOutcomeId || null,
+        },
+    },
+    mode: mode || '',
+});
+
+/**
+  * @ignore
+  */
 export const generateNavigateRequest = (
     stateData: any,
     navigationId: string,

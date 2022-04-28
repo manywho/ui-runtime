@@ -627,19 +627,25 @@ function joinWithAuthorization(callback, flowKey) {
             }
 
             if (response.currentStreamId) {
-
                 Social.initialize(flowKey, response.currentStreamId);
-
             }
 
             return Utils.whenAll(deferreds);
 
         },
-              (response) => {
+        (response) => {
 
-                  onAuthorizationFailed(response, flowKey, callback);
+            onAuthorizationFailed(response, flowKey, callback);
 
-              })
+        })     
+        .always(() => {
+            const queryParameters = Utils.parseQueryString(window.location.search.substring(1));
+            let selectedOutcomeId = queryParameters['selectedOutcomeId'];
+
+            if (selectedOutcomeId) {
+                messageActionMove(selectedOutcomeId, flowKey);
+            }
+        })
         .always(() => {
 
             render(flowKey);
@@ -1025,6 +1031,34 @@ export const move = (outcome: any, flowKey: string) => {
         flowKey,
     );
 
+};
+
+/**
+ * Invoke down a specified outcome using the invokeType that the engine returned last
+ */
+ export const messageActionMove = (outcome: string, flowKey: string) => {
+
+    const invokeRequest = Json.generateMessageActionInvokeRequest(
+        State.getState(flowKey),
+        'FORWARD',
+        outcome,
+        Settings.flow('annotations', flowKey),
+        State.getLocation(flowKey),
+        Settings.flow('mode', flowKey),
+    );
+
+    return moveWithAuthorization.call(
+        this,
+        {
+            execute: joinWithAuthorization,
+            context: this,
+            args: [flowKey],
+            name: 'invoke',
+            type: 'done',
+        },
+        invokeRequest,
+        flowKey,
+    );
 };
 
 /**
