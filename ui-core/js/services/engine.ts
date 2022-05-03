@@ -643,6 +643,8 @@ function joinWithAuthorization(callback, flowKey) {
             let selectedOutcomeId = queryParameters['selectedOutcomeId'];
 
             if (selectedOutcomeId) {
+                const newUrl = Utils.removeURIParam(window.location.href, 'selectedOutcomeId');
+                history.replaceState(null, '', newUrl);
                 messageActionMove(selectedOutcomeId, flowKey);
             }
         })
