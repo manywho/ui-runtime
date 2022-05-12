@@ -151,7 +151,7 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                     valueToReference.contentValue = parseInt(valueToReference.contentValue, 10) + parseInt(valueToApply.contentValue, 10)
                 }
 
-                if (isListOperation === false) {
+                if (isListOperation) {
                     valueToReference.objectData = valueToReference.objectData || [];
     
                     let hadExisting = false;
