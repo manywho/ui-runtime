@@ -135,47 +135,66 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 break;
 
             case 'ADD': {
-                valueToReference.objectData = valueToReference.objectData || [];
+                const isStringOperation = valueToReference.contentType === 'ContentString' && valueToApply.contentType === 'ContentString';
+                const isNumericalOperation = valueToReference.contentType === 'ContentNumber' && valueToApply.contentType === 'ContentNumber';
+                const isListOperation = valueToReference.contentType === 'ContentObject' && valueToApply.contentType === 'ContentList';
 
-                let hadExisting = false;
-
-                const objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || []).map((objData) => {
-                    if (valueToReference.objectData.length > 0) {
-                        const existingItem = valueToReference.objectData.find(
-                            (item) => (item.externalId && item.externalId === objData.externalId) ||
-                                      (item.internalId && item.internalId === objData.internalId),
-                        );
-                        if (existingItem) {
-                            valueToReference.objectData.splice(valueToReference.objectData.indexOf(existingItem), 1);
-                            hadExisting = true;
-                            return existingItem;
-                        }
-                    }
-                    return objData;
-                });
-
-                if (!hadExisting) {
-                    valueToReference.objectData = [{
-                        typeElementId,
-                        externalId: null,
-                        internalId: guid(),
-                        developerName: valueToReference.objectData[0].developerName,
-                        order: 0,
-                        isSelected: false,
-                        properties: clone(type.properties).map((property) => {
-                            const newProp = valueToReference.objectData[0].properties.filter(
-                                (prop) => prop.typeElementPropertyId === property.id,
-                            );
-                            property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
-                            property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
-                            property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
-                            return property;
-                        }),
-                    }];
+                if (!isStringOperation && !isNumericalOperation && !isListOperation) {
+                    console.error(`The value being changed is a ${valueToReference.contentType} and the value being referenced is a ${valueToApply.contentType} which are not valid for use with the ADD command`);
                 }
 
-                const concatenatedObjectData = objectData.concat(clone(valueToReference.objectData));
-                valueToReference.objectData = concatenatedObjectData;
+                if (isStringOperation) {
+                    valueToReference.contentValue = `${valueToReference.contentValue}${valueToApply.contentValue}`;
+                }
+
+                if (isNumericalOperation) {
+                    valueToReference.contentValue = parseInt(valueToReference.contentValue, 10) + parseInt(valueToApply.contentValue, 10)
+                }
+
+                if (isListOperation === false) {
+                    valueToReference.objectData = valueToReference.objectData || [];
+    
+                    let hadExisting = false;
+    
+                    const objectData = clone(valueToApply.objectData || valueToApply.defaultObjectData || []).map((objData) => {
+                        if (valueToReference.objectData.length > 0) {
+                            const existingItem = valueToReference.objectData.find(
+                                (item) => (item.externalId && item.externalId === objData.externalId) ||
+                                          (item.internalId && item.internalId === objData.internalId),
+                            );
+                            if (existingItem) {
+                                valueToReference.objectData.splice(valueToReference.objectData.indexOf(existingItem), 1);
+                                hadExisting = true;
+                                return existingItem;
+                            }
+                        }
+                        return objData;
+                    });
+    
+                    if (!hadExisting) {
+                        valueToReference.objectData = [{
+                            typeElementId,
+                            externalId: null,
+                            internalId: guid(),
+                            developerName: valueToReference.objectData[0].developerName,
+                            order: 0,
+                            isSelected: false,
+                            properties: clone(type.properties).map((property) => {
+                                const newProp = valueToReference.objectData[0].properties.filter(
+                                    (prop) => prop.typeElementPropertyId === property.id,
+                                );
+                                property.contentValue = newProp[0].contentValue ? newProp[0].contentValue : null;
+                                property.objectData = newProp[0].objectData ? newProp[0].objectData : null;
+                                property.typeElementPropertyId = newProp[0].typeElementPropertyId ? newProp[0].typeElementPropertyId : null;
+                                return property;
+                            }),
+                        }];
+                    }
+    
+                    const concatenatedObjectData = objectData.concat(clone(valueToReference.objectData));
+                    valueToReference.objectData = concatenatedObjectData;
+
+                }
                 break;
             }
 
@@ -192,7 +211,17 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 break;
         }
 
-        setStateValue(operation.valueElementToApplyId, typeElementId, snapshot, valueToReference);
+        setStateValue(
+            operation.valueElementToApplyId,
+            typeElementId,
+            snapshot,
+
+            /**
+             * Some operations use values with different content types e.g. performing an Add on a List value.
+             * We do this so that the content type of the value in state does not get overwritten with the incorrect one 
+             */
+            { ...valueToReference, contentType: valueToApply.contentType }
+        );
     }
 
     return resolve(state);
