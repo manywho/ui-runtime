@@ -71,14 +71,18 @@ describe('Operation service', () => {
                 command: 'SET_EQUAL',
                 id: 'apply',
                 typeElementPropertyId: null,
-                expectedReturn: 'No',
+                expectedReturn: {
+                    contentValue: 'No',
+                },
             },
             valueElementToApplyTypeElementId: null,
             valueElementToReferenceId: {
                 command: 'VALUE_OF',
                 id: 'reference',
                 typeElementPropertyId: null,
-                expectedReturn: 'Yes',
+                expectedReturn: {
+                    contentValue: 'Yes',
+                },
             },
             valueElementToReferenceTypeElementId: null,
         };
@@ -88,15 +92,15 @@ describe('Operation service', () => {
             expect(ret).toEqual(state);
             // Get the newly applied value
             const applied = getStateValue({ id: 'apply', typeElementPropertyId: null });
-            expect(applied).toEqual('Yes');
+            expect(applied).toEqual({ contentValue: 'Yes' });
 
             // OK with an empty state - better check with a dirty state using the same Id's
-            operation.valueElementToReferenceId.expectedReturn = 'Reapplied Yes';
+            operation.valueElementToReferenceId.expectedReturn = { contentValue: 'Reapplied Yes' };
             return executeOperation(operation, state, snapshot).then((ret2) => {
                 expect(ret2).toEqual(state);
                 // Get the newly applied value
                 const applied2 = getStateValue({ id: 'apply', typeElementPropertyId: null });
-                expect(applied2).toEqual('Reapplied Yes');
+                expect(applied2).toEqual({ contentValue: 'Reapplied Yes' });
             });
 
         });
