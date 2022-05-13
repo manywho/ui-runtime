@@ -95,7 +95,7 @@ export const StateUpdate = (inputs: any[], mapElement: any, snapshot: any) => {
 
         if (component.valueElementValueBindingReferenceId) {
             const value = snapshot.getValue(component.valueElementValueBindingReferenceId);
-            setStateValue(component.valueElementValueBindingReferenceId, value.typeElementId, snapshot, input);
+            setStateValue(component.valueElementValueBindingReferenceId, value.typeElementId, snapshot, { ...input, contentType: value.contentType });
         }
     });
 };

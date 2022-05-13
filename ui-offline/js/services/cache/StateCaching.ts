@@ -20,6 +20,7 @@ const injectValuesIntoState = (values: any) => {
         const valueProps = {
             contentValue: value.contentValue,
             objectData: value.objectData,
+            contentType: value.contentType,
         };
         setStateValue(
             { id: value.valueElementId, typeElementPropertyId: null },
