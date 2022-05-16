@@ -144,11 +144,11 @@ export const executeOperation = (operation: any, state: IState, snapshot: any) =
                 }
 
                 if (isStringOperation) {
-                    valueToReference.contentValue = `${valueToReference.contentValue}${valueToApply.contentValue}`;
+                    valueToReference.contentValue = `${valueToApply.contentValue}${valueToReference.contentValue}`;
                 }
 
                 if (isNumericalOperation) {
-                    valueToReference.contentValue = parseFloat(valueToReference.contentValue) + parseFloat(valueToApply.contentValue)
+                    valueToReference.contentValue = parseFloat(valueToReference.contentValue ?? 0) + parseFloat(valueToApply.contentValue ?? 0);
                 }
 
                 if (isListOperation) {

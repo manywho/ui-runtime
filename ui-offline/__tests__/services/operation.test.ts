@@ -206,6 +206,114 @@ describe('Operation service', () => {
         expect(appliedValue.contentValue).toEqual(15);
     });
 
+    test('Commands ADD and VALUE_OF to add together two number values when one value is null', async () => {
+        const mockSnapShot = {
+            getValue: jest.fn(),
+            metadata: {},
+        };
+
+        mockSnapShot.getValue.mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: null,
+            id: 'reference',
+        })).mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: 10,
+            id: 'apply',
+        }));
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'ADD',
+                id: 'apply',
+                typeElementPropertyId: null,
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+
+        await executeOperation(operation, state, mockSnapShot);
+        const appliedValue = getStateValue({ id: 'apply', typeElementPropertyId: null });
+        expect(appliedValue.contentValue).toEqual(10);
+    });
+
+    test('Commands ADD and VALUE_OF to add together two number values when one value is 0', async () => {
+        const mockSnapShot = {
+            getValue: jest.fn(),
+            metadata: {},
+        };
+
+        mockSnapShot.getValue.mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: 0,
+            id: 'reference',
+        })).mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: 10,
+            id: 'apply',
+        }));
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'ADD',
+                id: 'apply',
+                typeElementPropertyId: null,
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+
+        await executeOperation(operation, state, mockSnapShot);
+        const appliedValue = getStateValue({ id: 'apply', typeElementPropertyId: null });
+        expect(appliedValue.contentValue).toEqual(10);
+    });
+
+    test('Commands ADD and VALUE_OF to add together two number values when one value is "0"', async () => {
+        const mockSnapShot = {
+            getValue: jest.fn(),
+            metadata: {},
+        };
+
+        mockSnapShot.getValue.mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: '0',
+            id: 'reference',
+        })).mockImplementationOnce(() => ({
+            contentType: 'ContentNumber',
+            contentValue: '10',
+            id: 'apply',
+        }));
+
+        const operation = {
+            valueElementToApplyId: {
+                command: 'ADD',
+                id: 'apply',
+                typeElementPropertyId: null,
+            },
+            valueElementToApplyTypeElementId: null,
+            valueElementToReferenceId: {
+                command: 'VALUE_OF',
+                id: 'reference',
+                typeElementPropertyId: null,
+            },
+            valueElementToReferenceTypeElementId: null,
+        };
+
+        await executeOperation(operation, state, mockSnapShot);
+        const appliedValue = getStateValue({ id: 'apply', typeElementPropertyId: null });
+        expect(appliedValue.contentValue).toEqual(10);
+    });
+
     test('Commands ADD and VALUE_OF to concatenate two string values', async () => {
         const mockSnapShot = {
             getValue: jest.fn(),
@@ -239,7 +347,7 @@ describe('Operation service', () => {
 
         await executeOperation(operation, state, mockSnapShot);
         const appliedValue = getStateValue({ id: 'apply', typeElementPropertyId: null });
-        expect(appliedValue.contentValue).toEqual('foobar');
+        expect(appliedValue.contentValue).toEqual('barfoo');
     });
 
     test('Commands ADD and VALUE_OF does not insert a new duplicate list item', async () => {
