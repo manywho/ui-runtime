@@ -228,6 +228,9 @@ function initializeSimpleWithAuthorization(
     let streamId = null;
     let initializationResponse = null;
 
+    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
+    const environmentId = queryParameters['environmentid'];
+
     const initializationRequest = {
         developerName,
         versionId,
@@ -235,6 +238,7 @@ function initializeSimpleWithAuthorization(
         password,
         inputs,
         id: id || '00000000-0000-0000-0000-000000000000',
+        environmentId: environmentId,
     };
 
     return Ajax.initializeSimple(initializationRequest, tenantId)
@@ -358,6 +362,9 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
             ? Utils.extractStateId(flowKey)
             : null;
 
+    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
+    const environmentId = queryParameters['environmentid'];
+
     const initializationRequest = Json.generateInitializationRequest(
         { id: flowId, versionId: flowVersionId },
         stateId,
@@ -367,6 +374,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         Settings.global('joinUrl'),
         options.mode,
         options.reportingMode,
+        environmentId,
     );
 
     if (flowKey) {
