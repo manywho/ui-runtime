@@ -351,7 +351,7 @@ function initializeSimpleWithAuthorization(
         .then(() => flowKey);
 }
 
-function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken, stateId) {
+function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, environmentId, container, options, authenticationToken, stateId) {
 
     let { flowKey } = callback;
     let streamId = null;
@@ -361,9 +361,6 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         : (flowKey)
             ? Utils.extractStateId(flowKey)
             : null;
-
-    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
-    const environmentId = queryParameters['environmentid'];
 
     const initializationRequest = Json.generateInitializationRequest(
         { id: flowId, versionId: flowVersionId },
@@ -394,6 +391,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     tenantId,
                     flowId,
                     flowVersionId,
+                    environmentId,
                     container,
                     options,
                     stateId,
@@ -874,9 +872,12 @@ export const initialize = (
 
     if (authenticationToken) authenticationToken = decodeURI(authenticationToken);
 
-    if (!tenantId && (!stateId || (!flowId && !flowVersionId))) {
+    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
+    const environmentId = queryParameters['environmentid'];
 
-        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId must be specified');
+    if (!tenantId && (!stateId || (!flowId && !flowVersionId) || (!flowId && !environmentId))) {
+
+        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId or tenantId & flowId & environmentId must be specified');
         return;
 
     }
@@ -888,7 +889,7 @@ export const initialize = (
     const storedConfig = window.sessionStorage.getItem(`oauth-${stateId}`);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
-        config = { tenantId, flowId, flowVersionId, container, options };
+        config = { tenantId, flowId, flowVersionId, environmentId, container, options };
     }
 
     /**
@@ -921,6 +922,7 @@ export const initialize = (
             config.tenantId,
             config.flowId,
             config.flowVersionId,
+            config.environmentId,
             config.container,
             stateId,
             authenticationToken,
@@ -933,7 +935,7 @@ export const initialize = (
         this,
         {
             execute: initializeWithAuthorization.bind(this),
-            args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
+            args: [config.tenantId, config.flowId, config.flowVersionId, config.environmentId, config.container, config.options, authenticationToken || null],
             name: 'initialize',
             type: 'done',
             context: this,
@@ -941,6 +943,7 @@ export const initialize = (
         config.tenantId,
         config.flowId,
         config.flowVersionId,
+        config.environmentId,
         config.container,
         config.options,
         authenticationToken,
