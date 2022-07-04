@@ -228,9 +228,6 @@ function initializeSimpleWithAuthorization(
     let streamId = null;
     let initializationResponse = null;
 
-    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
-    const environmentId = queryParameters['environmentid'];
-
     const initializationRequest = {
         developerName,
         versionId,
@@ -238,7 +235,6 @@ function initializeSimpleWithAuthorization(
         password,
         inputs,
         id: id || '00000000-0000-0000-0000-000000000000',
-        environmentId: environmentId,
     };
 
     return Ajax.initializeSimple(initializationRequest, tenantId)
@@ -397,7 +393,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     stateId,
                 }));
 
-                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
+                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container, environmentId);
 
                 State.setOptions(options, flowKey);
 
@@ -873,13 +869,12 @@ export const initialize = (
     if (authenticationToken) authenticationToken = decodeURI(authenticationToken);
 
     const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
-    const environmentId = queryParameters['environmentid'];
+    const environmentId = queryParameters['environment-id'];
 
     if (!tenantId && (!stateId || (!flowId && !flowVersionId) || (!flowId && !environmentId))) {
 
-        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId or tenantId & flowId & environmentId must be specified');
+        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId or flowId & environmentId must be specified');
         return;
-
     }
 
     if (options.theme && manywho.theming) {
@@ -889,7 +884,7 @@ export const initialize = (
     const storedConfig = window.sessionStorage.getItem(`oauth-${stateId}`);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
-        config = { tenantId, flowId, flowVersionId, environmentId, container, options };
+        config = { tenantId, flowId, flowVersionId, container, options, environmentId };
     }
 
     /**
@@ -1215,6 +1210,7 @@ export const join = (
     tenantId: string,
     flowId: string,
     flowVersionId: string,
+    environmentId: string,
     container: string,
     stateId: string,
     authenticationToken:
@@ -1222,7 +1218,7 @@ export const join = (
     options: any,
 ): JQueryDeferred<any> => {
 
-    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container);
+    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container, environmentId);
 
     if (options && options.authentication != null && options.authentication.sessionId != null) {
 
@@ -1253,6 +1249,7 @@ export const join = (
         flowVersionId,
         container,
         options,
+        environmentId,
     }));
 
     return joinWithAuthorization.call(

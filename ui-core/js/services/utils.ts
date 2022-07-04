@@ -333,7 +333,7 @@ export const getAll = (map: any, id: string, key: string) => {
 /**
  * Construct a new flow key
  */
-export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, stateId: string, element: string) {
+export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, environmentId: string, stateId: string, element: string) {
     const args = Array.prototype.slice.call(arguments);
     return args.join('_');
 };
