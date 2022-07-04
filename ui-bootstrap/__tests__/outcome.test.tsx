@@ -15,6 +15,7 @@ describe('Outcome component behaviour', () => {
             className = null,
             type = '',
             size = '',
+            propSize = null,
             pageActionType = str(),
             pageActionBindingType = null,
             classes = '',
@@ -44,7 +45,7 @@ describe('Outcome component behaviour', () => {
             };
         };
 
-        return shallow(<Outcome className={className} onClick={onClick} display={null} />);
+        return shallow(<Outcome className={className} onClick={onClick} display={null} size={propSize} />);
     }
 
     afterEach(() => {
@@ -81,6 +82,19 @@ describe('Outcome component behaviour', () => {
         });
 
         expect(componentWrapper.hasClass(`btn-${size}`)).toBe(true);
+    });
+
+    test('Component model.attributes.size overrides props.size', () => {
+        const size = str(5);
+        const propSize = str(5);
+
+        componentWrapper = manyWhoMount({
+            size,
+            propSize,
+        });
+
+        expect(componentWrapper.hasClass(`btn-${size}`)).toBe(true);
+        expect(componentWrapper.hasClass(`btn-${propSize}`)).toBe(false);
     });
 
     test('Component receives correct pageActionType CSS classes', () => {
