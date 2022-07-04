@@ -95,6 +95,7 @@ test('Intialization Request', (t) => {
 
     const expected: any = {
         flowId,
+        environmentId: null,
         stateId,
         annotations,
         inputs,
@@ -120,6 +121,7 @@ test('Intialization Request, optional', (t) => {
             id: 'id',
             versionId: null,
         },
+        environmentId: null,
         stateId: null,
         annotations: null,
         inputs: null,

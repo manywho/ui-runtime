@@ -436,7 +436,7 @@ test.serial('Join', (t) => {
         id: 'outcome',
     };
 
-    return Engine.join('Key1', 'Key2', 'Key3', 'main', 'key4', 'authenticationToken', options)
+    return Engine.join('Key1', 'Key2', 'Key3', 'Key4', 'main', 'key5', 'authenticationToken', options)
         .always((flowKey) => {
             t.not(flowKey, null);
             sinon.stub(Engine, 'join');
@@ -490,7 +490,7 @@ test.serial('Ping', (t) => {
 
     return Engine.ping(flowKey)
         .then(() => {
-            t.true((Engine.join as sinon.SinonStub).calledWith('key1', 'key2', 'key3', '', undefined, 'authenticationToken', 'options'));
+            t.true((Engine.join as sinon.SinonStub).calledWith('key1', 'key2', 'key3', 'key4', '', undefined, 'authenticationToken', 'options'));
         });
 });
 

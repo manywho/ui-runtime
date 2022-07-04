@@ -351,7 +351,7 @@ export const getLookUpKey = (flowKey: string) => {
  * Get the `element` from a flow key
  */
 export const extractElement = (flowKey: string) => {
-    return flowKey.split('_')[4];
+    return flowKey.split('_')[5];
 };
 
 /**
@@ -379,6 +379,13 @@ export const extractFlowVersionId = (flowKey: string) => {
  * Get the `state id` from a flow key
  */
 export const extractStateId = (flowKey: string) => {
+    return flowKey.split('_')[4];
+};
+
+/**
+ * Get the `environment id` from a flow key
+ */
+ export const extractEnvironmentId = (flowKey: string) => {
     return flowKey.split('_')[3];
 };
 
