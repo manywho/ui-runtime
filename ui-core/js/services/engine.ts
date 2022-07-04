@@ -394,7 +394,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     stateId,
                 }));
 
-                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container, environmentId);
+                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, environmentId, response.stateId, container);
 
                 State.setOptions(options, flowKey);
 
