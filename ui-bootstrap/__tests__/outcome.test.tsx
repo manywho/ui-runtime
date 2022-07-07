@@ -84,19 +84,6 @@ describe('Outcome component behaviour', () => {
         expect(componentWrapper.hasClass(`btn-${size}`)).toBe(true);
     });
 
-    test('Component model.attributes.size overrides props.size', () => {
-        const size = str(5);
-        const propSize = str(5);
-
-        componentWrapper = manyWhoMount({
-            size,
-            propSize,
-        });
-
-        expect(componentWrapper.hasClass(`btn-${size}`)).toBe(true);
-        expect(componentWrapper.hasClass(`btn-${propSize}`)).toBe(false);
-    });
-
     test('Component receives correct pageActionType CSS classes', () => {
         componentWrapper = manyWhoMount({
             pageActionType: 'import',
