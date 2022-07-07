@@ -343,7 +343,7 @@ export const getFlowKey = function (tenantId: string, flowId: string, flowVersio
  */
 export const getLookUpKey = (flowKey: string) => {
     if (flowKey) {
-        return [flowKey.split('_')[0], flowKey.split('_')[3]].join('_');
+        return [flowKey.split('_')[0], flowKey.split('_')[4]].join('_');
     }
 };
 
