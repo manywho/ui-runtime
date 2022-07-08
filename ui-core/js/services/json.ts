@@ -56,6 +56,7 @@ export const generateInitializationRequest = (
     joinUrl?: string,
     mode?: string,
     reportingMode?: string,
+    environmentId?: string,
 ) => ({
     flowId: {
         id: flowId.id,
@@ -68,6 +69,7 @@ export const generateInitializationRequest = (
     joinPlayerUrl: joinUrl || null,
     mode: mode || '',
     reportingMode: reportingMode || '',
+    environmentId: environmentId || null,
 });
 
 /**

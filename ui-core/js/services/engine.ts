@@ -218,6 +218,7 @@ function initializeSimpleWithAuthorization(
     developerName: string,
     id: string,
     versionId: string,
+    environmentId: string,
     username: string,
     password: string,
     inputs: any[],
@@ -243,7 +244,7 @@ function initializeSimpleWithAuthorization(
             (response) => {
                 initializationResponse = response;
 
-                flowKey = Utils.getFlowKey(tenantId, id, versionId, response.stateId, container);
+                flowKey = Utils.getFlowKey(tenantId, id, versionId, environmentId, response.stateId, container);
 
                 if (response.authorizationContext && !Utils.isNullOrEmpty(response.authorizationContext.loginUrl)) {
                     return Ajax.login(
@@ -347,7 +348,7 @@ function initializeSimpleWithAuthorization(
         .then(() => flowKey);
 }
 
-function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, container, options, authenticationToken, stateId) {
+function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, environmentId, container, options, authenticationToken, stateId) {
 
     let { flowKey } = callback;
     let streamId = null;
@@ -367,6 +368,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
         Settings.global('joinUrl'),
         options.mode,
         options.reportingMode,
+        environmentId,
     );
 
     if (flowKey) {
@@ -386,12 +388,13 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     tenantId,
                     flowId,
                     flowVersionId,
+                    environmentId,
                     container,
                     options,
                     stateId,
                 }));
 
-                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, response.stateId, container);
+                flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, environmentId, response.stateId, container);
 
                 State.setOptions(options, flowKey);
 
@@ -866,11 +869,13 @@ export const initialize = (
 
     if (authenticationToken) authenticationToken = decodeURI(authenticationToken);
 
-    if (!tenantId && (!stateId || (!flowId && !flowVersionId))) {
+    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
+    const environmentId = queryParameters['environment-id'];
 
-        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId must be specified');
+    if (!tenantId && (!stateId || (!flowId && !flowVersionId) || (!flowId && !environmentId))) {
+
+        Log.error('tenantId & stateId, or tenantId & flowId & flowVersionId or flowId & environmentId must be specified');
         return;
-
     }
 
     if (options.theme && manywho.theming) {
@@ -880,7 +885,7 @@ export const initialize = (
     const storedConfig = window.sessionStorage.getItem(`oauth-${stateId}`);
     let config = (stateId) ? !Utils.isNullOrWhitespace(storedConfig) && JSON.parse(storedConfig) : null;
     if (!config) {
-        config = { tenantId, flowId, flowVersionId, container, options };
+        config = { tenantId, flowId, flowVersionId, container, options, environmentId };
     }
 
     /**
@@ -913,6 +918,7 @@ export const initialize = (
             config.tenantId,
             config.flowId,
             config.flowVersionId,
+            config.environmentId,
             config.container,
             stateId,
             authenticationToken,
@@ -925,7 +931,7 @@ export const initialize = (
         this,
         {
             execute: initializeWithAuthorization.bind(this),
-            args: [config.tenantId, config.flowId, config.flowVersionId, config.container, config.options, authenticationToken || null],
+            args: [config.tenantId, config.flowId, config.flowVersionId, config.environmentId, config.container, config.options, authenticationToken || null],
             name: 'initialize',
             type: 'done',
             context: this,
@@ -933,6 +939,7 @@ export const initialize = (
         config.tenantId,
         config.flowId,
         config.flowVersionId,
+        config.environmentId,
         config.container,
         config.options,
         authenticationToken,
@@ -963,11 +970,15 @@ export const initializeSimple = (
 
     checkLocale();
 
+    const queryParameters = Utils.parseQueryString(window.location.search.substring(1).toLowerCase());
+    const environmentId = queryParameters['environmentid'];
+
     return initializeSimpleWithAuthorization(
         tenantId,
         developerName,
         id,
         versionId,
+        environmentId,
         username,
         password,
         inputs,
@@ -1075,13 +1086,13 @@ export const flowOut = (outcome: any, flowKey: string) => {
         .then((response) => {
 
             const options = State.getOptions(flowKey);
-            const subFlowKey = Utils.getFlowKey(tenantId, null, null, response.stateId, Utils.extractElement(flowKey));
+            const subFlowKey = Utils.getFlowKey(tenantId, null, null, null, response.stateId, Utils.extractElement(flowKey));
 
             Collaboration.flowOut(flowKey, response.stateId, subFlowKey);
 
             Utils.removeFlow(flowKey);
 
-            join(tenantId, null, null, 'main', response.stateId, authenticationToken, options);
+            join(tenantId, null, null, null, 'main', response.stateId, authenticationToken, options);
 
         });
 
@@ -1104,7 +1115,7 @@ export const returnToParent = (flowKey: string, parentStateId: string) => {
 
     Utils.removeFlow(flowKey);
 
-    return join(tenantId, null, null, 'main', parentStateId, authenticationToken, options);
+    return join(tenantId, null, null, null, 'main', parentStateId, authenticationToken, options);
 
 };
 
@@ -1204,14 +1215,14 @@ export const join = (
     tenantId: string,
     flowId: string,
     flowVersionId: string,
+    environmentId: string,
     container: string,
     stateId: string,
-    authenticationToken:
-    string,
+    authenticationToken: string,
     options: any,
 ): JQueryDeferred<any> => {
 
-    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container);
+    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container, environmentId);
 
     if (options && options.authentication != null && options.authentication.sessionId != null) {
 
@@ -1242,6 +1253,7 @@ export const join = (
         flowVersionId,
         container,
         options,
+        environmentId,
     }));
 
     return joinWithAuthorization.call(
@@ -1433,6 +1445,7 @@ export const wait = (until: Date, flowKey: string) => {
             join(Utils.extractTenantId(flowKey),
                 Utils.extractFlowId(flowKey),
                 Utils.extractFlowVersionId(flowKey),
+                Utils.extractEnvironmentId(flowKey),
                 Utils.extractElement(flowKey),
                 state.id,
                 State.getAuthenticationToken(flowKey),
@@ -1461,6 +1474,7 @@ export const ping = (flowKey: string) => {
                     join(Utils.extractTenantId(flowKey),
                          Utils.extractFlowId(flowKey),
                          Utils.extractFlowVersionId(flowKey),
+                         Utils.extractEnvironmentId(flowKey),
                          Utils.extractElement(flowKey),
                          state.id,
                          State.getAuthenticationToken(flowKey),
