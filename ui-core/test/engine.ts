@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import * as mockery from 'mockery';
 import * as $ from 'jquery';
 
-const flowKey = 'key1_key2_key3_key4__main';
+const flowKey = 'key1_key2_key3_key4_key5__main';
 
 const react = {
     createElement: sinon.stub(),
@@ -436,7 +436,7 @@ test.serial('Join', (t) => {
         id: 'outcome',
     };
 
-    return Engine.join('Key1', 'Key2', 'Key3', 'main', 'key4', 'authenticationToken', options)
+    return Engine.join('Key1', 'Key2', 'Key3', 'Key4', 'main', 'key5', 'authenticationToken', options)
         .always((flowKey) => {
             t.not(flowKey, null);
             sinon.stub(Engine, 'join');
@@ -490,7 +490,7 @@ test.serial('Ping', (t) => {
 
     return Engine.ping(flowKey)
         .then(() => {
-            t.true((Engine.join as sinon.SinonStub).calledWith('key1', 'key2', 'key3', '', undefined, 'authenticationToken', 'options'));
+            t.true((Engine.join as sinon.SinonStub).calledWith('key1', 'key2', 'key3', 'key4', '', undefined, 'authenticationToken', 'options'));
         });
 });
 
@@ -711,7 +711,7 @@ test.serial('Return To Parent', (t) => {
     t.true(state.setComponentLoading.calledWith('', null, flowKey));
     t.true((Engine.render as sinon.SinonStub).calledOnce);
     t.true((Collaboration.returnToParent as sinon.SinonStub).calledWith(flowKey, 'parentStateId'));
-    t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, 'main', 'parentStateId', 'authenticationToken', 'options'));
+    t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, null, 'main', 'parentStateId', 'authenticationToken', 'options'));
 });
 
 test.serial('Flow Out', (t) => {
@@ -727,8 +727,8 @@ test.serial('Flow Out', (t) => {
 
     return Engine.flowOut({}, flowKey)
         .then(() => {
-            t.true((Collaboration.flowOut as sinon.SinonStub).calledWith(flowKey, 'stateId', 'key1___stateId_'));
-            t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, 'main', 'stateId', 'authenticationToken', 'options'));
+            t.true((Collaboration.flowOut as sinon.SinonStub).calledWith(flowKey, 'stateId', 'key1____stateId_'));
+            t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, null, 'main', 'stateId', 'authenticationToken', 'options'));
         });
 });
 

@@ -333,7 +333,7 @@ export const getAll = (map: any, id: string, key: string) => {
 /**
  * Construct a new flow key
  */
-export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, stateId: string, element: string) {
+export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, environmentId: string, stateId: string, element: string) {
     const args = Array.prototype.slice.call(arguments);
     return args.join('_');
 };
@@ -343,7 +343,7 @@ export const getFlowKey = function (tenantId: string, flowId: string, flowVersio
  */
 export const getLookUpKey = (flowKey: string) => {
     if (flowKey) {
-        return [flowKey.split('_')[0], flowKey.split('_')[3]].join('_');
+        return [flowKey.split('_')[0], flowKey.split('_')[4]].join('_');
     }
 };
 
@@ -351,7 +351,7 @@ export const getLookUpKey = (flowKey: string) => {
  * Get the `element` from a flow key
  */
 export const extractElement = (flowKey: string) => {
-    return flowKey.split('_')[4];
+    return flowKey.split('_')[5];
 };
 
 /**
@@ -379,6 +379,13 @@ export const extractFlowVersionId = (flowKey: string) => {
  * Get the `state id` from a flow key
  */
 export const extractStateId = (flowKey: string) => {
+    return flowKey.split('_')[4];
+};
+
+/**
+ * Get the `environment id` from a flow key
+ */
+ export const extractEnvironmentId = (flowKey: string) => {
     return flowKey.split('_')[3];
 };
 

@@ -83,9 +83,10 @@ function onMove(data) {
     const flowVersionId = Utils.extractFlowVersionId(flowKey);
     const stateId = Utils.extractStateId(flowKey);
     const element = Utils.extractElement(flowKey);
+    const environmentId = Utils.extractEnvironmentId(flowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId, flowId, flowVersionId, element, stateId, State.getAuthenticationToken(flowKey), Settings.flow(null, flowKey))
+    Engine.join(tenantId, flowId, flowVersionId, environmentId, element, stateId, State.getAuthenticationToken(flowKey), Settings.flow(null, flowKey))
         .then(() => {
             socket.emit('getValues', data);
         });
@@ -104,7 +105,7 @@ function onFlowOut(data) {
     const stateId = Utils.extractStateId(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId, null, null, element, stateId, null, Settings.flow(null, data.parentFlowKey));
+    Engine.join(tenantId, null, null, null, element, stateId, null, Settings.flow(null, data.parentFlowKey));
 }
 
 function onReturnToParent(data) {
@@ -120,6 +121,7 @@ function onReturnToParent(data) {
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
     Engine.join(tenantId,
+                null,
                 null,
                 null,
                 element,

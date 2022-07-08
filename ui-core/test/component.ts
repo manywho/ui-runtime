@@ -44,7 +44,7 @@ import * as Component from '../js/services/component';
 import * as Settings from '../js/services/settings';
 import * as Utils from '../js/services/utils';
 
-const flowKey = 'key1_key2_key3_key4';
+const flowKey = 'key1_key2_key3_key4_key5';
 
 test.beforeEach((t) => {
     engine.render.resetHistory();
