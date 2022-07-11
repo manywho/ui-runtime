@@ -1222,7 +1222,7 @@ export const join = (
     options: any,
 ): JQueryDeferred<any> => {
 
-    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, stateId, container, environmentId);
+    const flowKey = Utils.getFlowKey(tenantId, flowId, flowVersionId, environmentId, stateId, container);
 
     if (options && options.authentication != null && options.authentication.sessionId != null) {
 
