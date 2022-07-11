@@ -26,13 +26,16 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
 
     render() {
 
+        let className = 'btn-link';
+
         if (!this.props.isDesignTime) {
             const model = manywho.model.getComponent(this.props.id, this.props.flowKey); 
             const file = model.objectData.find((item) => item.developerName === '$File');
             const fileId = file.properties.find((prop) => prop.developerName === 'Id').contentValue;
             const filename = file.properties.find((prop) => prop.developerName === 'Name').contentValue;
+            className = model?.attributes?.classes ? model?.attributes?.classes : 'btn-link';
 
-            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId, filename)} className="btn-link">{model.label}</button>;  
+            return <button onClick={(e) => this.downloadPdf(e, this.props.flowKey, fileId, filename)} className={className}>{model.label}</button>;  
         }
 
         let displayName = 'Download Pdf';
@@ -43,7 +46,7 @@ class PdfDownloader extends React.Component<IComponentProps, null> {
             }
         }
 
-        return <button className="btn-link">{displayName}</button>;
+        return <button className={className}>{displayName}</button>;
     }
 }
 
