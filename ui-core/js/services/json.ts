@@ -98,6 +98,7 @@ export const generateInvokeRequest = (
             pageComponentInputResponses: pageComponentInputResponses || null,
         },
         selectedOutcomeId: selectedOutcomeId || null,
+        timezoneOffset: (new Date()).getTimezoneOffset(),
     },
     mode: mode || '',
     selectedMapElementId: selectedMapElementId || null,
