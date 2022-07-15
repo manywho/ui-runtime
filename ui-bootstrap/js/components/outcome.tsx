@@ -113,11 +113,11 @@ class Outcome extends React.Component<IOutcomeProps, null> {
     }
 
     getSize(model) {
-        if (this.props.size)
-            return 'btn-' + this.props.size;
-        
         if (model.attributes && model.attributes.size)
             return 'btn-' + model.attributes.size;
+        
+        if (this.props.size)
+            return 'btn-' + this.props.size;
         
         if (!manywho.utils.isNullOrWhitespace(model.pageObjectBindingId)) {
             const component = manywho.model.getComponent(
