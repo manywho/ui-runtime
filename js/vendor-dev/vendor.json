@@ -1,10 +1,10 @@
 {
-    "jquery.js": "/js/vendor/jquery-3.4.1.min.js",
+    "jquery.js": "/js/vendor/jquery-3.5.1.min.js",
     "jquery-migrate.js": "/js/vendor/jquery-migrate-3.1.0.js",
-    "boostrap.js": "/js/vendor/bootstrap-3.3.7.min.js",
+    "boostrap.js": "/js/vendor/bootstrap-3.4.1.min.js",
     "react.js": "/js/vendor/react.development.js",
     "react-dom.js": "/js/vendor/react-dom.development.js",
     "socket-io.js": "/js/vendor/socket.io-1.4.5.min.js",
-    "moment.js": "/js/vendor/moment-with-locales-2.10.6.min.js",
+    "moment.js": "/js/vendor/moment-with-locales-2.19.3.min.js",
     "loglevel.js": "/js/vendor/loglevel-1.4.0.min.js"
 }
