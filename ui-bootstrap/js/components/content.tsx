@@ -8,7 +8,7 @@ import fileUpload from './file-upload';
 
 /* eslint import/no-webpack-loader-syntax: off */
 import * as rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
-import 'tinymce/themes/modern';
+import 'tinymce/themes/silver';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/advlist';
