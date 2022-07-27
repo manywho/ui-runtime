@@ -1,5 +1,10 @@
 .mw-bs {
     .mw-chart {
         position: relative;
+        // Charts are set to be responsive, which means they will try to fill their container, however this makes
+        // the charts grow infinitely because most parent containers have no width set at all or set to 100% to fill
+        // their parent container so we gat a runaway chart size growth as it never hits a solid maximum size.
+        // This fix produces a finite size for the chart to scale up to but still lets it fill its container.
+        width: calc(100% - 1px);
     }
 }
