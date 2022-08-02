@@ -188,6 +188,10 @@ class Input extends React.Component<IComponentProps, null> {
             inputElement = <InputDateTime {...props} />;
             break;
 
+        case manywho.component.contentTypes.date:
+            inputElement = <InputDateTime {...props} />;
+            break;
+
         case manywho.component.contentTypes.boolean:
             label = null;
             inputElement = <InputBoolean {...props} />;

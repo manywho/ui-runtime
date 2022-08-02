@@ -38,6 +38,7 @@ export const contentTypes = {
     password: 'CONTENTPASSWORD',
     encrypted: 'CONTENTENCRYPTED',
     datetime: 'CONTENTDATETIME',
+    date: 'CONTENTDATE',
     content: 'CONTENTCONTENT',
     object: 'CONTENTOBJECT',
     list: 'CONTENTLIST',

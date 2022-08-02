@@ -93,6 +93,7 @@ export const format = (value: string | number, format: string, contentType: stri
     }
 
     switch (contentType.toUpperCase()) {
+    case Component.contentTypes.date:
     case Component.contentTypes.datetime:
         return dateTime(value as string, format, flowKey);
 

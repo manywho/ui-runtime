@@ -152,6 +152,7 @@ const Rules = {
             case manywho.component.contentTypes.number:
                 return contentValue ? parseFloat(contentValue) : contentValue;
             case manywho.component.contentTypes.datetime:
+            case manywho.component.contentTypes.date:    
                 return contentValue ? moment(contentValue) : contentValue;
             case manywho.component.contentTypes.boolean:
                 return contentValue ? Boolean(contentValue) : contentValue;
@@ -178,7 +179,7 @@ const Rules = {
     compareContentValues(left: any, right: any, criteriaType: string, contentType: string) {
         switch (criteriaType.toUpperCase()) {
             case 'EQUAL':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return left.isSame(right);
                     }
@@ -187,7 +188,7 @@ const Rules = {
                 return left === right;
 
             case 'NOT_EQUAL':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return !left.isSame(right);
                     }
@@ -196,7 +197,7 @@ const Rules = {
                 return left !== right;
 
             case 'GREATER_THAN':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return left.isAfter(right);
                     }
@@ -205,7 +206,7 @@ const Rules = {
                 return left > right;
 
             case 'GREATER_THAN_OR_EQUAL':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return left.isSameOrAfter(right);
                     }
@@ -215,7 +216,7 @@ const Rules = {
                 return left === right || left > right;
 
             case 'LESS_THAN':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return left.isBefore(right);
                     }
@@ -224,7 +225,7 @@ const Rules = {
                 return left < right;
 
             case 'LESS_THAN_OR_EQUAL':
-                if (contentType === manywho.component.contentTypes.datetime) {
+                if (contentType === manywho.component.contentTypes.datetime || contentType === manywho.component.contentTypes.date) {
                     if (moment.isMoment(left) && left.isValid() && moment.isMoment(right) && right.isValid()) {
                         return left.isSameOrBefore(right);
                     }
@@ -254,6 +255,7 @@ const Rules = {
                     case manywho.component.contentTypes.number:
                     case manywho.component.contentTypes.boolean:
                     case manywho.component.contentTypes.datetime:
+                    case manywho.component.contentTypes.date:
                         return (left === null && right) || (left !== null && !right);
                     default:
                         // TODO - Exception ?

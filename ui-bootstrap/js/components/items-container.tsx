@@ -176,7 +176,7 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
                     }
                     
                     break;
-                    
+            case manywho.component.contentTypes.date: 
             case manywho.component.contentTypes.datetime: {
                 // moment will ignore a format supplied as an empty string
                 // if there is no format supplied contentValue will be a full datetime stamp eg. "2020-12-10T10:39:00+02:00"

@@ -98,6 +98,7 @@ export const validate = (model: any, state: any, flowKey: string): IValidationRe
     case Component.contentTypes.password:
     case Component.contentTypes.content:
     case Component.contentTypes.datetime:
+    case Component.contentTypes.date:
         return validateString(value, regex, message, model.isRequired, flowKey);
 
     case Component.contentTypes.number:
