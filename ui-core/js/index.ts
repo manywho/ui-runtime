@@ -66,4 +66,11 @@ const ui = {
     Log: log,
 };
 
+function pushStateFunc(): void {
+    window2.history.pushState(null, null, document.URL);
+}
+
+pushStateFunc();
+window2.addEventListener('popstate', pushStateFunc);
+
 export default ui;
