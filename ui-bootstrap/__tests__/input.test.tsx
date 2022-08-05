@@ -57,6 +57,7 @@ describe('Input component behaviour', () => {
             boolean: 'CONTENTBOOLEAN',
             content: 'CONTENTCONTENT',
             datetime: 'CONTENTDATETIME',
+            date: 'CONTENTDATE',
             list: 'CONTENTLIST',
             number: 'CONTENTNUMBER',
             object: 'CONTENTOBJECT',

@@ -23,6 +23,7 @@ export const CONTENT_TYPES = {
     LIST: 'ContentList',
     NUMBER: 'ContentNumber',
     DATETIME: 'ContentDateTime',
+    DATE: 'ContentDate',
     PASSWORD: 'ContentPassword',
     CONTENT: 'ContentContent',
 };

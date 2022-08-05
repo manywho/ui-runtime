@@ -41,6 +41,7 @@ describe('Table input component behaviour', () => {
             boolean: 'CONTENTBOOLEAN',
             content: 'CONTENTCONTENT',
             datetime: 'CONTENTDATETIME',
+            date: 'CONTENTDATE',
             list: 'CONTENTLIST',
             number: 'CONTENTNUMBER',
             object: 'CONTENTOBJECT',
@@ -357,6 +358,31 @@ describe('Table input component behaviour', () => {
         const expectedDate = moment(
             value, 
             ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, 'string' || ''],
+        ).format();
+
+        expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', expectedDate);
+    });
+
+    test('Committing content date commits successfully', () => {
+        globalAny.window.manywho.utils.isEqual = jest.fn((input, comparison) => { 
+            if (comparison === 'CONTENTDATETIME') {
+                return false;
+            } 
+            return true;
+        });
+
+        const value = '02/02/0002';
+
+        tableInputWrapper = manyWhoMount({
+            contentType: globalAny.window.manywho.component.contentTypes.date,
+            value,
+        });
+
+        tableInputWrapper.instance().onCommit();
+
+        const expectedDate = moment(
+            value, 
+            ['MM/DD/YYYY', 'string' || ''],
         ).format();
 
         expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', expectedDate);
