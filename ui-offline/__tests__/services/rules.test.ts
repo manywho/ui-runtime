@@ -1746,3 +1746,147 @@ describe('Miscellaneous tests for coverage', () => {
         expect(Rules.compareContentValues(value(null), value(null), 'IS_EMPTY', 'no-such-content-type')).toBeFalsy();
     });
 });
+
+describe('Rules service Content Date expected behaviour', () => {
+
+    console.warn = jest.fn();
+
+    test('Invalid criteria for an empty date', () => {
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'BAD_CRITERIA')).toBeFalsy();
+    });
+
+    test('Date Equal', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-27'), value('2021-02-28'),
+            manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value('abcd'), manywho.component.contentTypes.date, 'EQUAL')).toBeFalsy();
+        expect(console.warn).toHaveBeenCalled();
+    });
+
+    test('Date Not Equal', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-27'), value('2021-02-28'),
+            manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value('abcd'), manywho.component.contentTypes.date, 'NOT_EQUAL')).toBeFalsy();
+        expect(console.warn).toHaveBeenCalled();
+    });
+
+    test('Date Greater Than', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-29'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'GREATER_THAN')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('b'), value('a'), manywho.component.contentTypes.date, 'GREATER_THAN')).toBeFalsy();
+    });
+
+    test('Date Less Than', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-29'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-29'),
+            manywho.component.contentTypes.date, 'LESS_THAN')).toBeTruthy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+        expect(Rules.compareValues(value('b'), value('a'), manywho.component.contentTypes.date, 'LESS_THAN')).toBeFalsy();
+    });
+
+    test('Date Greater Than Or Equal', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-29'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-29'),
+            manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('b'), value('a'), manywho.component.contentTypes.date, 'GREATER_THAN_OR_EQUAL')).toBeFalsy();
+    });
+
+    test('Date Less Than Or Equal', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-29'), value('2020-02-28'),
+            manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-28'), value('2020-02-29'),
+            manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeTruthy();
+        expect(Rules.compareValues(value(''), value(''), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+        expect(Rules.compareValues(value('b'), value('a'), manywho.component.contentTypes.date, 'LESS_THAN_OR_EQUAL')).toBeFalsy();
+    });
+
+    test('Date Starts With', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('2'), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'STARTS_WITH')).toBeFalsy();
+    });
+
+    test('Date Ends With', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value('1'), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'ENDS_WITH')).toBeFalsy();
+    });
+
+    test('Date Contains', () => {
+        expect(Rules.compareValues(value('2020-02-28'), value(':'), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+
+        expect(Rules.compareValues(value(null), value(null), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value(''), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+        expect(Rules.compareValues(value(''), value(null), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+        expect(Rules.compareValues(value('abcd'), value(null), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+        expect(Rules.compareValues(value(null), value('abcd'), manywho.component.contentTypes.date, 'CONTAINS')).toBeFalsy();
+    });
+
+    test('Date Is Empty', () => {
+        expect(Rules.compareValues(value(null), value(true), manywho.component.contentTypes.date, 'IS_EMPTY')).toBeTruthy();
+        expect(Rules.compareValues(value('2020-02-28'), value(true), manywho.component.contentTypes.date, 'IS_EMPTY')).toBeFalsy();
+    });
+
+    test('Date Is Not Empty', () => {
+        expect(Rules.compareValues(value(null), value(false), manywho.component.contentTypes.date, 'IS_EMPTY')).toBeFalsy();
+        expect(Rules.compareValues(value('2020-02-28'), value(false), manywho.component.contentTypes.date, 'IS_EMPTY')).toBeTruthy();
+    });
+
+});

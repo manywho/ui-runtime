@@ -27,6 +27,8 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             return 'password';
         case manywho.component.contentTypes.datetime:
             return 'datetime';
+        case manywho.component.contentTypes.date:
+            return 'date';
         default:
             return 'text';
         }
@@ -91,6 +93,10 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
                 this.props.contentType, 
                 manywho.component.contentTypes.datetime, 
                 true,
+            ) || manywho.utils.isEqual(
+                this.props.contentType, 
+                manywho.component.contentTypes.date, 
+                true,
             )
         ) {
             this.setState({ value: e });
@@ -126,6 +132,10 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
                 this.props.contentType, 
                 manywho.component.contentTypes.datetime, 
                 true,
+            ) || manywho.utils.isEqual(
+                this.props.contentType, 
+                manywho.component.contentTypes.date, 
+                true,
             )
         ) {
             this.setState({ currentValue: this.state.value });
@@ -139,21 +149,30 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
             manywho.component.contentTypes.datetime, 
             true,
         );
+        const isDateInput = manywho.utils.isEqual(
+            this.props.contentType, 
+            manywho.component.contentTypes.date, 
+            true,
+        );
 
-        if (isDateTimeInput) {
+        if (isDateTimeInput || isDateInput) {
             const isEmptyDate = this.isEmptyDate(this.state.value);
 
             if (isEmptyDate) {
                 this.renderDateTimeModal('Please select a date');
             } else {
-                const dateTime = moment(
+                const dateTime = isDateTimeInput ? moment(
                     this.state.value, 
                     ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, this.props.contentFormat || ''],
+                ) : moment(
+                    this.state.value, 
+                    ['MM/DD/YYYY', this.props.contentFormat || ''],
                 );
-    
+
                 this.props.onCommitted(this.props.id, this.props.propertyId, dateTime.format());
                 manywho.model.setModal(this.props.flowKey, null);
             }
+    
         } else {
             this.props.onCommitted(this.props.id, this.props.propertyId, this.state.value);
         }
@@ -200,6 +219,10 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
         if (
             !manywho.utils.isEqual(
                 this.props.contentType, manywho.component.contentTypes.datetime, true,
+            ) && !manywho.utils.isEqual(
+                this.props.contentType, 
+                manywho.component.contentTypes.date, 
+                true,
             )
         ) {
             props.onBlur = this.onBlur;
