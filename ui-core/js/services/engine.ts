@@ -382,8 +382,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
     return Ajax.initialize(initializationRequest, tenantId, authenticationToken)
         .then(
-            (response) => {
-
+            async (response) => {
                 window.sessionStorage.setItem(`oauth-${response.stateId}`, JSON.stringify({
                     tenantId,
                     flowId,
@@ -432,6 +431,13 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     Model.setSelectedNavigation(options.navigationElementId, flowKey);
 
                 }
+
+                await Component.addCustomComponents({
+                    tenantId: Utils.extractTenantId(flowKey),
+                    flowId,
+                    flowVersionId,
+                    authenticationToken,
+                }, flowKey);
 
                 Component.appendFlowContainer(flowKey);
                 State.setComponentLoading(Utils.extractElement(flowKey), { message: Settings.global('localization.initializing') }, flowKey);
@@ -582,11 +588,18 @@ function joinWithAuthorization(callback, flowKey) {
     Formatting.initialize(flowKey);
 
     return Ajax.join(state.id, Utils.extractTenantId(flowKey), authenticationToken)
-        .then((response) => {
+        .then(async (response) => {
 
             if (notAllowed(response)) {
                 manywho.authorization.invokeAuthorization(response, flowKey);
             }
+
+            await Component.addCustomComponents({
+                tenantId: Utils.extractTenantId(flowKey),
+                flowId: response.flowId,
+                flowVersionId: response.flowVersion,
+                authenticationToken,
+            }, flowKey);
 
             return isAuthorized(response, flowKey);
 
