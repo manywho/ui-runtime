@@ -13,7 +13,7 @@ const aliases = {};
 
 const DEFAULT_PAGE_LIMIT = 10;
 
-let customComponentLoadCount = 0;
+let customComponentsLoadingCount = 0;
 
 function getComponentType(item) {
     if ('containerType' in item) {
@@ -108,7 +108,7 @@ export const get = (model: any) => {
     }
 
     // Custom components are being loaded...
-    if (customComponentLoadCount > 0) {
+    if (customComponentsLoadingCount > 0) {
         // ..render a waiter until this is done
         return this.getByName('wait');
     }
@@ -385,24 +385,37 @@ export const getPageSize = (model, flowKey) => {
     return parseInt(limit, 10);
 };
 
-// Insert custom components into script tags automatically
+/**
+ * Decrement load count and re-render if all have loaded
+ * @param flowKey
+ */
+const finishLoadingCustomComponent = (flowKey: string) => (): void => {
+    // Decrement the script load count
+    customComponentsLoadingCount -= 1;
+    // If there are no more scripts loading...
+    if (customComponentsLoadingCount === 0) {
+        // ...re-render the flow
+        Engine.render(flowKey);
+    }
+};
+
+/**
+ * Insert custom components into script tags automatically
+ * @param flowInfo tenant, flow and auth info needed for the component api call
+ * @param flowKey
+ * @returns awaitable Promise
+ */
 export const addCustomComponents = async (
     flowInfo: Ajax.CustomComponentRequest, flowKey: string,
 ): Promise<void> => Ajax.fetchCustomComponents(flowInfo).then((customComponentResponse) => {
     customComponentResponse.forEach((component) => {
         // Increment the script load count
-        customComponentLoadCount += 1;
+        customComponentsLoadingCount += 1;
         const componentScriptTag = document.createElement('script');
         componentScriptTag.src = component.scriptURL;
-        componentScriptTag.onload = (): void => {
-            // Decrement the script load count
-            customComponentLoadCount -= 1;
-            // If there are no more scripts loading...
-            if (customComponentLoadCount === 0) {
-                // ...re-render the flow
-                Engine.render(flowKey);
-            }
-        };
+        // On load or error, decrement the load count
+        componentScriptTag.onload = finishLoadingCustomComponent(flowKey);
+        componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
         document.head.appendChild(componentScriptTag);
     });
 });
