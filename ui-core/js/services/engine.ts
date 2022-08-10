@@ -382,7 +382,8 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
     return Ajax.initialize(initializationRequest, tenantId, authenticationToken)
         .then(
-            async (response) => {
+            (response) => {
+
                 window.sessionStorage.setItem(`oauth-${response.stateId}`, JSON.stringify({
                     tenantId,
                     flowId,
@@ -432,7 +433,7 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
 
                 }
 
-                await Component.addCustomComponents({
+                Component.addCustomComponents({
                     tenantId: Utils.extractTenantId(flowKey),
                     flowId,
                     flowVersionId,
@@ -588,13 +589,13 @@ function joinWithAuthorization(callback, flowKey) {
     Formatting.initialize(flowKey);
 
     return Ajax.join(state.id, Utils.extractTenantId(flowKey), authenticationToken)
-        .then(async (response) => {
+        .then((response) => {
 
             if (notAllowed(response)) {
                 manywho.authorization.invokeAuthorization(response, flowKey);
             }
 
-            await Component.addCustomComponents({
+            Component.addCustomComponents({
                 tenantId: Utils.extractTenantId(flowKey),
                 flowId: response.flowId,
                 flowVersionId: response.flowVersion,
