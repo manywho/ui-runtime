@@ -23,7 +23,7 @@ const ajax = {
     flowOut: sinon.stub(),
     getNavigation: sinon.stub(),
     join: sinon.stub(),
-    fetchCustomComponents: sinon.stub(),
+    fetchCustomComponents: sinon.stub().resolves(),
 };
 
 const state = {
