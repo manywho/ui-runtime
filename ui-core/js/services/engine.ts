@@ -458,6 +458,12 @@ function initializeWithAuthorization(callback, tenantId, flowId, flowVersionId, 
                     && response.authorizationContext.authenticationType
                     && response.authorizationContext.authenticationType.toLowerCase() === 'saml';
 
+                // If the SAML session has expired in the runtime table of the engine db and we are initializing a new flow, 
+                // send the user to idp to reauthenticate and then let it retry instead of calling invoke for the first step
+                if (isSAML && response.statusCode === '401') {
+                    return onAuthorizationFailed(response, flowKey, callback);
+                }
+
                 const replaceUrl = Settings.flow('replaceUrl', flowKey);
 
                 if (flowKey && replaceUrl === false && (isOauth2 || isSAML)) {
