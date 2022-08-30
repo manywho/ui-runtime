@@ -13,7 +13,9 @@ const aliases = {};
 
 const DEFAULT_PAGE_LIMIT = 10;
 
+let customComponentsChecked = false;
 let customComponentsLoadingCount = 0;
+let isComponentWaitingForCustomComponents = false;
 
 function getComponentType(item) {
     if ('containerType' in item) {
@@ -108,8 +110,10 @@ export const get = (model: any) => {
     }
 
     // Custom components are being loaded...
-    if (customComponentsLoadingCount > 0) {
+    // ... or haven't been checked yet ...
+    if (customComponentsLoadingCount > 0 || customComponentsChecked === false) {
         // ..render a waiter until this is done
+        isComponentWaitingForCustomComponents = true;
         return this.getByName('wait');
     }
 
@@ -386,17 +390,30 @@ export const getPageSize = (model, flowKey) => {
 };
 
 /**
+ * Re-renders the flow if a component is known to be waiting for the custom components to be loaded
+ * and the custom components have finished loading
+ * @param flowKey
+ */
+const reRenderIfComponentIsWaiting = (flowKey: string): void => {
+    if (
+        // If there are no more scripts loading...
+        customComponentsLoadingCount === 0 &&
+        // ...re-render the flow if an element is waiting
+        isComponentWaitingForCustomComponents
+    ) {
+        Engine.render(flowKey);
+    }
+};
+
+/**
  * Decrement load count and re-render if all have loaded
  * @param flowKey
  */
 const finishLoadingCustomComponent = (flowKey: string) => (): void => {
     // Decrement the script load count
     customComponentsLoadingCount -= 1;
-    // If there are no more scripts loading...
-    if (customComponentsLoadingCount === 0) {
-        // ...re-render the flow
-        Engine.render(flowKey);
-    }
+    // Re-render if done loading
+    reRenderIfComponentIsWaiting(flowKey);
 };
 
 /**
@@ -408,9 +425,10 @@ const finishLoadingCustomComponent = (flowKey: string) => (): void => {
 export const addCustomComponents = async (
     flowInfo: Ajax.CustomComponentRequest, flowKey: string,
 ): Promise<void> => Ajax.fetchCustomComponents(flowInfo).then((customComponentResponse) => {
+    // Set the script load count
+    customComponentsLoadingCount = customComponentResponse.length;
+
     customComponentResponse.forEach((component) => {
-        // Increment the script load count
-        customComponentsLoadingCount += 1;
         const componentScriptTag = document.createElement('script');
         componentScriptTag.src = component.scriptURL;
         // On load or error, decrement the load count
@@ -418,4 +436,17 @@ export const addCustomComponents = async (
         componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
         document.head.appendChild(componentScriptTag);
     });
+
+    customComponentsChecked = true;
+
+    // Re-render if done loading
+    reRenderIfComponentIsWaiting(flowKey);
+}).catch((e) => {
+    Log.error(e);
+    // Set the loading count to 0 and the checked bool to true...
+    customComponentsLoadingCount = 0;
+    customComponentsChecked = true;
+    // ...and re-render the flow...
+    reRenderIfComponentIsWaiting(flowKey);
+    // ...so that now the temporary waiter goes and they can see 'not found' errors as normal
 });
