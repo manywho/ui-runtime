@@ -70,6 +70,7 @@ function pushStateFunc(): void {
     window2.history.pushState(null, null, document.URL);
 }
 
+// Cancel the back button so it can be custom made later during a move.
 pushStateFunc();
 window2.addEventListener('popstate', pushStateFunc);
 
