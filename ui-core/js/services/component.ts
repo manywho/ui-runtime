@@ -435,6 +435,13 @@ export const addCustomComponents = async (
         componentScriptTag.onload = finishLoadingCustomComponent(flowKey);
         componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
         document.head.appendChild(componentScriptTag);
+
+        if (component.styleSheetURL) {
+            const componentStylesheetTag = document.createElement('link');
+            componentStylesheetTag.href = component.styleSheetURL;
+            componentStylesheetTag.rel = 'stylesheet';
+            document.head.appendChild(componentStylesheetTag);
+        }
     });
 
     customComponentsChecked = true;
