@@ -468,3 +468,32 @@ export const downloadPdf = (stateId: string, fileId: string, filename: string, t
         filename,
     );
 };
+
+export interface CustomComponentRequest {
+    tenantId: string;
+    flowId: string;
+    flowVersionId: string;
+    authenticationToken: string | null;
+}
+
+export interface CustomComponentResponse {
+    key: string;
+    scriptURL: string;
+    styleSheetURL: string;
+}
+
+export const fetchCustomComponents = async ({
+    tenantId,
+    flowId,
+    flowVersionId,
+    authenticationToken,
+}: CustomComponentRequest): Promise<CustomComponentResponse[]> => Connection.request(
+    null,
+    'social',
+    `/api/run/1/flow/${flowId}/${flowVersionId}/customPageComponents`,
+    'GET',
+    tenantId,
+    null,
+    authenticationToken,
+    null,
+);

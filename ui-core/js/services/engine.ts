@@ -529,6 +529,13 @@ function initializeWithAuthorization(
           Model.setSelectedNavigation(options.navigationElementId, flowKey);
         }
 
+        Component.addCustomComponents({
+          tenantId: Utils.extractTenantId(flowKey),
+          flowId,
+          flowVersionId,
+          authenticationToken,
+        }, flowKey);
+
         Component.appendFlowContainer(flowKey);
         State.setComponentLoading(
           Utils.extractElement(flowKey),
@@ -737,6 +744,13 @@ function joinWithAuthorization(callback, flowKey) {
       if (notAllowed(response)) {
         manywho.authorization.invokeAuthorization(response, flowKey);
       }
+
+      Component.addCustomComponents({
+        tenantId: Utils.extractTenantId(flowKey),
+        flowId: response.flowId,
+        flowVersionId: response.flowVersion,
+        authenticationToken,
+      }, flowKey);
 
       return isAuthorized(response, flowKey);
     }, onInitializeFailed)
