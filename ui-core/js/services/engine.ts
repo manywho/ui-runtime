@@ -422,7 +422,7 @@ function initializeWithAuthorization(
   authenticationToken,
   stateId
 ) {
-    console.log("initializeWithAuthorization");
+  console.log("initializeWithAuthorization");
   let { flowKey } = callback;
   let streamId = null;
 
@@ -529,12 +529,15 @@ function initializeWithAuthorization(
           Model.setSelectedNavigation(options.navigationElementId, flowKey);
         }
 
-        Component.addCustomComponents({
-          tenantId: Utils.extractTenantId(flowKey),
-          flowId,
-          flowVersionId,
-          authenticationToken,
-        }, flowKey);
+        Component.addCustomComponents(
+          {
+            tenantId: Utils.extractTenantId(flowKey),
+            flowId,
+            flowVersionId,
+            authenticationToken,
+          },
+          flowKey
+        );
 
         Component.appendFlowContainer(flowKey);
         State.setComponentLoading(
@@ -692,6 +695,8 @@ function initializeWithAuthorization(
             [response]
           );
         }
+
+        return Utils.whenAll(deferreds);
       },
       // Invoke call failed
       (response) => notifyError(flowKey, response)
@@ -745,12 +750,15 @@ function joinWithAuthorization(callback, flowKey) {
         manywho.authorization.invokeAuthorization(response, flowKey);
       }
 
-      Component.addCustomComponents({
-        tenantId: Utils.extractTenantId(flowKey),
-        flowId: response.flowId,
-        flowVersionId: response.flowVersion,
-        authenticationToken,
-      }, flowKey);
+      Component.addCustomComponents(
+        {
+          tenantId: Utils.extractTenantId(flowKey),
+          flowId: response.flowId,
+          flowVersionId: response.flowVersion,
+          authenticationToken,
+        },
+        flowKey
+      );
 
       return isAuthorized(response, flowKey);
     }, onInitializeFailed)
