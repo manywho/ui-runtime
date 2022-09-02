@@ -716,7 +716,9 @@ function notAllowed(response) {
     // on a check to see if the loginUrl is blank as an indicator
     // that we should not redirect to login which could potentially
     // cause a login redirect loop.
-    !manywho.utils.isNullOrEmpty(response.authorizationContext.loginUrl)
+    ((!manywho.utils.isNullOrEmpty(response.authorizationContext.loginUrl) &&
+      response.statusCode === "401") ||
+      response.statusCode !== "403")
   );
 }
 
