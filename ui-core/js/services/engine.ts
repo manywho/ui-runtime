@@ -707,17 +707,28 @@ function initializeWithAuthorization(
     .then(() => flowKey);
 }
 
-function notAllowed(response) {
-  return (
+function shouldAuthenticate(response) {
+  if (
     response.invokeType === "NOT_ALLOWED" &&
-    response.authorizationContext !== null &&
+    response.authorizationContext !== null
+  ) {
+    // When authenticating with a connector:
     // If the user is authenticated but not authorized (forbidden).
     // Unfortunately we won't receive a 403 status code so rely
     // on a check to see if the loginUrl is blank as an indicator
     // that we should not redirect to login which could potentially
     // cause a login redirect loop.
-    !manywho.utils.isNullOrEmpty(response.authorizationContext.loginUrl)
-  );
+
+    // Identity providers will return a 403 status code for unauthorized
+
+    if (
+      !manywho.utils.isNullOrEmpty(response.authorizationContext.loginUrl) &&
+      response.statusCode === "401"
+    )
+      return true;
+  }
+
+  return false;
 }
 
 function joinWithAuthorization(callback, flowKey) {
@@ -746,7 +757,7 @@ function joinWithAuthorization(callback, flowKey) {
     authenticationToken
   )
     .then((response) => {
-      if (notAllowed(response)) {
+      if (shouldAuthenticate(response)) {
         manywho.authorization.invokeAuthorization(response, flowKey);
       }
 
@@ -1707,7 +1718,7 @@ function moveWithAuthorization(callback, invokeRequest, flowKey) {
   )
     .then(
       (response) => {
-        if (notAllowed(response)) {
+        if (shouldAuthenticate(response)) {
           manywho.authorization.invokeAuthorization(response, flowKey);
         }
 
