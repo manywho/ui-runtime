@@ -480,6 +480,8 @@ export interface CustomComponentResponse {
     key: string;
     scriptURL: string;
     styleSheetURL: string;
+    legacyScriptURL: string;
+    legacyStyleSheetURL: string;
 }
 
 export const fetchCustomComponents = async ({

@@ -430,11 +430,18 @@ export const addCustomComponents = async (
 
     customComponentResponse.forEach((component) => {
         const componentScriptTag = document.createElement('script');
-        componentScriptTag.src = component.scriptURL;
+        componentScriptTag.src = component.legacyScriptURL;
         // On load or error, decrement the load count
         componentScriptTag.onload = finishLoadingCustomComponent(flowKey);
         componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
         document.head.appendChild(componentScriptTag);
+
+        if (component.legacyStyleSheetURL) {
+            const componentStylesheetTag = document.createElement('link');
+            componentStylesheetTag.href = component.legacyStyleSheetURL;
+            componentStylesheetTag.rel = 'stylesheet';
+            document.head.appendChild(componentStylesheetTag);
+        }
     });
 
     customComponentsChecked = true;
