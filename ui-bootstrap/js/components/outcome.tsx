@@ -83,6 +83,10 @@ function getIcon(model) {
             return 'glyphicon-thumbs-down';
         case 'remove':
             return 'glyphicon-remove';
+        case 'back':
+            return 'glyphicon-arrow-left';
+        case 'next':
+            return 'glyphicon-arrow-right';
         default:
             return 'glyphicon-plus';
         }
