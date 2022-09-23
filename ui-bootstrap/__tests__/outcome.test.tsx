@@ -192,6 +192,34 @@ describe('Outcome component behaviour', () => {
         expect(componentWrapper.find('.glyphicon').hasClass('glyphicon-log-in')).toBe(true);
     });
 
+    test('Correct icon is rendered for Next outcome', () => {
+
+        globalAny.window.manywho.utils.isNullOrWhitespace = (str) => {
+            return str === 'next' ? false : true;
+        };
+
+        componentWrapper = manyWhoMount({
+            display: 'ICON',
+            pageActionType: 'next',
+        });
+
+        expect(componentWrapper.find('.glyphicon').hasClass('glyphicon-arrow-right')).toBe(true);
+    });
+
+    test('Correct icon is rendered for Back outcome', () => {
+
+        globalAny.window.manywho.utils.isNullOrWhitespace = (str) => {
+            return str === 'back' ? false : true;
+        };
+
+        componentWrapper = manyWhoMount({
+            display: 'ICON',
+            pageActionType: 'back',
+        });
+
+        expect(componentWrapper.find('.glyphicon').hasClass('glyphicon-arrow-left')).toBe(true);
+    });
+
     test('glyphicon type is not rendered when pageActionType and pageActionBindingType are null', () => {
 
         globalAny.window.manywho.utils.isNullOrWhitespace = x => x === null;
