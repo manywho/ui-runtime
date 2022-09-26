@@ -19,7 +19,25 @@ describe('Macro utilities behaviour', () => {
             developerName: 'test',
         };
 
-        const result = getProperty(testTypeId, CONTENT_TYPES.STRING, value);
+        const result = getProperty(testTypeId, [CONTENT_TYPES.STRING], value);
+        expect(result).toEqual(testContentValue);
+    });
+    test('If property is found when multiple valid content types are specified then return the property contentValue', () => {
+        const testTypeId = 'test id';
+        const testContentValue = 'test content value';
+        const value = {
+            properties: [
+                {
+                    contentType: 'ContentString',
+                    contentValue: testContentValue,
+                    developerName: 'test name',
+                    typeElementPropertyId: testTypeId,
+                },
+            ],
+            developerName: 'test',
+        };
+
+        const result = getProperty(testTypeId, [CONTENT_TYPES.STRING, CONTENT_TYPES.NUMBER, CONTENT_TYPES.BOOLEAN], value);
         expect(result).toEqual(testContentValue);
     });
     test('If property is found but is incorrect contentType then error is thrown', () => {
@@ -38,7 +56,7 @@ describe('Macro utilities behaviour', () => {
         };
 
         expect(() => {
-            getProperty(testTypeId, CONTENT_TYPES.NUMBER, value);
+            getProperty(testTypeId, [CONTENT_TYPES.NUMBER], value);
         }).toThrow(Error);
     });
     test('If objectdata has no properties key throw an error', () => {
@@ -48,7 +66,7 @@ describe('Macro utilities behaviour', () => {
         };
 
         expect(() => {
-            getProperty(testTypeId, CONTENT_TYPES.NUMBER, value);
+            getProperty(testTypeId, [CONTENT_TYPES.NUMBER], value);
         }).toThrow(Error);
     });
     test('If objectdata properties key is null then throw an error', () => {
@@ -59,7 +77,7 @@ describe('Macro utilities behaviour', () => {
         };
 
         expect(() => {
-            getProperty(testTypeId, CONTENT_TYPES.NUMBER, value);
+            getProperty(testTypeId, [CONTENT_TYPES.NUMBER], value);
         }).toThrow(Error);
     });
 

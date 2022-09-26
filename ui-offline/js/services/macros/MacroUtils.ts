@@ -2,20 +2,24 @@ import { CONTENT_TYPES } from '../../constants';
 import { clone } from '../Utils';
 import { getMacroState, setMacroState } from './MacroState';
 
+const containsContentType = (contentType: string, validContentTypes: string[]): boolean => validContentTypes.indexOf(contentType) >= 0;
+
 /**
  * @param typeElementPropertyId
- * @param contentType
+ * @param validContentTypes
  * @param value the value from which the object data property is to be extracted from
  * @description extracting a specific properties content value from some objectdata
  */
-export const getProperty = (typeElementPropertyId, contentType, objectData) => {
+export const getProperty = (typeElementPropertyId: string, validContentTypes: string[], objectData: any) => {
     if (objectData) {
         if (objectData.properties || objectData.properties !== null) {
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
-            if (specifiedProperty.contentType !== contentType) {
-                throw new Error(`${specifiedProperty.developerName} does not have a content type of ${contentType}`);
+            const isValidContentType = containsContentType(specifiedProperty.contentType, validContentTypes);
+            if (!isValidContentType) {
+                // eslint-disable-next-line max-len
+                throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
             }
-            if (contentType === CONTENT_TYPES.LIST || contentType === CONTENT_TYPES.OBJECT) {
+            if (containsContentType(CONTENT_TYPES.LIST, validContentTypes) || containsContentType(CONTENT_TYPES.OBJECT, validContentTypes)) {
                 return specifiedProperty.objectData;
             }
             return specifiedProperty.contentValue;
@@ -28,22 +32,25 @@ export const getProperty = (typeElementPropertyId, contentType, objectData) => {
 
 /**
  * @param typeElementPropertyId
- * @param contentType
+ * @param validContentTypes
  * @param newValue the new value to set to the objects property
  * @param value the value metadata that is to be modified
  * @description setting a specific properties content value from some objectdata
  */
-export const setProperty = (typeElementPropertyId, contentType, newValue, objectData) => {
+export const setProperty = (typeElementPropertyId: string, validContentTypes: string[], newValue: any, objectData: any) => {
     if (objectData) {
         if (objectData.properties || objectData.properties !== null) {
+
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
-            if (specifiedProperty.contentType !== contentType) {
-                throw new Error(`${specifiedProperty.developerName} does not have a content type of ${contentType}`);
+            const isValidContentType = containsContentType(specifiedProperty.contentType, validContentTypes);
+            if (!isValidContentType) {
+                // eslint-disable-next-line max-len
+                throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
             }
 
             // This is to account for setPropertyObject and setPropertyArray
             // both of which I am unsure as to how they work
-            if (contentType === CONTENT_TYPES.LIST || contentType === CONTENT_TYPES.OBJECT) {
+            if (containsContentType(CONTENT_TYPES.LIST, validContentTypes) || containsContentType(CONTENT_TYPES.OBJECT, validContentTypes)) {
                 specifiedProperty.objectData = newValue;
             } else {
                 specifiedProperty.contentValue = newValue;
