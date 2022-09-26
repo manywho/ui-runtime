@@ -90,7 +90,7 @@ function getPropertyObject(typeElementPropertyId: string) {
  * @param typeElementPropertyId
  * @param contentValue the new content value for the type property
  * @description sets the type element properties content value
- * for a property of any primiteive content type e.g string, number etc
+ * for a property of any primitive content type e.g string, number etc
  */
 function setPropertyValue(typeElementPropertyId: string, contentValue: string) {
     setProperty(
