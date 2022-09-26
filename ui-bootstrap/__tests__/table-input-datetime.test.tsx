@@ -34,7 +34,7 @@ describe('Table Input Datetime component behaviour', () => {
     let tableInputDatetimeWrapper;
     let props;
 
-    function manyWhoMount(value = null, isShallow = false, format = str(10), contentFormat = null) {
+    function manyWhoMount(value = null, isShallow = false, format = str(10)) {
         props = {
             value,
             format,
@@ -44,7 +44,6 @@ describe('Table Input Datetime component behaviour', () => {
             onChange: jest.fn(() => {
                 return true;
             }),
-            contentFormat,
         };
 
         if (isShallow === false)
@@ -84,7 +83,7 @@ describe('Table Input Datetime component behaviour', () => {
             useCurrent: false,
         };
 
-        tableInputDatetimeWrapper = manyWhoMount('07-12-1986', true, null, 'MM-DD-YYYY');
+        tableInputDatetimeWrapper = manyWhoMount('07-12-1986', true, 'MM-DD-YYYY');
         expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(
             expectedArgs,
         ); 
