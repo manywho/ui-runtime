@@ -76,9 +76,6 @@ class InputDateTime extends React.Component<IInputProps, null> {
     }
 
     setPickerDate(newDate) {
-        const datepickerElement = findDOMNode(this.refs['datepicker']);
-        const datepickerInstance = $(datepickerElement).data('DateTimePicker');
-
         let date = moment(
             newDate,
             [
@@ -95,22 +92,22 @@ class InputDateTime extends React.Component<IInputProps, null> {
         );
 
         if (newDate === null) {
-            datepickerInstance.date(null);
+            return null;
         } else if (this.isDateOnly) {
             // Create a new date with no time information
 
             // With a Date only input box, we do not show time,
             // so we do not want timezones and so use utc
-            datepickerInstance.date(UTCdate);
+            return UTCdate;
 
         } else {
 
             if (
                 manywho.settings.global('i18n.overrideTimezoneOffset', this.props.flowKey)
             ) {
-                datepickerInstance.date(date.local());
+                return date.local();
             } else {
-                datepickerInstance.date(UTCdate);
+                return UTCdate;
             }
         }
     }
@@ -159,6 +156,7 @@ class InputDateTime extends React.Component<IInputProps, null> {
                 manywho.formatting.toMomentFormat(model.contentFormat) ||
                 'MM/DD/YYYY',
             timeZone: 'UTC',
+            date: this.setPickerDate(this.props.value),
         })
             .on('dp.change', !this.props.isDesignTime && this.onChange);
 
@@ -167,8 +165,6 @@ class InputDateTime extends React.Component<IInputProps, null> {
         if (model.autoFocus) {
             $(datepickerElement).data('DateTimePicker').show();
         }
-
-        this.setPickerDate(this.props.value);
     }
 
     componentWillUnmount() {
@@ -177,10 +173,11 @@ class InputDateTime extends React.Component<IInputProps, null> {
     }
 
     componentDidUpdate() {
-        const newDate = this.props.value === ''
-            ? null
-            : this.props.value;
-        this.setPickerDate(newDate);
+        if (this.props.value === '') {
+            const datepickerElement = findDOMNode(this.refs['datepicker']);
+            const datepickerInstance = $(datepickerElement).data('DateTimePicker');
+            datepickerInstance.clear();
+        }
     }
 
     render() {
