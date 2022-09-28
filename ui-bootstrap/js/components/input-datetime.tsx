@@ -173,7 +173,9 @@ class InputDateTime extends React.Component<IInputProps, null> {
     }
 
     componentDidUpdate() {
-        if (this.props.value === '') {
+        // This makes sure that the date value gets cleared from the input field when
+        // it's visibility is toggled using a page condition
+        if (!this.props.value) {
             const datepickerElement = findDOMNode(this.refs['datepicker']);
             const datepickerInstance = $(datepickerElement).data('DateTimePicker');
             datepickerInstance.clear();
