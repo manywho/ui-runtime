@@ -912,6 +912,183 @@ describe('ItemsContainer component behaviour', () => {
         expect(objectData[2].order).toEqual(2);
     });
 
+    test('When sorting strings any empty values are last in the sort order', () => {
+        const testData = [
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 0,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentString',
+                        contentValue: 'a string',
+                        developerName: 'string',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 1,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentString',
+                        contentValue: null,
+                        developerName: 'string',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 2,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentString',
+                        contentValue: 'c string',
+                        developerName: 'string',
+                        objectData: null,
+                    },
+                ],
+            },
+        ];
+        
+        componentWrapper = manyWhoMount();
+        const objectData = Object.assign([], testData);
+
+        objectData.sort(componentWrapper.instance().compare('string', false));
+        expect(objectData[0].order).toEqual(2);
+        expect(objectData[1].order).toEqual(0);
+        expect(objectData[2].order).toEqual(1);
+        objectData.sort(componentWrapper.instance().compare('string', true));
+        expect(objectData[0].order).toEqual(0);
+        expect(objectData[1].order).toEqual(2);
+        expect(objectData[2].order).toEqual(1);
+    });
+
+    test('When sorting numbers any empty values are last in the sort order', () => {
+        const testData = [
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 0,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentNumber',
+                        contentValue: 1,
+                        developerName: 'number',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 1,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentNumber',
+                        contentValue: null,
+                        developerName: 'number',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 2,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentNumber',
+                        contentValue: 3,
+                        developerName: 'number',
+                        objectData: null,
+                    },
+                ],
+            },
+        ];
+        
+        componentWrapper = manyWhoMount();
+        const objectData = Object.assign([], testData);
+
+        objectData.sort(componentWrapper.instance().compare('number', false));
+        expect(objectData[0].order).toEqual(2);
+        expect(objectData[1].order).toEqual(0);
+        expect(objectData[2].order).toEqual(1);
+        objectData.sort(componentWrapper.instance().compare('number', true));
+        expect(objectData[0].order).toEqual(0);
+        expect(objectData[1].order).toEqual(2);
+        expect(objectData[2].order).toEqual(1);
+    });
+
+    test('When sorting dates any empty values are last in the sort order', () => {
+        const testData = [
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 0,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentDateTime',
+                        contentValue: '2019-05-01T16:38:00+01:00',
+                        developerName: 'date',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 1,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentDateTime',
+                        contentValue: null,
+                        developerName: 'date',
+                        objectData: null,
+                    },
+                ],
+            },
+            {
+                developerName: 'OneOfEach',
+                isSelected: false,
+                order: 2,
+                properties: [
+                    {
+                        contentFormat: '',
+                        contentType: 'ContentDateTime',
+                        contentValue: '2019-05-03T16:38:00+01:00',
+                        developerName: 'date',
+                        objectData: null,
+                    },
+                ],
+            },
+        ];
+        
+        componentWrapper = manyWhoMount();
+        const objectData = Object.assign([], testData);
+
+        objectData.sort(componentWrapper.instance().compare('date', false));
+        expect(objectData[0].order).toEqual(2);
+        expect(objectData[1].order).toEqual(0);
+        expect(objectData[2].order).toEqual(1);
+        objectData.sort(componentWrapper.instance().compare('date', true));
+        expect(objectData[0].order).toEqual(0);
+        expect(objectData[1].order).toEqual(2);
+        expect(objectData[2].order).toEqual(1);
+    });
+
     test('Verify sort method handles contentType:string', () => {
         componentWrapper = manyWhoMount();
         const objectData = Object.assign([], sortingTestData);
