@@ -164,58 +164,86 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
                 return 0;
             }
 
-            let result = 0;
-            switch (l.contentType.toUpperCase()) {
-                case manywho.component.contentTypes.password: // Fallthrough
-                case manywho.component.contentTypes.content: // Fallthrough
-                case manywho.component.contentTypes.string:
-                    if (!l.contentValue || !r.contentValue) {
-                        result = 0;
-                    } else {
-                        result = l.contentValue.localeCompare(r.contentValue);
-                    }
-                    
-                    break;
-            case manywho.component.contentTypes.date: 
-            case manywho.component.contentTypes.datetime: {
+            const determineStringComparison = (): number => {
+
+                // Ensure empty values always appear last
+                if (!l.contentValue) {
+                    return sortedIsAscending ? 1 : -1;
+                }
+                
+                if (!r.contentValue) {
+                    return sortedIsAscending ? -1 : 1;
+                }
+                
+                return l.contentValue.localeCompare(r.contentValue);
+            };
+
+            const determineNumericalComparison = (): number => {
+                const leftParsed = parseFloat(l.contentValue);
+                const rightParsed = parseFloat(r.contentValue);
+
+                // Ensure empty values always appear last
+                if (Number.isNaN(leftParsed)) {
+                    return sortedIsAscending ? 1 : -1;
+                }
+                
+                if (Number.isNaN(rightParsed)) {
+                    return sortedIsAscending ? -1 : 1;
+                }
+                
+                return leftParsed - rightParsed;
+            };
+
+            const determineDateComparison = (): number => {
                 // moment will ignore a format supplied as an empty string
                 // if there is no format supplied contentValue will be a full datetime stamp eg. "2020-12-10T10:39:00+02:00"
                 // moment will correctly parse a string in this format with no format supplied as a second argument
                 // moment requires 'd' and 'y' characters in the format to be uppercase
 
-                const chars = {'d':'D','y':'Y'};
+                const chars = { d: 'D', y: 'Y' };
 
-                const leftFormat = (l.contentFormat || "").replace(/[dy]/g, key => chars[key]);
-                const rightFormat = (r.contentFormat || "").replace(/[dy]/g, key => chars[key]);
+                const leftFormat = (l.contentFormat || '').replace(/[dy]/g, (key) => chars[key]);
+                const rightFormat = (r.contentFormat || '').replace(/[dy]/g, (key) => chars[key]);
 
                 const leftParsed = moment(l.contentValue, leftFormat);
                 const rightParsed = moment(r.contentValue, rightFormat);
 
-                if (leftParsed.isBefore(rightParsed)) {
-                    result = -1;
-                } else if (leftParsed.isAfter(rightParsed)) {
-                    result = 1;
-                } else {
-                    result = 0;
-                }
-
-                break;
-            }
-
-            case manywho.component.contentTypes.number: {
-
-                const leftParsed = parseFloat(l.contentValue);
-                const rightParsed = parseFloat(r.contentValue);
-
-                if (isNaN(leftParsed) || isNaN(rightParsed)) {
-                    result = 0;
-                } else {
-                    result = leftParsed - rightParsed;
+                // Ensure empty values always appear last
+                if (!leftParsed.isValid()) {
+                    return sortedIsAscending ? 1 : -1;
                 }
                 
+                if (!rightParsed.isValid()) {
+                    return sortedIsAscending ? -1 : 1;
+                }
+                
+                if (leftParsed.isBefore(rightParsed)) {
+                    return -1;
+                }
+                
+                if (leftParsed.isAfter(rightParsed)) {
+                    return 1;
+                }
+
+                return 0;
+            };
+
+            let result = 0;
+            switch (l.contentType.toUpperCase()) {
+                case manywho.component.contentTypes.password: // Fallthrough
+                case manywho.component.contentTypes.content: // Fallthrough
+                case manywho.component.contentTypes.string:
+                    result = determineStringComparison();
+                    break;
+            case manywho.component.contentTypes.date: 
+            case manywho.component.contentTypes.datetime: {
+                result = determineDateComparison();
                 break;
             }
-
+            case manywho.component.contentTypes.number: {
+                result = determineNumericalComparison();
+                break;
+            }
             case manywho.component.contentTypes.boolean:
                 if (checkBooleanString(l.contentValue) === checkBooleanString(r.contentValue)) {
                     result = 0;
@@ -225,7 +253,6 @@ class ItemsContainer extends React.Component<IComponentProps, IItemsContainerSta
                     result = 1;
                 }
                 break;
-
             default:
                 result = 0;
                 break;
