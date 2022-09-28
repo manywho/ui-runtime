@@ -2,8 +2,6 @@ import { CONTENT_TYPES } from '../../constants';
 import { clone } from '../Utils';
 import { getMacroState, setMacroState } from './MacroState';
 
-const containsContentType = (contentType: string, validContentTypes: string[]): boolean => validContentTypes.indexOf(contentType) >= 0;
-
 /**
  * @param typeElementPropertyId
  * @param validContentTypes
@@ -14,12 +12,12 @@ export const getProperty = (typeElementPropertyId: string, validContentTypes: st
     if (objectData) {
         if (objectData.properties || objectData.properties !== null) {
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
-            const isValidContentType = containsContentType(specifiedProperty.contentType, validContentTypes);
+            const isValidContentType = validContentTypes.includes(specifiedProperty.contentType);
             if (!isValidContentType) {
                 // eslint-disable-next-line max-len
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
             }
-            if (containsContentType(CONTENT_TYPES.LIST, validContentTypes) || containsContentType(CONTENT_TYPES.OBJECT, validContentTypes)) {
+            if (validContentTypes.includes(CONTENT_TYPES.LIST) || validContentTypes.includes(CONTENT_TYPES.OBJECT)) {
                 return specifiedProperty.objectData;
             }
             return specifiedProperty.contentValue;
@@ -42,7 +40,7 @@ export const setProperty = (typeElementPropertyId: string, validContentTypes: st
         if (objectData.properties || objectData.properties !== null) {
 
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
-            const isValidContentType = containsContentType(specifiedProperty.contentType, validContentTypes);
+            const isValidContentType = validContentTypes.includes(specifiedProperty.contentType);
             if (!isValidContentType) {
                 // eslint-disable-next-line max-len
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
@@ -50,7 +48,7 @@ export const setProperty = (typeElementPropertyId: string, validContentTypes: st
 
             // This is to account for setPropertyObject and setPropertyArray
             // both of which I am unsure as to how they work
-            if (containsContentType(CONTENT_TYPES.LIST, validContentTypes) || containsContentType(CONTENT_TYPES.OBJECT, validContentTypes)) {
+            if (validContentTypes.includes(CONTENT_TYPES.LIST) || validContentTypes.includes(CONTENT_TYPES.OBJECT)) {
                 specifiedProperty.objectData = newValue;
             } else {
                 specifiedProperty.contentValue = newValue;
