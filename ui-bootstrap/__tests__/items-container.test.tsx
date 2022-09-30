@@ -962,13 +962,13 @@ describe('ItemsContainer component behaviour', () => {
         const objectData = Object.assign([], testData);
 
         objectData.sort(componentWrapper.instance().compare('string', false));
-        expect(objectData[0].order).toEqual(2);
-        expect(objectData[1].order).toEqual(0);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual('c string');
+        expect(objectData[1].properties[0].contentValue).toEqual('a string');
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
         objectData.sort(componentWrapper.instance().compare('string', true));
-        expect(objectData[0].order).toEqual(0);
-        expect(objectData[1].order).toEqual(2);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual('a string');
+        expect(objectData[1].properties[0].contentValue).toEqual('c string');
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
     });
 
     test('When sorting numbers any empty values are last in the sort order', () => {
@@ -1021,13 +1021,13 @@ describe('ItemsContainer component behaviour', () => {
         const objectData = Object.assign([], testData);
 
         objectData.sort(componentWrapper.instance().compare('number', false));
-        expect(objectData[0].order).toEqual(2);
-        expect(objectData[1].order).toEqual(0);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual(3);
+        expect(objectData[1].properties[0].contentValue).toEqual(1);
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
         objectData.sort(componentWrapper.instance().compare('number', true));
-        expect(objectData[0].order).toEqual(0);
-        expect(objectData[1].order).toEqual(2);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual(1);
+        expect(objectData[1].properties[0].contentValue).toEqual(3);
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
     });
 
     test('When sorting dates any empty values are last in the sort order', () => {
@@ -1080,13 +1080,13 @@ describe('ItemsContainer component behaviour', () => {
         const objectData = Object.assign([], testData);
 
         objectData.sort(componentWrapper.instance().compare('date', false));
-        expect(objectData[0].order).toEqual(2);
-        expect(objectData[1].order).toEqual(0);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual('2019-05-03T16:38:00+01:00');
+        expect(objectData[1].properties[0].contentValue).toEqual('2019-05-01T16:38:00+01:00');
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
         objectData.sort(componentWrapper.instance().compare('date', true));
-        expect(objectData[0].order).toEqual(0);
-        expect(objectData[1].order).toEqual(2);
-        expect(objectData[2].order).toEqual(1);
+        expect(objectData[0].properties[0].contentValue).toEqual('2019-05-01T16:38:00+01:00');
+        expect(objectData[1].properties[0].contentValue).toEqual('2019-05-03T16:38:00+01:00');
+        expect(objectData[2].properties[0].contentValue).toEqual(null);
     });
 
     test('Verify sort method handles contentType:string', () => {
