@@ -13,28 +13,7 @@ const mockDatetimepicker = jest.fn((options) => {
 
 globalAny['datetimepickerMock'] = mockDatetimepicker;
 
-const mockDateObject = {
-    utc() {
-        return mockDateObject;
-    },
-    local() {
-        return true;
-    },
-    format() {
-        return str();
-    },
-    year() {
-        return 'xxx';
-    },
-    month() {
-        return 'xxx';
-    },
-    date() {
-        return 'xxx';
-    }
-}
-
-jest.mock('moment', mockDateObject);
+const mockClear = jest.fn()
 
 jest.mock('jquery', () => {
     return jest.fn(() => {
@@ -43,6 +22,7 @@ jest.mock('jquery', () => {
             data: () => ({
                 date: () => 'xxx',
                 destroy: () => {},
+                clear: mockClear,
             }),
         };
     });
@@ -91,6 +71,7 @@ describe('InputDateTime component behaviour', () => {
 
     afterEach(() => {
         componentWrapper.unmount();
+        globalAny.datetimepickerMock.mockClear();
     });
 
     test('Component renders without crashing', () => {
@@ -130,14 +111,16 @@ describe('InputDateTime component behaviour', () => {
         );
     });
 
-    test('setPickerDate is called with correct null value', () => {
+    // This tests the scenario whereby a page condition triggers the date input to be
+    // hidden then reappear. In which case the input value needs to be cleared.
+    test('If the component updates with a falsey value prop then clear the date pickers contents', () => {
         const mockSetPickerDate = jest.spyOn(InputDateTime.prototype, 'setPickerDate');
 
         componentWrapper = manyWhoMount(false, false, 'YYYY/MM/DD', '2018/12/25');
         expect(mockSetPickerDate).toHaveBeenCalledWith('2018/12/25');
 
         componentWrapper.setProps({ value: null });
-        expect(mockSetPickerDate).toHaveBeenCalledWith(null);
+        expect(mockClear).toHaveBeenCalled();
     });
 
     test('make sure backspace doesn\'t clear input', () => {
@@ -155,9 +138,20 @@ describe('InputDateTime component behaviour', () => {
 
         componentWrapper = manyWhoMount(false, false, 'YYYY/MM/DD', '2018/12/25');
         expect(mockSetPickerDate).toHaveBeenCalledWith('2018/12/25');
-
-        componentWrapper.setProps({ value: '2017/11/24' });
-        expect(mockSetPickerDate).toHaveBeenCalledWith('2017/11/24');
     });
 
+    // By default the date time picker should display it's content value in UTC
+    test('Date times are output in UTC format', () => {
+        globalAny.window.manywho.settings.global.mockImplementation(() => false);
+        componentWrapper = manyWhoMount(false, false, 'DD/MM/YYYY HH:mm:ss', '2022-02-16T17:00:00.0000000+00:00');
+        expect(globalAny.datetimepickerMock.mock.calls[0][0].date.isUTC()).toEqual(true);
+    });
+
+    // Date times can displayed in local time (derived from the browser) if
+    // a player setting is enabled
+    test('overrideTimezoneOffset setting makes date times output in local time', () => {
+        globalAny.window.manywho.settings.global.mockImplementation(() => true);
+        componentWrapper = manyWhoMount(false, false, 'DD/MM/YYYY HH:mm:ss', '2022-02-16T17:00:00.0000000+00:00');
+        expect(globalAny.datetimepickerMock.mock.calls[0][0].date.isUTC()).toEqual(false);
+    });
 });
