@@ -33,8 +33,11 @@ export const invokeMacroWorker = (operation: any, state: any, snapshot: any) => 
     if (macro) {
         const worker = new Worker();
 
+        // https://stackoverflow.com/a/59094308
+        const removeComments = (string: string): string => string.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '').trim();
+
         worker.postMessage(
-            JSON.stringify({ state, metadata: snapshot.metadata, macro: macro.code }),
+            JSON.stringify({ state, metadata: snapshot.metadata, macro: removeComments(macro.code) }),
         );
 
         worker.onmessage = (workerResponse) => {

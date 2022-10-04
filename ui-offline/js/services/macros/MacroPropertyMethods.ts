@@ -6,7 +6,12 @@ import { getProperty, setProperty, toEngineUTCStringFormat } from './MacroUtils'
  * @description returns the type element properties content value
  */
 function getPropertyValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.STRING, this);
+    return getProperty(
+        typeElementPropertyId,
+        [CONTENT_TYPES.STRING, CONTENT_TYPES.CONTENT, CONTENT_TYPES.PASSWORD, CONTENT_TYPES.BOOLEAN, CONTENT_TYPES.NUMBER, CONTENT_TYPES.DATETIME],
+        this,
+    );
+
 }
 
 /**
@@ -15,7 +20,7 @@ function getPropertyValue(typeElementPropertyId: string) {
  * for a property of content type - string
  */
 function getPropertyStringValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.STRING, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.STRING], this);
 }
 
 /**
@@ -24,7 +29,7 @@ function getPropertyStringValue(typeElementPropertyId: string) {
  * for a property of content type - content
  */
 function getPropertyContentValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.CONTENT, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.CONTENT], this);
 }
 
 /**
@@ -33,7 +38,7 @@ function getPropertyContentValue(typeElementPropertyId: string) {
  * for a property of content type - password
  */
 function getPropertyPasswordValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.PASSWORD, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.PASSWORD], this);
 }
 
 /**
@@ -42,7 +47,7 @@ function getPropertyPasswordValue(typeElementPropertyId: string) {
  * for a property of content type - number
  */
 function getPropertyNumberValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.NUMBER, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.NUMBER], this);
 }
 
 /**
@@ -51,7 +56,7 @@ function getPropertyNumberValue(typeElementPropertyId: string) {
  * for a property of content type - datetime
  */
 function getPropertyDateTimeValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.DATETIME, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.DATETIME], this);
 }
 
 /**
@@ -60,7 +65,7 @@ function getPropertyDateTimeValue(typeElementPropertyId: string) {
  * for a property of content type - boolean
  */
 function getPropertyBooleanValue(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.BOOLEAN, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.BOOLEAN], this);
 }
 
 /**
@@ -69,7 +74,7 @@ function getPropertyBooleanValue(typeElementPropertyId: string) {
  * for a property of content type - list
  */
 function getPropertyArray(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.LIST, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.LIST], this);
 }
 
 /**
@@ -78,17 +83,22 @@ function getPropertyArray(typeElementPropertyId: string) {
  * for a property of content type - object
  */
 function getPropertyObject(typeElementPropertyId: string) {
-    return getProperty(typeElementPropertyId, CONTENT_TYPES.OBJECT, this);
+    return getProperty(typeElementPropertyId, [CONTENT_TYPES.OBJECT], this);
 }
 
 /**
  * @param typeElementPropertyId
  * @param contentValue the new content value for the type property
  * @description sets the type element properties content value
- * for a property of content type - string, to the passed in value
+ * for a property of any primitive content type e.g string, number etc
  */
 function setPropertyValue(typeElementPropertyId: string, contentValue: string) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.STRING, contentValue, this);
+    setProperty(
+        typeElementPropertyId,
+        [CONTENT_TYPES.STRING, CONTENT_TYPES.CONTENT, CONTENT_TYPES.PASSWORD, CONTENT_TYPES.BOOLEAN, CONTENT_TYPES.NUMBER, CONTENT_TYPES.DATETIME],
+        contentValue,
+        this,
+    );
 }
 
 /**
@@ -98,7 +108,7 @@ function setPropertyValue(typeElementPropertyId: string, contentValue: string) {
  * for a property of content type - string, to the passed in value
  */
 function setPropertyStringValue(typeElementPropertyId: string, contentValue: string) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.STRING, contentValue, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.STRING], contentValue, this);
 }
 
 /**
@@ -108,7 +118,7 @@ function setPropertyStringValue(typeElementPropertyId: string, contentValue: str
  * for a property of content type - content, to the passed in value
  */
 function setPropertyContentValue(typeElementPropertyId: string, contentValue: string) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.CONTENT, contentValue, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.CONTENT], contentValue, this);
 }
 
 /**
@@ -118,7 +128,7 @@ function setPropertyContentValue(typeElementPropertyId: string, contentValue: st
  * for a property of content type - password, to the passed in value
  */
 function setPropertyPasswordValue(typeElementPropertyId: string, contentValue: string) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.PASSWORD, contentValue, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.PASSWORD], contentValue, this);
 }
 
 /**
@@ -128,7 +138,7 @@ function setPropertyPasswordValue(typeElementPropertyId: string, contentValue: s
  * for a property of content type - number, to the passed in value
  */
 function setPropertyNumberValue(typeElementPropertyId: string, contentValue: string | number) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.NUMBER, contentValue, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.NUMBER], contentValue, this);
 }
 
 /**
@@ -138,7 +148,7 @@ function setPropertyNumberValue(typeElementPropertyId: string, contentValue: str
  * for a property of content type - datetime, to the passed in value converted to UTC datetime
  */
 function setPropertyDateTimeValue(typeElementPropertyId: string, contentValue) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.DATETIME, toEngineUTCStringFormat(contentValue), this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.DATETIME], toEngineUTCStringFormat(contentValue), this);
 }
 
 /**
@@ -148,7 +158,7 @@ function setPropertyDateTimeValue(typeElementPropertyId: string, contentValue) {
  * for a property of content type - boolean, to the passed in value
  */
 function setPropertyBooleanValue(typeElementPropertyId: string, contentValue: string | boolean) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.BOOLEAN, contentValue, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.BOOLEAN], contentValue, this);
 }
 
 /**
@@ -158,7 +168,7 @@ function setPropertyBooleanValue(typeElementPropertyId: string, contentValue: st
  * for a property of content type - list, to the passed in value
  */
 function setPropertyArray(typeElementPropertyId: string, objectData: any) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.LIST, objectData, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.LIST], objectData, this);
 }
 
 /**
@@ -168,7 +178,7 @@ function setPropertyArray(typeElementPropertyId: string, objectData: any) {
  * for a property of content type - object, to the passed in value
  */
 function setPropertyObject(typeElementPropertyId: string, objectData: any) {
-    setProperty(typeElementPropertyId, CONTENT_TYPES.OBJECT, objectData, this);
+    setProperty(typeElementPropertyId, [CONTENT_TYPES.OBJECT], objectData, this);
 }
 
 export default {
