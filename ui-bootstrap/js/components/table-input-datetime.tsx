@@ -3,13 +3,13 @@ import { findDOMNode } from 'react-dom';
 import * as $ from 'jquery';
 import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
-import ITableInputDateTimeProps from '../interfaces/ITableInputDateTimeProps';
+import TableInputDateTimeProps from '../interfaces/ITableInputDateTimeProps';
 
 import '../lib/100-datetimepicker.js';
 
 declare var manywho: any;
 
-class TableInputDateTime extends React.Component<ITableInputDateTimeProps, null> {
+class TableInputDateTime extends React.Component<TableInputDateTimeProps, null> {
 
     datetime = null;
 
@@ -31,7 +31,7 @@ class TableInputDateTime extends React.Component<ITableInputDateTimeProps, null>
             this.props.value ? 
             moment(
                 this.props.value, 
-                [this.props.contentFormat || '', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
+                [this.props.format || '', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
             ) : 
             null;
 
