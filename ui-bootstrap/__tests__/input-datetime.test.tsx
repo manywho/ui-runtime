@@ -114,30 +114,30 @@ describe('InputDateTime component behaviour', () => {
     // This tests the scenario whereby a page condition triggers the date input to be
     // hidden then reappear. In which case the input value needs to be cleared.
     test('If the component updates with a falsey value prop then clear the date pickers contents', () => {
-        const mockSetPickerDate = jest.spyOn(InputDateTime.prototype, 'setPickerDate');
+        const mockSetGetDate = jest.spyOn(InputDateTime.prototype, 'getDate');
 
         componentWrapper = manyWhoMount(false, false, 'YYYY/MM/DD', '2018/12/25');
-        expect(mockSetPickerDate).toHaveBeenCalledWith('2018/12/25');
+        expect(mockSetGetDate).toHaveBeenCalledWith('2018/12/25');
 
         componentWrapper.setProps({ value: null });
         expect(mockClear).toHaveBeenCalled();
     });
 
     test('make sure backspace doesn\'t clear input', () => {
-        const mockSetPickerDate = jest.spyOn(InputDateTime.prototype, 'setPickerDate');
+        const mockSetGetDate = jest.spyOn(InputDateTime.prototype, 'getDate');
 
         componentWrapper = manyWhoMount(false, false, 'DD/MM/YYYY', '25/12/2018');
-        expect(mockSetPickerDate).toHaveBeenCalledWith('25/12/2018');
+        expect(mockSetGetDate).toHaveBeenCalledWith('25/12/2018');
 
         componentWrapper.find(InputDateTime).simulate('keydown', {keyCode: 8});
         expect(componentWrapper.find(InputDateTime).props().value).toBeTruthy();
     });
 
-    test('setPickerDate is called with correct date value', () => {
-        const mockSetPickerDate = jest.spyOn(InputDateTime.prototype, 'setPickerDate');
+    test('getDate is called with correct date value', () => {
+        const mockSetGetDate = jest.spyOn(InputDateTime.prototype, 'getDate');
 
         componentWrapper = manyWhoMount(false, false, 'YYYY/MM/DD', '2018/12/25');
-        expect(mockSetPickerDate).toHaveBeenCalledWith('2018/12/25');
+        expect(mockSetGetDate).toHaveBeenCalledWith('2018/12/25');
     });
 
     // By default the date time picker should display it's content value in UTC
