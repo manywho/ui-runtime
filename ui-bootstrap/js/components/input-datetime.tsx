@@ -75,15 +75,17 @@ class InputDateTime extends React.Component<IInputProps, null> {
         }
     }
 
-    setPickerDate(newDate) {
-        let date = moment(
+    // eslint-disable-next-line react/sort-comp
+    getDate(newDate): moment.Moment
+    {
+        const date = moment(
             newDate,
             [
                 'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ',
                 moment.ISO_8601,
             ],
         );
-        let UTCdate = moment.utc(
+        const UTCdate = moment.utc(
             newDate,
             [
                 'MM/DD/YYYY hh:mm:ss A ZZ', 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ',
@@ -112,7 +114,15 @@ class InputDateTime extends React.Component<IInputProps, null> {
         }
     }
 
-    componentDidMount() {
+    setPickerDate(newDate): void {
+        const datepickerElement = findDOMNode(this.refs['datepicker']);
+        const datepickerInstance = $(datepickerElement).data('DateTimePicker');
+
+        const date = this.getDate(newDate);
+        datepickerInstance.date(date);
+    }
+
+    componentDidMount(): void {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
         let useCurrent = false;
@@ -156,7 +166,7 @@ class InputDateTime extends React.Component<IInputProps, null> {
                 manywho.formatting.toMomentFormat(model.contentFormat) ||
                 'MM/DD/YYYY',
             timeZone: 'UTC',
-            date: this.setPickerDate(this.props.value),
+            date: this.getDate(this.props.value),
         })
             .on('dp.change', !this.props.isDesignTime && this.onChange);
 
@@ -179,6 +189,11 @@ class InputDateTime extends React.Component<IInputProps, null> {
             const datepickerElement = findDOMNode(this.refs['datepicker']);
             const datepickerInstance = $(datepickerElement).data('DateTimePicker');
             datepickerInstance.clear();
+        } else {
+            const newDate = this.props.value === ''
+                ? null
+                : this.props.value;
+            this.setPickerDate(newDate);
         }
     }
 
