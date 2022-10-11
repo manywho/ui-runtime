@@ -75,8 +75,8 @@ class InputDateTime extends React.Component<IInputProps, null> {
         }
     }
 
-    // eslint-disable-next-line react/sort-comp
-    getDate(newDate): moment.Moment
+
+    getDate(newDate)
     {
         const date = moment(
             newDate,
