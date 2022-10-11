@@ -107,6 +107,8 @@
 
                 playerUrl.searchParams.delete('flow-id');
                 playerUrl.searchParams.delete('flow-version-id');
+                playerUrl.searchParams.delete('authorization');
+                playerUrl.searchParams.delete('initialization');
 
                 manywho.settings.initialize({
                     platform: {
