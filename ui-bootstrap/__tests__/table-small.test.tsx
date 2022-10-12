@@ -166,10 +166,10 @@ describe('Table Small input component behaviour', () => {
     test('onClick gets added to rows when there is a single, non-destructive outcome', () => {
         const internalId1 = str();
         const internalId2 = str();
-        const pageActionBindingType = str();
+        const pageActionType = str();
 
         globalAny.window.manywho.utils.isEqual = (a) => {
-            if (a === pageActionBindingType) {
+            if (a === pageActionType) {
                 return false;
             }
         };
@@ -177,7 +177,7 @@ describe('Table Small input component behaviour', () => {
         tableSmallWrapper = manyWhoMount({
             outcomes: [
                 {
-                    pageActionBindingType,
+                    pageActionType,
                     id: str(),
                 },
             ],
@@ -194,6 +194,46 @@ describe('Table Small input component behaviour', () => {
         expect(
             tableSmallWrapper.find(`li#${internalId2}`).first().props()['onClick'],
         ).toBe(
+            tableSmallWrapper.instance().onItemClick,
+        );
+    });
+
+    test('onClick doesnt get added to rows when there is a single, destructive outcome', () => {
+        const internalId1 = str();
+        const internalId2 = str();
+        const pageActionType = str();
+
+        globalAny.window.manywho.utils.isEqual = (a) => {
+            if (a === pageActionType) {
+                return true;
+            }
+        };
+        
+        tableSmallWrapper = manyWhoMount({
+            outcomes: [
+                {
+                    pageActionType,
+                    id: str(),
+                },
+            ],
+            objectData: [
+                {
+                    internalId: internalId1,
+                },
+                {
+                    internalId: internalId2,
+                },
+            ],
+        });
+
+        expect(
+            tableSmallWrapper.find('.glyphicon-chevron-right').length,
+        ).toBe(
+            0,
+        );
+        expect(
+            tableSmallWrapper.find(`li#${internalId2}`).first().props()['onClick'],
+        ).not.toBe(
             tableSmallWrapper.instance().onItemClick,
         );
     });
