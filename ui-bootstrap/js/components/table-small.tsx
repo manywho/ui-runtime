@@ -88,8 +88,8 @@ class TableSmall extends React.Component<ITableSmallProps, null> {
             };
 
             const isOutcomeDestructive = outcomes.filter(
-                outcome => manywho.utils.isEqual(outcome.pageActionBindingType, 'remove', true) ||
-                    manywho.utils.isEqual(outcome.pageActionBindingType, 'delete', true),
+                outcome => manywho.utils.isEqual(outcome.pageActionType, 'remove', true) ||
+                    manywho.utils.isEqual(outcome.pageActionType, 'delete', true),
             ).length > 0;
 
             let chevron = null;

@@ -7,7 +7,7 @@ interface ITableSmallProps extends IComponentProps {
     objectData: any;
     outcomes: { 
         id: string;
-        pageActionBindingType: string; 
+        pageActionType: string; 
     }[];
     displayColumns: IColumn[];
     selectedRows: any[];
