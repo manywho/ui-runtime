@@ -19,6 +19,7 @@ import * as Tours from "./tours";
 import * as Utils from "./utils";
 import * as Validation from "./validation";
 import { ohCanada } from "./localisation";
+import { FAILED_REQUIREMENT, UNAUTHORIZED_INITIALIZED_ERROR_MESSAGES } from '../../constants';
 
 declare let manywho: any;
 declare let window: any;
@@ -185,7 +186,24 @@ function notifyError(flowKey, response) {
   }
 }
 
-function onInitializeFailed(response) {
+function onInitializeFailed(response) {  
+    let errorMessage = response.responseText || response.statusText;
+
+    if (response.status === 403) {
+        const error = JSON.parse(response.responseText);
+      
+        if (error.failedRequirement) {
+            switch (error.failedRequirement) {
+              case FAILED_REQUIREMENT.RuntimeEnvironmentCheckRequirement:
+                errorMessage = UNAUTHORIZED_INITIALIZED_ERROR_MESSAGES.RuntimeEnvironmentCheckRequirement;
+                break;
+              default:
+                errorMessage = UNAUTHORIZED_INITIALIZED_ERROR_MESSAGES.Default;
+                break;
+            }
+        }
+    }
+
   const container = document.querySelector(
     Settings.global("containerSelector", null, "#manywho")
   );
@@ -193,7 +211,7 @@ function onInitializeFailed(response) {
 
   const alert = document.createElement("div");
   alert.className = "alert alert-danger initialize-error";
-  alert.innerText = response.responseText || response.statusText;
+  alert.innerText = errorMessage;
 
   container.insertBefore(alert, container.children[0]);
 
@@ -237,7 +255,7 @@ function initializeSimpleWithAuthorization(
   password: string,
   inputs: any[],
   options: any,
-  container: string
+  container: string,
 ) {
   let flowKey = null;
   let streamId = null;
