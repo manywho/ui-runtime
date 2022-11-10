@@ -1666,8 +1666,7 @@ export const render = (flowKey: string) => {
   const modalContainerName = "modal-map-element";
   let modalContainer = document.getElementById(modalContainerName);
   if (modalPage) {
-    container = modalContainer?.querySelector(".modal-body") ?? null;
-    if (!container) {
+    if (!modalContainer?.querySelector(".modal-body")) {
       // Remove the loader from the base page
       document.querySelector(".wait-container")?.classList.add("hidden");
 

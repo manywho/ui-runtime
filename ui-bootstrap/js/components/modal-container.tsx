@@ -27,10 +27,8 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     }
 
     React.useEffect(() => {
-        console.log('add');
         document.addEventListener('keyup', onKeyUp);
         return () => {
-            console.log('remove');
             document.removeEventListener('keyup', onKeyUp);
         };
     }, []);
