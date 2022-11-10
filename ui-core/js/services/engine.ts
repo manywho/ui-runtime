@@ -1648,12 +1648,13 @@ export const render = (flowKey: string) => {
     );
   }
 
-  const renderModal = (modalContainer) => {
+  const renderModal = () => {
     ReactDOM.render(
       React.createElement(Component.getByName("modal-container"), {
         flowKey,
         title: modalPage?.title,
         onClose: backOutcome ? useBackOutcomeOnBack : null,
+        modalClasses: 'modal-lg',
       }),
       modalContainer
     );
@@ -1661,12 +1662,12 @@ export const render = (flowKey: string) => {
     container = modalContainer?.querySelector(".modal-body") ?? null;
   };
 
-  // Render inside of a modal
   const modalPage = Model.getModalPage(flowKey);
   const modalContainerName = "modal-map-element";
   let modalContainer = document.getElementById(modalContainerName);
+  // Render inside of a modal
   if (modalPage) {
-    if (!modalContainer?.querySelector(".modal-body")) {
+    if (!modalContainer) {
       // Remove the loader from the base page
       document.querySelector(".wait-container")?.classList.add("hidden");
 
@@ -1677,13 +1678,14 @@ export const render = (flowKey: string) => {
       const manywhoContainer = document.querySelector(
         Settings.global("containerSelector", flowKey, "#manywho")
       );
-      manywhoContainer.prepend(modalContainer);
+      manywhoContainer.append(modalContainer);
     }
-    renderModal(modalContainer);
+    renderModal();
   } else {
     // Unmount modal
     if (modalContainer) {
       ReactDOM.unmountComponentAtNode(modalContainer);
+      modalContainer.remove();
     }
   }
 

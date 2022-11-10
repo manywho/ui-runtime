@@ -8,6 +8,7 @@ interface IModalContainerProps extends IComponentProps {
     cancelLabel?: string;
     confirmLabel?: string;
     onClose?: any;
+    modalClasses?: string;
 }
 
 export default IModalContainerProps;

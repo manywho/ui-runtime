@@ -13,6 +13,7 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     confirmLabel,
     cancelLabel,
     onClose,
+    modalClasses,
 }) => {
 
     const onKeyUp = (e) => {
@@ -20,9 +21,7 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
             if (onClose) {
                 onClose();
             }
-            if (manywho.model.getModal(flowKey)) {
-                manywho.model.setModal(flowKey, null);
-            }
+            manywho.model.setModal(flowKey, null);
         }
     }
 
@@ -75,7 +74,7 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
         <div onKeyUp={onKeyUp}>
             <div className="modal-backdrop full-height" onClick={onClickBackdrop} />
             <div className="modal show">
-                <div className="modal-dialog">
+                <div className={"modal-dialog " + modalClasses}>
                     <div className="modal-content">
                         {header}
                         <div className="modal-body">
