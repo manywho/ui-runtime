@@ -1708,7 +1708,6 @@ export const render = (flowKey: string) => {
       container
     );
   } else {
-    console.log(`%c BFTEST rendering ${JSON.stringify(modalPage)} ${Utils.extractElement(flowKey)} in #${container.id}`, 'background: #222; color: #bada55');
     ReactDOM.render(
       React.createElement(Component.getByName(Utils.extractElement(flowKey)), {
         flowKey,
