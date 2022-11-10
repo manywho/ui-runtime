@@ -1648,6 +1648,46 @@ export const render = (flowKey: string) => {
     );
   }
 
+  const renderModal = (modalContainer) => {
+    ReactDOM.render(
+      React.createElement(Component.getByName("modal-container"), {
+        flowKey,
+        title: modalPage?.title,
+        onClose: backOutcome ? useBackOutcomeOnBack : null,
+      }),
+      modalContainer
+    );
+    // Set the main container inside the modal
+    container = modalContainer?.querySelector(".modal-body") ?? null;
+  };
+
+  // Render inside of a modal
+  const modalPage = Model.getModalPage(flowKey);
+  const modalContainerName = "modal-map-element";
+  let modalContainer = document.getElementById(modalContainerName);
+  if (modalPage) {
+    container = modalContainer?.querySelector(".modal-body") ?? null;
+    if (!container) {
+      // Remove the loader from the base page
+      document.querySelector(".wait-container")?.classList.add("hidden");
+
+      // Add a div#modal-map-element to wrap the modal-container component
+      modalContainer = document.createElement("div");
+      modalContainer.setAttribute("id", modalContainerName);
+      modalContainer.className = "mw-bs flow-container modal-container";
+      const manywhoContainer = document.querySelector(
+        Settings.global("containerSelector", flowKey, "#manywho")
+      );
+      manywhoContainer.prepend(modalContainer);
+    }
+    renderModal(modalContainer);
+  } else {
+    // Unmount modal
+    if (modalContainer) {
+      ReactDOM.unmountComponentAtNode(modalContainer);
+    }
+  }
+
   // Bail here if there is no container.
   if (!container) {
     return;
@@ -1668,6 +1708,7 @@ export const render = (flowKey: string) => {
       container
     );
   } else {
+    console.log(`%c BFTEST rendering ${JSON.stringify(modalPage)} ${Utils.extractElement(flowKey)} in #${container.id}`, 'background: #222; color: #bada55');
     ReactDOM.render(
       React.createElement(Component.getByName(Utils.extractElement(flowKey)), {
         flowKey,

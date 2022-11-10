@@ -12,12 +12,28 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     onCancel,
     confirmLabel,
     cancelLabel,
+    onClose,
 }) => {
 
     const onKeyUp = (e) => {
-        if (e.keyCode === 27)
-            manywho.model.setModal(flowKey, null);
+        if (e.keyCode === 27) {
+            if (onClose) {
+                onClose();
+            }
+            if (manywho.model.getModal(flowKey)) {
+                manywho.model.setModal(flowKey, null);
+            }
+        }
     }
+
+    React.useEffect(() => {
+        console.log('add');
+        document.addEventListener('keyup', onKeyUp);
+        return () => {
+            console.log('remove');
+            document.removeEventListener('keyup', onKeyUp);
+        };
+    }, []);
 
     // This is not desired behaviour and will be removed
     const onClickBackdrop = (e) => {
@@ -30,7 +46,8 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     if (!manywho.utils.isNullOrEmpty(title)) {
         header = (
             <div className="modal-header">
-                <div className="modal-title">{title}</div>
+                {onClose && <button type="button" onClick={onClose} className="close" title="close" data-dismiss="modal" aria-hidden="true">&times;</button>}
+                <h4 className="modal-title">{title}</h4>
             </div>
         );
     }
