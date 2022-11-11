@@ -137,4 +137,42 @@ describe('ModalContainer component behaviour', () => {
         expect(wrapper3.exists('.btn-primary')).toBe(false);
     });
 
+    test('Modal map element content is conditionally rendered', () => {
+        const onClose = jest.fn();
+        window.manywho.model.setModal = jest.fn();
+
+        const props1 = {
+            flowKey: 'zzz'
+        };
+
+        const props2 = {
+            flowKey: 'zzz',
+            onClose,
+            title: 'Test Title',
+            modalClasses: 'test-class',
+        };
+        
+        const wrapper1 = shallow(<ModalContainer {...props1} />);
+        expect(wrapper1.exists('.modal-header')).toBe(true);
+        expect(wrapper1.exists('.close')).toBe(false);
+        expect(wrapper1.exists('.modal-dialog.test-class')).toBe(false);
+        wrapper1.simulate('keyup', { 
+            keyCode: 27,
+        })
+        expect(onClose).not.toHaveBeenCalled();
+        expect(window.manywho.model.setModal).toHaveBeenCalledWith('zzz', null);
+        window.manywho.model.setModal.mockClear();
+
+        const wrapper2 = shallow(<ModalContainer {...props2} />);
+        expect(wrapper1.exists('.modal-header')).toBe(true);
+        expect(wrapper2.exists('.close')).toBe(true);
+        expect(wrapper2.exists('.modal-dialog.test-class')).toBe(true);
+        wrapper2.simulate('keyup', { 
+            keyCode: 27,
+        })
+        expect(onClose).toHaveBeenCalled();
+        expect(window.manywho.model.setModal).toHaveBeenCalledWith('zzz', null);
+
+    });
+
 });

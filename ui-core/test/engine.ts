@@ -54,6 +54,7 @@ const model = {
     getDefaultNavigationId: sinon.stub(),
     getOutcome: sinon.stub(),
     parseNavigationResponse: sinon.stub(),
+    getModalPage: sinon.stub(),
 };
 
 const social = {

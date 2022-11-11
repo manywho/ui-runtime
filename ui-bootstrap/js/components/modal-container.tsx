@@ -40,7 +40,7 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     let header = null;
     let footer = null;
 
-    if (!manywho.utils.isNullOrEmpty(title)) {
+    if (!manywho.utils.isNullOrEmpty(title) || !manywho.utils.isNullOrEmpty(onClose)) {
         header = (
             <div className="modal-header">
                 {onClose && <button type="button" onClick={onClose} className="close" title="close" data-dismiss="modal" aria-hidden="true">&times;</button>}
