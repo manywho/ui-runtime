@@ -1678,7 +1678,7 @@ export const render = (flowKey: string) => {
       const manywhoContainer = document.querySelector(
         Settings.global("containerSelector", flowKey, "#manywho")
       );
-      manywhoContainer.append(modalContainer);
+      manywhoContainer.appendChild(modalContainer);
     }
     renderModal();
   } else {
