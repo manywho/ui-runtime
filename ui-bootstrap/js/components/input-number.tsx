@@ -28,8 +28,8 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
         if (manywho.utils.isNullOrWhitespace(value))
             this.props.onChange('');
         else if (!isNaN(value)) {
-            let max = (Math.pow(10, model.maxSize)) - 1;
-            let min = (Math.pow(10, model.maxSize) * - 1) + 1;
+            let max = model.maxSize === null ? null : (Math.pow(10, model.maxSize)) - 1;
+            let min = model.maxSize === null ? null : (Math.pow(10, model.maxSize) * - 1) + 1;
 
             if (model.attributes) {
                 if (!manywho.utils.isNullOrUndefined(model.attributes.minimum))
@@ -39,8 +39,12 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
                     max = parseFloat(model.attributes.maximum);
             }
 
-            parsedValue = Math.min(parsedValue, max);
-            parsedValue = Math.max(parsedValue, min);
+            if (max) {
+                parsedValue = Math.min(parsedValue, max);
+            }
+            if (min) {
+                parsedValue = Math.max(parsedValue, min);
+            }
 
             manywho.state.setComponent(this.props.id, { isValid: true }, this.props.flowKey, true);
 
@@ -75,8 +79,8 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
         const style = { maxWidth: 30 + (15 * model.size) + 'px' };
-        let max = (Math.pow(10, Math.min(model.maxSize, 17))) - 1;
-        let min = (Math.pow(10, Math.min(model.maxSize, 17)) * -1) + 1;
+        let max = model.maxSize === null ? null : (Math.pow(10, Math.min(model.maxSize, 17))) - 1;
+        let min = model.maxSize === null ? null : (Math.pow(10, Math.min(model.maxSize, 17)) * -1) + 1;
         let step = 1;
 
         if (model.attributes) {
