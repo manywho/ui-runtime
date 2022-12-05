@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/quotes */
 const configCommon = require('./webpack.config.common');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
