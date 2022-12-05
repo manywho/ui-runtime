@@ -86,7 +86,6 @@
         "form-data": "2.2.0",
         "html-loader": "^0.5.5",
         "html-webpack-plugin": "^5.5.0",
-        "html-webpack-string-replace-plugin": "^1.1.0",
         "identity-obj-proxy": "3.0.0",
         "jest": "^26.6.3",
         "jest-junit-reporter": "^1.1.0",
@@ -127,7 +126,7 @@
         "xhr-mock": "1.9.0"
     },
     "scripts": {
-        "start": "webpack-dev-server --config webpack.config.development.js --env.development",
+        "start": "webpack-dev-server --config webpack.config.development.js",
         "build": "webpack build --config webpack.config.production.js",
         "docs:core": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./ui-core/js/services",
         "test": "jest test && npm run test:core",

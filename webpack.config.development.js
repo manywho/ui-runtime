@@ -1,8 +1,7 @@
-const path = require('path');
+/* eslint-disable @typescript-eslint/quotes */
 const configCommon = require('./webpack.config.common');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackStringReplacePlugin = require('html-webpack-string-replace-plugin');
 
 module.exports = (env) => {
     // generate the common config object
@@ -16,50 +15,47 @@ module.exports = (env) => {
     // ones down the line)
     return {
         ...common,
-
+        mode: 'development',
         plugins: [
             ...common.plugins,
-            new CopyPlugin([
-                // copy the development vendor scripts
-                {
-                    from: 'js/vendor-dev/**/*.*',
-                    to: 'js/vendor',
-                    flatten: true,
-                },
-                {
-                    from: 'bundles.template.json',
-                    to: 'bundles.json',
-                    // The `content` argument is a [`Buffer`](https://nodejs.org/api/buffer.html) object, it could be converted to a `String` to be processed using `content.toString()`
-                    // The `absoluteFrom` argument is a `String`, it is absolute path from where the file is being copied
-                    transform(content) {
-                        return content.toString().replace(/\$\{PATH_PREFIX\}/g, '');
+            new CopyPlugin({
+                patterns: [
+                    // copy the development vendor scripts
+                    {
+                        from: 'js/vendor-dev/**/*.*',
+                        to: 'js/vendor/[name][ext]',
                     },
-                },
-            ]),
+                    {
+                        from: 'bundles.template.json',
+                        to: 'bundles.json',
+                        // The `content` argument is a [`Buffer`](https://nodejs.org/api/buffer.html) object, it could be converted to a `String` to be processed using `content.toString()`
+                        // The `absoluteFrom` argument is a `String`, it is absolute path from where the file is being copied
+                        transform(content) {
+                            return content.toString().replace(/\$\{PATH_PREFIX\}/g, '');
+                        },
+                    },
+                ],
+            }),
             new HtmlWebpackPlugin({
                 template: 'index.html',
                 filename: 'index.html',
                 inject: false,
-            }),
-            new HtmlWebpackStringReplacePlugin({
-                '\\$\\{CDN_URL\\}': process.env.CDN_URL,
-                '\\$\\{PLATFORM_URI\\}': process.env.PLATFORM_URI,
+                options: {
+                    cdnUrl: process.env.CDN_URL,
+                    platformUri: process.env.PLATFORM_URI,
+                },
             }),
         ],
-
         module: {
-            rules: [
-                ...common.module.rules,
-                { test: /\.html$/, loader: 'html-loader' },
-            ],
+            rules: [...common.module.rules, { test: /\.html$/, loader: 'html-loader' }],
         },
-
         devtool: 'eval-source-map',
-
         devServer: {
-            hot: true,
-            inline: true,
-            overlay: true,
+            // hot: true,
+            // inline: true,
+            client: {
+                overlay: false,
+            },
             // if no HOST is defined it will default to localhost
             host: process.env.HOST,
             port: process.env.PORT || 3000,
@@ -72,5 +68,4 @@ module.exports = (env) => {
         // dev server go to the following url in the browser:
         // http://localhost:3000/webpack-dev-server
     };
-
 };
