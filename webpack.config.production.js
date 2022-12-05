@@ -1,8 +1,9 @@
-const CopyPlugin = require('copy-webpack-plugin');
-const configCommon = require('./webpack.config.common');
-const RemovePlugin = require('remove-files-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { repoPaths } = require('./config/paths');
+/* eslint-disable @typescript-eslint/quotes */
+const CopyPlugin = require("copy-webpack-plugin");
+const configCommon = require("./webpack.config.common");
+const RemovePlugin = require("remove-files-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { repoPaths } = require("./config/paths");
 
 module.exports = (env) => {
     const common = configCommon(env);
@@ -10,21 +11,23 @@ module.exports = (env) => {
     return {
         ...common,
 
-        mode: 'production',
+        mode: "production",
 
         plugins: [
             ...common.plugins,
-            new CopyPlugin([
-                // copy the production vendor scripts
-                {
-                    from: 'js/vendor/**/*.*',
-                },
-                {
-                    // placeholders substituted during deployment
-                    from: 'bundles.template.json',
-                    to: 'bundles.template.json',
-                },
-            ]),
+            new CopyPlugin({
+                patterns: [
+                    // copy the production vendor scripts
+                    {
+                        from: "js/vendor/**/*.*",
+                    },
+                    {
+                        // placeholders substituted during deployment
+                        from: "bundles.template.json",
+                        to: "bundles.template.json",
+                    },
+                ],
+            }),
             new CleanWebpackPlugin(),
             // remove unnecessary files from the build folder
             new RemovePlugin({
@@ -33,7 +36,9 @@ module.exports = (env) => {
                         {
                             folder: repoPaths.build,
                             method: (filePath) => {
-                                return new RegExp(/\.(js|map|txt)$/, 'm').test(filePath);
+                                return new RegExp(/\.(js|map|txt)$/, "m").test(
+                                    filePath
+                                );
                             },
                         },
                     ],
@@ -41,7 +46,6 @@ module.exports = (env) => {
             }),
         ],
 
-        devtool: 'source-map',
+        devtool: "source-map",
     };
-
 };
