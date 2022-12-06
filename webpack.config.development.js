@@ -36,13 +36,10 @@ module.exports = (env) => {
                 ],
             }),
             new HtmlWebpackPlugin({
-                template: 'index.html',
-                filename: 'index.html',
+                template: './index.ejs',
                 inject: false,
-                options: {
-                    cdnUrl: process.env.CDN_URL,
-                    platformUri: process.env.PLATFORM_URI,
-                },
+                cdnUrl: process.env.CDN_URL,
+                platformUri: process.env.PLATFORM_URI,
             }),
         ],
         module: {

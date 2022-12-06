@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { repoPaths } = require('./config/paths');
-const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+const dotenv = require('dotenv').config();
 
 module.exports = (env) => ({
     entry: {
@@ -52,8 +52,8 @@ module.exports = (env) => ({
                 },
                 // copy the index.html
                 {
-                    from: 'index.html',
-                    to: 'players/',
+                    from: 'index.ejs',
+                    to: 'players/[name].html',
                 },
             ],
         }),
