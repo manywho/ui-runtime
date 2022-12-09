@@ -38,7 +38,7 @@
     "regenerator-runtime": "^0.13.3",
     "request-promise": "^4.2.5",
     "socket.io-client": "2.0.3",
-    "tinymce": "^4.8.5",
+    "tinymce": "^5.10.7",
     "typescript": "^3.9.5",
     "write-file": "1.0.0",
     "yargs": "^15.3.1"
