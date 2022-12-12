@@ -173,6 +173,7 @@ describe('Navigation component behaviour', () => {
                     label: 'My URL Nav',
                     items: null,
                     url: 'https://boomi.com',
+                    urlTarget: '_blank',
                     isEnabled: true,
                 },
             },

@@ -47,7 +47,7 @@ class Navigation extends React.Component<INavigationProps, null> {
 
     // Concerns navigating the Flow if the navigation
     // item clicked has not got a sub menu
-    onClick({ e, item, persistState }: { e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>; item: { isEnabled: boolean; id: string; url: string | null }; persistState: boolean; }): boolean {
+    onClick({ e, item, persistState }: { e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>; item: { isEnabled: boolean; id: string; url: string | null; urlTarget: string | null }; persistState: boolean; }): boolean {
 
         if (!item.isEnabled) {
             return false;
@@ -67,7 +67,7 @@ class Navigation extends React.Component<INavigationProps, null> {
         });
 
         if (item.url != null) {
-            window.open(item.url, '_blank', 'noopener,noreferrer');
+            window.open(item.url, item.urlTarget, 'noopener,noreferrer');
             return true;
         }
 
