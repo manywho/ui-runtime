@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import 'script-loader!./lib/010-pollyfills.js';
 
 // Polyfill for Promises in IE - Can be removed when when support for IE is dropped

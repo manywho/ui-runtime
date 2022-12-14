@@ -1,4 +1,9 @@
-import { getValueByName, setStateValue, generateNewObjectData, toEngineUTCStringFormat } from './MacroUtils';
+import {
+    getValueByName,
+    setStateValue,
+    generateNewObjectData,
+    toEngineUTCStringFormat,
+} from './MacroUtils';
 import { STRIP_VALUE_TAGS_REGEX } from '../../constants';
 import MacroPropertyMethods from './MacroPropertyMethods';
 
@@ -77,6 +82,7 @@ export const bindValuePropertyFunctions = () => ({
 const createObject = (type: string) => {
     const result = generateNewObjectData(type, metadata);
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     function GenerateResponse() {}
 
     // Enables calling value property methods on the object data returned
@@ -101,6 +107,7 @@ const getArray = (value: string) => {
     const list = listValue.props.objectData;
     const objectData = [];
     list.forEach((obj) => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         function GenerateResponse() {}
 
         // Enables calling value property methods on the object data returned
@@ -143,6 +150,7 @@ const getObject = (value: string) => {
     const valueObj = getValueByName(value.replace(STRIP_VALUE_TAGS_REGEX, ''), metadata);
     const objectData = valueObj.props.objectData[0];
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     function GenerateResponse() {}
 
     // Enables calling value property methods on the object data returned

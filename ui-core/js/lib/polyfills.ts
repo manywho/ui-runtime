@@ -10,6 +10,7 @@ if (!Array.prototype.find) {
         }
         const list = Object(this);
         const length = list.length >>> 0;
+        // eslint-disable-next-line prefer-rest-params
         const thisArg = arguments[1];
         let value;
 

@@ -4,29 +4,27 @@ import INotificationsProps from '../interfaces/INotificationsProps';
 import { getNotification } from './notification';
 
 const Notifications: React.SFC<INotificationsProps> = ({ flowKey, position }) => {
-
     const models = manywho.model.getNotifications(flowKey, position);
     const Notification = getNotification();
-    const padding = (models.length > 0) ? '20px' : null;
+    const padding = models.length > 0 ? '20px' : null;
 
     return (
-        <ul className={ position + '-notifications notifications'} 
-            style={ { padding } }>
-        {
-            models.map((item) => {
+        <ul className={position + '-notifications notifications'} style={{ padding }}>
+            {models.map((item) => {
                 return (
+                    // eslint-disable-next-line react/jsx-key
                     <li>
                         <Notification flowKey={flowKey} model={item} />
                     </li>
                 );
-            })
-        }
+            })}
         </ul>
     );
 };
 
 manywho.component.register(registeredComponents.NOTIFICATIONS, Notifications);
 
-export const getNotifications = () : typeof Notifications => manywho.component.getByName(registeredComponents.NOTIFICATIONS) || Notifications;
+export const getNotifications = (): typeof Notifications =>
+    manywho.component.getByName(registeredComponents.NOTIFICATIONS) || Notifications;
 
 export default Notifications;

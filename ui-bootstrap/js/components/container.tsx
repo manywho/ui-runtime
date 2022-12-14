@@ -8,7 +8,6 @@ import { getOutcome } from './outcome';
 // tslint:disable-next-line
 import Dynamic from './dynamic';
 
-
 declare let manywho: any;
 
 interface IContainerState {
@@ -16,7 +15,6 @@ interface IContainerState {
 }
 
 class Container extends React.Component<IComponentProps, IContainerState> {
-
     constructor(props) {
         super(props);
 
@@ -34,17 +32,14 @@ class Container extends React.Component<IComponentProps, IContainerState> {
 
         const isCollapsible = manywho.settings.global('collapsible', this.props.flowKey, null);
 
-        if (isCollapsible === null)
-            return false;
+        if (isCollapsible === null) return false;
 
-        if (typeof isCollapsible === 'boolean')
-            return isCollapsible;
+        if (typeof isCollapsible === 'boolean') return isCollapsible;
 
         if (typeof isCollapsible === 'object') {
-            const settings = 
+            const settings =
                 isCollapsible[model.containerType.toLowerCase()] || isCollapsible.default;
-            if (settings)
-                return settings.enabled;
+            if (settings) return settings.enabled;
         }
 
         return false;
@@ -64,8 +59,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         if (typeof collapsible === 'object')
             settings = collapsible[model.containerType.toLowerCase()] || collapsible.default;
 
-        if (settings && settings.group)
-            return settings.group;
+        if (settings && settings.group) return settings.group;
 
         if (model.attributes && model.attributes.collapseGroup != null)
             return model.attributes.collapseGroup;
@@ -73,7 +67,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         return null;
     }
 
-    onToggle(e) {
+    onToggle() {
         this.setState({ isCollapsed: !this.state.isCollapsed });
 
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
@@ -81,7 +75,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
 
         if (collapseGroup) {
             localStorage.setItem(
-                this.getCollapseGroupKey(collapseGroup), 
+                this.getCollapseGroupKey(collapseGroup),
                 JSON.stringify(!this.state.isCollapsed),
             );
             manywho.engine.render(this.props.flowKey);
@@ -94,8 +88,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         let isCollapsed = null;
 
         if (collapseGroup) {
-            const isGroupCollapsed = 
-                localStorage.getItem(this.getCollapseGroupKey(collapseGroup));
+            const isGroupCollapsed = localStorage.getItem(this.getCollapseGroupKey(collapseGroup));
 
             if (!manywho.utils.isNullOrWhitespace(isGroupCollapsed))
                 isCollapsed = JSON.parse(isGroupCollapsed);
@@ -106,27 +99,24 @@ class Container extends React.Component<IComponentProps, IContainerState> {
                 isCollapsed = manywho.utils.isEqual(model.attributes.isCollapsed, 'true', true);
 
         if (isCollapsed == null) {
-            const collapsible = 
-                manywho.settings.global('collapsible', this.props.flowKey, false);
-                
+            const collapsible = manywho.settings.global('collapsible', this.props.flowKey, false);
+
             if (typeof collapsible === 'object') {
-                const settings = 
+                const settings =
                     collapsible[model.containerType.toLowerCase()] || collapsible.default;
-                if (settings)
-                    isCollapsed = settings.collapsed;
+                if (settings) isCollapsed = settings.collapsed;
             }
         }
 
         this.setState({ isCollapsed });
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps() {
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
         const collapseGroup = this.getCollapseGroup(model);
 
         if (collapseGroup) {
-            const isGroupCollapsed = 
-                localStorage.getItem(this.getCollapseGroupKey(collapseGroup));
+            const isGroupCollapsed = localStorage.getItem(this.getCollapseGroupKey(collapseGroup));
 
             if (!manywho.utils.isNullOrWhitespace(isGroupCollapsed))
                 this.setState({ isCollapsed: JSON.parse(isGroupCollapsed) });
@@ -143,12 +133,14 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         );
 
         const outcomes = manywho.model.getOutcomes(this.props.id, this.props.flowKey);
-        
-        const Outcome = getOutcome(); 
-        
-        const outcomeButtons = outcomes && outcomes.map((outcome) => {
-            return <Outcome id={outcome.id} flowKey={this.props.flowKey} key={outcome.id} />;
-        });
+
+        const Outcome = getOutcome();
+
+        const outcomeButtons =
+            outcomes &&
+            outcomes.map((outcome) => {
+                return <Outcome id={outcome.id} flowKey={this.props.flowKey} key={outcome.id} />;
+            });
         const isCollapsible = this.isCollapsible(model);
         let label = null;
 
@@ -156,52 +148,51 @@ class Container extends React.Component<IComponentProps, IContainerState> {
             label = <h3>{model.label}</h3>;
 
             if (isCollapsible) {
-                const toggleIcon = (this.state.isCollapsed) ? 'plus' : 'minus';
-                label = <h3 onClick={this.onToggle}>
-                    <span className={`glyphicon glyphicon-${toggleIcon}`} />
-                    {model.label}
-                </h3>;
+                const toggleIcon = this.state.isCollapsed ? 'plus' : 'minus';
+                label = (
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+                    <h3 onClick={this.onToggle}>
+                        <span className={`glyphicon glyphicon-${toggleIcon}`} />
+                        {model.label}
+                    </h3>
+                );
             }
         }
 
-        let className = manywho.styling.getClasses(
-            this.props.parentId, 
-            this.props.id, 
-            model.containerType, 
-            this.props.flowKey,
-        ).join(' ');
+        let className = manywho.styling
+            .getClasses(this.props.parentId, this.props.id, model.containerType, this.props.flowKey)
+            .join(' ');
         className += ' mw-container';
 
-        if (!this.props.isDesignTime && !model.isVisible)
-            className += ' hidden';
+        if (!this.props.isDesignTime && !model.isVisible) className += ' hidden';
 
         let content = null;
 
         if (isCollapsible && model.label)
             content = (
-                <Collapse 
-                    isOpened={!this.state.isCollapsed} 
-                    springConfig={presets.gentle}>
+                <Collapse isOpened={!this.state.isCollapsed} springConfig={presets.gentle}>
                     <Dynamic name={`mw-${model.containerType}`} props={this.props} />
-                    { outcomeButtons }
+                    {outcomeButtons}
                 </Collapse>
             );
         else
             content = [
                 <Dynamic name={`mw-${model.containerType}`} props={this.props} key={'container'} />,
-                outcomeButtons,         
+                outcomeButtons,
             ];
 
-        return <div className={className} id={this.props.id}>
-            {label}
-            {content}
-        </div>;
+        return (
+            <div className={className} id={this.props.id}>
+                {label}
+                {content}
+            </div>
+        );
     }
-
 }
 
 manywho.component.register(registeredComponents.CONTAINER, Container);
 
-export const getContainer = () : typeof Container => manywho.component.getByName(registeredComponents.CONTAINER) || Container;
+export const getContainer = (): typeof Container =>
+    manywho.component.getByName(registeredComponents.CONTAINER) || Container;
 
 export default Container;

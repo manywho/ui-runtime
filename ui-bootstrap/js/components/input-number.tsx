@@ -9,7 +9,6 @@ interface IInputNumberState {
 }
 
 class InputNumber extends React.Component<IInputProps, IInputNumberState> {
-
     constructor(props: IInputProps) {
         super(props);
 
@@ -25,11 +24,10 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
         const value = e.target.value.replace(/^\s+|\s+$/g, '');
         let parsedValue = parseFloat(value);
 
-        if (manywho.utils.isNullOrWhitespace(value))
-            this.props.onChange('');
+        if (manywho.utils.isNullOrWhitespace(value)) this.props.onChange('');
         else if (!isNaN(value)) {
-            let max = model.maxSize === null ? null : (Math.pow(10, model.maxSize)) - 1;
-            let min = model.maxSize === null ? null : (Math.pow(10, model.maxSize) * - 1) + 1;
+            let max = model.maxSize === null ? null : Math.pow(10, model.maxSize) - 1;
+            let min = model.maxSize === null ? null : Math.pow(10, model.maxSize) * -1 + 1;
 
             if (model.attributes) {
                 if (!manywho.utils.isNullOrUndefined(model.attributes.minimum))
@@ -48,8 +46,7 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
 
             manywho.state.setComponent(this.props.id, { isValid: true }, this.props.flowKey, true);
 
-            if (parseFloat(value) !== parsedValue)
-                this.setState({ value: parsedValue.toString() });
+            if (parseFloat(value) !== parsedValue) this.setState({ value: parsedValue.toString() });
 
             setTimeout(() => this.props.onChange(parsedValue));
         } else if (isNaN(value) && !manywho.utils.isNullOrWhitespace(value))
@@ -58,9 +55,9 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
 
     componentWillMount() {
         this.setState({
-            value: !manywho.utils.isNullOrUndefined(this.props.value) ?
-                manywho.formatting.number(this.props.value, this.props.format) :
-                null,
+            value: !manywho.utils.isNullOrUndefined(this.props.value)
+                ? manywho.formatting.number(this.props.value, this.props.format)
+                : null,
         });
     }
 
@@ -78,9 +75,10 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
     render() {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
-        const style = { maxWidth: 30 + (15 * model.size) + 'px' };
-        let max = model.maxSize === null ? null : (Math.pow(10, Math.min(model.maxSize, 17))) - 1;
-        let min = model.maxSize === null ? null : (Math.pow(10, Math.min(model.maxSize, 17)) * -1) + 1;
+        const style = { maxWidth: 30 + 15 * model.size + 'px' };
+        let max = model.maxSize === null ? null : Math.pow(10, Math.min(model.maxSize, 17)) - 1;
+        let min =
+            model.maxSize === null ? null : Math.pow(10, Math.min(model.maxSize, 17)) * -1 + 1;
         let step = 1;
 
         if (model.attributes) {
@@ -94,29 +92,33 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
                 step = model.attributes.step;
         }
 
-        return <input id={this.props.id}
-            value={this.state.value}
-            placeholder={this.props.placeholder}
-            className="form-control"
-            type="number"
-            style={style}
-            max={max}
-            min={min}
-            step={step}
-            readOnly={this.props.readOnly}
-            disabled={this.props.disabled}
-            required={this.props.required}
-            onChange={!this.props.isDesignTime && this.onChange}
-            onBlur={this.props.onBlur}
-            autoComplete={this.props.autocomplete}
-            autoFocus={model.autoFocus}
-        />;
+        return (
+            <input
+                id={this.props.id}
+                value={this.state.value}
+                placeholder={this.props.placeholder}
+                className="form-control"
+                type="number"
+                style={style}
+                max={max}
+                min={min}
+                step={step}
+                readOnly={this.props.readOnly}
+                disabled={this.props.disabled}
+                required={this.props.required}
+                onChange={!this.props.isDesignTime && this.onChange}
+                onBlur={this.props.onBlur}
+                autoComplete={this.props.autocomplete}
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus={model.autoFocus}
+            />
+        );
     }
-
 }
 
 manywho.component.register(registeredComponents.INPUT_NUMBER, InputNumber);
 
-export const getInputNumber = () : typeof InputNumber => manywho.component.getByName(registeredComponents.INPUT_NUMBER) || InputNumber;
+export const getInputNumber = (): typeof InputNumber =>
+    manywho.component.getByName(registeredComponents.INPUT_NUMBER) || InputNumber;
 
 export default InputNumber;

@@ -2,8 +2,6 @@ import { StateInit } from './State';
 import { merge } from 'ramda';
 import { IFlow } from '../interfaces/IModels';
 
-declare let manywho: any;
-
 let authenticationToken = null;
 let id = null;
 let objectData = null;
@@ -52,7 +50,6 @@ export const getFlowModel = () => ({
  * @param snapshot
  */
 export const addRequest = (request: any, snapshot: any) => {
-
     const currentMapElement = snapshot.metadata.mapElements.find(
         (element) => element.id === request.currentMapElementId,
     );

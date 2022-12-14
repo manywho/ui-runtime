@@ -14,20 +14,21 @@ import { renderOutcomesInOrder } from './utils/CoreUtils';
  * @param onComplete Function to be called from the parent component. This is for when the upload component
  * is listing files. The callback typically would be to fetch files to be displayed
  */
-export function uploadComplete(response: {objectData}, id: string, flowKey: string, onComplete: Function) {
-    if (
-        response &&
-        !manywho.utils.isNullOrWhitespace(id)
-    ) {
+export function uploadComplete(
+    response: { objectData },
+    id: string,
+    flowKey: string,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    onComplete: Function,
+) {
+    if (response && !manywho.utils.isNullOrWhitespace(id)) {
         const objectData = response.objectData.map((item) => {
             item.isSelected = true;
             return item;
         });
 
         // Save the objectData from the response to the component state
-        manywho.state.setComponent(
-            id, { objectData }, flowKey, true,
-        );
+        manywho.state.setComponent(id, { objectData }, flowKey, true);
 
         // Re-sync with the server so that any events attached to the component are processed
         manywho.component.handleEvent(
@@ -52,12 +53,14 @@ export function uploadComplete(response: {objectData}, id: string, flowKey: stri
  * @return File upload react component with props options configured and set
  */
 const FileUploadWrapper: React.SFC<IFileUploadProps> = (props) => {
-
     const model =
         !manywho.utils.isNullOrWhitespace(props.id) &&
         manywho.model.getComponent(props.id, props.flowKey);
     // If client-side validation is enabled (IValidationResult), local state overrides the validity of the server-side model validation
-    const state = { ...{ isValid: true, validationMessage: null }, ...manywho.state.getComponent(props.id, props.flowKey) };
+    const state = {
+        ...{ isValid: true, validationMessage: null },
+        ...manywho.state.getComponent(props.id, props.flowKey),
+    };
 
     manywho.log.info(`Rendering File Upload: ${props.id}`);
 
@@ -67,11 +70,13 @@ const FileUploadWrapper: React.SFC<IFileUploadProps> = (props) => {
         outcomes = manywho.model.getOutcomes(props.id, props.flowKey);
     }
 
-    const Outcome : typeof outcome = manywho.component.getByName(registeredComponents.OUTCOME);
+    const Outcome: typeof outcome = manywho.component.getByName(registeredComponents.OUTCOME);
 
-    const outcomeButtons = outcomes && outcomes.map(
-        outcomeButton => <Outcome id={outcomeButton.id} key={outcomeButton.id} flowKey={props.flowKey} />,
-    );
+    const outcomeButtons =
+        outcomes &&
+        outcomes.map((outcomeButton) => (
+            <Outcome id={outcomeButton.id} key={outcomeButton.id} flowKey={props.flowKey} />
+        ));
 
     manywho.log.info(`Rendering File Upload: ${props.id}`);
 
@@ -79,48 +84,56 @@ const FileUploadWrapper: React.SFC<IFileUploadProps> = (props) => {
         <FileUpload
             id={props.id}
             className={
-                props.id ?
-                    (
-                        manywho.styling.getClasses(
-                            props.parentId,
-                            props.id,
-                            'file_upload',
-                            props.flowKey,
-                        )
-                    ).join(' ') :
-                    null
+                props.id
+                    ? manywho.styling
+                          .getClasses(props.parentId, props.id, 'file_upload', props.flowKey)
+                          .join(' ')
+                    : null
             }
-            multiple={manywho.utils.isNullOrUndefined(props.multiple) ? model.isMultiSelect : props.multiple}
+            multiple={
+                manywho.utils.isNullOrUndefined(props.multiple)
+                    ? model.isMultiSelect
+                    : props.multiple
+            }
             upload={(files, progress) => {
                 // Construct some form data, for backwards compatibility
                 const formData = new FormData();
-                files && files.forEach((file, i) => {
-                    formData.append(`FileData${i}`, file);
-                });
+                files &&
+                    files.forEach((file, i) => {
+                        formData.append(`FileData${i}`, file);
+                    });
 
-                return Promise.resolve(props.upload(
-                    props.flowKey,
-                    formData,
-                    progress,
-                    files,
-                    model && model.fileDataRequest
-                        ? model.fileDataRequest
-                        : null,
-                ))
+                return Promise.resolve(
+                    props.upload(
+                        props.flowKey,
+                        formData,
+                        progress,
+                        files,
+                        model && model.fileDataRequest ? model.fileDataRequest : null,
+                    ),
+                );
             }}
             uploadCaption={props.uploadCaption}
-            uploadComplete={response => uploadComplete(response, props.id, props.flowKey, props.uploadComplete)}
+            uploadComplete={(response) =>
+                uploadComplete(response, props.id, props.flowKey, props.uploadComplete)
+            }
             smallInputs={props.smallInputs}
             isUploadVisible={props.isUploadVisible}
-            isAutoUpload={model.attributes && model.attributes.isAutoUpload ? model.attributes.isAutoUpload.toLowerCase() === 'true' : false}
+            isAutoUpload={
+                model.attributes && model.attributes.isAutoUpload
+                    ? model.attributes.isAutoUpload.toLowerCase() === 'true'
+                    : false
+            }
             label={model.label}
             isRequired={model.isRequired}
             validationMessage={state.validationMessage || model.validationMessage}
             isVisible={model.isVisible}
             isValid={state.isValid && model.isValid} // If client-side validation is disabled state.isValid is true. See IValidationResult.
-            hintValue={model.hintValue === ''
-                ? manywho.settings.global('localization.fileUploadMessage', props.flowKey)
-                : model.hintValue}
+            hintValue={
+                model.hintValue === ''
+                    ? manywho.settings.global('localization.fileUploadMessage', props.flowKey)
+                    : model.hintValue
+            }
             helpInfo={model.helpInfo}
             disabled={props.isDesignTime}
         />
@@ -142,12 +155,20 @@ FileUploadWrapper.defaultProps = {
         const authenticationToken = manywho.state.getAuthenticationToken(flowKey);
         const stateId = manywho.utils.extractStateId(flowKey);
 
-        return manywho.ajax.uploadFiles(files, request, tenantId, authenticationToken, onProgress, stateId);
+        return manywho.ajax.uploadFiles(
+            files,
+            request,
+            tenantId,
+            authenticationToken,
+            onProgress,
+            stateId,
+        );
     },
 };
 
 manywho.component.register(registeredComponents.FILE_UPLOAD, FileUploadWrapper, ['file_upload']);
 
-export const getFileUpload = () : typeof FileUploadWrapper => manywho.component.getByName(registeredComponents.FILE_UPLOAD);
+export const getFileUpload = (): typeof FileUploadWrapper =>
+    manywho.component.getByName(registeredComponents.FILE_UPLOAD);
 
 export default FileUploadWrapper;

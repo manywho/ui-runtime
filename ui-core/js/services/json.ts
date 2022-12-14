@@ -3,22 +3,25 @@
  */
 
 /**
-  * @ignore
-  */
+ * @ignore
+ */
 export const generateFlowInputs = (inputsData: any) => {
     if (inputsData && !Array.isArray(inputsData)) {
+        // eslint-disable-next-line no-param-reassign
         inputsData = [inputsData];
     }
 
     return inputsData.map((input) => {
-
         for (const property in input) {
             if (input[property].objectData) {
                 return {
-                    contentType: input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
+                    contentType:
+                        input[property].objectData.length > 1 ? 'ContentList' : 'ContentObject',
                     contentValue: null,
                     developerName: property,
-                    objectData: Array.isArray(input[property].objectData) ? input[property].objectData : [input[property].objectData],
+                    objectData: Array.isArray(input[property].objectData)
+                        ? input[property].objectData
+                        : [input[property].objectData],
                     typeElementDeveloperName: input[property].typeElementDeveloperName,
                 };
             }
@@ -27,13 +30,14 @@ export const generateFlowInputs = (inputsData: any) => {
             }
 
             return {
-                contentType: `Content${(typeof input[property]).charAt(0).toUpperCase()}${(typeof input[property]).substring(1).toLowerCase()}`,
+                contentType: `Content${(typeof input[property])
+                    .charAt(0)
+                    .toUpperCase()}${(typeof input[property]).substring(1).toLowerCase()}`,
                 contentValue: input[property],
                 developerName: property,
                 objectData: null,
                 typeElementDeveloperName: null,
             };
-
         }
     });
 };
@@ -45,8 +49,8 @@ export interface IFlowId {
 }
 
 /**
-  * @ignore
-  */
+ * @ignore
+ */
 export const generateInitializationRequest = (
     flowId: IFlowId,
     stateId?: string,
@@ -73,8 +77,8 @@ export const generateInitializationRequest = (
 });
 
 /**
-  * @ignore
-  */
+ * @ignore
+ */
 export const generateInvokeRequest = (
     stateData: any,
     invokeType: string,
@@ -106,9 +110,9 @@ export const generateInvokeRequest = (
 });
 
 /**
-  * @ignore
-  */
- export const generateMessageActionInvokeRequest = (
+ * @ignore
+ */
+export const generateMessageActionInvokeRequest = (
     stateData: any,
     invokeType: string,
     selectedOutcomeId?: string,
@@ -131,8 +135,8 @@ export const generateInvokeRequest = (
 });
 
 /**
-  * @ignore
-  */
+ * @ignore
+ */
 export const generateNavigateRequest = (
     stateData: any,
     navigationId: string,
@@ -162,8 +166,8 @@ export const generateNavigateRequest = (
 });
 
 /**
-  * @ignore
-  */
+ * @ignore
+ */
 export const generateSessionRequest = (
     sessionId: string,
     sessionUrl: string,

@@ -7,7 +7,6 @@ import { renderOutcomesInOrder } from './utils/CoreUtils';
 declare let manywho: any;
 
 class Textarea extends React.Component<IComponentProps, null> {
-
     constructor(props) {
         super(props);
 
@@ -20,19 +19,20 @@ class Textarea extends React.Component<IComponentProps, null> {
         manywho.state.setComponent(
             this.props.id,
             { contentValue: e.target.value },
-            this.props.flowKey, true,
+            this.props.flowKey,
+            true,
         );
         this.forceUpdate();
     }
 
     onKeyUp(e) {
-        if (e.keyCode === 13)
-            e.stopPropagation();
+        if (e.keyCode === 13) e.stopPropagation();
     }
 
-    onBlur(e) {
+    onBlur() {
         manywho.component.handleEvent(
-            this, manywho.model.getComponent(this.props.id, this.props.flowKey),
+            this,
+            manywho.model.getComponent(this.props.id, this.props.flowKey),
             this.props.flowKey,
         );
     }
@@ -44,10 +44,9 @@ class Textarea extends React.Component<IComponentProps, null> {
 
         manywho.log.info(`Rendering Textarea: ${model.developerName}, ${this.props.id}`);
 
-        const state = this.props.isDesignTime ? { contentValue: '' } : manywho.state.getComponent(
-            this.props.id,
-            this.props.flowKey,
-        ) || {};
+        const state = this.props.isDesignTime
+            ? { contentValue: '' }
+            : manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
         const outcomes = manywho.model.getOutcomes(this.props.id, this.props.flowKey);
 
         const props: any = {
@@ -65,30 +64,27 @@ class Textarea extends React.Component<IComponentProps, null> {
         };
 
         if (!this.props.isDesignTime) {
-
             props.onChange = this.onChange;
             props.onKeyUp = this.onKeyUp;
 
-            if (model.hasEvents)
-                props.onBlur = this.onBlur;
+            if (model.hasEvents) props.onBlur = this.onBlur;
         }
 
-        let className = manywho.styling.getClasses(
-            this.props.parentId,
-            this.props.id,
-            'textarea',
-            this.props.flowKey,
-        ).join(' ');
+        let className = manywho.styling
+            .getClasses(this.props.parentId, this.props.id, 'textarea', this.props.flowKey)
+            .join(' ');
 
         className += ' form-group';
 
-        if (model.isVisible === false)
-            className += ' hidden';
+        if (model.isVisible === false) className += ' hidden';
 
-        if (model.isValid === false || state.isValid === false)
-            className += ' has-error';
+        if (model.isValid === false || state.isValid === false) className += ' has-error';
 
-        const outcomeButtons = outcomes && outcomes.map(outcome => <Outcome id={outcome.id} flowKey={this.props.flowKey} />);
+        const outcomeButtons =
+            outcomes &&
+            outcomes.map((outcome) => (
+                <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />
+            ));
 
         const textArea = (
             <div>
@@ -97,7 +93,9 @@ class Textarea extends React.Component<IComponentProps, null> {
                     {model.isRequired ? <span className="input-required"> *</span> : null}
                 </label>
                 <textarea {...props} />
-                <span className="help-block">{model.validationMessage || state.validationMessage}</span>
+                <span className="help-block">
+                    {model.validationMessage || state.validationMessage}
+                </span>
                 <span className="help-block">{model.helpInfo}</span>
             </div>
         );
@@ -108,12 +106,11 @@ class Textarea extends React.Component<IComponentProps, null> {
             </div>
         );
     }
-
 }
 
 manywho.component.register(registeredComponents.TEXTAREA, Textarea);
 
-export const getTextarea = () : typeof Textarea => manywho.component.getByName(registeredComponents.TEXTAREA);
+export const getTextarea = (): typeof Textarea =>
+    manywho.component.getByName(registeredComponents.TEXTAREA);
 
 export default Textarea;
-

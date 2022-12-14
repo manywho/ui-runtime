@@ -8,7 +8,6 @@ import { renderOutcomesInOrder } from './utils/CoreUtils';
 declare let manywho: any;
 
 const List: React.SFC<IComponentProps> = ({ id, parentId, flowKey, isDesignTime }) => {
-
     const model = manywho.model.getComponent(id, flowKey);
 
     manywho.log.info(`Rendering List: ${id}, ${model.developerName}`);
@@ -20,44 +19,33 @@ const List: React.SFC<IComponentProps> = ({ id, parentId, flowKey, isDesignTime 
     const Wait = getWait();
 
     let elements = null;
-    let className = manywho.styling.getClasses(
-        parentId,
-        id,
-        'list',
-        flowKey,
-    ).join(' ');
+    let className = manywho.styling.getClasses(parentId, id, 'list', flowKey).join(' ');
 
-    if (model.isValid === false || state.isValid === false)
-        className += ' has-error';
+    if (model.isValid === false || state.isValid === false) className += ' has-error';
 
-    if (model.isVisible === false)
-        className += ' hidden';
+    if (model.isVisible === false) className += ' hidden';
 
     if (model.objectData && !isDesignTime) {
-        const columnTypeElementPropertyId =
-            manywho.component.getDisplayColumns(model.columns)[0].typeElementPropertyId;
+        const columnTypeElementPropertyId = manywho.component.getDisplayColumns(model.columns)[0]
+            .typeElementPropertyId;
 
         elements = model.objectData.map((element) => {
-
-            const property =
-                element.properties.find((prop) => {
-                    return manywho.utils.isEqual(
-                        prop.typeElementPropertyId,
-                        columnTypeElementPropertyId,
-                        true,
-                    );
-                });
+            const property = element.properties.find((prop) => {
+                return manywho.utils.isEqual(
+                    prop.typeElementPropertyId,
+                    columnTypeElementPropertyId,
+                    true,
+                );
+            });
 
             return (
                 <li id={element.externalId} key={element.externalId}>
-                    {
-                        manywho.formatting.format(
-                            property.contentValue,
-                            property.contentFormat,
-                            property.contentType,
-                            flowKey,
-                        )
-                    }
+                    {manywho.formatting.format(
+                        property.contentValue,
+                        property.contentFormat,
+                        property.contentType,
+                        flowKey,
+                    )}
                 </li>
             );
         });
@@ -79,7 +67,8 @@ const List: React.SFC<IComponentProps> = ({ id, parentId, flowKey, isDesignTime 
     }
 
     const outcomeButtons =
-        outcomes && outcomes.map(outcome => <Outcome flowKey={flowKey} id={outcome.id} />);
+        outcomes &&
+        outcomes.map((outcome) => <Outcome key={outcome.id} flowKey={flowKey} id={outcome.id} />);
 
     const listElement = (
         <div>
@@ -91,13 +80,17 @@ const List: React.SFC<IComponentProps> = ({ id, parentId, flowKey, isDesignTime 
     return (
         <div className={className} id={id}>
             {renderOutcomesInOrder(listElement, outcomeButtons, outcomes, model.isVisible)}
-            <Wait isVisible={state.loading} message={state.loading && state.loading.message} isSmall />
+            <Wait
+                isVisible={state.loading}
+                message={state.loading && state.loading.message}
+                isSmall
+            />
         </div>
     );
 };
 
 manywho.component.register(registeredComponents.LIST, List);
 
-export const getList = () : typeof List => manywho.component.getByName(registeredComponents.LIST);
+export const getList = (): typeof List => manywho.component.getByName(registeredComponents.LIST);
 
 export default List;

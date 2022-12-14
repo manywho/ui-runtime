@@ -59,18 +59,19 @@ let culture = 'en-US';
 export const initialize = (flowKey) => {
     if (Settings.global('i18n.culture', flowKey) && numbro) {
         culture = Settings.global('i18n.culture', flowKey);
-    }
-    else if (window.navigator && window.navigator.language && window.navigator.language.indexOf('-') !== -1) {
+    } else if (
+        window.navigator &&
+        window.navigator.language &&
+        window.navigator.language.indexOf('-') !== -1
+    ) {
         const parts = window.navigator.language.split('-');
         const userCulture = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
         if (window.numbro.cultures()[userCulture]) {
             culture = userCulture;
-        }
-        else {
+        } else {
             culture = 'en-US';
         }
-    }
-    else {
+    } else {
         culture = 'en-US';
     }
 };
@@ -82,8 +83,16 @@ export const initialize = (flowKey) => {
  * @param contentType Type of the value as defined in the metadata e.g. `ContentString`
  * @param flowKey
  */
-export const format = (value: string | number, format: string, contentType: string, flowKey: string): string | number => {
-    if (!Settings.global('formatting.isEnabled', flowKey, false) || Utils.isNullOrWhitespace(contentType)) {
+export const format = (
+    value: string | number,
+    format: string,
+    contentType: string,
+    flowKey: string,
+): string | number => {
+    if (
+        !Settings.global('formatting.isEnabled', flowKey, false) ||
+        Utils.isNullOrWhitespace(contentType)
+    ) {
         return value;
     }
 
@@ -93,12 +102,12 @@ export const format = (value: string | number, format: string, contentType: stri
     }
 
     switch (contentType.toUpperCase()) {
-    case Component.contentTypes.date:
-    case Component.contentTypes.datetime:
-        return dateTime(value as string, format, flowKey);
+        case Component.contentTypes.date:
+        case Component.contentTypes.datetime:
+            return dateTime(value as string, format, flowKey);
 
-    case Component.contentTypes.number:
-        return number(value, format, flowKey);
+        case Component.contentTypes.number:
+            return number(value, format, flowKey);
     }
 
     return value;
@@ -110,47 +119,33 @@ export const format = (value: string | number, format: string, contentType: stri
  */
 export const toMomentFormat = (format: string): string => {
     if (!Utils.isNullOrEmpty(format)) {
-
         if (format === 'd') {
             return 'l';
-        }
-        else if (format === 'D') {
+        } else if (format === 'D') {
             return 'dddd, MMMM DD, YYYY';
-        }
-        else if (format === 'f') {
+        } else if (format === 'f') {
             return 'LLLL';
-        }
-        else if (format === 'F') {
+        } else if (format === 'F') {
             return 'dddd, LL LTS';
-        }
-        else if (format === 'g') {
+        } else if (format === 'g') {
             return 'L LT';
-        }
-        else if (format === 'G') {
+        } else if (format === 'G') {
             return 'L LTS';
-        }
-        else if (format === 'm') {
+        } else if (format === 'm') {
             return 'MMMM D';
-        }
-        else if (format === 'r') {
+        } else if (format === 'r') {
             return 'ddd, DD MMM YYYY HH:mm:ss [GMT]';
-        }
-        else if (format === 's') {
+        } else if (format === 's') {
             return 'YYYY-MM-DD[T]HH:mm:ss';
-        }
-        else if (format === 't') {
+        } else if (format === 't') {
             return 'LT';
-        }
-        else if (format === 'T') {
+        } else if (format === 'T') {
             return 'LTS';
-        }
-        else if (format === 'u') {
+        } else if (format === 'u') {
             return 'YYYY-MM-DD HH:mm:ss[Z]';
-        }
-        else if (format === 'U') {
+        } else if (format === 'U') {
             return 'dddd, LL LTS';
-        }
-        else if (format === 'y') {
+        } else if (format === 'y') {
             return 'MMMM YYYY';
         }
 
@@ -160,7 +155,7 @@ export const toMomentFormat = (format: string): string => {
             let parsedFormat = format;
 
             parts.forEach((part) => {
-                const mapping = dateTimeFormatMappings.find(item => item.key === part);
+                const mapping = dateTimeFormatMappings.find((item) => item.key === part);
                 parsedFormat = mapping ? parsedFormat.replace(part, mapping.value) : parsedFormat;
             });
 
@@ -185,17 +180,24 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
     let offset = moment().utcOffset();
     const overrideTimezoneOffset = Settings.global('i18n.overrideTimezoneOffset', flowKey);
 
-    if (overrideTimezoneOffset && !Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey))) {
+    if (
+        overrideTimezoneOffset &&
+        !Utils.isNullOrUndefined(Settings.global('i18n.timezoneOffset', flowKey))
+    ) {
         offset = Settings.global('i18n.timezoneOffset', flowKey);
     }
 
-    if ((Utils.isNullOrUndefined(offset) || offset === 0) && Utils.isNullOrWhitespace(format) && !overrideTimezoneOffset) {
+    if (
+        (Utils.isNullOrUndefined(offset) || offset === 0) &&
+        Utils.isNullOrWhitespace(format) &&
+        !overrideTimezoneOffset
+    ) {
         return dateTime;
     }
 
     try {
         const momentFormat = Utils.isNullOrWhitespace(format) ? null : toMomentFormat(format);
-        const formats: (string|moment.MomentBuiltinFormat)[] = [moment.ISO_8601];
+        const formats: (string | moment.MomentBuiltinFormat)[] = [moment.ISO_8601];
 
         if (momentFormat) {
             formats.unshift(momentFormat);
@@ -213,12 +215,10 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
 
         if (overrideTimezoneOffset) {
             return parsedDateTime.format(momentFormat);
-        }
-        else {
+        } else {
             return parsedDateTime.utc().format(momentFormat);
         }
-    }
-    catch (ex) {
+    } catch (ex) {
         Log.error(ex);
     }
 
@@ -233,7 +233,10 @@ export const dateTime = (dateTime: string, format: string, flowKey: string): str
  * @param flowKey
  */
 export const number = (value: number | string, format: string, flowKey: string): string => {
-    if (Utils.isNullOrWhitespace(format) || !Settings.global('formatting.isEnabled', flowKey, false)) {
+    if (
+        Utils.isNullOrWhitespace(format) ||
+        !Settings.global('formatting.isEnabled', flowKey, false)
+    ) {
         return value.toString();
     }
 
@@ -243,43 +246,50 @@ export const number = (value: number | string, format: string, flowKey: string):
 
     try {
         if (format.indexOf('e') !== -1 || format.indexOf('E') !== -1) {
-            return (Number(value)).toExponential();
+            return Number(value).toExponential();
         }
 
         if (format.indexOf('c') !== -1 || format.indexOf('C') !== -1) {
             const numbroValue = numbro(value);
             window.numbro.culture(culture);
 
-            const formattedNumber = numbroValue.formatCurrency(Settings.global('formatting.currency', flowKey, '0[.]00'));
+            const formattedNumber = numbroValue.formatCurrency(
+                Settings.global('formatting.currency', flowKey, '0[.]00'),
+            );
             window.numbro.culture('en-US');
 
             return formattedNumber;
         }
 
-        format = format.replace(/^#+\./, match => match.replace(/#/g, '0'));
+        // eslint-disable-next-line no-param-reassign
+        format = format.replace(/^#+\./, (match) => match.replace(/#/g, '0'));
 
         if (format.indexOf('.') !== -1) {
             const numberString = value.toString();
             const decimals = numberString.substring(numberString.indexOf('.') + 1);
             const decimalsFormat = format.substring(format.indexOf('.') + 1);
 
+            // eslint-disable-next-line no-param-reassign
             format = format.substring(0, format.indexOf('.') + 1);
 
             decimalsFormat.split('').forEach((part, index) => {
                 switch (part.toUpperCase()) {
-                case '#':
-                    if (index < decimals.length) {
-                        format += 0;
-                    }
-                    break;
+                    case '#':
+                        if (index < decimals.length) {
+                            // eslint-disable-next-line no-param-reassign
+                            format += 0;
+                        }
+                        break;
 
-                case '0':
-                    format += '0';
-                    break;
+                    case '0':
+                        // eslint-disable-next-line no-param-reassign
+                        format += '0';
+                        break;
 
-                default:
-                    format += part;
-                    break;
+                    default:
+                        // eslint-disable-next-line no-param-reassign
+                        format += part;
+                        break;
                 }
             });
         }
@@ -291,8 +301,7 @@ export const number = (value: number | string, format: string, flowKey: string):
         window.numbro.culture('en-US');
 
         return formattedNumber;
-    }
-    catch (ex) {
+    } catch (ex) {
         Log.error(ex);
     }
 

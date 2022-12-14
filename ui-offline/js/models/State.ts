@@ -1,8 +1,6 @@
 import { clone } from '../services/Utils';
 import { IState, Id } from '../interfaces/IModels';
 
-declare let manywho: any;
-
 let currentMapElementId = null;
 let id = null;
 let token = null;
@@ -35,7 +33,9 @@ export const getStateValue = (valueId: Id) => {
 
         // If required, get a property value from an object
         if (valueId.typeElementPropertyId && value.objectData && value.objectData.length > 0) {
-            const property = value.objectData[0].properties.find((prop) => prop.typeElementPropertyId === valueId.typeElementPropertyId);
+            const property = value.objectData[0].properties.find(
+                (prop) => prop.typeElementPropertyId === valueId.typeElementPropertyId,
+            );
             if (property) {
                 value.contentValue = property.contentValue ? property.contentValue : null;
                 value.objectData = property.objectData ? property.objectData : null;
@@ -56,8 +56,14 @@ export const getStateValue = (valueId: Id) => {
  */
 export const setStateValue = (valueId: Id, typeElementId: string, snapshot: any, value: any) => {
     if (valueId.typeElementPropertyId) {
-        if (!values[valueId.id] || !values[valueId.id].objectData || values[valueId.id].objectData.length === 0) {
-            const typeElement = clone(snapshot.metadata.typeElements.find((type) => type.id === typeElementId));
+        if (
+            !values[valueId.id] ||
+            !values[valueId.id].objectData ||
+            values[valueId.id].objectData.length === 0
+        ) {
+            const typeElement = clone(
+                snapshot.metadata.typeElements.find((type) => type.id === typeElementId),
+            );
 
             typeElement.properties = typeElement.properties.map((property) => {
                 property.typeElementPropertyId = property.id;
@@ -71,12 +77,13 @@ export const setStateValue = (valueId: Id, typeElementId: string, snapshot: any,
             };
         }
 
-        const property = values[valueId.id].objectData[0].properties.find((prop) => prop.typeElementPropertyId === valueId.typeElementPropertyId);
+        const property = values[valueId.id].objectData[0].properties.find(
+            (prop) => prop.typeElementPropertyId === valueId.typeElementPropertyId,
+        );
         if (property) {
             property.contentValue = value.contentValue;
             property.objectData = value.objectData;
         }
-
     } else {
         values[valueId.id] = clone(value);
     }
@@ -90,12 +97,21 @@ export const setStateValue = (valueId: Id, typeElementId: string, snapshot: any,
  */
 export const StateUpdate = (inputs: any[], mapElement: any, snapshot: any) => {
     inputs.forEach((input) => {
-        const page = snapshot.metadata.pageElements.find((pageElement) => pageElement.id === mapElement.pageElementId);
-        const component = page.pageComponents.find((pageComponent) => pageComponent.id === input.pageComponentId);
+        const page = snapshot.metadata.pageElements.find(
+            (pageElement) => pageElement.id === mapElement.pageElementId,
+        );
+        const component = page.pageComponents.find(
+            (pageComponent) => pageComponent.id === input.pageComponentId,
+        );
 
         if (component.valueElementValueBindingReferenceId) {
             const value = snapshot.getValue(component.valueElementValueBindingReferenceId);
-            setStateValue(component.valueElementValueBindingReferenceId, value.typeElementId, snapshot, { ...input, contentType: value.contentType });
+            setStateValue(
+                component.valueElementValueBindingReferenceId,
+                value.typeElementId,
+                snapshot,
+                { ...input, contentType: value.contentType },
+            );
         }
     });
 };

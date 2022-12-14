@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
@@ -11,6 +9,7 @@ import { renderOutcomesInOrder } from './utils/CoreUtils';
 
 // react-maskedinput v4.0.1 has messed up default exports
 // https://github.com/insin/react-maskedinput/issues/104
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 let MaskedInput = require('react-maskedinput');
 
 if (MaskedInput.default) {
@@ -19,10 +18,7 @@ if (MaskedInput.default) {
 
 declare const manywho: any;
 
-const Test = Comp => <Comp />;
-
 class Input extends React.Component<IComponentProps, null> {
-
     constructor(props) {
         super(props);
 
@@ -47,7 +43,10 @@ class Input extends React.Component<IComponentProps, null> {
             e === null
         ) {
             manywho.state.setComponent(
-                this.props.id, { contentValue: e }, this.props.flowKey, true,
+                this.props.id,
+                { contentValue: e },
+                this.props.flowKey,
+                true,
             );
         } else {
             manywho.state.setComponent(
@@ -65,13 +64,10 @@ class Input extends React.Component<IComponentProps, null> {
         this.forceUpdate();
     }
 
-    onBlur(e) {
+    onBlur() {
         manywho.component.handleEvent(
             this,
-            manywho.model.getComponent(
-                this.props.id,
-                this.props.flowKey,
-            ),
+            manywho.model.getComponent(this.props.id, this.props.flowKey),
             this.props.flowKey,
             null,
         );
@@ -92,10 +88,9 @@ class Input extends React.Component<IComponentProps, null> {
         const InputNumber = getInputNumber();
         const Outcome = getOutcome();
 
-        const contentValue =
-            !manywho.utils.isNullOrUndefined(state.contentValue)
-                ? state.contentValue
-                : model.contentValue || '';
+        const contentValue = !manywho.utils.isNullOrUndefined(state.contentValue)
+            ? state.contentValue
+            : model.contentValue || '';
 
         let mask = null;
         if (model.attributes && model.attributes.mask) {
@@ -130,13 +125,16 @@ class Input extends React.Component<IComponentProps, null> {
             props.isDesignTime = true;
         }
 
-        if (typeof model.hintValue === 'number' || !manywho.utils.isNullOrWhitespace(model.hintValue)) {
+        if (
+            typeof model.hintValue === 'number' ||
+            !manywho.utils.isNullOrWhitespace(model.hintValue)
+        ) {
             props.placeholder = model.hintValue;
         }
 
-        let className = manywho.styling.getClasses(
-            this.props.parentId, this.props.id, 'input', this.props.flowKey,
-        ).join(' ');
+        let className = manywho.styling
+            .getClasses(this.props.parentId, this.props.id, 'input', this.props.flowKey)
+            .join(' ');
 
         if (model.isValid === false || state.isValid === false) {
             className += ' has-error';
@@ -154,7 +152,6 @@ class Input extends React.Component<IComponentProps, null> {
 
         let contentType = model.contentType || 'ContentString';
         if (model.valueElementValueBindingReferenceId) {
-
             if (model.valueElementValueBindingReferenceId.contentType) {
                 contentType = model.valueElementValueBindingReferenceId.contentType;
             } else if (
@@ -162,17 +159,19 @@ class Input extends React.Component<IComponentProps, null> {
                 model.valueElementValueBindingReferenceId.length > 0 &&
                 model.valueElementValueBindingReferenceId[0].properties
             ) {
-                contentType = (manywho.utils.getObjectDataProperty(
-                    model.valueElementValueBindingReferenceId[0].properties,
-                    'ContentType',
-                ) || {}).contentValue;
+                contentType = (
+                    manywho.utils.getObjectDataProperty(
+                        model.valueElementValueBindingReferenceId[0].properties,
+                        'ContentType',
+                    ) || {}
+                ).contentValue;
             }
         }
 
         const isRequired =
-        typeof model.isRequired === 'string' ?
-            manywho.utils.isEqual(model.isRequired, 'True', true) :
-            model.isRequired;
+            typeof model.isRequired === 'string'
+                ? manywho.utils.isEqual(model.isRequired, 'True', true)
+                : model.isRequired;
 
         let label = (
             <label>
@@ -184,67 +183,79 @@ class Input extends React.Component<IComponentProps, null> {
         let inputElement = null;
 
         switch (contentType.toUpperCase()) {
-        case manywho.component.contentTypes.datetime:
-            inputElement = <InputDateTime {...props} />;
-            break;
+            case manywho.component.contentTypes.datetime:
+                inputElement = <InputDateTime {...props} />;
+                break;
 
-        case manywho.component.contentTypes.date:
-            inputElement = <InputDateTime {...props} />;
-            break;
+            case manywho.component.contentTypes.date:
+                inputElement = <InputDateTime {...props} />;
+                break;
 
-        case manywho.component.contentTypes.boolean:
-            label = null;
-            inputElement = <InputBoolean {...props} />;
-            break;
+            case manywho.component.contentTypes.boolean:
+                label = null;
+                inputElement = <InputBoolean {...props} />;
+                break;
 
-        case manywho.component.contentTypes.number:
-            inputElement = <InputNumber {...props} />;
-            break;
+            case manywho.component.contentTypes.number:
+                inputElement = <InputNumber {...props} />;
+                break;
 
-        case manywho.component.contentTypes.password:
-            delete props.flowKey;
-            delete props.format;
-            if (manywho.utils.isNullOrWhitespace(props.value)) {
-                // Prevent browser from autofilling the wrong password. Chrome in particular guesses the autofill
-                // value and generally gets it wrong because there is no username field associated with this
-                // value. Also we do not store passwords in plain-text so this value should never be pre-populated.
-                props.autoComplete = 'new-password';
-            }
-            // A type of 'hidden' prevents browsers trying to autofill the previous form input as a username.
-            inputElement = <input {...props} className="form-control" type={model.isVisible ? 'password' : 'hidden'} />;
-            break;
-
-        default:
-            delete props.flowKey;
-            delete props.format;
-
-            if (manywho.utils.isNullOrEmpty(mask)) {
+            case manywho.component.contentTypes.password:
+                delete props.flowKey;
+                delete props.format;
+                if (manywho.utils.isNullOrWhitespace(props.value)) {
+                    // Prevent browser from autofilling the wrong password. Chrome in particular guesses the autofill
+                    // value and generally gets it wrong because there is no username field associated with this
+                    // value. Also we do not store passwords in plain-text so this value should never be pre-populated.
+                    props.autoComplete = 'new-password';
+                }
+                // A type of 'hidden' prevents browsers trying to autofill the previous form input as a username.
                 inputElement = (
                     <input
                         {...props}
                         className="form-control"
-                        type={model.attributes.type ? model.attributes.type : 'text'}
+                        type={model.isVisible ? 'password' : 'hidden'}
                     />
                 );
-            } else {
-                inputElement = (
-                    <MaskedInput
-                        {...props}
-                        className="form-control"
-                        type={model.attributes.type ? model.attributes.type : 'text'}
-                    />
-                );
-            }
-            break;
+                break;
+
+            default:
+                delete props.flowKey;
+                delete props.format;
+
+                if (manywho.utils.isNullOrEmpty(mask)) {
+                    inputElement = (
+                        <input
+                            {...props}
+                            className="form-control"
+                            type={model.attributes.type ? model.attributes.type : 'text'}
+                        />
+                    );
+                } else {
+                    inputElement = (
+                        <MaskedInput
+                            {...props}
+                            className="form-control"
+                            type={model.attributes.type ? model.attributes.type : 'text'}
+                        />
+                    );
+                }
+                break;
         }
 
-        const outcomeButtons = outcomes && outcomes.map(outcome => <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />);
+        const outcomeButtons =
+            outcomes &&
+            outcomes.map((outcome) => (
+                <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />
+            ));
 
         const inputField = (
             <div key="">
                 {label}
                 {inputElement}
-                <span className="help-block">{model.validationMessage || state.validationMessage}</span>
+                <span className="help-block">
+                    {model.validationMessage || state.validationMessage}
+                </span>
                 <span className="help-block">{model.helpInfo}</span>
             </div>
         );
@@ -259,6 +270,6 @@ class Input extends React.Component<IComponentProps, null> {
 
 manywho.component.register(registeredComponents.INPUT, Input, ['checkbox']);
 
-export const getInput = () : typeof Input => manywho.component.getByName(registeredComponents.INPUT);
+export const getInput = (): typeof Input => manywho.component.getByName(registeredComponents.INPUT);
 
 export default Input;

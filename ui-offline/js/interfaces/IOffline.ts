@@ -16,7 +16,10 @@ export interface IOfflineProps {
     isOffline: boolean;
     hasNetwork: boolean;
     cachingProgress: number;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     toggleIsOffline: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     toggleIsReplaying: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     toggleIsOnline: Function;
 }

@@ -6,7 +6,9 @@ interface IItemsHeaderProps extends IComponentProps {
     outcomes: any[];
     refresh: any;
     isDisabled?: boolean;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onSearch?: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onSearchChanged?: Function;
     search?: any;
 }

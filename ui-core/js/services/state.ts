@@ -1,4 +1,3 @@
-import * as $ from 'jquery';
 import * as moment from 'moment';
 
 import * as Collaboration from './collaboration';
@@ -7,7 +6,6 @@ import * as Settings from './settings';
 import * as Utils from './utils';
 import * as Validation from './validation';
 
-const loading = {};
 const components = {};
 const state = {};
 const authenticationToken = {};
@@ -26,12 +24,11 @@ export const refreshComponents = (models: any, flowKey: string) => {
     components[lookUpKey] = {};
 
     for (const id in models) {
-
         let selectedObjectData = null;
 
         // We need to do a little work on the object data as we only want the selected values in the state
         if (models[id].objectData && !Utils.isEmptyObjectData(models[id])) {
-            selectedObjectData = models[id].objectData.filter(item => item.isSelected);
+            selectedObjectData = models[id].objectData.filter((item) => item.isSelected);
         }
 
         components[lookUpKey][id] = {
@@ -53,27 +50,32 @@ export const getLocation = (flowKey: string) => {
  * Set the current location to the running users `navigator.geolocation` if the `location.isTrackingEnabled` setting is true
  */
 export const setLocation = (flowKey: string) => {
-    if ('geolocation' in navigator
-        && (Settings.global('trackLocation', flowKey, false) || Settings.global('location.isTrackingEnabled', flowKey, false))) {
-
+    if (
+        'geolocation' in navigator &&
+        (Settings.global('trackLocation', flowKey, false) ||
+            Settings.global('location.isTrackingEnabled', flowKey, false))
+    ) {
         const lookUpKey = Utils.getLookUpKey(flowKey);
 
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                if (position != null && position.coords != null) {
+                    location[lookUpKey] = {
+                        latitude: Utils.getNumber(position.coords.latitude),
+                        longitude: Utils.getNumber(position.coords.longitude),
+                        accuracy: Utils.getNumber(position.coords.accuracy),
+                        altitude: Utils.getNumber(position.coords.altitude),
+                        altitudeAccuracy: Utils.getNumber(position.coords.altitudeAccuracy),
+                        heading: Utils.getNumber(position.coords.heading),
+                        speed: Utils.getNumber(position.coords.speed),
+                    };
 
-            if (position != null && position.coords != null) {
-                location[lookUpKey] = {
-                    latitude: Utils.getNumber(position.coords.latitude),
-                    longitude: Utils.getNumber(position.coords.longitude),
-                    accuracy: Utils.getNumber(position.coords.accuracy),
-                    altitude: Utils.getNumber(position.coords.altitude),
-                    altitudeAccuracy: Utils.getNumber(position.coords.altitudeAccuracy),
-                    heading: Utils.getNumber(position.coords.heading),
-                    speed: Utils.getNumber(position.coords.speed),
-                };
-
-                setUserTime(flowKey);
-            }
-        },                                       null, { timeout: 60000 });
+                    setUserTime(flowKey);
+                }
+            },
+            null,
+            { timeout: 60000 },
+        );
     }
 };
 
@@ -90,8 +92,7 @@ export const setUserTime = (flowKey: string) => {
 
     if (location[lookUpKey]) {
         location[lookUpKey].time = now.format();
-    }
-    else {
+    } else {
         location[lookUpKey] = { time: now.format() };
     }
 };
@@ -119,10 +120,10 @@ export interface IComponentValue {
     objectData?: any[];
     contentValue?: string | number | boolean;
     loading?: {
-        message: string,
+        message: string;
     };
     error?: {
-        message: string,
+        message: string;
     };
     isValid?: boolean;
     validationMessage?: string;
@@ -132,7 +133,12 @@ export interface IComponentValue {
  * Update the state of a single component. If clientside validation is enabled the new state will be validated first
  * @param push Set to true to call `Collaboration.push` after updating the component
  */
-export const setComponent = (id: string, value: IComponentValue, flowKey: string, push: boolean) => {
+export const setComponent = (
+    id: string,
+    value: IComponentValue,
+    flowKey: string,
+    push: boolean,
+) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     components[lookUpKey][id] = Utils.extend(components[lookUpKey][id], value);
@@ -163,16 +169,16 @@ export interface IPageComponentInputResponseRequest {
 /**
  * Transform the current components local state into an array of IPageComponentInputResponseRequest
  */
-export const getPageComponentInputResponseRequests = (flowKey: string): IPageComponentInputResponseRequest[] => {
+export const getPageComponentInputResponseRequests = (
+    flowKey: string,
+): IPageComponentInputResponseRequest[] => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     let pageComponentInputResponseRequests = null;
 
     if (components[lookUpKey] != null) {
-
         pageComponentInputResponseRequests = [];
 
         for (const id in components[lookUpKey]) {
-
             if (guidRegex.test(id)) {
                 pageComponentInputResponseRequests.push({
                     pageComponentId: id,
@@ -334,14 +340,12 @@ export const setComponentError = (componentId: string, error: any | string, flow
     if (error !== null && typeof error === 'object') {
         components[lookUpKey][componentId].error = error;
         components[lookUpKey][componentId].error.id = componentId;
-    }
-    else if (typeof error === 'string') {
+    } else if (typeof error === 'string') {
         components[lookUpKey][componentId].error = {
             message: error,
             id: componentId,
         };
-    }
-    else if (!error) {
+    } else if (!error) {
         components[lookUpKey][componentId].error = null;
     }
 };

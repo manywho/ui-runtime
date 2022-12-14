@@ -6,20 +6,20 @@ import registeredComponents from '../constants/registeredComponents';
 declare let manywho: any;
 
 class Wait extends React.Component<IWaitProps, null> {
-
     componentDidUpdate() {
+        // eslint-disable-next-line react/no-find-dom-node
         if (findDOMNode(this.refs['wait'])) {
+            // eslint-disable-next-line react/no-find-dom-node
             const element = findDOMNode(this.refs['wait']);
             if (element.clientHeight > window.innerHeight) {
-                (element.children[0] as HTMLElement)
-                    .style.top = 'calc(40% + ' + window.scrollY + ')';
+                (element.children[0] as HTMLElement).style.top =
+                    'calc(40% + ' + window.scrollY + ')';
             }
         }
     }
 
     render() {
         if (this.props.isVisible) {
-
             manywho.log.info('Rendering Wait');
 
             const spinnerClassNames = ['wait-spinner'];
@@ -34,7 +34,6 @@ class Wait extends React.Component<IWaitProps, null> {
                     <span className="wait-message">{this.props.message}</span>
                 </div>
             );
-
         }
 
         return null;
@@ -43,6 +42,7 @@ class Wait extends React.Component<IWaitProps, null> {
 
 manywho.component.register(registeredComponents.WAIT, Wait);
 
-export const getWait = () : typeof Wait => manywho.component.getByName(registeredComponents.WAIT) || Wait;
+export const getWait = (): typeof Wait =>
+    manywho.component.getByName(registeredComponents.WAIT) || Wait;
 
 export default Wait;

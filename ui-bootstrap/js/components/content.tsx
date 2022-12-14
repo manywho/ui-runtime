@@ -6,7 +6,7 @@ import outcome from './outcome';
 import tableContainer from './table-container';
 import fileUpload from './file-upload';
 
-/* eslint import/no-webpack-loader-syntax: off */
+// eslint-disable-next-line import/no-unresolved
 import * as rawTinyMceContentStyles from '!!raw-loader!tinymce/skins/lightgray/content.min.css';
 import 'tinymce/themes/modern';
 import 'tinymce/plugins/anchor';
@@ -62,7 +62,6 @@ export const checkCharacterLength = (keyCode: string, maxSize: number, text: str
 };
 
 class Content extends React.Component<IComponentProps, IContentState> {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -72,6 +71,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
         this.id = `content-${this.props.id}_${manywho.utils.guid()}`;
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     changeInterval: Function;
     skipSetContent: boolean;
     editor: any;
@@ -108,11 +108,14 @@ class Content extends React.Component<IComponentProps, IContentState> {
     initializeEditor = () => {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
 
-        const customPlugins =
-            manywho.settings.global('richtext.custom_plugins', this.props.flowKey, null);
+        const customPlugins = manywho.settings.global(
+            'richtext.custom_plugins',
+            this.props.flowKey,
+            null,
+        );
 
         if (customPlugins) {
-            Object.keys(customPlugins).forEach(name =>
+            Object.keys(customPlugins).forEach((name) =>
                 tinymce.PluginManager.add(name, customPlugins[name]),
             );
         }
@@ -133,11 +136,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
             readonly: !model.isEditable,
             menubar: 'edit insert view format table',
             browser_spellcheck: true,
-            toolbar: manywho.settings.global(
-                'richtext.toolbar',
-                this.props.flowKey,
-                [],
-            ),
+            toolbar: manywho.settings.global('richtext.toolbar', this.props.flowKey, []),
             file_picker_callback: null,
             convert_urls: false,
             relative_urls: false,
@@ -149,10 +148,11 @@ class Content extends React.Component<IComponentProps, IContentState> {
                 this.editor = editor;
 
                 if (!this.props.isDesignTime) {
-
                     if (
                         manywho.settings.global(
-                            'richtext.imageUploadEnabled', this.props.flowKey, true,
+                            'richtext.imageUploadEnabled',
+                            this.props.flowKey,
+                            true,
                         )
                     ) {
                         editor.addButton('mwimage', {
@@ -170,8 +170,12 @@ class Content extends React.Component<IComponentProps, IContentState> {
                         if (model.maxSize !== null) {
                             const body = tinymce.get(this.id).getBody();
                             const text: string = tinymce.trim(body.innerText || body.textContent);
-                            const hasExceededMaxCharLength = checkCharacterLength(e.code, model.maxSize, text);
-                            
+                            const hasExceededMaxCharLength = checkCharacterLength(
+                                e.code,
+                                model.maxSize,
+                                text,
+                            );
+
                             if (hasExceededMaxCharLength) {
                                 tinymce.dom.Event.cancel(e);
                             }
@@ -186,7 +190,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
                 editor.on('init', this.onInit);
             },
         });
-    }
+    };
 
     /**
      * tinyMCE init
@@ -202,9 +206,13 @@ class Content extends React.Component<IComponentProps, IContentState> {
      * options for the importcss plugin as they are not used and, by default, richtext.importcss_file_filter has the
      * same URI as richtext.content_css
      */
-    onInit = (e) => {
+    onInit = () => {
         const iframe = this.editor.getDoc();
-        iframe.body.style.fontSize = manywho.settings.global('richtext.fontsize', this.props.flowKey, '13px');
+        iframe.body.style.fontSize = manywho.settings.global(
+            'richtext.fontsize',
+            this.props.flowKey,
+            '13px',
+        );
 
         const content_css = manywho.settings.global('richtext.content_css', this.props.flowKey, []);
 
@@ -219,38 +227,40 @@ class Content extends React.Component<IComponentProps, IContentState> {
         iframe.head.appendChild(tinyMceContentStyleTag);
 
         for (const uri of content_css) {
-            const css = document.createElement("link");
+            const css = document.createElement('link');
             css.href = uri;
-            css.rel = "stylesheet";
-            css.type = "text/css";
-            css.crossOrigin = "anonymous";
+            css.rel = 'stylesheet';
+            css.type = 'text/css';
+            css.crossOrigin = 'anonymous';
             iframe.head.appendChild(css);
         }
-
 
         // Ensure the new styles are applied and we update state for any text modifications made by the user
         // between presenting the <textarea> UI and initializing tinyMCE
 
         this.editor.fire('change');
-    }
+    };
 
-    onChange = (e) => {
+    onChange = () => {
         const contentValue = this.editor.getContent();
         manywho.state.setComponent(this.props.id, { contentValue }, this.props.flowKey, true);
-    }
+    };
 
-    onEvent = (e) => {
+    onEvent = () => {
         manywho.component.handleEvent(
             this,
             manywho.model.getComponent(this.props.id, this.props.flowKey),
             this.props.flowKey,
         );
-    }
+    };
 
     renderFileDialog = () => {
-
-        const TableContainer : typeof tableContainer = manywho.component.getByName(registeredComponents.TABLE_CONTAINER);
-        const FileUpload : typeof fileUpload = manywho.component.getByName(registeredComponents.FILE_UPLOAD);
+        const TableContainer: typeof tableContainer = manywho.component.getByName(
+            registeredComponents.TABLE_CONTAINER,
+        );
+        const FileUpload: typeof fileUpload = manywho.component.getByName(
+            registeredComponents.FILE_UPLOAD,
+        );
 
         const tableProps: any = {
             flowKey: this.props.flowKey,
@@ -269,64 +279,71 @@ class Content extends React.Component<IComponentProps, IContentState> {
             uploadProps.uploadComplete = this.onUploadComplete;
         }
 
-        return <div className="modal show">
-            <div className="modal-dialog full-screen">
-                <div className="modal-content full-screen">
-                    <div className="modal-body">
-                        <ul className="nav nav-tabs">
-                            <li className="active">
-                                <a href="#files" data-toggle="tab">File List</a>
-                            </li>
-                            <li>
-                                <a href="#files" data-toggle="tab">Direct Upload</a>
-                            </li>
-                        </ul>
-                        <div className="tab-content">
-                            <div className="tab-pane active" id="files">
-                                <TableContainer {...tableProps} />
-                            </div>
-                            <div className="tab-pane" id="upload">
-                                <FileUpload {...uploadProps} />
+        return (
+            <div className="modal show">
+                <div className="modal-dialog full-screen">
+                    <div className="modal-content full-screen">
+                        <div className="modal-body">
+                            <ul className="nav nav-tabs">
+                                <li className="active">
+                                    <a href="#files" data-toggle="tab">
+                                        File List
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#files" data-toggle="tab">
+                                        Direct Upload
+                                    </a>
+                                </li>
+                            </ul>
+                            <div className="tab-content">
+                                <div className="tab-pane active" id="files">
+                                    <TableContainer {...tableProps} />
+                                </div>
+                                <div className="tab-pane" id="upload">
+                                    <FileUpload {...uploadProps} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button className="btn btn-default" onClick={this.onFileCancel}>
-                            Cancel
-                        </button>
+                        <div className="modal-footer">
+                            <button className="btn btn-default" onClick={this.onFileCancel}>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>;
-    }
+        );
+    };
 
     onUploadComplete = (response) => {
         const imageUri = manywho.utils.getObjectDataProperty(
-            response.objectData[0].properties, 'Download Uri',
+            response.objectData[0].properties,
+            'Download Uri',
         );
         const imageName = manywho.utils.getObjectDataProperty(
-            response.objectData[0].properties, 'Name',
+            response.objectData[0].properties,
+            'Name',
         );
 
         if (imageUri) {
             tinymce.activeEditor.execCommand(
                 'mceInsertContent',
                 false,
-                '<img src="' + imageUri.contentValue + '" alt="' +
-                    imageName.contentValue + '"/>',
+                '<img src="' + imageUri.contentValue + '" alt="' + imageName.contentValue + '"/>',
             );
 
             this.setState({
                 isImageUploadOpen: false,
             });
         }
-    }
+    };
 
-    onFileCancel = (event) => {
+    onFileCancel = () => {
         this.setState({
             isImageUploadOpen: false,
         });
-    }
+    };
 
     onFileTableRowClicked = (event) => {
         const imageUri = event.currentTarget.lastChild.innerText;
@@ -343,7 +360,7 @@ class Content extends React.Component<IComponentProps, IContentState> {
                 isImageUploadOpen: false,
             });
         }
-    }
+    };
 
     render() {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
@@ -353,30 +370,30 @@ class Content extends React.Component<IComponentProps, IContentState> {
         const state = manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
         const outcomes = manywho.model.getOutcomes(this.props.id, this.props.flowKey);
 
-        const Outcome : typeof outcome = manywho.component.getByName(registeredComponents.OUTCOME);
+        const Outcome: typeof outcome = manywho.component.getByName(registeredComponents.OUTCOME);
 
-        const contentValue =
-            state.contentValue
-            ? state.contentValue
-            : model.contentValue || '';
+        const contentValue = state.contentValue ? state.contentValue : model.contentValue || '';
 
         const openBracket = '{![';
         const closedBracket = ']}';
 
-        const replaceSpacesInReferences = contentValue.split(openBracket).map((splitByStartString, index) => {
-            // splitByStartString is all text up until the next {![
-            // e.g. {![ , 'ReferencedValue]} normal text in the content' , {![
-            // If this text has index:0, then this text didn't have a start {![ OR
-            // If this text has no ending ]}
-            if (index === 0 || splitByStartString.indexOf(closedBracket) === -1) {
-                // Then this is not a valid reference, so we will leave it alone
-                return splitByStartString;
-            }
-            const splitByEndString = splitByStartString.split(closedBracket);
-            // Using regex to replace spaces with &nbsp;
-            splitByEndString[0] = splitByEndString[0].replace(/ /g, '&nbsp;');
-            return splitByEndString.join(closedBracket);
-        }).join(openBracket);
+        const replaceSpacesInReferences = contentValue
+            .split(openBracket)
+            .map((splitByStartString, index) => {
+                // splitByStartString is all text up until the next {![
+                // e.g. {![ , 'ReferencedValue]} normal text in the content' , {![
+                // If this text has index:0, then this text didn't have a start {![ OR
+                // If this text has no ending ]}
+                if (index === 0 || splitByStartString.indexOf(closedBracket) === -1) {
+                    // Then this is not a valid reference, so we will leave it alone
+                    return splitByStartString;
+                }
+                const splitByEndString = splitByStartString.split(closedBracket);
+                // Using regex to replace spaces with &nbsp;
+                splitByEndString[0] = splitByEndString[0].replace(/ /g, '&nbsp;');
+                return splitByEndString.join(closedBracket);
+            })
+            .join(openBracket);
 
         const props: any = {
             id: this.id,
@@ -392,9 +409,9 @@ class Content extends React.Component<IComponentProps, IContentState> {
 
         props['data-flowkey'] = this.props.flowKey;
 
-        let className = manywho.styling.getClasses(
-            this.props.parentId, this.props.id, 'input', this.props.flowKey,
-        ).join(' ');
+        let className = manywho.styling
+            .getClasses(this.props.parentId, this.props.id, 'input', this.props.flowKey)
+            .join(' ');
 
         if (model.isValid === false || state.isValid === false) {
             className += ' has-error';
@@ -406,36 +423,33 @@ class Content extends React.Component<IComponentProps, IContentState> {
 
         className += ' form-group';
 
-        const outcomeButtons = outcomes && outcomes.map((outcome) => {
-            return <Outcome id={outcome.id} flowKey={this.props.flowKey} />;
-        });
+        const outcomeButtons =
+            outcomes &&
+            outcomes.map((outcome) => {
+                return <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />;
+            });
 
-
-
-        return <div className={className} id={this.props.id}>
-            <label>
-                {model.label}
-                {
-                    model.isRequired ?
-                        <span className="input-required"> *</span> :
-                        null
-                }
-            </label>
-            <textarea {...props} />
-            <span className="help-block">
-            {
-                model.validationMessage || state.validationMessage
-            }
-            </span>
-            <span className="help-block">{model.helpInfo}</span>
-            {outcomeButtons}
-            {this.state.isImageUploadOpen ? this.renderFileDialog() : null}
-        </div>;
+        return (
+            <div className={className} id={this.props.id}>
+                <label>
+                    {model.label}
+                    {model.isRequired ? <span className="input-required"> *</span> : null}
+                </label>
+                <textarea {...props} />
+                <span className="help-block">
+                    {model.validationMessage || state.validationMessage}
+                </span>
+                <span className="help-block">{model.helpInfo}</span>
+                {outcomeButtons}
+                {this.state.isImageUploadOpen ? this.renderFileDialog() : null}
+            </div>
+        );
     }
 }
 
 manywho.component.register(registeredComponents.CONTENT, Content);
 
-export const getContent = () : typeof Content => manywho.component.getByName(registeredComponents.CONTENT) || Content;
+export const getContent = (): typeof Content =>
+    manywho.component.getByName(registeredComponents.CONTENT) || Content;
 
 export default Content;

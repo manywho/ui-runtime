@@ -32,6 +32,7 @@ module.exports = {
         beforeEach: 'readonly',
         describe: 'readonly',
     },
+    reportUnusedDisableDirectives: true,
     rules: {
         'no-trailing-spaces': 'off',
         'import/order': 'off',

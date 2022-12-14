@@ -6,17 +6,17 @@ import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
 // Can't use import otherwise the Jest tests fail to find DOMPurify
-const createDOMPurify = require('dompurify');
+import createDOMPurify = require('dompurify');
 
 const DOMPurify = createDOMPurify(window);
 
 declare let manywho: any;
 
 class Presentation extends React.Component<IComponentProps, null> {
-
     html = null;
 
     replaceContent() {
+        // eslint-disable-next-line react/no-find-dom-node
         const node = findDOMNode(this.refs.content);
 
         const imgs = node.querySelectorAll('img');
@@ -26,8 +26,12 @@ class Presentation extends React.Component<IComponentProps, null> {
             }
     }
 
-    componentDidUpdate() { this.replaceContent(); }
-    componentDidMount() { this.replaceContent(); }
+    componentDidUpdate() {
+        this.replaceContent();
+    }
+    componentDidMount() {
+        this.replaceContent();
+    }
 
     // Enzyme/Jest do not render dangerouslySetInnerHTML with mount or shallow, so to allow
     // testing provide access to the rendered html
@@ -44,15 +48,15 @@ class Presentation extends React.Component<IComponentProps, null> {
 
         const state = manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
         const outcomes: any = manywho.model.getOutcomes(this.props.id, this.props.flowKey);
-        const outcomeElements: JSX.Element[] = outcomes && outcomes
-            .map(outcome => <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey}/>);
+        const outcomeElements: JSX.Element[] =
+            outcomes &&
+            outcomes.map((outcome) => (
+                <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />
+            ));
 
-        let className = manywho.styling.getClasses(
-            this.props.parentId,
-            this.props.id,
-            'presentation',
-            this.props.flowKey,
-        ).join(' ');
+        let className = manywho.styling
+            .getClasses(this.props.parentId, this.props.id, 'presentation', this.props.flowKey)
+            .join(' ');
 
         if (model.isVisible === false) {
             className += ' hidden';
@@ -62,8 +66,9 @@ class Presentation extends React.Component<IComponentProps, null> {
 
         if (!manywho.utils.isNullOrUndefined(this.html)) {
             // Undo some escaping applied by the API.
-            this.html = this.html.replace(/&quot;/g, '\"')
-                .replace(/&#39;/g, '\'')
+            this.html = this.html
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
                 .replace(/&amp;/g, '&');
@@ -72,12 +77,24 @@ class Presentation extends React.Component<IComponentProps, null> {
             // The default player, for new customers/flows, will have this setting enabled by default.
             // Allow an optional DOMPurify config to allow/disallow certain tags or attributes.
             // Always strip dangerous JavaScript when in debug mode.
-            if (manywho.settings.global('disableScripting', this.props.flowKey, false) || manywho.settings.isDebugEnabled(this.props.flowKey)) {
-                this.html = DOMPurify.sanitize(this.html, manywho.settings.global('disableScriptingConfiguration', this.props.flowKey, null));
+            if (
+                manywho.settings.global('disableScripting', this.props.flowKey, false) ||
+                manywho.settings.isDebugEnabled(this.props.flowKey)
+            ) {
+                this.html = DOMPurify.sanitize(
+                    this.html,
+                    manywho.settings.global(
+                        'disableScriptingConfiguration',
+                        this.props.flowKey,
+                        null,
+                    ),
+                );
                 if (DOMPurify.removed && DOMPurify.removed.length > 0) {
                     // Notify someone so we can identify Flows that have been affected, which
                     // may not be desirable for some customers.
-                    console.error(`Scripting removed from Presentation: ${this.props.id}, Name: ${model.developerName} Content: ${model.content}`);
+                    console.error(
+                        `Scripting removed from Presentation: ${this.props.id}, Name: ${model.developerName} Content: ${model.content}`,
+                    );
                 }
             }
         }
@@ -95,15 +112,20 @@ class Presentation extends React.Component<IComponentProps, null> {
 
         return (
             <div className={className} id={this.props.id}>
-                {renderOutcomesInOrder(presentationField, outcomeElements, outcomes, model.isVisible)}
+                {renderOutcomesInOrder(
+                    presentationField,
+                    outcomeElements,
+                    outcomes,
+                    model.isVisible,
+                )}
             </div>
         );
     }
-
 }
 
 manywho.component.register(registeredComponents.PRESENTATION, Presentation);
 
-export const getPresentation = () : typeof Presentation => manywho.component.getByName(registeredComponents.PRESENTATION);
+export const getPresentation = (): typeof Presentation =>
+    manywho.component.getByName(registeredComponents.PRESENTATION);
 
 export default Presentation;

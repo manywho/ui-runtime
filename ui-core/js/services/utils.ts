@@ -1,5 +1,3 @@
-
-import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 
@@ -12,10 +10,9 @@ import * as Social from './social';
 import * as State from './state';
 
 function extendShallow(mergedObject, objects) {
-
     objects.forEach((object) => {
         for (const key in object) {
-            if (object.hasOwnProperty(key)) {
+            if (objectHasProperty(object, key)) {
                 mergedObject[key] = object[key];
             }
         }
@@ -25,21 +22,16 @@ function extendShallow(mergedObject, objects) {
 }
 
 function extendDeep(mergedObject, object) {
-
     for (const key in object) {
-
         try {
             if (Array.isArray(object[key])) {
                 mergedObject[key] = extendArray(mergedObject[key] || [], object[key]);
-            }
-            else if (object[key].constructor === Object) {
+            } else if (object[key].constructor === Object) {
                 mergedObject[key] = extendDeep(mergedObject[key], object[key]);
-            }
-            else if (object.hasOwnProperty(key)) {
+            } else if (objectHasProperty(object, key)) {
                 mergedObject[key] = object[key];
             }
-        }
-        catch (e) {
+        } catch (e) {
             mergedObject[key] = object[key];
         }
     }
@@ -48,7 +40,6 @@ function extendDeep(mergedObject, object) {
 }
 
 function extendArray(mergedArray, array) {
-
     array.forEach((child) => {
         mergedArray.push(child);
     });
@@ -84,9 +75,7 @@ export const removeURIParam = (uri, key) => {
     const currentQuery = anchorElement.search;
     const hasQuery = currentQuery !== '';
 
-    const queryParams = hasQuery
-        ? parseQueryString(currentQuery.substring(1))
-        : {};
+    const queryParams = hasQuery ? parseQueryString(currentQuery.substring(1)) : {};
 
     const paramStringPairs = [];
     for (const paramKey in queryParams) {
@@ -111,9 +100,7 @@ export const setURIParam = (uri, key, value) => {
     const currentQuery = anchorElement.search;
     const hasQuery = currentQuery !== '';
 
-    const queryParams = hasQuery
-        ? parseQueryString(currentQuery.substring(1))
-        : {};
+    const queryParams = hasQuery ? parseQueryString(currentQuery.substring(1)) : {};
 
     queryParams[encodeURIComponent(key)] = encodeURIComponent(value);
 
@@ -136,7 +123,15 @@ export const replaceBrowserUrl = (response: any) => {
         const queryParameters = parseQueryString(window.location.search.substring(1));
 
         let newJoinUri = response.joinFlowUri;
-        const ignoreParameters = ['tenant-id', 'flow-id', 'flow-version-id', 'navigation-element-id', 'join', 'initialization', 'authorization'];
+        const ignoreParameters = [
+            'tenant-id',
+            'flow-id',
+            'flow-version-id',
+            'navigation-element-id',
+            'join',
+            'initialization',
+            'authorization',
+        ];
 
         for (const queryParameter in queryParameters) {
             if (ignoreParameters.indexOf(queryParameter) === -1) {
@@ -146,8 +141,7 @@ export const replaceBrowserUrl = (response: any) => {
 
         try {
             history.replaceState(response.stateToken, 'Title', newJoinUri);
-        }
-        catch (ex) {
+        } catch (ex) {
             Log.error(ex);
         }
     }
@@ -158,13 +152,12 @@ export const replaceBrowserUrl = (response: any) => {
  */
 export const parseQueryString = (queryString: string): any => {
     const params = {};
-    let queries;
     let temp;
     let i;
     let l;
 
     // Split into key/value pairs
-    queries = queryString.split('&');
+    const queries = queryString.split('&');
 
     // Convert the array of strings into an object
     for (i = 0, l = queries.length; i < l; i += 1) {
@@ -185,14 +178,16 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
 
     if (objects) {
         if (!Array.isArray(objects)) {
+            // eslint-disable-next-line no-param-reassign
             objects = [objects];
         }
 
         if (!isDeep) {
+            // eslint-disable-next-line no-param-reassign
             mergedObject = extendShallow(mergedObject, objects);
-        }
-        else {
+        } else {
             objects.forEach((object) => {
+                // eslint-disable-next-line no-param-reassign
                 mergedObject = extendDeep(mergedObject, object);
             });
         }
@@ -204,25 +199,23 @@ export const extend = (mergedObject, objects, isDeep?: boolean) => {
 /**
  * @hidden
  */
-export const extendObjectData = (mergedObjectData: any[], objectData: any[]): any[]  => {
+export const extendObjectData = (mergedObjectData: any[], objectData: any[]): any[] => {
     if (objectData) {
         if (!mergedObjectData) {
+            // eslint-disable-next-line no-param-reassign
             mergedObjectData = [];
             mergedObjectData.push(objectData[0]);
-            return;
+
+            return mergedObjectData;
         }
 
         objectData.forEach((objectProperty) => {
-
             if (mergedObjectData && mergedObjectData.length > 0) {
-
                 mergedObjectData.forEach((property) => {
-
                     if (isEqual(property.developerName, objectProperty.developerName, true)) {
                         if (objectProperty.contentValue != null) {
                             extend(property, objectProperty, true);
-                        }
-                        else if (objectProperty.objectData != null) {
+                        } else if (objectProperty.objectData != null) {
                             property.objectData = objectProperty.objectData;
                         }
                     }
@@ -265,12 +258,10 @@ export const isNullOrEmpty = (value: string): boolean => {
 export const isEqual = (value1: string, value2: string, ignoreCase: boolean): boolean => {
     if (!value1 && !value2) {
         return true;
-    }
-    else if (value1 && value2) {
+    } else if (value1 && value2) {
         if (ignoreCase) {
             return value1.toLowerCase() === value2.toLowerCase();
-        }
-        else {
+        } else {
             return value1 === value2;
         }
     }
@@ -298,15 +289,15 @@ export const convertToArray = (obj): any[] => {
  * Check if an array contains item where the `key` property is equal to `id`
  */
 export const contains = (collection: any[], id: string, key: string) => {
-    const selectedItem = collection.filter(item => item[key] === id);
-    return (selectedItem && selectedItem.length > 0);
+    const selectedItem = collection.filter((item) => item[key] === id);
+    return selectedItem && selectedItem.length > 0;
 };
 
 /**
  * Get an item from an array where the `key` property of the item is equal to `id`
  */
 export const get = (collection: any[], id: string, key: string) => {
-    const selectedItem = collection.filter(item => item[key] === id);
+    const selectedItem = collection.filter((item) => item[key] === id);
 
     if (selectedItem && selectedItem.length > 0) {
         return selectedItem[0];
@@ -333,8 +324,15 @@ export const getAll = (map: any, id: string, key: string) => {
 /**
  * Construct a new flow key
  */
-export const getFlowKey = function (tenantId: string, flowId: string, flowVersionId: string, environmentId: string, stateId: string, element: string) {
-    const args = Array.prototype.slice.call(arguments);
+export const getFlowKey = function (
+    tenantId: string,
+    flowId: string,
+    flowVersionId: string,
+    environmentId: string,
+    stateId: string,
+    element: string,
+) {
+    const args = Array.of(tenantId, flowId, flowVersionId, environmentId, stateId, element);
     return args.join('_');
 };
 
@@ -385,7 +383,7 @@ export const extractStateId = (flowKey: string) => {
 /**
  * Get the `environment id` from a flow key
  */
- export const extractEnvironmentId = (flowKey: string) => {
+export const extractEnvironmentId = (flowKey: string) => {
     return flowKey.split('_')[3];
 };
 
@@ -435,15 +433,15 @@ export const getValueByPath = (obj: any, path: string): any => {
             }
 
             if (foundKey) {
+                // eslint-disable-next-line no-param-reassign
                 obj = obj[foundKey];
-            }
-            else {
+            } else {
+                // eslint-disable-next-line no-param-reassign
                 obj = undefined;
             }
         }
         return obj;
-    }
-    catch (ex) {
+    } catch (ex) {
         return undefined;
     }
 };
@@ -453,7 +451,9 @@ export const getValueByPath = (obj: any, path: string): any => {
  */
 export const removeFlowFromDOM = (flowKey) => {
     const lookUpKey = getLookUpKey(flowKey);
-    const rootElement = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
+    const rootElement = document.querySelector(
+        Settings.global('containerSelector', flowKey, '#manywho'),
+    );
 
     // Ref. CORE-4602
     // Intermittently receiving the following error in the tooling
@@ -462,11 +462,9 @@ export const removeFlowFromDOM = (flowKey) => {
     // just in case while looping rootElement gets removed
 
     if (rootElement) {
-
         for (let i = 0; i < rootElement.children.length; i += 1) {
-
             const elementId =
-                (rootElement && rootElement.children && rootElement.children[i])
+                rootElement && rootElement.children && rootElement.children[i]
                     ? rootElement.children[i].id
                     : null;
 
@@ -482,14 +480,20 @@ export const removeFlowFromDOM = (flowKey) => {
  * Returns the property where its `developerName` is equal to the `propertyName` argument
  */
 export const getObjectDataProperty = (properties: any[], propertyName: string): any => {
-    return properties.find(property => isEqual(property.developerName, propertyName, true));
+    return properties.find((property) => isEqual(property.developerName, propertyName, true));
 };
 
 /**
  * Set the `contentValue` of a property that matches the `propertyName`
  */
-export const setObjectDataProperty = (properties: any[], propertyName: string, value: string | number | boolean) => {
-    const property = properties.find(property => isEqual(property.developerName, propertyName, true));
+export const setObjectDataProperty = (
+    properties: any[],
+    propertyName: string,
+    value: string | number | boolean,
+) => {
+    const property = properties.find((property) =>
+        isEqual(property.developerName, propertyName, true),
+    );
     if (property) {
         property.contentValue = value;
     }
@@ -501,8 +505,7 @@ export const setObjectDataProperty = (properties: any[], propertyName: string, v
 export const isEmptyObjectData = (model): boolean => {
     if (model.objectDataRequest && model.objectData && model.objectData.length === 1) {
         return isPlaceholderObjectData(model.objectData);
-    }
-    else if (model.objectData) {
+    } else if (model.objectData) {
         return false;
     }
 
@@ -515,7 +518,7 @@ export const isEmptyObjectData = (model): boolean => {
 export const isPlaceholderObjectData = (objectData: any[]): boolean => {
     if (objectData.length === 1) {
         for (const prop in objectData[0].properties) {
-            if(objectData[0].properties.hasOwnProperty(prop)){
+            if (objectHasProperty(objectData[0].properties, prop)) {
                 if (!isNullOrWhitespace(objectData[0].properties[prop].contentValue)) {
                     return false;
                 }
@@ -530,23 +533,21 @@ export const isPlaceholderObjectData = (objectData: any[]): boolean => {
 /**
  * Stolen from: https://github.com/johndugan/javascript-debounce/blob/master/debounce.js
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const debounce = (func: Function, wait: number, immediate: boolean) => {
-    let timeout;
-    return function () {
-        // tslint:disable-next-line:no-var-self
-        const context = this;
-        const args = arguments;
-        const later = function () {
-            timeout = null;
+    let timeout: any;
+    return function (...args: any[]) {
+        const later = () => {
+            timeout = undefined;
             if (!immediate) {
-                func.apply(context, args);
+                func.apply(this, args);
             }
         };
         const callNow = immediate && !timeout;
         clearTimeout(timeout);
         timeout = setTimeout(later, wait || 200);
         if (callNow) {
-            func.apply(context, args);
+            func.apply(this, args);
         }
     };
 };
@@ -581,7 +582,7 @@ export const guid = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         const r = (now + Math.random() * 16) % 16 | 0;
         now = Math.floor(now / 16);
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
 };
 
@@ -593,23 +594,20 @@ export const whenAll = (deferreds: JQueryDeferred<any[]>[]): JQueryDeferred<any>
         const deferred = $.Deferred();
         let toResolve = deferreds.length;
         let someFailed = false;
-        let fail;
-        let always;
-        always = function () {
+        const always = function () {
             // tslint:disable-next-line:no-increment-decrement
             if (!--toResolve) {
                 deferred[someFailed ? 'reject' : 'resolve']();
             }
         };
-        fail = function () {
+        const fail = function () {
             someFailed = true;
         };
         deferreds.forEach((d) => {
             d.fail(fail).always(always);
         });
         return deferred;
-    }
-    else {
+    } else {
         return $.Deferred().resolve();
     }
 };
@@ -618,19 +616,19 @@ export const whenAll = (deferreds: JQueryDeferred<any[]>[]): JQueryDeferred<any>
  * Return the current browser language/culture if one is found and supported,
  * otherwise return a suitable fallback, or default to en-US if all else fails.
  */
-export const currentCulture = (navCulture, supportedCultures):string => {
+export const currentCulture = (navCulture, supportedCultures): string => {
     if (navCulture) {
         const navCultureParts = navCulture.split('-');
         // uppercase the culture suffix as safari will report it as lowercase
         // and Numbro requires uppercase
-        const culture = navCultureParts.length === 2
-            ? `${navCultureParts[0]}-${navCultureParts[1].toUpperCase()}`
-            : navCulture;
+        const culture =
+            navCultureParts.length === 2
+                ? `${navCultureParts[0]}-${navCultureParts[1].toUpperCase()}`
+                : navCulture;
         const cultureIsSupported = supportedCultures.indexOf(culture) !== -1;
 
         return cultureIsSupported ? culture : fallbackCulture(navCultureParts[0]);
-    }
-    else {
+    } else {
         return 'en-US';
     }
 };
@@ -639,28 +637,33 @@ export const currentCulture = (navCulture, supportedCultures):string => {
  * If current culture is not supported by Numbro try to give us a suitable
  * fallback or default to 'en-US'.
  */
-export const fallbackCulture = (culture):string => {
+export const fallbackCulture = (culture): string => {
     let fallback;
 
     switch (culture) {
-    case 'en':
-        fallback = 'en-US';
-        break;
-    case 'de':
-        fallback = 'de-DE';
-        break;
-    case 'fr':
-        fallback = 'fr-FR';
-        break;
-    case 'es':
-        fallback = 'es-ES';
-        break;
-    case 'it':
-        fallback = 'it-IT';
-        break;
-    default:
-        fallback = 'en-US';
+        case 'en':
+            fallback = 'en-US';
+            break;
+        case 'de':
+            fallback = 'de-DE';
+            break;
+        case 'fr':
+            fallback = 'fr-FR';
+            break;
+        case 'es':
+            fallback = 'es-ES';
+            break;
+        case 'it':
+            fallback = 'it-IT';
+            break;
+        default:
+            fallback = 'en-US';
     }
 
     return fallback;
+};
+
+// Safely check if an object has a property
+export const objectHasProperty = (object: unknown, property: PropertyKey) => {
+    return Object.prototype.hasOwnProperty.call(object, property);
 };
