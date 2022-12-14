@@ -72,15 +72,7 @@ module.exports = (env) => ({
                     path.resolve(__dirname, `${repoPaths.uiBootstrap}/js`),
                     path.resolve(__dirname, `${repoPaths.uiOffline}/js`),
                 ],
-                use: [
-                    { loader: 'babel-loader' },
-                    {
-                        loader: 'ts-loader',
-                        options: {
-                            transpileOnly: true,
-                        },
-                    },
-                ],
+                use: [{ loader: 'babel-loader' }],
                 enforce: 'pre',
             },
             // bundle ui-offline styles

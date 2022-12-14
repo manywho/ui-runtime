@@ -1,16 +1,14 @@
 {
-  "compilerOptions": {
-    "pretty": true,
-    "target": "es5",
-    "allowJs": true,
-    "sourceMap": true,
-    "jsx": "react",
-    "lib": ["dom", "es6", "es2015"],
-    "moduleResolution": "node",
-    "noUnusedLocals": true
-  },
-  "include": [
-      "ui-offline/js",
-      "ui-bootstrap/js"
-  ]
+    "compilerOptions": {
+        "pretty": true,
+        "target": "es5",
+        "noEmit": true,
+        "allowJs": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "lib": ["DOM", "ES6"],
+        "moduleResolution": "node",
+        "noUnusedLocals": true
+    },
+    "include": ["ui-offline/js", "ui-bootstrap/js"]
 }
