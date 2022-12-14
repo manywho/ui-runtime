@@ -22,16 +22,15 @@ function emit(flowKey, kind, data?) {
 
         if (socket.connected) {
             socket.emit(kind, newData);
-        }
-        else {
+        } else {
             socket.on('connect', socket.emit.bind(socket, kind, newData));
         }
     }
 }
 
 function onDisconnect() {
-    Object.keys(rooms).forEach(
-        stateId => socket.emit('left', {
+    Object.keys(rooms).forEach((stateId) =>
+        socket.emit('left', {
             stateId,
             user: rooms[stateId].user,
         }),
@@ -86,10 +85,18 @@ function onMove(data) {
     const environmentId = Utils.extractEnvironmentId(flowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId, flowId, flowVersionId, environmentId, element, stateId, State.getAuthenticationToken(flowKey), Settings.flow(null, flowKey))
-        .then(() => {
-            socket.emit('getValues', data);
-        });
+    Engine.join(
+        tenantId,
+        flowId,
+        flowVersionId,
+        environmentId,
+        element,
+        stateId,
+        State.getAuthenticationToken(flowKey),
+        Settings.flow(null, flowKey),
+    ).then(() => {
+        socket.emit('getValues', data);
+    });
 }
 
 function onFlowOut(data) {
@@ -105,7 +112,16 @@ function onFlowOut(data) {
     const stateId = Utils.extractStateId(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId, null, null, null, element, stateId, null, Settings.flow(null, data.parentFlowKey));
+    Engine.join(
+        tenantId,
+        null,
+        null,
+        null,
+        element,
+        stateId,
+        null,
+        Settings.flow(null, data.parentFlowKey),
+    );
 }
 
 function onReturnToParent(data) {
@@ -120,14 +136,16 @@ function onReturnToParent(data) {
     Utils.removeFlow(data.subFlowKey);
 
     // Re-join the flow here so that we sync with the latest state from the manywho server
-    Engine.join(tenantId,
-                null,
-                null,
-                null,
-                element,
-                data.parentStateId,
-                State.getAuthenticationToken(data.subFlowKey),
-                Settings.flow(null, data.subFlowKey));
+    Engine.join(
+        tenantId,
+        null,
+        null,
+        null,
+        element,
+        data.parentStateId,
+        State.getAuthenticationToken(data.subFlowKey),
+        Settings.flow(null, data.subFlowKey),
+    );
 }
 
 function onSync(data) {
@@ -139,7 +157,11 @@ function onGetValues(data) {
     const stateId = data.subStateId || data.stateId;
 
     Log.info(`get values from: ${data.owner} in ${stateId}`);
-    socket.emit('setValues', { stateId, id: data.id, components: State.getComponents(rooms[stateId].flowKey) });
+    socket.emit('setValues', {
+        stateId,
+        id: data.id,
+        components: State.getComponents(rooms[stateId].flowKey),
+    });
 }
 
 function onSetValues(data) {
@@ -193,7 +215,8 @@ export const initialize = (flowKey: string) => {
 /**
  * Has `initialize` been called for this state
  */
-export const isInitialized = (flowKey: string): boolean => Object.prototype.hasOwnProperty.call(rooms, Utils.extractStateId(flowKey));
+export const isInitialized = (flowKey: string): boolean =>
+    Object.prototype.hasOwnProperty.call(rooms, Utils.extractStateId(flowKey));
 
 /**
  * Set `isEnabled` to true for this state, if we have initialized a socket yet then `initialize` will also be called
@@ -254,7 +277,11 @@ export const flowOut = (flowKey: string, stateId: string, subFlowKey: string) =>
  * Emit a `returnToParent` event to the collaboration server
  */
 export const returnToParent = (flowKey: string, parentStateId: string) => {
-    emit(flowKey, 'returnToParent', { parentStateId, subFlowKey: flowKey, stateId: Utils.extractStateId(flowKey) });
+    emit(flowKey, 'returnToParent', {
+        parentStateId,
+        subFlowKey: flowKey,
+        stateId: Utils.extractStateId(flowKey),
+    });
 };
 
 /**
@@ -275,9 +302,12 @@ export const join = (user, flowKey) => {
         emit(flowKey, 'join', { user });
 
         if (!socket.connected) {
-            socket.on('connect', this.getValues.bind(null, flowKey));
-        }
-        else {
+            socket.on(
+                'connect',
+                // @ts-expect-error working legacy code
+                this.getValues.bind(null, flowKey),
+            );
+        } else {
             getValues(flowKey);
         }
     }

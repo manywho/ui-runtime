@@ -55,7 +55,11 @@ export const contentTypes = {
  * @param component
  * @param alias Extra names that can also be used to fetch the component later
  */
-export const register = (name: string, component: React.Component | React.SFC, alias?: string[]) => {
+export const register = (
+    name: string,
+    component: React.Component | React.SFC,
+    alias?: string[],
+) => {
     components[name.toLowerCase()] = component;
 
     if (alias) {
@@ -114,6 +118,7 @@ export const get = (model: any) => {
     if (customComponentsLoadingCount > 0 || customComponentsChecked === false) {
         // ..render a waiter until this is done
         isComponentWaitingForCustomComponents = true;
+        // @ts-expect-error working legacy code
         return this.getByName('wait');
     }
 
@@ -127,7 +132,6 @@ export const get = (model: any) => {
  * @param name Name of the component
  */
 export const getByName: any = (name: string) => {
-
     let componentName = name;
 
     if (name && aliases[name.toLowerCase()]) {
@@ -143,18 +147,33 @@ export const getByName: any = (name: string) => {
  * @param id
  * @param flowKey
  */
-export const getChildComponents = (children: any[], id: string, flowKey: string) => children
-    .sort((a, b) => a.order - b.order)
-    .map(item => React.createElement(this.get(item), { flowKey, id: item.id, parentId: id, key: item.id }));
+export const getChildComponents = (children: any[], id: string, flowKey: string) =>
+    children
+        .sort((a, b) => a.order - b.order)
+        .map((item) =>
+            React.createElement(
+                // @ts-expect-error working legacy code
+                this.get(item),
+                {
+                    flowKey,
+                    id: item.id,
+                    parentId: id,
+                    key: item.id,
+                },
+            ),
+        );
 
 /**
  * Transform the outcome models into outcome components
  * @param outcomes
  * @param flowKey
  */
-export const getOutcomes = (outcomes: any[], flowKey: string): any[] => outcomes
-    .sort((a, b) => a.order - b.order)
-    .map(item => React.createElement(getByName('outcome'), { flowKey, id: item.id, key: item.id }));
+export const getOutcomes = (outcomes: any[], flowKey: string): any[] =>
+    outcomes
+        .sort((a, b) => a.order - b.order)
+        .map((item) =>
+            React.createElement(getByName('outcome'), { flowKey, id: item.id, key: item.id }),
+        );
 
 /**
  * If the model `hasEvents = true` perform an `Engine.sync` then re-render the flow and `forceUpdate` on the component
@@ -163,7 +182,12 @@ export const getOutcomes = (outcomes: any[], flowKey: string): any[] => outcomes
  * @param flowKey
  * @param callback Callback that is called after `Engine.sync` returns
  */
-export const handleEvent = (component: React.Component | React.SFC, model: any, flowKey: any, callback: () => void) => {
+export const handleEvent = (
+    component: React.Component | React.SFC,
+    model: any,
+    flowKey: any,
+    callback: () => void,
+) => {
     if (model.hasEvents) {
         // Re-sync with the server here so that any events attached to the component are processed
         Engine.sync(flowKey)
@@ -191,10 +215,10 @@ export const getSelectedRows = (model: any, selectedIds: string[]): any[] => {
 
     if (selectedIds) {
         selectedIds.forEach((selectedId) => {
-
             if (!Utils.isNullOrWhitespace(selectedId)) {
                 selectedObjectData = selectedObjectData.concat(
-                    model.objectData.filter(item => Utils.isEqual(item.internalId, selectedId, true))
+                    model.objectData
+                        .filter((item) => Utils.isEqual(item.internalId, selectedId, true))
                         .map((item) => {
                             const clone = JSON.parse(JSON.stringify(item));
                             clone.isSelected = true;
@@ -254,15 +278,18 @@ export const appendFlowContainer = (flowKey: string) => {
     }
 
     if (!container && !Utils.isEqual(containerType, 'modal-standalone', true)) {
-        const manywhoContainer = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
+        const manywhoContainer = document.querySelector(
+            Settings.global('containerSelector', flowKey, '#manywho'),
+        );
 
         container = document.createElement('div');
         container.setAttribute('id', lookUpKey);
         container.className = containerClasses;
         manywhoContainer.appendChild(container);
-    }
-    else if (Utils.isEqual(containerType, 'modal-standalone', true)) {
-        container = document.querySelector(Settings.global('containerSelector', flowKey, '#manywho'));
+    } else if (Utils.isEqual(containerType, 'modal-standalone', true)) {
+        container = document.querySelector(
+            Settings.global('containerSelector', flowKey, '#manywho'),
+        );
     }
 
     return container;
@@ -311,7 +338,11 @@ export const scrollToTop = (flowKey: string) => {
  * @param flowKey
  * @returns Deffered result from `Engine.move`
  */
-export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQueryDeferred<any> => {
+export const onOutcome = (
+    outcome: any,
+    objectData: any[],
+    flowKey: string,
+): JQueryDeferred<any> => {
     if (outcome.attributes) {
         if (outcome.attributes.uri) {
             window.open(outcome.attributes.uri, '_blank');
@@ -319,8 +350,12 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
         }
 
         if (outcome.attributes.uriTypeElementPropertyId && objectData) {
-            const property = objectData[0].properties.find(
-                prop => Utils.isEqual(prop.typeElementPropertyId, outcome.attributes.uriTypeElementPropertyId, true),
+            const property = objectData[0].properties.find((prop) =>
+                Utils.isEqual(
+                    prop.typeElementPropertyId,
+                    outcome.attributes.uriTypeElementPropertyId,
+                    true,
+                ),
             );
 
             // The following contentValue change is only necessary because of the Flows (Flow Tiles) System Flow
@@ -328,7 +363,8 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
             // Otherwise the run uri is generated from the Draw2 Service as https://development.manywho.net or https://flow.manywho.com
             if (
                 property &&
-                outcome.attributes.uriTypeElementPropertyId === '03db5fd4-e9c0-4f2c-af2f-bc86304969a5' &&
+                outcome.attributes.uriTypeElementPropertyId ===
+                    '03db5fd4-e9c0-4f2c-af2f-bc86304969a5' &&
                 !Utils.isNullOrWhitespace(Settings.global('runtimeUri'))
             ) {
                 // Replace engine Draw2 Service base uri with runtime uri
@@ -344,12 +380,11 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
         }
     }
 
-    return Engine.move(outcome, flowKey)
-        .then(() => {
-            if (outcome.isOut) {
-                Engine.flowOut(outcome, flowKey);
-            }
-        });
+    return Engine.move(outcome, flowKey).then(() => {
+        if (outcome.isOut) {
+            Engine.flowOut(outcome, flowKey);
+        }
+    });
 };
 
 /**
@@ -359,32 +394,33 @@ export const onOutcome = (outcome: any, objectData: any[], flowKey: string): JQu
  * @returns Page limit size
  */
 export const getPageSize = (model, flowKey) => {
-
     const pageLimitFromAttributes = pathOr(null, ['attributes', 'paginationSize'], model);
-    const pageLimitFromAttributesIsValid = pageLimitFromAttributes && !Number.isNaN(Number(pageLimitFromAttributes));
+    const pageLimitFromAttributesIsValid =
+        pageLimitFromAttributes && !Number.isNaN(Number(pageLimitFromAttributes));
 
     const usePaginationAttribute =
         pageLimitFromAttributesIsValid &&
-        (
-            // Data is coming from a service, we can ignore "pagination" boolean attribute
-            !Utils.isNullOrUndefined(model.objectDataRequest)
+        // Data is coming from a service, we can ignore "pagination" boolean attribute
+        (!Utils.isNullOrUndefined(model.objectDataRequest) ||
             // Data is coming from a list value, we need to check that the "pagination" attribute is also set to true
-            || Utils.isEqual(model.attributes.pagination, 'true', true)
-        );
+            Utils.isEqual(model.attributes.pagination, 'true', true));
 
     const pageLimitSettingForComponentType = Settings.flow(
-        `paging.${model.componentType.toLowerCase()}`, flowKey,
+        `paging.${model.componentType.toLowerCase()}`,
+        flowKey,
     );
 
-    const pageLimitSettingFromListFilter = pathOr(null, ['objectDataRequest', 'listFilter', 'limit'], model);
+    const pageLimitSettingFromListFilter = pathOr(
+        null,
+        ['objectDataRequest', 'listFilter', 'limit'],
+        model,
+    );
 
     const limit = usePaginationAttribute
         ? pageLimitFromAttributes // 1st priority
-        : (
-            pageLimitSettingFromListFilter // 2nd priority
-            || pageLimitSettingForComponentType // 3rd priority
-            || DEFAULT_PAGE_LIMIT // final default
-        );
+        : pageLimitSettingFromListFilter || // 2nd priority
+          pageLimitSettingForComponentType || // 3rd priority
+          DEFAULT_PAGE_LIMIT; // final default
 
     return parseInt(limit, 10);
 };
@@ -423,37 +459,41 @@ const finishLoadingCustomComponent = (flowKey: string) => (): void => {
  * @returns awaitable Promise
  */
 export const addCustomComponents = async (
-    flowInfo: Ajax.CustomComponentRequest, flowKey: string,
-): Promise<void> => Ajax.fetchCustomComponents(flowInfo).then((customComponentResponse) => {
-    // Set the script load count
-    customComponentsLoadingCount = customComponentResponse.length;
+    flowInfo: Ajax.CustomComponentRequest,
+    flowKey: string,
+): Promise<void> =>
+    Ajax.fetchCustomComponents(flowInfo)
+        .then((customComponentResponse) => {
+            // Set the script load count
+            customComponentsLoadingCount = customComponentResponse.length;
 
-    customComponentResponse.forEach((component) => {
-        const componentScriptTag = document.createElement('script');
-        componentScriptTag.src = component.legacyScriptURL;
-        // On load or error, decrement the load count
-        componentScriptTag.onload = finishLoadingCustomComponent(flowKey);
-        componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
-        document.head.appendChild(componentScriptTag);
+            customComponentResponse.forEach((component) => {
+                const componentScriptTag = document.createElement('script');
+                componentScriptTag.src = component.legacyScriptURL;
+                // On load or error, decrement the load count
+                componentScriptTag.onload = finishLoadingCustomComponent(flowKey);
+                componentScriptTag.onerror = finishLoadingCustomComponent(flowKey);
+                document.head.appendChild(componentScriptTag);
 
-        if (component.legacyStyleSheetURL) {
-            const componentStylesheetTag = document.createElement('link');
-            componentStylesheetTag.href = component.legacyStyleSheetURL;
-            componentStylesheetTag.rel = 'stylesheet';
-            document.head.appendChild(componentStylesheetTag);
-        }
-    });
+                if (component.legacyStyleSheetURL) {
+                    const componentStylesheetTag = document.createElement('link');
+                    componentStylesheetTag.href = component.legacyStyleSheetURL;
+                    componentStylesheetTag.rel = 'stylesheet';
+                    document.head.appendChild(componentStylesheetTag);
+                }
+            });
 
-    customComponentsChecked = true;
+            customComponentsChecked = true;
 
-    // Re-render if done loading
-    reRenderIfComponentIsWaiting(flowKey);
-}).catch((e) => {
-    Log.error(e);
-    // Set the loading count to 0 and the checked bool to true...
-    customComponentsLoadingCount = 0;
-    customComponentsChecked = true;
-    // ...and re-render the flow...
-    reRenderIfComponentIsWaiting(flowKey);
-    // ...so that now the temporary waiter goes and they can see 'not found' errors as normal
-});
+            // Re-render if done loading
+            reRenderIfComponentIsWaiting(flowKey);
+        })
+        .catch((e) => {
+            Log.error(e);
+            // Set the loading count to 0 and the checked bool to true...
+            customComponentsLoadingCount = 0;
+            customComponentsChecked = true;
+            // ...and re-render the flow...
+            reRenderIfComponentIsWaiting(flowKey);
+            // ...so that now the temporary waiter goes and they can see 'not found' errors as normal
+        });

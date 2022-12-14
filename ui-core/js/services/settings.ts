@@ -3,7 +3,7 @@
  * settings can be found here: https://github.com/manywho/ui-html5/wiki/Settings
  */
 
- /** this comment exists as a typedoc workaround */
+/** this comment exists as a typedoc workaround */
 import * as $ from 'jquery';
 
 import * as Utils from './utils';
@@ -90,28 +90,40 @@ let globals = {
         background: null,
     },
     charts: {
-        backgroundColors: ['#42a5f5', '#66bb6a', '#ef5350', '#ab47bc', '#ffa726', '#78909c', '#5c6bc0'],
+        backgroundColors: [
+            '#42a5f5',
+            '#66bb6a',
+            '#ef5350',
+            '#ab47bc',
+            '#ffa726',
+            '#78909c',
+            '#5c6bc0',
+        ],
         borderColors: ['#42a5f5', '#66bb6a', '#ef5350', '#ab47bc', '#ffa726', '#78909c', '#5c6bc0'],
         options: {},
         bar: {
             options: {
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
                         },
-                    }],
+                    ],
                 },
             },
         },
         line: {
             options: {
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
                         },
-                    }],
+                    ],
                 },
             },
         },
@@ -277,13 +289,25 @@ export const isDebugEnabled = (flowKey: string, value?: boolean): boolean => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     if (typeof value === 'undefined') {
-        return Utils.isEqual(this.flow('mode', flowKey), 'Debug', true) || Utils.isEqual(this.flow('mode', flowKey), 'Debug_StepThrough', true);
+        return (
+            Utils.isEqual(
+                // @ts-expect-error working legacy code
+                this.flow('mode', flowKey),
+                'Debug',
+                true,
+            ) ||
+            Utils.isEqual(
+                // @ts-expect-error working legacy code
+                this.flow('mode', flowKey),
+                'Debug_StepThrough',
+                true,
+            )
+        );
     }
 
     if (value) {
         flows[lookUpKey].mode = 'Debug';
-    }
-    else {
+    } else {
         flows[lookUpKey].mode = '';
     }
 };
