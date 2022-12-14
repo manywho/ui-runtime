@@ -5,13 +5,13 @@ import registeredComponents from '../constants/registeredComponents';
 import { getErrorFallback } from './error-fallback';
 import IComponentProps from '../interfaces/IComponentProps';
 
-declare var manywho: any;
+declare let manywho: any;
 
 interface IGroupState {
     activeTabIndex: number;
     error: Error;
-    componentStack: String;
-    hasError: Boolean;
+    componentStack: string;
+    hasError: boolean;
 }
 
 const childContainsInvalidItems = (child, flowKey) => {

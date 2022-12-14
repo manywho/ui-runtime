@@ -9,7 +9,7 @@ import { getOutcome } from './outcome';
 import Dynamic from './dynamic';
 
 
-declare var manywho: any;
+declare let manywho: any;
 
 interface IContainerState {
     isCollapsed: boolean;

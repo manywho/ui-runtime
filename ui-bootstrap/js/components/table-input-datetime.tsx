@@ -7,7 +7,7 @@ import TableInputDateTimeProps from '../interfaces/ITableInputDateTimeProps';
 
 import '../lib/100-datetimepicker.js';
 
-declare var manywho: any;
+declare let manywho: any;
 
 class TableInputDateTime extends React.Component<TableInputDateTimeProps, null> {
 

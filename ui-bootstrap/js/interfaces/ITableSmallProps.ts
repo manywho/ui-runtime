@@ -12,7 +12,7 @@ interface ITableSmallProps extends IComponentProps {
     displayColumns: IColumn[];
     selectedRows: any[];
     onRowClicked: Function;
-    isFiles: Boolean;
+    isFiles: boolean;
 }
 
 export default ITableSmallProps;

@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import { getErrorFallback } from './error-fallback';
 import IComponentProps from '../interfaces/IComponentProps';
 
-declare var manywho: any;
+declare let manywho: any;
 
 class Horizontal extends React.Component<IComponentProps> {
 

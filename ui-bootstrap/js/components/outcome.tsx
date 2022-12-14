@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IOutcomeProps from '../interfaces/IOutcomeProps';
 
-declare var manywho: any;
+declare let manywho: any;
 
 function getType(model) {
     if (model.attributes && model.attributes.type)

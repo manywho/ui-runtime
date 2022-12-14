@@ -1,6 +1,5 @@
 import IItemsComponentProps from './IItemsComponentProps';
 
-interface ITilesProps extends IItemsComponentProps {
-}
+type ITilesProps = IItemsComponentProps
 
 export default ITilesProps;

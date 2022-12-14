@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 
-declare var manywho: any;
+declare let manywho: any;
 
 class Outcomes extends React.Component<IComponentProps, null> {
 

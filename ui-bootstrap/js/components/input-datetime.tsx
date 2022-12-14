@@ -7,7 +7,7 @@ import registeredComponents from '../constants/registeredComponents';
 
 import '../lib/100-datetimepicker.js';
 
-declare var manywho: any;
+declare let manywho: any;
 
 class InputDateTime extends React.Component<IInputProps, null> {
 

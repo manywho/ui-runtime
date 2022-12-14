@@ -4,7 +4,7 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-declare var manywho: any;
+declare let manywho: any;
 
 interface IToggleState {
 }
@@ -15,7 +15,7 @@ class Toggle extends React.Component<IComponentProps, IToggleState> {
         super(props);
     }
 
-    handleChange: (e: { target: { checked: Boolean; } }) => void = (e) => {
+    handleChange: (e: { target: { checked: boolean; } }) => void = (e) => {
         manywho.state.setComponent(
             this.props.id,
             { contentValue: e.target.checked },

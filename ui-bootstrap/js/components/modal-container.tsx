@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IModalContainerProps from '../interfaces/IModalContainerProps';
 
-declare var manywho: any;
+declare let manywho: any;
 
 const ModalContainer: React.SFC<IModalContainerProps> = ({
     title,

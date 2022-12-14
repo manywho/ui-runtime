@@ -864,7 +864,7 @@ function joinWithAuthorization(callback, flowKey) {
       const queryParameters = Utils.parseQueryString(
         window.location.search.substring(1)
       );
-      let selectedOutcomeId = queryParameters["selectedOutcomeId"];
+      const selectedOutcomeId = queryParameters["selectedOutcomeId"];
 
       if (selectedOutcomeId) {
         const newUrl = Utils.removeURIParam(

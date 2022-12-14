@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-declare var manywho: any;
+declare let manywho: any;
 
 const Dynamic: React.SFC<{ name: string; props: any; }> = ({ name, props }) => {
     const Component = manywho.component.getByName(name);

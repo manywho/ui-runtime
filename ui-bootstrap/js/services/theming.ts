@@ -1,4 +1,4 @@
-declare var manywho;
+declare let manywho;
 
 manywho.theming = (function (manywho) {
 

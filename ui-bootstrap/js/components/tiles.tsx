@@ -7,7 +7,7 @@ import { getWait } from './wait';
 import { Motion, spring } from 'react-motion';
 import { getTileItem } from './tile-item';
 
-declare var manywho: any;
+declare let manywho: any;
 
 class Tiles extends React.Component<ITilesProps, null> {
 
@@ -127,7 +127,7 @@ class Tiles extends React.Component<ITilesProps, null> {
         else
             contentElement = (<div className="mw-tiles-items">
                 {items.map((item, index) => {
-                    const key: string = `${this.props.page.toString()}-${index}`;
+                    const key = `${this.props.page.toString()}-${index}`;
 
                     return (<div className="mw-tiles-item-container" key={key} ref="items">
                                 <Motion defaultStyle={{ rotate: 0 }}
@@ -137,10 +137,10 @@ class Tiles extends React.Component<ITilesProps, null> {
                             ) }}>
 
                             {(interpolatingStyle) => {
-                                const frontTransform: string = `rotateY(
+                                const frontTransform = `rotateY(
                                     ${interpolatingStyle.rotate}deg
                                 )`;
-                                const backTransform: string = `rotateY(
+                                const backTransform = `rotateY(
                                     ${180 - interpolatingStyle.rotate}deg
                                 )`;
 
