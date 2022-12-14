@@ -82,7 +82,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
         const collapseGroup = this.getCollapseGroup(model);
         let isCollapsed = null;
@@ -111,7 +111,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         this.setState({ isCollapsed });
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
         const collapseGroup = this.getCollapseGroup(model);
 

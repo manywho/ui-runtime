@@ -45,7 +45,7 @@ class Tour extends React.Component<ITourProps, ITourState> {
         manywho.tours.done(this.props.tour);
     };
 
-    componentWillReceiveProps(nextProps: ITourProps) {
+    UNSAFE_componentWillReceiveProps(nextProps: ITourProps) {
         if (this.props.stepIndex !== nextProps.stepIndex) {
             this.setState({ foundTarget: false, style: this.state.style });
             this.domWatcher = setInterval(() => {
