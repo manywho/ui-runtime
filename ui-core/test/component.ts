@@ -1,4 +1,4 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
@@ -27,7 +27,6 @@ const reactErrorBoundary = {
     withErrorBoundary: sinon.stub().returnsArg(0),
 };
 
-
 mockery.enable({
     useCleanCache: true,
     warnOnUnregistered: false,
@@ -46,7 +45,7 @@ import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4_key5';
 
-test.beforeEach((t) => {
+test.beforeEach(() => {
     engine.render.resetHistory();
     engine.sync.resetHistory();
     engine.move.resetHistory();
@@ -55,7 +54,7 @@ test.beforeEach((t) => {
     react.createElement.resetHistory();
 });
 
-test.after((t) => {
+test.after(() => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -193,7 +192,9 @@ test.serial('Handle Event', async (t) => {
 
     const component = {
         forceUpdate: sinon.stub(),
-        setState: () => {},
+        setState: () => {
+            return undefined;
+        },
         render: (): ReactNode => null,
         props: null,
         state: null,
@@ -207,7 +208,7 @@ test.serial('Handle Event', async (t) => {
         t.is(collaboration.sync.callCount, 1, 'Collaboration Sync Count');
     };
 
-    await Component.handleEvent(component as React.Component, model, flowKey, callback);
+    Component.handleEvent(component as React.Component, model, flowKey, callback);
 });
 
 test.serial('Get Selected Rows 1', (t) => {
@@ -353,11 +354,10 @@ test.serial('On Outcome 1', async (t) => {
         isOut: true,
     };
 
-    return Component.onOutcome(outcome, null, flowKey)
-        .then(() => {
-            t.is(engine.move.callCount, 1, 'Move');
-            t.is(engine.flowOut.callCount, 1, 'Flow Out');
-        });
+    return Component.onOutcome(outcome, null, flowKey).then(() => {
+        t.is(engine.move.callCount, 1, 'Move');
+        t.is(engine.flowOut.callCount, 1, 'Flow Out');
+    });
 });
 
 test.serial('On Outcome 2', async (t) => {
@@ -365,11 +365,10 @@ test.serial('On Outcome 2', async (t) => {
         isOut: false,
     };
 
-    return Component.onOutcome(outcome, null, flowKey)
-        .then(() => {
-            t.is(engine.move.callCount, 1, 'Move');
-            t.is(engine.flowOut.callCount, 0, 'Flow Out');
-        });
+    return Component.onOutcome(outcome, null, flowKey).then(() => {
+        t.is(engine.move.callCount, 1, 'Move');
+        t.is(engine.flowOut.callCount, 0, 'Flow Out');
+    });
 });
 
 test.serial('On Outcome 3', async (t) => {
@@ -395,14 +394,16 @@ test.serial('On Outcome 4', async (t) => {
         },
     };
 
-    const objectData = [{
-        properties: [
-            {
-                typeElementPropertyId: 'id',
-                contentValue: 'https://manywho.com',
-            },
-        ],
-    }];
+    const objectData = [
+        {
+            properties: [
+                {
+                    typeElementPropertyId: 'id',
+                    contentValue: 'https://manywho.com',
+                },
+            ],
+        },
+    ];
 
     const spy = sinon.spy(window, 'open');
 

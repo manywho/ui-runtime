@@ -1,4 +1,4 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
@@ -347,10 +347,7 @@ test.serial('Scroll to invalid element', (t) => {
 
     try {
         Validation.scrollToInvalidElement(null);
-    }
-    catch (e) {
-
-    }
+    } catch (e) {}
 
     t.pass();
 });

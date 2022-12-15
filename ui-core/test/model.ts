@@ -1,6 +1,7 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
+import * as Model from '../js/services/model';
 
 const engine = {
     render: sinon.stub(),
@@ -17,20 +18,18 @@ mockery.registerMock('./settings', {
     global: sinon.stub().returns(false),
 });
 
-import * as Model from '../js/services/model';
-
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach((t) => {
+test.beforeEach(() => {
     Model.initializeModel(flowKey);
     engine.render.resetHistory();
 });
 
-test.afterEach((t) => {
+test.afterEach(() => {
     Model.deleteFlowModel(flowKey);
 });
 
-test.after((t) => {
+test.after(() => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -110,7 +109,7 @@ test.serial('Parse Response', (t) => {
         ],
         preCommitStateValues: 'preCommitStateValues',
         stateValues: 'stateValues',
-        waitExpiresAt: '2021-12-08T11:23:31+00:00'
+        waitExpiresAt: '2021-12-08T11:23:31+00:00',
     };
 
     Model.parseEngineResponse(response, flowKey);
@@ -705,191 +704,199 @@ test.serial('Auto focus gets applied to elements nested in child containers', (t
     t.is(Model.getComponentByName('component-3', flowKey).autoFocus, false);
 });
 
-test.serial('Auto focus gets applied to first input in first container, regardless of name', (t) => {
-    const response = {
-        parentStateId: 'parentStateId',
-        invokeType: 'FORWARD',
-        waitMessage: 'waitMessage',
-        voteResponse: 'vote',
-        mapElementInvokeResponses: [
-            {
-                pageResponse: {
-                    label: 'label',
-                    attributes: {
-                        key: 'value',
+test.serial(
+    'Auto focus gets applied to first input in first container, regardless of name',
+    (t) => {
+        const response = {
+            parentStateId: 'parentStateId',
+            invokeType: 'FORWARD',
+            waitMessage: 'waitMessage',
+            voteResponse: 'vote',
+            mapElementInvokeResponses: [
+                {
+                    pageResponse: {
+                        label: 'label',
+                        attributes: {
+                            key: 'value',
+                        },
+                        pageContainerResponses: [
+                            {
+                                containerType: 'VERTICAL_FLOW',
+                                developerName: 'main container',
+                                id: 'container-2',
+                                order: 1,
+                                pageContainerResponses: [],
+                            },
+                            {
+                                containerType: 'VERTICAL_FLOW',
+                                developerName: 'first container',
+                                id: 'container-1',
+                                order: 0,
+                                pageContainerResponses: [],
+                            },
+                        ],
+                        pageContainerDataResponses: [
+                            {
+                                isEditable: true,
+                                isEnabled: true,
+                                isVisible: true,
+                                pageContainerId: 'container-2',
+                            },
+                            {
+                                isEditable: true,
+                                isEnabled: true,
+                                isVisible: true,
+                                pageContainerId: 'container-1',
+                            },
+                        ],
+                        pageComponentResponses: [
+                            {
+                                componentType: 'INPUT',
+                                contentType: 'ContentString',
+                                developerName: 'component-1',
+                                id: 'component-1',
+                                pageContainerId: 'container-1',
+                                pageContainerDeveloperName: 'container-1',
+                                isVisible: true,
+                            },
+                            {
+                                componentType: 'INPUT',
+                                contentType: 'ContentString',
+                                developerName: 'component-2',
+                                id: 'component-2',
+                                pageContainerId: 'container-2',
+                                pageContainerDeveloperName: 'container-2',
+                                isVisible: true,
+                            },
+                        ],
+                        pageComponentDataResponses: [
+                            {
+                                contentValue: 'value',
+                                pageComponentId: 'component-1',
+                            },
+                        ],
                     },
-                    pageContainerResponses: [
+                    outcomeResponses: [
                         {
-                            containerType: 'VERTICAL_FLOW',
-                            developerName: 'main container',
-                            id: 'container-2',
-                            order: 1,
-                            pageContainerResponses: [],
-                        },
-                        {
-                            containerType: 'VERTICAL_FLOW',
-                            developerName: 'first container',
-                            id: 'container-1',
-                            order: 0,
-                            pageContainerResponses: [],
+                            id: 'outcome-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
                         },
                     ],
-                    pageContainerDataResponses: [
-                        {
-                            isEditable: true,
-                            isEnabled: true,
-                            isVisible: true,
-                            pageContainerId: 'container-2',
-                        },
-                        {
-                            isEditable: true,
-                            isEnabled: true,
-                            isVisible: true,
-                            pageContainerId: 'container-1',
-                        },
-                    ],
-                    pageComponentResponses: [
-                        {
-                            componentType: 'INPUT',
-                            contentType: 'ContentString',
-                            developerName: 'component-1',
-                            id: 'component-1',
-                            pageContainerId: 'container-1',
-                            pageContainerDeveloperName: 'container-1',
-                            isVisible: true,
-                        },
-                        {
-                            componentType: 'INPUT',
-                            contentType: 'ContentString',
-                            developerName: 'component-2',
-                            id: 'component-2',
-                            pageContainerId: 'container-2',
-                            pageContainerDeveloperName: 'container-2',
-                            isVisible: true,
-                        },
-                    ],
-                    pageComponentDataResponses: [
-                        {
-                            contentValue: 'value',
-                            pageComponentId: 'component-1',
-                        },
-                    ],
-                },
-                outcomeResponses: [
-                    {
-                        id: 'outcome-1',
-                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    rootFaults: {
+                        fault: 'fault message',
                     },
-                ],
-                rootFaults: {
-                    fault: 'fault message',
                 },
-            },
-        ],
-        preCommitStateValues: 'preCommitStateValues',
-        stateValues: 'stateValues',
-    };
+            ],
+            preCommitStateValues: 'preCommitStateValues',
+            stateValues: 'stateValues',
+        };
 
-    Model.parseEngineResponse(response, flowKey);
+        Model.parseEngineResponse(response, flowKey);
 
-    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
-    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
-});
+        t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+        t.is(Model.getComponentByName('component-2', flowKey).autoFocus, false);
+    },
+);
 
-test.serial('Auto focus gets applied to first input, even when it\'s not in the first container', (t) => {
-    const response = {
-        parentStateId: 'parentStateId',
-        invokeType: 'FORWARD',
-        waitMessage: 'waitMessage',
-        voteResponse: 'vote',
-        mapElementInvokeResponses: [
-            {
-                pageResponse: {
-                    label: 'label',
-                    attributes: {
-                        key: 'value',
+test.serial(
+    "Auto focus gets applied to first input, even when it's not in the first container",
+    (t) => {
+        const response = {
+            parentStateId: 'parentStateId',
+            invokeType: 'FORWARD',
+            waitMessage: 'waitMessage',
+            voteResponse: 'vote',
+            mapElementInvokeResponses: [
+                {
+                    pageResponse: {
+                        label: 'label',
+                        attributes: {
+                            key: 'value',
+                        },
+                        pageContainerResponses: [
+                            {
+                                containerType: 'VERTICAL_FLOW',
+                                developerName: 'main container',
+                                id: 'container-2',
+                                order: 0,
+                                pageContainerResponses: [],
+                            },
+                            {
+                                containerType: 'VERTICAL_FLOW',
+                                developerName: 'second container',
+                                id: 'container-1',
+                                order: 1,
+                                pageContainerResponses: [],
+                            },
+                        ],
+                        pageContainerDataResponses: [
+                            {
+                                isEditable: true,
+                                isEnabled: true,
+                                isVisible: true,
+                                pageContainerId: 'container-2',
+                            },
+                            {
+                                isEditable: true,
+                                isEnabled: true,
+                                isVisible: true,
+                                pageContainerId: 'container-1',
+                            },
+                        ],
+                        pageComponentResponses: [
+                            {
+                                componentType: 'INPUT',
+                                contentType: 'ContentString',
+                                developerName: 'component-1',
+                                id: 'component-1',
+                                pageContainerId: 'container-1',
+                                pageContainerDeveloperName: 'container-1',
+                                isVisible: true,
+                            },
+                            {
+                                componentType: 'NOT_AN_INPUT',
+                                contentType: 'ContentString',
+                                developerName: 'component-2',
+                                id: 'component-2',
+                                pageContainerId: 'container-2',
+                                pageContainerDeveloperName: 'container-2',
+                                isVisible: true,
+                            },
+                        ],
+                        pageComponentDataResponses: [
+                            {
+                                contentValue: 'value',
+                                pageComponentId: 'component-1',
+                            },
+                        ],
                     },
-                    pageContainerResponses: [
+                    outcomeResponses: [
                         {
-                            containerType: 'VERTICAL_FLOW',
-                            developerName: 'main container',
-                            id: 'container-2',
-                            order: 0,
-                            pageContainerResponses: [],
-                        },
-                        {
-                            containerType: 'VERTICAL_FLOW',
-                            developerName: 'second container',
-                            id: 'container-1',
-                            order: 1,
-                            pageContainerResponses: [],
+                            id: 'outcome-1',
+                            pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
                         },
                     ],
-                    pageContainerDataResponses: [
-                        {
-                            isEditable: true,
-                            isEnabled: true,
-                            isVisible: true,
-                            pageContainerId: 'container-2',
-                        },
-                        {
-                            isEditable: true,
-                            isEnabled: true,
-                            isVisible: true,
-                            pageContainerId: 'container-1',
-                        },
-                    ],
-                    pageComponentResponses: [
-                        {
-                            componentType: 'INPUT',
-                            contentType: 'ContentString',
-                            developerName: 'component-1',
-                            id: 'component-1',
-                            pageContainerId: 'container-1',
-                            pageContainerDeveloperName: 'container-1',
-                            isVisible: true,
-                        },
-                        {
-                            componentType: 'NOT_AN_INPUT',
-                            contentType: 'ContentString',
-                            developerName: 'component-2',
-                            id: 'component-2',
-                            pageContainerId: 'container-2',
-                            pageContainerDeveloperName: 'container-2',
-                            isVisible: true,
-                        },
-                    ],
-                    pageComponentDataResponses: [
-                        {
-                            contentValue: 'value',
-                            pageComponentId: 'component-1',
-                        },
-                    ],
-                },
-                outcomeResponses: [
-                    {
-                        id: 'outcome-1',
-                        pageContainerId: 'ffd48fa6-2017-4d38-9f48-b896993bb874',
+                    rootFaults: {
+                        fault: 'fault message',
                     },
-                ],
-                rootFaults: {
-                    fault: 'fault message',
                 },
-            },
-        ],
-        preCommitStateValues: 'preCommitStateValues',
-        stateValues: 'stateValues',
-    };
+            ],
+            preCommitStateValues: 'preCommitStateValues',
+            stateValues: 'stateValues',
+        };
 
-    Model.parseEngineResponse(response, flowKey);
+        Model.parseEngineResponse(response, flowKey);
 
-    t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
-    // non-inputs should not get autofocus
-    t.is(Model.getComponentByName('component-2', flowKey).autoFocus, undefined);
-});
+        t.is(Model.getComponentByName('component-1', flowKey).autoFocus, true);
+        // non-inputs should not get autofocus
+        t.is(Model.getComponentByName('component-2', flowKey).autoFocus, undefined);
+    },
+);
 
 test.serial('Notifications', (t) => {
-    (Model.getNotifications(flowKey, 'center') || []).forEach(notification => Model.removeNotification(flowKey, notification));
+    (Model.getNotifications(flowKey, 'center') || []).forEach((notification) =>
+        Model.removeNotification(flowKey, notification),
+    );
     engine.render.resetHistory();
 
     const notification = {
@@ -1051,20 +1058,24 @@ test('Set History', (t) => {
         ],
     };
 
-    const expected = [{
-        name: response.mapElementInvokeResponses[0].developerName,
-        id: response.mapElementInvokeResponses[0].mapElementId,
-        label: response.mapElementInvokeResponses[0].pageResponse.label,
-        content: response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0].content,
-        outcomes: [
-            {
-                name: 'outcome',
-                id: 'outcome-id',
-                label: 'outcome',
-                order: 1,
-            },
-        ],
-    }];
+    const expected = [
+        {
+            name: response.mapElementInvokeResponses[0].developerName,
+            id: response.mapElementInvokeResponses[0].mapElementId,
+            label: response.mapElementInvokeResponses[0].pageResponse.label,
+            content:
+                response.mapElementInvokeResponses[0].pageResponse.pageComponentDataResponses[0]
+                    .content,
+            outcomes: [
+                {
+                    name: 'outcome',
+                    id: 'outcome-id',
+                    label: 'outcome',
+                    order: 1,
+                },
+            ],
+        },
+    ];
 
     Model.setHistory(response, flowKey);
     t.deepEqual(Model.getHistory(flowKey), expected);
@@ -1115,12 +1126,14 @@ test('Set History Selected Outcome', (t) => {
 test('Set map element is fired when invoke response is parsed', (t) => {
     const invokeResponse = {
         invokeType: 'test',
-        mapElementInvokeResponses: [{
-            pageResponse: { label: 'test1' },
-            label: 'test2',
-            developerName: 'test3',
-            mapElementId: 'test4',
-        }],
+        mapElementInvokeResponses: [
+            {
+                pageResponse: { label: 'test1' },
+                label: 'test2',
+                developerName: 'test3',
+                mapElementId: 'test4',
+            },
+        ],
     };
 
     Model.parseEngineResponse(invokeResponse, flowKey);
@@ -1129,18 +1142,19 @@ test('Set map element is fired when invoke response is parsed', (t) => {
         name: invokeResponse.mapElementInvokeResponses[0].label,
         id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
     });
-
 });
 
 test('We use the developerName if the invoke response has no label', (t) => {
     const invokeResponse = {
         invokeType: 'test',
-        mapElementInvokeResponses: [{
-            pageResponse: { label: 'test1' },
-            label: null,
-            developerName: 'test3',
-            mapElementId: 'test4',
-        }],
+        mapElementInvokeResponses: [
+            {
+                pageResponse: { label: 'test1' },
+                label: null,
+                developerName: 'test3',
+                mapElementId: 'test4',
+            },
+        ],
     };
 
     Model.parseEngineResponse(invokeResponse, flowKey);
@@ -1149,7 +1163,6 @@ test('We use the developerName if the invoke response has no label', (t) => {
         name: invokeResponse.mapElementInvokeResponses[0].developerName,
         id: invokeResponse.mapElementInvokeResponses[0].mapElementId,
     });
-
 });
 
 test('Outcomes are sorted by order', (t) => {
@@ -1210,10 +1223,7 @@ test('Outcomes are empty if an invalid flowkey is specified', (t) => {
 test('Outcomes are empty if no outcomes were parsed in api response', (t) => {
     const response = {
         invokeType: 'FORWARD',
-        mapElementInvokeResponses: [
-            {
-            },
-        ],
+        mapElementInvokeResponses: [{}],
     };
 
     Model.parseEngineResponse(response, flowKey);

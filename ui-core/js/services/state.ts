@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-
+import moment from 'moment';
 import * as Collaboration from './collaboration';
 import * as Model from './model';
 import * as Settings from './settings';

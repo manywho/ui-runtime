@@ -1,9 +1,9 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach((t) => {
+test.beforeEach(() => {
     Settings.initialize(null, null);
     Settings.initializeFlow(
         {

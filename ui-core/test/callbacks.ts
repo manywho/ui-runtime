@@ -1,4 +1,4 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as Callbacks from '../js/services/callbacks';
 
 test.serial('Register', (t) => {
@@ -15,7 +15,7 @@ test.serial('Remove', (t) => {
 
 test.serial.cb('Execute', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => {
+    const execute = (_response, t) => {
         t.pass();
         t.end();
     };
@@ -33,7 +33,7 @@ test.serial.cb('Execute', (t) => {
 
 test.serial('Execute filter by name', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => t.fail();
+    const execute = (_response, t) => t.fail();
 
     Callbacks.register(flowKey, {
         execute,
@@ -50,7 +50,7 @@ test.serial('Execute filter by name', (t) => {
 
 test.serial('Execute filter by type', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => t.fail();
+    const execute = (_response, t) => t.fail();
 
     Callbacks.register(flowKey, {
         execute,
@@ -67,7 +67,7 @@ test.serial('Execute filter by type', (t) => {
 
 test.serial('Execute filter by map element', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => t.fail();
+    const execute = (_response, t) => t.fail();
 
     Callbacks.register(flowKey, {
         execute,
@@ -85,7 +85,7 @@ test.serial('Execute filter by map element', (t) => {
 
 test.serial.cb('Execute no args', (t) => {
     const flowKey = 'key1_key2_key3_key4';
-    const execute = (response, t) => {
+    const execute = (_response, t) => {
         t.pass();
         t.end();
     };

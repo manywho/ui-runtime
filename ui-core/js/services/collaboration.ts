@@ -1,6 +1,5 @@
-import * as io from 'socket.io-client';
-
 import * as Log from 'loglevel';
+import io from 'socket.io-client';
 import * as Engine from './engine';
 import * as Model from './model';
 import * as Settings from './settings';

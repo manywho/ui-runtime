@@ -1,4 +1,4 @@
-import test from 'ava'; // tslint:disable-line:import-name
+import test from 'ava';
 import * as Json from '../js/services/json';
 
 test('Flow Inputs (object)', (t) => {
@@ -105,13 +105,21 @@ test('Intialization Request', (t) => {
         joinPlayerUrl: joinUrl,
     };
 
-    const actual = Json.generateInitializationRequest(flowId, stateId, annotations, inputs, playerUrl, joinUrl,
-                                                      mode, reportingMode);
+    const actual = Json.generateInitializationRequest(
+        flowId,
+        stateId,
+        annotations,
+        inputs,
+        playerUrl,
+        joinUrl,
+        mode,
+        reportingMode,
+    );
 
     t.deepEqual(actual, expected);
 });
 
-test('Intialization Request, optional', (t) => {
+test('Initialization Request, optional', (t) => {
     const flowId: any = {
         id: 'id',
     };
@@ -295,7 +303,12 @@ test('Navigate Request, optional', (t) => {
         selectedStateEntryId: null,
     };
 
-    const actual = Json.generateNavigateRequest(stateData, navigationId, navigationElementId, mapElementId);
+    const actual = Json.generateNavigateRequest(
+        stateData,
+        navigationId,
+        navigationElementId,
+        mapElementId,
+    );
 
     t.deepEqual(actual, expected);
 });
@@ -317,7 +330,14 @@ test('Session Request', (t) => {
         sessionToken: sessionId,
     };
 
-    const actual = Json.generateSessionRequest(sessionId, sessionUrl, loginUrl, username, password, token);
+    const actual = Json.generateSessionRequest(
+        sessionId,
+        sessionUrl,
+        loginUrl,
+        username,
+        password,
+        token,
+    );
 
     t.deepEqual(actual, expected);
 });
