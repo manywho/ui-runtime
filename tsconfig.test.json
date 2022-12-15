@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2015",
-        "outDir": "dist_test",
-        "inlineSourceMap": true,
+        "pretty": true,
+        "noEmit": true,
+        "allowJs": true,
         "jsx": "react",
         "lib": ["DOM", "ES6"],
-        "removeComments": true,
-        "skipLibCheck": true
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "esModuleInterop": true
     },
     "include": [
         "ui-core/test/*.ts",

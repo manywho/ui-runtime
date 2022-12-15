@@ -1,15 +1,13 @@
 {
     "compilerOptions": {
         "pretty": true,
-        "target": "es5",
         "noEmit": true,
         "allowJs": true,
-        "sourceMap": true,
         "jsx": "react",
         "lib": ["DOM", "ES6"],
         "moduleResolution": "node",
         "noUnusedLocals": true,
         "esModuleInterop": true
     },
-    "include": ["ui-offline/js", "ui-bootstrap/js"]
+    "include": ["ui-offline/js/**/*", "ui-bootstrap/js/**/*"]
 }
