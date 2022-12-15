@@ -1,10 +1,9 @@
+import $ from 'jquery';
+import moment from 'moment';
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
-import * as $ from 'jquery';
-import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
 import TableInputDateTimeProps from '../interfaces/ITableInputDateTimeProps';
-
 import '../lib/100-datetimepicker.js';
 
 declare let manywho: any;

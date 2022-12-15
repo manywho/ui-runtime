@@ -1,15 +1,12 @@
+import { mount, shallow } from 'enzyme';
+import moment from 'moment';
+import * as React from 'react';
+import TableInputDateTime from '../js/components/table-input-datetime';
 import { str } from '../test-utils';
 
-import * as React from 'react';
-import * as moment from 'moment';
+const globalAny: any = global;
 
-import { mount, shallow } from 'enzyme';
-
-import TableInputDateTime from '../js/components/table-input-datetime';
-
-const globalAny:any = global;
-
-const mockDatetimepicker = jest.fn((options) => {
+const mockDatetimepicker = jest.fn(() => {
     return { on: jest.fn() };
 });
 
@@ -30,7 +27,6 @@ jest.mock('jquery', () => {
 jest.mock('../js/lib/100-datetimepicker.js', () => 'xxx');
 
 describe('Table Input Datetime component behaviour', () => {
-
     let tableInputDatetimeWrapper;
     let props;
 
@@ -46,8 +42,7 @@ describe('Table Input Datetime component behaviour', () => {
             }),
         };
 
-        if (isShallow === false)
-            return mount(<TableInputDateTime {...props} />);
+        if (isShallow === false) return mount(<TableInputDateTime {...props} />);
         return shallow(<TableInputDateTime {...props} />);
     }
 
@@ -67,14 +62,15 @@ describe('Table Input Datetime component behaviour', () => {
 
     test('The datepicker plugin gets instantiated', () => {
         tableInputDatetimeWrapper = manyWhoMount();
-        expect(globalAny.datetimepickerMock).toHaveBeenCalled(); 
+        expect(globalAny.datetimepickerMock).toHaveBeenCalled();
     });
 
     test('A default date gets set', () => {
-        const testDate = moment(
-            '07-12-1986', 
-            ['MM-DD-YYYY', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
-        );
+        const testDate = moment('07-12-1986', [
+            'MM-DD-YYYY',
+            'MM/DD/YYYY hh:mm:ss A ZZ',
+            moment.ISO_8601,
+        ]);
 
         const expectedArgs = {
             defaultDate: testDate,
@@ -84,9 +80,7 @@ describe('Table Input Datetime component behaviour', () => {
         };
 
         tableInputDatetimeWrapper = manyWhoMount('07-12-1986', true, 'MM-DD-YYYY');
-        expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(
-            expectedArgs,
-        ); 
+        expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(expectedArgs);
     });
 
     test('A default date does not get set', () => {
@@ -98,9 +92,7 @@ describe('Table Input Datetime component behaviour', () => {
         };
 
         tableInputDatetimeWrapper = manyWhoMount();
-        expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(
-            expectedArgs,
-        ); 
+        expect(globalAny.datetimepickerMock).toHaveBeenCalledWith(expectedArgs);
     });
 
     test('Date gets formatted on change event', () => {

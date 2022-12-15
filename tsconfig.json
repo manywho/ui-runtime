@@ -8,7 +8,8 @@
         "jsx": "react",
         "lib": ["DOM", "ES6"],
         "moduleResolution": "node",
-        "noUnusedLocals": true
+        "noUnusedLocals": true,
+        "esModuleInterop": true
     },
     "include": ["ui-offline/js", "ui-bootstrap/js"]
 }

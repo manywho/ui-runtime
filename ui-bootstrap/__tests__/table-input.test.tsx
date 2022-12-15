@@ -1,31 +1,19 @@
+import { shallow } from 'enzyme';
+import moment from 'moment';
+import * as React from 'react';
+import TableInput from '../js/components/table-input';
 import { f, str } from '../test-utils';
 
-import * as React from 'react';
-
-import { shallow } from 'enzyme';
-
-import TableInput from '../js/components/table-input';
-
-import * as moment from 'moment';
-
-
 describe('Table input component behaviour', () => {
-
     let tableInputWrapper;
-    let val:any;
+    let val: any;
     val = str();
 
-    const globalAny:any = global;
+    const globalAny: any = global;
 
     const mockOnCommitted = jest.fn();
 
-    function manyWhoMount(
-        {
-            contentType = 'string',
-            value = val,
-        } = {},
-    ) {
-
+    function manyWhoMount({ contentType = 'string', value = val } = {}) {
         const props = {
             value,
             contentType,
@@ -102,66 +90,66 @@ describe('Table input component behaviour', () => {
 
         expect(TableInput.prototype.isEmptyDate(date)).toBe(true);
     });
-    
+
     test('isEmptyDate identifies valid date', () => {
         tableInputWrapper = manyWhoMount();
         const date = Date();
 
         expect(TableInput.prototype.isEmptyDate(date)).toBe(false);
     });
-    
+
     test('getInputType returns the correct type for CONTENTSTRING', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTSTRING')).toBe('text');
     });
-    
+
     test('getInputType returns the correct type for CONTENTPASSWORD', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTPASSWORD')).toBe('password');
     });
-    
+
     test('getInputType returns the correct type for CONTENTOBJECT', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTOBJECT')).toBe('text');
     });
-    
+
     test('getInputType returns the correct type for CONTENTNUMBER', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTNUMBER')).toBe('number');
     });
-    
+
     test('getInputType returns the correct type for CONTENTLIST', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTLIST')).toBe('text');
     });
-    
+
     test('getInputType returns the correct type for CONTENTDATETIME', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTDATETIME')).toBe('datetime');
     });
-    
+
     test('getInputType returns the correct type for CONTENTCONTENT', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTCONTENT')).toBe('text');
     });
-    
+
     test('getInputType returns the correct type for CONTENTBOOLEAN', () => {
         tableInputWrapper = manyWhoMount();
-        
+
         expect(TableInput.prototype.getInputType('CONTENTBOOLEAN')).toBe('checkbox');
     });
-    
+
     test('change event on boolean input toggles value between true and false', () => {
         const setStateSpy = jest.spyOn(TableInput.prototype, 'setState');
-        
-        globalAny.window.manywho.utils.isEqual = x => x === 'CONTENTBOOLEAN';
+
+        globalAny.window.manywho.utils.isEqual = (x) => x === 'CONTENTBOOLEAN';
 
         tableInputWrapper = manyWhoMount({
             contentType: 'CONTENTBOOLEAN',
@@ -169,12 +157,14 @@ describe('Table input component behaviour', () => {
         });
 
         tableInputWrapper.simulate('change');
-        
-        expect(setStateSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-            value: true,
-        }));
+
+        expect(setStateSpy).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                value: true,
+            }),
+        );
     });
-    
+
     test('change event on text input sets value on state', () => {
         const setStateSpy = jest.spyOn(TableInput.prototype, 'setState');
         const value1 = str();
@@ -194,12 +184,14 @@ describe('Table input component behaviour', () => {
         });
 
         tableInputWrapper.simulate('change', myEvent);
-        
-        expect(setStateSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-            value: value2,
-        }));
+
+        expect(setStateSpy).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                value: value2,
+            }),
+        );
     });
-    
+
     test('Pressing enter on input calls onCommit', () => {
         const setStateSpy = jest.spyOn(TableInput.prototype, 'setState');
         const value1 = str();
@@ -219,34 +211,40 @@ describe('Table input component behaviour', () => {
         });
 
         tableInputWrapper.simulate('change', myEvent);
-        
-        expect(setStateSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-            value: value2,
-        }));
+
+        expect(setStateSpy).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                value: value2,
+            }),
+        );
     });
-    
+
     test('Focussing on input sets isFocused on state to true', () => {
         const setStateSpy = jest.spyOn(TableInput.prototype, 'setState');
 
         tableInputWrapper = manyWhoMount();
 
         tableInputWrapper.simulate('focus');
-        
-        expect(setStateSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-            isFocused: true,
-        }));
+
+        expect(setStateSpy).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                isFocused: true,
+            }),
+        );
     });
-    
+
     test('Blurring focus on input sets isFocused on state to false', () => {
         const setStateSpy = jest.spyOn(TableInput.prototype, 'setState');
 
         tableInputWrapper = manyWhoMount();
 
         tableInputWrapper.simulate('blur');
-        
-        expect(setStateSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-            isFocused: false,
-        }));
+
+        expect(setStateSpy).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                isFocused: false,
+            }),
+        );
     });
 
     test('input value is set to props.value', () => {
@@ -271,8 +269,7 @@ describe('Table input component behaviour', () => {
         });
 
         tableInputWrapper.simulate('click', {
-            stopPropagation: () => {
-            },
+            stopPropagation: () => {},
         });
 
         expect(globalAny.window.manywho.model.setModal).toHaveBeenCalled();
@@ -355,19 +352,20 @@ describe('Table input component behaviour', () => {
 
         tableInputWrapper.instance().onCommit();
 
-        const expectedDate = moment(
-            value, 
-            ['MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601, 'string' || ''],
-        ).format();
+        const expectedDate = moment(value, [
+            'MM/DD/YYYY hh:mm:ss A ZZ',
+            moment.ISO_8601,
+            'string' || '',
+        ]).format();
 
         expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', expectedDate);
     });
 
     test('Committing content date commits successfully', () => {
-        globalAny.window.manywho.utils.isEqual = jest.fn((input, comparison) => { 
+        globalAny.window.manywho.utils.isEqual = jest.fn((input, comparison) => {
             if (comparison === 'CONTENTDATETIME') {
                 return false;
-            } 
+            }
             return true;
         });
 
@@ -380,10 +378,7 @@ describe('Table input component behaviour', () => {
 
         tableInputWrapper.instance().onCommit();
 
-        const expectedDate = moment(
-            value, 
-            ['MM/DD/YYYY', 'string' || ''],
-        ).format();
+        const expectedDate = moment(value, ['MM/DD/YYYY', 'string' || '']).format();
 
         expect(mockOnCommitted).toHaveBeenCalledWith('string', 'string', expectedDate);
     });

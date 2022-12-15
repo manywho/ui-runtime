@@ -1,12 +1,9 @@
-import { str, int } from '../test-utils';
-
+import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-
-import { shallow, mount } from 'enzyme';
-
 import Select from '../js/components/select';
+import { int, str } from '../test-utils';
 
-const globalAny:any = global;
+const globalAny: any = global;
 
 jest.useFakeTimers();
 
@@ -14,7 +11,6 @@ const classOne = str(5);
 const classTwo = str(5);
 
 describe('Select input component behaviour', () => {
-
     let selectWrapper;
     let classes;
     let model;
@@ -22,16 +18,17 @@ describe('Select input component behaviour', () => {
     let columns;
     let props;
 
-    classes = [
-        classOne,
-        classTwo,
-    ];
+    classes = [classOne, classTwo];
 
     model = {};
     state = {};
 
-    function manyWhoMount(isDesignTime = false, objectData = [], isLoading = false, isShallow = true) {
-
+    function manyWhoMount(
+        isDesignTime = false,
+        objectData = [],
+        isLoading = false,
+        isShallow = true,
+    ) {
         props = {
             isDesignTime,
             objectData,
@@ -81,8 +78,7 @@ describe('Select input component behaviour', () => {
                 return value;
             }),
         };
-        if (isShallow)
-            return shallow(<Select {...props} />, { disableLifecycleMethods: true });
+        if (isShallow) return shallow(<Select {...props} />, { disableLifecycleMethods: true });
 
         return mount(<Select {...props} />);
     }
@@ -159,7 +155,7 @@ describe('Select input component behaviour', () => {
         expect(selectWrapper.html()).toEqual(expect.stringContaining('width:20px'));
         expect(selectWrapper.html()).toEqual(expect.stringContaining('min-width:20px'));
     });
-    
+
     test('component renders help info', () => {
         const helpInfo = str(10);
         model['helpInfo'] = helpInfo;
@@ -173,7 +169,7 @@ describe('Select input component behaviour', () => {
         selectWrapper = manyWhoMount();
         expect(selectWrapper.contains(label)).toEqual(true);
     });
-    
+
     test('asterisk gets rendered if field is required', () => {
         model['isRequired'] = true;
         selectWrapper = manyWhoMount();
@@ -181,33 +177,34 @@ describe('Select input component behaviour', () => {
     });
 
     test('options are set to component state', () => {
-
         const dummyContentValue1 = str(10);
         const dummyContentValue2 = str(10);
         const dummyTypeElementPropertyId = str(10);
 
         const objData = [
-            { properties: [
-                {
-                    contentValue:dummyContentValue1,
-                    typeElementPropertyId: dummyTypeElementPropertyId,
-                    contentFormat: null,
-                    contentType: 'ContentString',
-                },
-            ] },
-            { properties: [
-                { 
-                    contentValue:dummyContentValue2,
-                    typeElementPropertyId: dummyTypeElementPropertyId,
-                    contentFormat: null,
-                    contentType: 'ContentString',
-                },
-            ] },
+            {
+                properties: [
+                    {
+                        contentValue: dummyContentValue1,
+                        typeElementPropertyId: dummyTypeElementPropertyId,
+                        contentFormat: null,
+                        contentType: 'ContentString',
+                    },
+                ],
+            },
+            {
+                properties: [
+                    {
+                        contentValue: dummyContentValue2,
+                        typeElementPropertyId: dummyTypeElementPropertyId,
+                        contentFormat: null,
+                        contentType: 'ContentString',
+                    },
+                ],
+            },
         ];
 
-        columns = [
-            { typeElementPropertyId: dummyTypeElementPropertyId },
-        ];
+        columns = [{ typeElementPropertyId: dummyTypeElementPropertyId }];
 
         selectWrapper = manyWhoMount(false, objData, false);
         expect(selectWrapper.state().options[0].label).toEqual(dummyContentValue1);
@@ -219,9 +216,7 @@ describe('Select input component behaviour', () => {
         const selectInstance = selectWrapper.instance();
         const value = str(10);
 
-        const options = [
-            { label: str(10), value: { key: value } },
-        ];
+        const options = [{ label: str(10), value: { key: value } }];
         selectInstance.onValuesChange(options);
         expect(props.select).toHaveBeenCalledWith({ key: value });
     });
@@ -286,21 +281,21 @@ describe('Select input component behaviour', () => {
     test('is on page 1 select options get generated', () => {
         const typeElementPropertyId = str(10);
 
-        columns = [
-            { typeElementPropertyId },
-        ];
+        columns = [{ typeElementPropertyId }];
         selectWrapper = manyWhoMount(false, [], true, false);
         const objData = [
-            { properties: [
-                {
-                    typeElementPropertyId,
-                    contentValue: str(10),
-                    contentFormat: null,
-                    contentType: 'ContentString',
-                },
-            ] },
+            {
+                properties: [
+                    {
+                        typeElementPropertyId,
+                        contentValue: str(10),
+                        contentFormat: null,
+                        contentType: 'ContentString',
+                    },
+                ],
+            },
         ];
-        selectWrapper.setProps({ isLoading:false, objectData:objData });
+        selectWrapper.setProps({ isLoading: false, objectData: objData });
         expect(selectWrapper.state().options.length).toEqual(1);
     });
 
@@ -309,7 +304,7 @@ describe('Select input component behaviour', () => {
         const developerName = str();
 
         const pageOneObjData = [
-            { 
+            {
                 developerName,
                 externalId: str(),
                 internalId: str(),
@@ -328,7 +323,7 @@ describe('Select input component behaviour', () => {
         ];
 
         const pageTwoObjData = [
-            { 
+            {
                 developerName,
                 externalId: str(),
                 internalId: str(),
@@ -346,15 +341,16 @@ describe('Select input component behaviour', () => {
             },
         ];
 
-        columns = [
-            { typeElementPropertyId },
-        ];
+        columns = [{ typeElementPropertyId }];
 
-        selectWrapper = manyWhoMount(false, pageOneObjData, true, false);        
+        selectWrapper = manyWhoMount(false, pageOneObjData, true, false);
 
         selectWrapper.setProps({ isLoading: false, objectData: pageTwoObjData, page: 2 });
         expect(selectWrapper.state().options.length).toEqual(2);
-        expect(selectWrapper.state().options.map(option => option.label)).toEqual(['Page 1 Value','Page 2 Value']);
+        expect(selectWrapper.state().options.map((option) => option.label)).toEqual([
+            'Page 1 Value',
+            'Page 2 Value',
+        ]);
         expect(selectWrapper.state().isOpen).toBeTruthy();
     });
 
@@ -399,13 +395,13 @@ describe('Select input component behaviour', () => {
     test('when addOptions is called with items selected, selected items are reversed and prepended', () => {
         const typeElementPropertyId = str(10);
         const developerName = str();
-        
+
         const contentValues = [];
         const existingOptions = [];
         // add 3 items to the combo box list: A,B,C,D
         for (let i = 0; i < 4; i++) {
             contentValues.push(str());
-            existingOptions.push({ 
+            existingOptions.push({
                 value: {
                     developerName,
                     externalId: str(),
@@ -422,24 +418,28 @@ describe('Select input component behaviour', () => {
                         },
                     ],
                 },
-                label: contentValues[contentValues.length - 1]
+                label: contentValues[contentValues.length - 1],
             });
         }
         // add 2 of those 4 items to the selected list: B,C
         const selectedOptions = [existingOptions[1], existingOptions[2]];
-        selectedOptions.forEach(selectedOption => {
-            selectedOption.value.isSelected = true
+        selectedOptions.forEach((selectedOption) => {
+            selectedOption.value.isSelected = true;
         });
-        
+
         selectWrapper = manyWhoMount();
         const selectWrapperInstance = selectWrapper.instance();
         // call addOptions with existing list A,B,C,D. and a selected list B,C
         const resultContentValues = selectWrapperInstance
             .addOptions(existingOptions, selectedOptions, false)
-            .map(option => option.label);
-        
+            .map((option) => option.label);
+
         // expect C,B,A,D as B,C is reversed and prepended to A,B,C,D. then duplicates removed
-        expect(resultContentValues).toEqual([contentValues[2],contentValues[1],contentValues[0],contentValues[3]]);
+        expect(resultContentValues).toEqual([
+            contentValues[2],
+            contentValues[1],
+            contentValues[0],
+            contentValues[3],
+        ]);
     });
-    
 });
