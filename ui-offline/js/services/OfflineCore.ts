@@ -248,7 +248,7 @@ const OfflineCore = {
                 } else if (request.selectedMapElementId) {
                     nextMapElementId = request.selectedMapElementId;
                 } else {
-                    // eslint-disable-next-line prefer-destructuring
+                     
                     outcome = mapElement.outcomes[0];
                 }
 
@@ -329,11 +329,11 @@ const OfflineCore = {
                 for (const operation of operations) {
                     if (operation.macroElementToExecuteId) {
                         // Execute a macro
-                        // eslint-disable-next-line no-await-in-loop
+                         
                         await invokeMacroWorker(operation, flow.state, snapshot);
                     } else {
                         // Execute an operation
-                        // eslint-disable-next-line no-await-in-loop
+                         
                         await executeOperation(operation, flow.state, snapshot);
                     }
                 }

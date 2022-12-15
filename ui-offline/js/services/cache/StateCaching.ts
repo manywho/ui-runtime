@@ -42,7 +42,7 @@ export const pollForStateValues = () => {
     };
 
     if (store.getState().flowInformation.token) {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
+         
         request.headers['Authorization'] = store.getState().flowInformation.token;
     }
     return fetch(url, request)

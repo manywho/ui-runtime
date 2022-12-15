@@ -146,7 +146,7 @@ const ObjectDataCaching = (flow: IFlow) => {
         const request = requests[reqIndex];
         request.stateId = reqFlow.state.id;
 
-        // eslint-disable-next-line consistent-return
+         
         return manywho.ajax.dispatchObjectDataRequest(
             request, reqFlow.tenantId, reqFlow.state.id, reqFlow.authenticationToken, request.listFilter.limit,
         )

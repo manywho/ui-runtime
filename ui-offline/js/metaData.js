@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
+ 
 /**
  * Script used for generating flow metadata
  * that gets written to a JS file

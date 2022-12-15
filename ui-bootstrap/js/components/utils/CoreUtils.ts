@@ -4,7 +4,7 @@
 
 import IOutcomeMetaData from '../../interfaces/IOutcomeMetaData';
 
-/* eslint-disable import/prefer-default-export */
+ 
 
 interface IRenderOutcomesInOrder {
     (element: JSX.Element, outcomes: JSX.Element[], outcomeMeta: Array<IOutcomeMetaData>, isVisible: boolean);

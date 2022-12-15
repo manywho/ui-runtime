@@ -11,7 +11,7 @@ declare const manywho: any;
 
 const selectAllRef = React.createRef();
 
-/* eslint-disable import/prefer-default-export */
+ 
 class TableLarge extends React.Component<ITableLargeProps, null> {
 
     componentDidUpdate() {
