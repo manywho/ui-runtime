@@ -1,0 +1,29 @@
+{
+    "testPathIgnorePatterns": ["/fixtures/"],
+    "globals": {
+        "ts-jest": {
+            "diagnostics": false
+        }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+        "ui-offline/js/**/*.{js,jsx,ts,tsx}",
+        "ui-offline/workers/**/*.{js,jsx,ts,tsx}",
+        "ui-bootstrap/js/components/*.{ts,tsx}",
+        "!**/node_modules/**",
+        "!**/vendor/**"
+    ],
+    "setupFiles": ["<rootDir>/test-setup.js"],
+    "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+    },
+    "setupFilesAfterEnv": ["<rootDir>/setup-tests-globals.js"],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+    "moduleNameMapper": {
+        "\\.(css|less)$": "identity-obj-proxy",
+        "worker.js": "<rootDir>/ui-offline/__mocks__/workerMock.js",
+        "\\.svg$": "<rootDir>/ui-offline/__mocks__/SvgIcons.tsx"
+    },
+    "testResultsProcessor": "./node_modules/jest-junit-reporter"
+}
