@@ -26,6 +26,40 @@ module.exports = (env) => ({
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
+    // load these externally (don't bundle them)
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        jquery: 'jQuery',
+        numbro: 'numbro',
+        moment: 'moment',
+        bootstrap: 'bootstrap',
+        'socket.io-client': 'io',
+    },
+    stats: {
+        // add asset Information
+        assets: false,
+        // add children information
+        children: false,
+        // add chunk information
+        // (setting this to `false` allows for a less verbose output)
+        chunks: false,
+        // `webpack --colors` equivalent
+        colors: true,
+        // add errors
+        errors: true,
+        // // set the maximum number of modules to be shown
+        // maxModules: 15,
+        // show performance hint when file size exceeds
+        // `performance.maxAssetSize`
+        performance: true,
+        // add warnings
+        warnings: true,
+    },
+    performance: {
+        hints: 'warning',
+        assetFilter: (assetFilename) => assetFilename.endsWith('.js'),
+    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(dotenv.parsed),
@@ -66,14 +100,26 @@ module.exports = (env) => ({
         rules: [
             // bundle source code from ui-core and ui-bootstrap
             {
-                test: /\.(ts|tsx)$/,
+                test: /\.tsx?$/,
                 include: [
                     path.resolve(__dirname, `${repoPaths.uiCore}/js`),
                     path.resolve(__dirname, `${repoPaths.uiBootstrap}/js`),
                     path.resolve(__dirname, `${repoPaths.uiOffline}/js`),
                 ],
-                use: [{ loader: 'babel-loader' }],
-                enforce: 'pre',
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-env'],
+                        },
+                    },
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true,
+                        },
+                    },
+                ],
             },
             // bundle ui-offline styles
             {
@@ -204,39 +250,5 @@ module.exports = (env) => ({
                 ],
             },
         ],
-    },
-    // load these externally (don't bundle them)
-    externals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        jquery: 'jQuery',
-        numbro: 'numbro',
-        moment: 'moment',
-        bootstrap: 'bootstrap',
-        'socket.io-client': 'io',
-    },
-    stats: {
-        // add asset Information
-        assets: false,
-        // add children information
-        children: false,
-        // add chunk information
-        // (setting this to `false` allows for a less verbose output)
-        chunks: false,
-        // `webpack --colors` equivalent
-        colors: true,
-        // add errors
-        errors: true,
-        // // set the maximum number of modules to be shown
-        // maxModules: 15,
-        // show performance hint when file size exceeds
-        // `performance.maxAssetSize`
-        performance: true,
-        // add warnings
-        warnings: true,
-    },
-    performance: {
-        hints: 'warning',
-        assetFilter: (assetFilename) => assetFilename.endsWith('.js'),
     },
 });

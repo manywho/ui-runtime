@@ -15,6 +15,22 @@ module.exports = (env) => {
     return {
         ...common,
         mode: 'development',
+        devtool: 'eval-source-map',
+        // NOTE: To see a list of all the files built and loaded by the
+        // dev server go to the following url in the browser:
+        // http://localhost:3000/webpack-dev-server
+        devServer: {
+            client: {
+                overlay: false,
+            },
+            // if no HOST is defined it will default to localhost
+            host: process.env.HOST,
+            port: process.env.PORT || 3000,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            historyApiFallback: true,
+        },
         plugins: [
             ...common.plugins,
             new CopyPlugin({
@@ -45,23 +61,5 @@ module.exports = (env) => {
         module: {
             rules: [...common.module.rules, { test: /\.html$/, loader: 'html-loader' }],
         },
-        devtool: 'eval-source-map',
-        devServer: {
-            // hot: true,
-            // inline: true,
-            client: {
-                overlay: false,
-            },
-            // if no HOST is defined it will default to localhost
-            host: process.env.HOST,
-            port: process.env.PORT || 3000,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-            historyApiFallback: true,
-        },
-        // NOTE: To see a list of all the files built and loaded by the
-        // dev server go to the following url in the browser:
-        // http://localhost:3000/webpack-dev-server
     };
 };

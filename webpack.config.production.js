@@ -10,6 +10,7 @@ module.exports = (env) => {
     return {
         ...common,
         mode: 'production',
+        devtool: 'source-map',
         plugins: [
             ...common.plugins,
             new CopyPlugin({
@@ -40,6 +41,5 @@ module.exports = (env) => {
                 },
             }),
         ],
-        devtool: 'source-map',
     };
 };

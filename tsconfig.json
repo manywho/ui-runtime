@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "pretty": true,
-        "noEmit": true,
+        "outDir": "./runtime_build",
+        "sourceMap": true,
         "allowJs": true,
         "jsx": "react",
         "lib": ["DOM", "ES6"],
