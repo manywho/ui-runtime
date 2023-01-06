@@ -1,13 +1,13 @@
-﻿import $ from 'jquery';
-import { uniqWith } from 'ramda';
-import * as React from 'react';
+﻿import * as React from 'react';
+import * as $ from 'jquery';
 import { findDOMNode } from 'react-dom';
 import { MultiSelect, SimpleSelect } from 'react-selectize';
 import registeredComponents from '../constants/registeredComponents';
 import IItemsComponentProps from '../interfaces/IItemsComponentProps';
 import { getOutcome } from './outcome';
-import { renderOutcomesInOrder } from './utils/CoreUtils';
 import { checkBooleanString } from './utils/DataUtils';
+import { renderOutcomesInOrder } from './utils/CoreUtils';
+import { uniqWith } from 'ramda';
 
 declare const manywho: any;
 

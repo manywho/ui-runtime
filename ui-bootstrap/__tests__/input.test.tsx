@@ -1,20 +1,23 @@
-import { mount, shallow } from 'enzyme';
+import { str } from '../test-utils';
+
 import * as React from 'react';
-import Input from '../js/components/input';
+
+import { mount, shallow } from 'enzyme';
+
 import InputBoolean from '../js/components/input-boolean';
 import InputDateTime from '../js/components/input-datetime';
 import InputNumber from '../js/components/input-number';
-import { str } from '../test-utils';
+import Input from '../js/components/input';
 
 // react-maskedinput v4.0.1 has messed up default exports
 // https://github.com/insin/react-maskedinput/issues/104
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 let MaskedInput = require('react-maskedinput');
 if (MaskedInput.default) {
     MaskedInput = MaskedInput.default;
 }
 
 describe('Input component behaviour', () => {
+
     let inputWrapper;
     let classes;
     let model;
@@ -23,21 +26,20 @@ describe('Input component behaviour', () => {
     let propparentId;
     let propflowKey;
 
-    const globalAny: any = global;
+    const globalAny:any = global;
 
-    function manyWhoMount(
-        modelcontentType = 'ContentString',
-        mask = null,
-        isVisible = false,
-        isNullOrWhitespace = null,
-        shallowRender = false,
-        autocomplete = null,
-    ) {
+    function manyWhoMount(modelcontentType = 'ContentString', mask = null, isVisible = false,
+        isNullOrWhitespace = null, shallowRender = false, autocomplete = null) {
+
         propID = str(5);
         propparentId = str(5);
         propflowKey = str(5);
 
-        classes = [str(5), str(5), str(5)];
+        classes = [
+            str(5),
+            str(5),
+            str(5),
+        ];
 
         model = {
             isVisible,
@@ -69,31 +71,31 @@ describe('Input component behaviour', () => {
         globalAny.window.manywho['styling'] = {
             getClasses: jest.fn(() => classes),
         };
-        (globalAny.window.manywho['model'] = {
+        globalAny.window.manywho['model'] = {
             getComponent: jest.fn(() => model),
             getOutcomes: jest.fn(() => []),
-        }),
-            (globalAny.window.manywho['state'] = {
-                getComponent: jest.fn(),
-                setComponent: jest.fn(),
+        },
+        globalAny.window.manywho['state'] = {
+            getComponent: jest.fn(),
+            setComponent: jest.fn(),
+        },
+        globalAny.window.manywho['formatting'] = {
+            toMomentFormat: jest.fn(),
+            number: jest.fn(),
+        },
+        globalAny.window.manywho.component['contentTypes'] = contentTypes,
+        globalAny.window.manywho.component['handleEvent'] = jest.fn(),
+        globalAny.window.manywho['utils'] = {
+            isNullOrWhitespace: jest.fn(() => isNullOrWhitespace),
+            isNullOrUndefined: jest.fn(),
+            isNullOrEmpty: jest.fn((arg) => {
+                if (arg === null || arg === []) {
+                    return true;
+                }
+                return false;
             }),
-            (globalAny.window.manywho['formatting'] = {
-                toMomentFormat: jest.fn(),
-                number: jest.fn(),
-            }),
-            (globalAny.window.manywho.component['contentTypes'] = contentTypes),
-            (globalAny.window.manywho.component['handleEvent'] = jest.fn()),
-            (globalAny.window.manywho['utils'] = {
-                isNullOrWhitespace: jest.fn(() => isNullOrWhitespace),
-                isNullOrUndefined: jest.fn(),
-                isNullOrEmpty: jest.fn((arg) => {
-                    if (arg === null || arg === []) {
-                        return true;
-                    }
-                    return false;
-                }),
-                isEqual: jest.fn((_) => true),
-            });
+            isEqual: jest.fn(_ => true),
+        };
 
         return shallowRender
             ? shallow(<Input id={propID} parentId={propparentId} flowKey={propflowKey} />)
@@ -189,4 +191,5 @@ describe('Input component behaviour', () => {
         expect(onblurSpy).toHaveBeenCalled();
         expect(globalAny.window.manywho.component.handleEvent).toHaveBeenCalled();
     });
+
 });

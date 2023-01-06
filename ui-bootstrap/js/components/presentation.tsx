@@ -6,8 +6,7 @@ import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
 // Can't use import otherwise the Jest tests fail to find DOMPurify
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const createDOMPurify = require('dompurify');
+import createDOMPurify = require('dompurify');
 
 const DOMPurify = createDOMPurify(window);
 

@@ -1,7 +1,8 @@
-import moment from 'moment';
 import * as React from 'react';
+import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
+// tslint:disable-next-line
 import Dynamic from './dynamic';
 import { checkBooleanString } from './utils/DataUtils';
 

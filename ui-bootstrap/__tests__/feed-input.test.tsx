@@ -1,12 +1,13 @@
-import { mount, shallow } from 'enzyme';
-import { merge } from 'ramda';
 import * as React from 'react';
+import { shallow, mount } from 'enzyme';
+import { merge } from 'ramda';
 import FeedInput from '../js/components/feed-input';
 
 describe('FeedInput component behaviour', () => {
+
     let componentWrapper;
 
-    const globalAny: any = global;
+    const globalAny:any = global;
 
     const defaultProps = {
         send: jest.fn(),
@@ -33,10 +34,8 @@ describe('FeedInput component behaviour', () => {
 
     test('Component gets registered', () => {
         componentWrapper = manyWhoMount();
-        expect(globalAny.window.manywho.component.register).toHaveBeenCalledWith(
-            'feed-input',
-            FeedInput,
-        );
+        expect(globalAny.window.manywho.component.register)
+            .toHaveBeenCalledWith('feed-input', FeedInput);
     });
 
     test('Component does not render file upload if attachments are disabled', () => {

@@ -1,5 +1,5 @@
-import moment from 'moment';
 import * as React from 'react';
+import * as moment from 'moment';
 import registeredComponents from '../constants/registeredComponents';
 import ITableInputProps from '../interfaces/ITableInputProps';
 import { getTableInputDateTime } from './table-input-datetime';
