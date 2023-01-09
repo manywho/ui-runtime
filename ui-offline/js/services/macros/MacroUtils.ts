@@ -14,7 +14,7 @@ export const getProperty = (typeElementPropertyId: string, validContentTypes: st
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
             const isValidContentType = validContentTypes.includes(specifiedProperty.contentType);
             if (!isValidContentType) {
-                 
+                // eslint-disable-next-line max-len
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
             }
             if (validContentTypes.includes(CONTENT_TYPES.LIST) || validContentTypes.includes(CONTENT_TYPES.OBJECT)) {
@@ -42,7 +42,7 @@ export const setProperty = (typeElementPropertyId: string, validContentTypes: st
             const specifiedProperty = objectData.properties.find((property) => property.typeElementPropertyId === typeElementPropertyId);
             const isValidContentType = validContentTypes.includes(specifiedProperty.contentType);
             if (!isValidContentType) {
-                 
+                // eslint-disable-next-line max-len
                 throw new Error(`${specifiedProperty.developerName} does not have a content type of either the following: ${validContentTypes.join(', ')}`);
             }
 

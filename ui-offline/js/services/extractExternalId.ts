@@ -85,7 +85,7 @@ const extractExternalId = (request: any, tenantId: string, authenticationToken: 
             },
         };
         if (authenticationToken) {
-             
+            // eslint-disable-next-line @typescript-eslint/dot-notation
             valueRequest.headers['Authorization'] = authenticationToken;
         }
         return fetch(url, valueRequest)
