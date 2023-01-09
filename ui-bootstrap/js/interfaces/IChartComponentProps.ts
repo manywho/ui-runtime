@@ -8,7 +8,6 @@ interface IChartComponentProps extends IComponentProps {
     contentElement: JSX.Element;
     objectData: any[];
     isLoading: boolean;
-    // eslint-disable-next-line @typescript-eslint/ban-types
     onOutcome: Function;
     refresh: (event: React.SyntheticEvent<HTMLElement>) => void;
 }

@@ -7,7 +7,7 @@ import IItemsComponentProps from '../interfaces/IItemsComponentProps';
 import { getOutcome } from './outcome';
 import { checkBooleanString } from './utils/DataUtils';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
-import { uniqWith } from 'ramda';
+import { uniqWith } from 'ramda'; 
 
 declare const manywho: any;
 
@@ -18,6 +18,7 @@ interface IDropDownState {
 }
 
 class Select extends React.Component<IItemsComponentProps, IDropDownState> {
+
     debouncedOnSearch = null;
 
     debouncedOnScroll = null;
@@ -71,19 +72,15 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
                 this.state.options.length < nextProps.limit * nextProps.page
             ) {
                 // add next page of options to end
-                options = this.addOptions(
-                    this.state.options,
-                    this.getOptions(nextPropsObjectData),
-                    true,
-                );
+                options = this.addOptions(this.state.options, this.getOptions(nextPropsObjectData), true);
                 this.setState({ isOpen: true });
 
                 const index = this.state.options.length + 1;
 
                 setTimeout(() => {
                     const dropdown: HTMLDivElement =
-                        // eslint-disable-next-line react/no-find-dom-node
-                        (findDOMNode(this) as HTMLDivElement).querySelector('.dropdown-menu');
+                        (findDOMNode(this) as HTMLDivElement)
+                            .querySelector('.dropdown-menu');
                     const scrollTarget = dropdown.children.item(index) as HTMLElement;
                     dropdown.scrollTop = scrollTarget.offsetTop;
                 });
@@ -115,34 +112,35 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.isOpen && this.state.isOpen) {
+
             // Timeout to ensure the dropdown has had a chance to render before accessing it's child elements
-            setTimeout(() => {
-                const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
-                // eslint-disable-next-line react/no-find-dom-node
-                const element = findDOMNode(this) as HTMLElement;
+            setTimeout(
+                () => {
+                    const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
+                    const element = (findDOMNode(this) as HTMLElement);
 
-                if (
-                    model.attributes &&
-                    manywho.utils.isEqual(model.attributes.isTethered, 'true', true)
-                ) {
-                    const dropdown: HTMLElement = document.querySelector(
-                        '.tether-element .dropdown-menu',
-                    ) as HTMLElement;
+                    if (
+                        model.attributes &&
+                        manywho.utils.isEqual(model.attributes.isTethered, 'true', true)
+                    ) {
+                        const dropdown: HTMLElement =
+                            document.querySelector('.tether-element .dropdown-menu') as HTMLElement;
 
-                    const selectize: HTMLElement = element.querySelector(
-                        '.react-selectize',
-                    ) as HTMLElement;
+                        const selectize: HTMLElement =
+                            element.querySelector('.react-selectize') as HTMLElement;
 
-                    if (dropdown !== null) {
-                        dropdown.addEventListener('scroll', this.debouncedOnScroll);
-                        dropdown.style.setProperty('width', `${selectize.offsetWidth}px`);
+                        if (dropdown !== null) {
+                            dropdown.addEventListener('scroll', this.debouncedOnScroll);
+                            dropdown.style.setProperty('width', `${selectize.offsetWidth}px`);
+                        }
+
+                    } else {
+                        element.querySelector('.dropdown-menu')
+                            .addEventListener('scroll', this.debouncedOnScroll);
                     }
-                } else {
-                    element
-                        .querySelector('.dropdown-menu')
-                        .addEventListener('scroll', this.debouncedOnScroll);
-                }
-            }, 10);
+                },
+                10,
+            );
         }
     }
 
@@ -183,7 +181,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
     onOpenChange(isOpen) {
         if (!this.props.isLoading) {
             this.setState({ isOpen });
-
+            
             const select = this.comboBoxRef.current;
             const mainScroller = $(select).closest('.main-scroller');
 
@@ -191,14 +189,12 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
             const documentSpaceUnderDropdown = window.innerHeight - select.offsetTop;
             // every bit we've scrolled down give us more space under the dropdown
             const viewSpaceUnderDropdown = documentSpaceUnderDropdown + mainScroller.scrollTop();
-
+            
             // The dropdown is 200px in height and scrolls if more is available (215px is what the docs suggest)
             // The select box node also includes the type-able input which can vary in height
             // If we have more than enough space to render downwards, we do that (1)
             // Otherwise we render upwards (-1)
-            this.setState({
-                dropdownDirection: viewSpaceUnderDropdown < 215 + select.offsetHeight ? -1 : 1,
-            });
+            this.setState({ dropdownDirection: viewSpaceUnderDropdown < 215 + select.offsetHeight ? -1 : 1 });
         }
     }
 
@@ -222,6 +218,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
             const columnTypeElementPropertyId = columns[0].typeElementPropertyId;
 
             return objectData.map((item) => {
+
                 const labelProperty = item.properties.find((value) => {
                     return manywho.utils.isEqual(
                         value.typeElementPropertyId,
@@ -239,11 +236,11 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
                 const optionText = labelProperty
                     ? manywho.formatting.format(
-                          labelProperty.contentValue,
-                          labelProperty.contentFormat,
-                          labelProperty.contentType,
-                          this.props.flowKey,
-                      )
+                        labelProperty.contentValue,
+                        labelProperty.contentFormat,
+                        labelProperty.contentType,
+                        this.props.flowKey,
+                    )
                     : '';
 
                 return {
@@ -275,9 +272,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
         if (append) {
             // Append the next page of options
             // Reverse the list before so newOptions replaces existingOptions for duplicates. Reverse again after to restore original order
-            return this.removeDuplicateOptions(
-                [...existingOptions, ...newOptions].reverse(),
-            ).reverse();
+            return this.removeDuplicateOptions([...existingOptions, ...newOptions].reverse()).reverse();
         }
         // Prepend the selected item(s) in reverse order
         return this.removeDuplicateOptions([...newOptions.reverse(), ...existingOptions]);
@@ -285,17 +280,16 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
     /**
      * Returns a list of unique option from the given list, only the first occurrence will remain
-     *
+     * 
      * Match on `externalId` or the `internalId` because when offline there is no externalId
-     *
+     * 
      * @param {Array} options list of options which duplicates will be removed from
      * @return {Array} the given list of options with duplicates removed
      */
     removeDuplicateOptions(options) {
         return uniqWith(
-            (a, b) =>
-                (a.value.externalId && a.value.externalId === b.value.externalId) ||
-                a.value.internalId === b.value.internalId,
+            (a, b) => ((a.value.externalId && a.value.externalId === b.value.externalId) || 
+            a.value.internalId === b.value.internalId)
         )(options);
     }
 
@@ -320,9 +314,10 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
         manywho.log.info(`Rendering Select: ${this.props.id}, ${model.developerName}`);
 
-        const state = this.props.isDesignTime
-            ? { error: null, loading: null }
-            : manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
+        const state =
+            this.props.isDesignTime ?
+                { error: null, loading: null } :
+                manywho.state.getComponent(this.props.id, this.props.flowKey) || {};
 
         const props: any = {
             filterOptions: this.filterOptions,
@@ -343,7 +338,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
             props.onFocus = this.onFocus;
             props.value = null;
             props.options = this.state.options;
-            props.disabled = model.isEnabled === false || model.isEditable === false;
+            props.disabled = (model.isEnabled === false || model.isEditable === false);
 
             // If a multiselect is used then the values prop
             // must always be set on re-render as react selectize will
@@ -363,26 +358,25 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
             }
 
             if (this.props.objectData) {
+
                 let internalIds = null;
 
                 if (state && state.objectData) {
-                    internalIds = state.objectData.map((item) => item.internalId);
+                    internalIds = state.objectData.map(item => item.internalId);
                 } else {
-                    internalIds = this.props.objectData
-                        .filter((item) => item.isSelected)
-                        .map((item) => item.internalId);
+                    internalIds = this.props.objectData.filter(item => item.isSelected)
+                        .map(item => item.internalId);
                 }
                 let values = null;
 
                 if (internalIds && internalIds.length > 0) {
                     // Out of all available options only show
-                    values = this.state.options.filter(
-                        (option) =>
-                            // options that are selected by internalId
-                            internalIds.indexOf(option.value.internalId) !== -1 &&
-                            // and options that don't have null labels
-                            // (this fixes an issue where the engine returns a null labelled selected entry initially)
-                            !manywho.utils.isNullOrWhitespace(option.label),
+                    values = this.state.options.filter(option =>
+                        // options that are selected by internalId
+                        internalIds.indexOf(option.value.internalId) !== -1 &&
+                        // and options that don't have null labels
+                        // (this fixes an issue where the engine returns a null labelled selected entry initially)
+                        !manywho.utils.isNullOrWhitespace(option.label)
                     );
                 }
 
@@ -406,23 +400,18 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
                     <span className="item-label">{item.label}</span>
                     <button
                         className="item-remove"
-                        onMouseDown={(e) => {
+                        onMouseDown={e => {
                             this.props.select(item.value);
                             e.stopPropagation();
                         }}
                     >
-                        <svg
-                            className="react-selectize-reset-button"
-                            focusable="false"
-                            width="8px"
-                            height="8px"
-                        >
+                        <svg className="react-selectize-reset-button" focusable="false" width="8px" height="8px">
                             <path d="M0 0 L8 8 M8 0 L 0 8"></path>
                         </svg>
                     </button>
                 </div>
             );
-            selectElement = <MultiSelect {...props} />;
+            selectElement = <MultiSelect {...props} />
         } else {
             selectElement = <SimpleSelect {...props} />;
         }
@@ -444,22 +433,22 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
                 <button
                     className="btn btn-default refresh-button"
                     onClick={this.props.refresh}
-                    disabled={isDisabled}
-                >
+                    disabled={isDisabled}>
                     <span className={className} />
                 </button>
             );
         }
 
-        const outcomeButtons =
-            this.props.outcomes &&
-            this.props.outcomes.map((outcome) => (
-                <Outcome key={outcome.id} id={outcome.id} flowKey={this.props.flowKey} />
-            ));
+        const outcomeButtons = this.props.outcomes && this.props.outcomes.map(
+            outcome => <Outcome id={outcome.id} flowKey={this.props.flowKey } />,
+        );
 
-        let className = manywho.styling
-            .getClasses(this.props.parentId, this.props.id, 'select', this.props.flowKey)
-            .join(' ');
+        let className = manywho.styling.getClasses(
+            this.props.parentId,
+            this.props.id,
+            'select',
+            this.props.flowKey,
+        ).join(' ');
 
         className += ' form-group';
 
@@ -484,18 +473,18 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
             <div id={this.props.id} ref={this.comboBoxRef}>
                 <label>
                     {model.label}
-                    {checkBooleanString(model.isRequired) ? (
-                        <span className="input-required"> * </span>
-                    ) : null}
+                    {checkBooleanString(model.isRequired) ? <span className="input-required"> * </span> : null}
                 </label>
                 <div style={style} className={widthClassName}>
                     {selectElement}
                     {refreshButton}
                 </div>
                 <span className="help-block">
-                    {(state.error && state.error.message) ||
+                    {
+                        (state.error && state.error.message) ||
                         model.validationMessage ||
-                        state.validationMessage}
+                        state.validationMessage
+                    }
                 </span>
                 <span className="help-block">{model.helpInfo}</span>
             </div>
@@ -503,12 +492,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
         return (
             <div className={className}>
-                {renderOutcomesInOrder(
-                    comboBox,
-                    outcomeButtons,
-                    this.props.outcomes,
-                    model.isVisible,
-                )}
+                {renderOutcomesInOrder(comboBox, outcomeButtons, this.props.outcomes, model.isVisible)}
             </div>
         );
     }
@@ -516,7 +500,6 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
 
 manywho.component.registerItems(registeredComponents.SELECT, Select);
 
-export const getSelect = (): typeof Select =>
-    manywho.component.getByName(registeredComponents.SELECT);
+export const getSelect = () : typeof Select => manywho.component.getByName(registeredComponents.SELECT);
 
 export default Select;

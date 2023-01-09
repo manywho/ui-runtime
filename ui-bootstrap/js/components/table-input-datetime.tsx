@@ -10,6 +10,7 @@ import '../lib/100-datetimepicker.js';
 declare let manywho: any;
 
 class TableInputDateTime extends React.Component<TableInputDateTimeProps, null> {
+
     datetime = null;
 
     constructor(props) {
@@ -17,44 +18,39 @@ class TableInputDateTime extends React.Component<TableInputDateTimeProps, null> 
     }
 
     onChange = (e) => {
-        this.props.onChange(this.props.format ? e.date.format(this.props.format) : e.date.format());
-    };
+        this.props.onChange(
+            this.props.format ? 
+            e.date.format(this.props.format) : 
+            e.date.format(),
+        );
+    }
 
     componentDidMount() {
-        // eslint-disable-next-line react/no-find-dom-node
         const target = findDOMNode(this.datetime);
-        const defaultDate = this.props.value
-            ? moment(this.props.value, [
-                  this.props.format || '',
-                  'MM/DD/YYYY hh:mm:ss A ZZ',
-                  moment.ISO_8601,
-              ])
-            : null;
+        const defaultDate = 
+            this.props.value ? 
+            moment(
+                this.props.value, 
+                [this.props.format || '', 'MM/DD/YYYY hh:mm:ss A ZZ', moment.ISO_8601],
+            ) : 
+            null;
 
-        $(target)
-            .datetimepicker({
-                defaultDate,
-                inline: true,
-                sideBySide: true,
-                useCurrent: false,
-            })
-            .on('dp.change', this.onChange);
+        $(target).datetimepicker({
+            defaultDate,
+            inline: true,
+            sideBySide: true,
+            useCurrent: false,
+        })
+        .on('dp.change', this.onChange);
     }
 
     render() {
-        return (
-            <div
-                ref={(datetime) => {
-                    this.datetime = datetime;
-                }}
-            />
-        );
+        return <div ref={(datetime) => { this.datetime = datetime; }} />;
     }
 }
 
 manywho.component.register(registeredComponents.TABLE_INPUT_DATETIME, TableInputDateTime);
 
-export const getTableInputDateTime = (): typeof TableInputDateTime =>
-    manywho.component.getByName(registeredComponents.TABLE_INPUT_DATETIME);
+export const getTableInputDateTime = () : typeof TableInputDateTime => manywho.component.getByName(registeredComponents.TABLE_INPUT_DATETIME);
 
 export default TableInputDateTime;

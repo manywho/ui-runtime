@@ -1,6 +1,8 @@
 import * as localforage from 'localforage';
 import { IFlow } from '../interfaces/IModels';
 
+declare const manywho;
+
 localforage.setDriver(['asyncStorage', 'webSQLStorage']).catch((e) => console.error(e));
 
 enum EventTypes {
@@ -27,19 +29,18 @@ export const removeOfflineData = (id: string) => localforage.removeItem(`manywho
  * @param flowId
  * @param event
  */
-export const getOfflineData = (stateId: string, flowId: string = null, event: string = null) =>
-    localforage.getItem(`manywho:offline-${stateId}`).then((value) => {
+export const getOfflineData = (stateId: string, flowId: string = null, event: string = null) => localforage.getItem(`manywho:offline-${stateId}`)
+    .then((value) => {
         if (value) {
             return value;
         }
 
-        return localforage
-            .iterate((val: IFlow) => {
-                if (val.id.id === flowId && event === EventTypes.initialization) {
-                    return val;
-                }
-                return null;
-            })
+        return localforage.iterate((val:IFlow) => {
+            if (val.id.id === flowId && event === EventTypes.initialization) {
+                return val;
+            }
+            return null;
+        })
             .then((flow) => {
                 if (flow) {
                     return flow;
@@ -52,8 +53,9 @@ export const getOfflineData = (stateId: string, flowId: string = null, event: st
  * @param flow
  * @description creating and updating indexDB cache store
  */
-export const setOfflineData = (flow: any) =>
-    localforage.getItem(`manywho:offline-${flow.state.id}`).then((value) => {
+export const setOfflineData = (flow: any) => localforage.getItem(`manywho:offline-${flow.state.id}`)
+    .then((value) => {
+
         // A cache store should only be created if one
         // does not already exist for current state and if
         // one does exist then should only be updated if there are
@@ -61,16 +63,15 @@ export const setOfflineData = (flow: any) =>
         // may be wiped from the cache when the flow goes offline
         if (!value || flow.state.values) {
             if (!flow.state.values) {
+
                 // If the flow has a new state then we want to clear out
                 // stale cache from previous state/s. Any cache store which
                 // has the same associated flow id and version will be removed
-                localforage
-                    .iterate((val: IFlow) => {
-                        if (val.id.id === flow.id.id && val.id.versionId === flow.id.versionId) {
-                            removeOfflineData(val.state.id).catch((e) => console.error(e));
-                        }
-                    })
-                    .catch((e) => console.error(e));
+                localforage.iterate((val:IFlow) => {
+                    if (val.id.id === flow.id.id && val.id.versionId === flow.id.versionId) {
+                        removeOfflineData(val.state.id).catch((e) => console.error(e));
+                    }
+                }).catch((e) => console.error(e));
             }
             return localforage.setItem(`manywho:offline-${flow.state.id}`, flow);
         }

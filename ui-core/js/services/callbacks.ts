@@ -2,7 +2,6 @@ import * as Utils from './utils';
 
 export interface ICallback {
     type: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
     execute: Function;
     name?: string;
     mapElement?: string;
@@ -40,43 +39,34 @@ export const register = (flowKey: string, options: ICallback) => {
  * currentMapElementId from the invoke response
  * @param args Arguments to pass to the callback. During normal flow execution this will be the invoke response itself
  */
-export const execute = (
-    flowKey: string,
-    type: string,
-    name: string,
-    mapElementId: string,
-    args: any[],
-) => {
+export const execute = (flowKey: string, type: string, name: string, mapElementId: string, args: any[]) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     if (callbacks[lookUpKey]) {
-        callbacks[lookUpKey]
-            .filter((item) => {
-                if (type && !Utils.isEqual(item.type, type, true)) {
-                    return false;
-                }
+        callbacks[lookUpKey].filter((item) => {
 
-                if (name && !Utils.isEqual(item.name, name, true)) {
-                    return false;
-                }
+            if (type && !Utils.isEqual(item.type, type, true)) {
+                return false;
+            }
 
-                if (
-                    !Utils.isEqual(type, 'done', true) &&
-                    mapElementId &&
-                    !Utils.isEqual(item.mapElement, mapElementId, true)
-                ) {
-                    return false;
-                }
+            if (name && !Utils.isEqual(item.name, name, true)) {
+                return false;
+            }
 
-                return true;
-            })
-            .forEach((item) => {
-                item.execute.apply(undefined, [item].concat(item.args || [], args));
+            if (!Utils.isEqual(type, 'done', true) && mapElementId && !Utils.isEqual(item.mapElement, mapElementId, true)) {
+                return false;
+            }
 
-                if (callbacks[lookUpKey] && !item.repeat) {
-                    callbacks[lookUpKey].splice(callbacks[lookUpKey].indexOf(item), 1);
-                }
-            });
+            return true;
+        })
+        .forEach((item) => {
+
+            item.execute.apply(undefined, [item].concat(item.args || [], args));
+
+            if (callbacks[lookUpKey] && !item.repeat) {
+                callbacks[lookUpKey].splice(callbacks[lookUpKey].indexOf(item), 1);
+            }
+        });
     }
 };
 

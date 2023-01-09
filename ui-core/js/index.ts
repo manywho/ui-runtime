@@ -1,6 +1,5 @@
-// eslint-disable-next-line import/no-unresolved
+
 import 'script-loader!../../node_modules/numbro/dist/numbro.min.js';
-// eslint-disable-next-line import/no-unresolved
 import 'script-loader!../../node_modules/numbro/dist/languages.min.js';
 import './lib/polyfills';
 

@@ -7,6 +7,5 @@ export interface IGoOfflineState {
 
 export interface IGoOfflineProps {
     flowKey: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
     onOffline: Function;
 }

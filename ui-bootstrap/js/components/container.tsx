@@ -67,7 +67,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         return null;
     }
 
-    onToggle() {
+    onToggle(e) {
         this.setState({ isCollapsed: !this.state.isCollapsed });
 
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
@@ -111,7 +111,7 @@ class Container extends React.Component<IComponentProps, IContainerState> {
         this.setState({ isCollapsed });
     }
 
-    UNSAFE_componentWillReceiveProps() {
+    componentWillReceiveProps(nextProps) {
         const model = manywho.model.getContainer(this.props.id, this.props.flowKey);
         const collapseGroup = this.getCollapseGroup(model);
 
@@ -150,7 +150,6 @@ class Container extends React.Component<IComponentProps, IContainerState> {
             if (isCollapsible) {
                 const toggleIcon = this.state.isCollapsed ? 'plus' : 'minus';
                 label = (
-                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
                     <h3 onClick={this.onToggle}>
                         <span className={`glyphicon glyphicon-${toggleIcon}`} />
                         {model.label}

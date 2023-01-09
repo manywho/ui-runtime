@@ -2,7 +2,10 @@ import * as React from 'react';
 import { values } from 'ramda';
 import { IRequestFaultProps } from '../interfaces/IRequestFault';
 
+declare const manywho: any;
+
 const RequestFault: React.SFC<IRequestFaultProps> = ({ response }) => {
+
     if (response.mapElementInvokeResponses) {
         let rootFaultsContent = [];
         const rootFaults = response.mapElementInvokeResponses[0].rootFaults || [];
@@ -17,10 +20,7 @@ const RequestFault: React.SFC<IRequestFaultProps> = ({ response }) => {
             <div className="request-fault">
                 <h4>Faults</h4>
                 <ul>
-                    {rootFaultsContent.map((fault) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <li className="text-danger">{fault}</li>
-                    ))}
+                    {rootFaultsContent.map((fault) => <li className="text-danger">{fault}</li>)}
                 </ul>
             </div>
         );

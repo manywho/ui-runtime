@@ -13,11 +13,7 @@ const streams = {};
 export const initialize = (flowKey: string, streamId: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    State.setComponentLoading(
-        'feed',
-        { message: Settings.global('localization.loading') },
-        flowKey,
-    );
+    State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
 
     const tenantId = Utils.extractTenantId(flowKey);
     const stateId = Utils.extractStateId(flowKey);
@@ -57,11 +53,7 @@ export const getStream = (flowKey: string) => {
 export const refreshMessages = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    State.setComponentLoading(
-        'feed',
-        { message: Settings.global('localization.loading') },
-        flowKey,
-    );
+    State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
     Engine.render(flowKey);
 
     const tenantId = Utils.extractTenantId(flowKey);
@@ -69,13 +61,13 @@ export const refreshMessages = (flowKey: string) => {
     const authenticationToken = State.getAuthenticationToken(flowKey);
     const streamId = streams[lookUpKey].id;
 
-    return Ajax.getSocialMessages(tenantId, streamId, stateId, 1, 10, authenticationToken).then(
-        (response) => {
+    return Ajax.getSocialMessages(tenantId, streamId, stateId, 1, 10, authenticationToken)
+        .then((response) => {
             streams[lookUpKey].messages = response;
             State.setComponentLoading('feed', null, flowKey);
             Engine.render(flowKey);
-        },
-    );
+        });
+
 };
 
 /**
@@ -84,11 +76,7 @@ export const refreshMessages = (flowKey: string) => {
 export const getMessages = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
-    State.setComponentLoading(
-        'feed',
-        { message: Settings.global('localization.loading') },
-        flowKey,
-    );
+    State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
     Engine.render(flowKey);
 
     const tenantId = Utils.extractTenantId(flowKey);
@@ -96,22 +84,15 @@ export const getMessages = (flowKey: string) => {
     const authenticationToken = State.getAuthenticationToken(flowKey);
     const streamId = streams[lookUpKey].id;
 
-    return Ajax.getSocialMessages(
-        tenantId,
-        streamId,
-        stateId,
-        streams[lookUpKey].messages.nextPage,
-        10,
-        authenticationToken,
-    ).then((response) => {
-        streams[lookUpKey].messages.messages = streams[lookUpKey].messages.messages.concat(
-            response.messages,
-        );
-        streams[lookUpKey].messages.nextPage = response.nextPage;
+    return Ajax.getSocialMessages(tenantId, streamId, stateId, streams[lookUpKey].messages.nextPage, 10, authenticationToken)
+        .then((response) => {
+            streams[lookUpKey].messages.messages = streams[lookUpKey].messages.messages.concat(response.messages);
+            streams[lookUpKey].messages.nextPage = response.nextPage;
 
-        State.setComponentLoading('feed', null, flowKey);
-        Engine.render(flowKey);
-    });
+            State.setComponentLoading('feed', null, flowKey);
+            Engine.render(flowKey);
+        });
+
 };
 
 /**
@@ -121,13 +102,7 @@ export const getMessages = (flowKey: string) => {
  * @param mentionedUsers @ mentioned users
  * @param attachments Files to be uploaded as part of the message
  */
-export const sendMessage = (
-    flowKey: string,
-    message: string,
-    repliedTo: string,
-    mentionedUsers: any,
-    attachments: any,
-) => {
+export const sendMessage = (flowKey: string, message: string, repliedTo: string, mentionedUsers: any, attachments: any) => {
     if (Utils.isNullOrWhitespace(message)) {
         return;
     }
@@ -150,26 +125,22 @@ export const sendMessage = (
         request.repliedTo = repliedTo;
     }
 
-    request.messageText = request.messageText.replace(/@\[[A-za-z0-9 ]*\]/gi, (match) => {
+    request.messageText = request.messageText.replace(/@\[[A-za-z0-9 ]*\]/ig, (match) => {
         return match.substring(2, match.length - 1);
     });
 
-    State.setComponentLoading(
-        'feed',
-        { message: Settings.global('localization.sending') },
-        flowKey,
-    );
+    State.setComponentLoading('feed', { message: Settings.global('localization.sending') }, flowKey);
     Engine.render(flowKey);
 
-    return Ajax.sendSocialMessage(tenantId, stream.id, stateId, request, authenticationToken).then(
-        (response) => {
+    return Ajax.sendSocialMessage(tenantId, stream.id, stateId, request, authenticationToken)
+        .then((response) => {
+
             if (repliedTo) {
-                const repliedToMessage = stream.messages.messages.find(
-                    (message) => message.id === repliedTo,
-                );
+                const repliedToMessage = stream.messages.messages.find(message => message.id === repliedTo);
                 repliedToMessage.comments = repliedToMessage.comments || [];
                 repliedToMessage.comments.push(response);
-            } else {
+            }
+            else {
                 stream.messages.messages = stream.messages.messages || [];
                 stream.messages.messages.unshift(response);
             }
@@ -178,8 +149,7 @@ export const sendMessage = (
 
             State.setComponentLoading('feed', null, flowKey);
             Engine.render(flowKey);
-        },
-    );
+        });
 };
 
 /**
@@ -193,15 +163,11 @@ export const toggleFollow = (flowKey: string) => {
     const authenticationToken = State.getAuthenticationToken(flowKey);
     const stream = streams[lookUpKey];
 
-    State.setComponentLoading(
-        'feed',
-        { message: Settings.global('localization.loading') },
-        flowKey,
-    );
+    State.setComponentLoading('feed', { message: Settings.global('localization.loading') }, flowKey);
     Engine.render(flowKey);
 
     return Ajax.follow(tenantId, stream.id, stateId, !stream.me.isFollower, authenticationToken)
-        .then(() => {
+        .then((response) => {
             stream.me.isFollower = !stream.me.isFollower;
             return Ajax.getSocialFollowers(tenantId, stream.id, stateId, authenticationToken);
         })
@@ -229,11 +195,7 @@ export const getUsers = (flowKey: string, name?: string): JQueryXHR => {
 /**
  * Upload a file to the stream via `Ajax.uploadSocialFile`
  */
-export const attachFiles = (
-    flowKey: string,
-    formData: FormData,
-    onProgress: EventListenerOrEventListenerObject,
-): JQueryXHR => {
+export const attachFiles = (flowKey: string, formData: FormData, onProgress: EventListenerOrEventListenerObject): JQueryXHR => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
 
     const tenantId = Utils.extractTenantId(flowKey);

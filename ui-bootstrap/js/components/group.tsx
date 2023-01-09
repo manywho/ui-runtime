@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as $ from 'jquery';
-import { path } from 'ramda';
+import { path } from 'ramda'; 
 import registeredComponents from '../constants/registeredComponents';
 import { getErrorFallback } from './error-fallback';
 import IComponentProps from '../interfaces/IComponentProps';
@@ -22,26 +22,29 @@ const childContainsInvalidItems = (child, flowKey) => {
     const items = manywho.model.getChildren(child.id, flowKey);
 
     for (let i = 0; i < items.length; i = i + 1) {
-        if (childContainsInvalidItems(items[i], flowKey)) return true;
+        if (childContainsInvalidItems(items[i], flowKey))
+            return true;
     }
 
     return false;
 };
 
 const clearActivePanes = (tabsElement, panesElement) => {
+
     const tabElements = path(['children'], tabsElement);
     const paneElements = path(['children'], panesElement);
 
     if (tabElements instanceof HTMLCollection) {
-        [].slice.call(tabElements).forEach((el) => el.classList.remove('active'));
+        [].slice.call(tabElements).forEach(el => el.classList.remove('active'));
     }
 
     if (paneElements instanceof HTMLCollection) {
-        [].slice.call(paneElements).forEach((el) => el.classList.remove('active'));
+        [].slice.call(paneElements).forEach(el => el.classList.remove('active'));
     }
 };
 
 class Group extends React.Component<IComponentProps, IGroupState> {
+
     constructor(props) {
         super(props);
 
@@ -56,7 +59,7 @@ class Group extends React.Component<IComponentProps, IGroupState> {
     }
 
     componentDidCatch(error, { componentStack }) {
-        this.setState({
+        this.setState({ 
             error,
             componentStack,
             hasError: true,
@@ -97,10 +100,15 @@ class Group extends React.Component<IComponentProps, IGroupState> {
     }
 
     render() {
-        const { error, componentStack, hasError } = this.state;
 
+        const {
+            error,
+            componentStack,
+            hasError,
+        } = this.state;
+        
         const ErrorFallback = getErrorFallback();
-
+        
         if (hasError) {
             return <ErrorFallback error={error} componentStack={componentStack} />;
         }
@@ -110,61 +118,58 @@ class Group extends React.Component<IComponentProps, IGroupState> {
         const tabs = children.map((child, index) => {
             let className = null;
 
-            if (!this.props.isDesignTime && childContainsInvalidItems(child, this.props.flowKey)) {
+            if (
+                !this.props.isDesignTime &&
+                childContainsInvalidItems(child, this.props.flowKey)
+            ) {
                 className += ' has-error';
             }
 
-            return (
-                <li className={className} key={index}>
-                    <a
-                        id={'tab-' + child.id}
-                        href={'#' + child.id}
-                        className="control-label"
-                        onClick={this.onTabSelected.bind(null, index, 'tab-' + child.id)}
-                        data-toggle="tab"
-                    >
-                        {child.label}
-                    </a>
-                </li>
-            );
+            return <li className={className} key={index}>
+                <a id={'tab-' + child.id} href={'#' + child.id}
+                    className="control-label"
+                    onClick={this.onTabSelected.bind(null, index, 'tab-' + child.id)}
+                    data-toggle="tab">
+                    {child.label}
+                </a>
+            </li>;
         });
 
         if (this.props.isDesignTime)
-            return (
-                <div className="clearfix">
-                    {this.props.children ||
-                        manywho.component.getChildComponents(
-                            children,
-                            this.props.id,
-                            this.props.flowKey,
-                        )}
-                </div>
-            );
+            return <div className="clearfix">
+                {
+                    this.props.children ||
+                    manywho.component.getChildComponents(
+                        children,
+                        this.props.id,
+                        this.props.flowKey,
+                    )
+                }
+            </div>;
 
-        return (
-            <div ref="group">
-                <ul className="nav nav-tabs" ref="tabs">
-                    {tabs}
-                </ul>
-                <div className="tab-content" ref="panes">
-                    {this.props.children ||
-                        manywho.component.getChildComponents(
-                            children,
-                            this.props.id,
-                            this.props.flowKey,
-                        )}
-                </div>
+        return <div ref="group">
+            <ul className="nav nav-tabs" ref="tabs">{tabs}</ul>
+            <div className="tab-content" ref="panes">
+                {
+                    this.props.children ||
+                    manywho.component.getChildComponents(
+                        children,
+                        this.props.id,
+                        this.props.flowKey,
+                    )
+                }
             </div>
-        );
+        </div>;
     }
+
 }
 
 manywho.component.registerContainer(registeredComponents.GROUP, Group);
 
-manywho.styling.registerContainer('group', () => {
+manywho.styling.registerContainer('group', (item, container) => {
     return ['tab-pane', 'label-hidden'];
 });
 
-export const getGroup = (): typeof Group => manywho.component.getByName(registeredComponents.GROUP);
+export const getGroup = () : typeof Group => manywho.component.getByName(registeredComponents.GROUP);
 
 export default Group;

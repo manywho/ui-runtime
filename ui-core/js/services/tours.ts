@@ -9,7 +9,9 @@ const configs = {};
 let domWatcher = null;
 
 const onInterval = function (tour, step, nextStep, moveImmediately: boolean) {
-    if (getTargetElement(nextStep) && (moveImmediately || !getTargetElement)) {
+    if (getTargetElement(nextStep)
+        && (moveImmediately || !getTargetElement)) {
+
         clearInterval(domWatcher);
         move(tour, tour.steps.indexOf(nextStep));
     }
@@ -28,16 +30,7 @@ const watchForStep = function (tour: ITour) {
     const step = tour.steps[tour.currentStep];
 
     if (!step.showNext && tour.currentStep < tour.steps.length - 1) {
-        domWatcher = setInterval(
-            () =>
-                onInterval(
-                    tour,
-                    step,
-                    tour.steps[tour.currentStep + 1],
-                    !step.showNext && !step.showBack,
-                ),
-            500,
-        );
+        domWatcher = setInterval(() => onInterval(tour, step, tour.steps[tour.currentStep + 1], !step.showNext && !step.showBack), 500);
     }
 
     if (tour.currentStep === tour.steps.length - 1) {
@@ -94,12 +87,7 @@ export const addTours = (tours: ITour[]) => {
  * @param containerSelector Selector for the top level container that the `.mw-tours` container will be appended to
  * @param getElement Function that provides the target node / element that `step` should be rendered next to
  */
-export const start = (
-    id: string,
-    containerSelector: string,
-    flowKey: string,
-    getElement?: (step: ITourStep) => any,
-): ITour => {
+export const start = (id: string, containerSelector: string, flowKey: string, getElement?: (step: ITourStep) => any): ITour => {
     const container = document.querySelector(containerSelector);
 
     if (container) {
@@ -111,7 +99,6 @@ export const start = (
         }
 
         if (Utils.isNullOrWhitespace(id)) {
-            // eslint-disable-next-line no-param-reassign
             id = Object.keys(configs)[0];
         }
 
@@ -127,13 +114,7 @@ export const start = (
 
         current = JSON.parse(JSON.stringify(configs[id])) as ITour;
         current.steps = (current.steps || []).map((step, index) =>
-            Object.assign(
-                {},
-                Settings.global('tours.defaults', flowKey, {}),
-                { order: index },
-                step,
-            ),
-        );
+            Object.assign({}, Settings.global('tours.defaults', flowKey, {}), { order: index }, step));
 
         current.currentStep = 0;
 
@@ -142,15 +123,11 @@ export const start = (
         }
 
         watchForStep(current);
-        ReactDOM.render(
-            React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }),
-            tourContainer,
-        );
+        ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour: current, stepIndex: 0 }), tourContainer);
         return current;
-    } else {
-        Log.error(
-            `A Container matching the selector ${containerSelector} could not be found when attempting to start a Tour`,
-        );
+    }
+    else {
+        Log.error(`A Container matching the selector ${containerSelector} could not be found when attempting to start a Tour`);
     }
 };
 
@@ -165,7 +142,8 @@ export const next = (tour: ITour = current) => {
 
     if (tour.currentStep + 1 >= tour.steps.length) {
         done(tour);
-    } else {
+    }
+    else {
         tour.currentStep += 1;
     }
 
@@ -227,7 +205,8 @@ export const refresh = (tour: ITour = current) => {
         }
 
         ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
-    } else {
+    }
+    else {
         render(tour);
     }
 };
@@ -236,7 +215,6 @@ export const refresh = (tour: ITour = current) => {
  * Reset `current` to null and unmount the `.mw-tours` node
  * @param tour The tour to move, defaults to `current`
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const done = (tour: ITour = current) => {
     current = null;
     ReactDOM.unmountComponentAtNode(document.querySelector('.mw-tours'));
@@ -251,16 +229,12 @@ export const render = (tour: ITour = current) => {
         return;
     }
 
-    ReactDOM.render(
-        React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }),
-        document.querySelector('.mw-tours'),
-    );
+    ReactDOM.render(React.createElement(Component.getByName('mw-tour'), { tour, stepIndex: tour.currentStep }), document.querySelector('.mw-tours'));
 };
 
 /**
  * Get the target element for the provided step. No default implementation is provided
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export let getTargetElement = (step: ITourStep): any => {
     return null;
 };

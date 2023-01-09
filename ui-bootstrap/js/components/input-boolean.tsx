@@ -9,52 +9,41 @@ interface IInputBooleanProps extends IComponentProps {
     disabled: boolean;
     readOnly: boolean;
     required: boolean;
-    // eslint-disable-next-line @typescript-eslint/ban-types
     onChange: Function;
     autocomplete: any;
 }
 
-const InputBoolean: React.SFC<IInputBooleanProps> = ({
-    id,
-    flowKey,
-    value,
-    disabled,
-    readOnly,
-    isDesignTime,
-    required,
-    autocomplete,
-    onChange,
-}) => {
+const InputBoolean: React.SFC<IInputBooleanProps> = (
+    { id, parentId, flowKey, value, disabled, readOnly, isDesignTime, required, autocomplete, onChange },
+) => {
+
     const model = manywho.model.getComponent(id, flowKey);
     const checked =
-        typeof value === 'string' ? manywho.utils.isEqual(value, 'true', true) : value === true;
+        typeof value === 'string' ?
+            manywho.utils.isEqual(value, 'true', true) :
+            value === true;
 
     const onInputChange = (e) => {
         onChange(e.target.checked);
     };
 
-    return (
-        <div className="checkbox">
-            <label>
-                <input
-                    id={id}
-                    checked={checked}
-                    type="checkbox"
-                    disabled={disabled || readOnly}
-                    required={required}
-                    onChange={!isDesignTime && onInputChange}
-                    autoComplete={autocomplete}
-                />
-                {model.label}
-                {model.isRequired ? <span className="input-required"> *</span> : null}
-            </label>
-        </div>
-    );
+    return <div className="checkbox">
+        <label>
+            <input id={id}
+                checked={checked}
+                type="checkbox"
+                disabled={disabled || readOnly}
+                required={required}
+                onChange={!isDesignTime && onInputChange}
+                autoComplete={autocomplete} />
+            {model.label}
+            {model.isRequired ? <span className="input-required"> *</span> : null}
+        </label>
+    </div>;
 };
 
 manywho.component.register(registeredComponents.INPUT_BOOLEAN, InputBoolean);
 
-export const getInputBoolean = (): typeof InputBoolean =>
-    manywho.component.getByName(registeredComponents.INPUT_BOOLEAN) || InputBoolean;
+export const getInputBoolean = () : typeof InputBoolean => manywho.component.getByName(registeredComponents.INPUT_BOOLEAN) || InputBoolean;
 
 export default InputBoolean;

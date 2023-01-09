@@ -13,13 +13,7 @@ function onError(xhr, status, error) {
 /**
  * Adding authentication token and tenant id to request headers
  * */
-export const beforeSend = (
-    xhr: XMLHttpRequest,
-    tenantId: string,
-    authenticationToken: string,
-    event: string,
-    request,
-) => {
+export const beforeSend = (xhr: XMLHttpRequest, tenantId: string, authenticationToken: string, event: string, request) => {
     xhr.setRequestHeader('ManyWhoTenant', tenantId);
 
     if (authenticationToken) {
@@ -43,16 +37,14 @@ export const beforeSend = (
  * @param data Body of the request data
  * @returns JQuery deferred from the $.ajax request
  */
-export const request = (
-    context,
-    event: string,
-    url: string,
-    type: string,
-    tenantId: string,
-    stateId: string,
-    authenticationToken: string,
-    data: object,
-) => {
+export const request = (context,
+                        event: string,
+                        url: string,
+                        type: string,
+                        tenantId: string,
+                        stateId: string,
+                        authenticationToken: string,
+                        data: object) => {
     let json = null;
 
     if (data != null) {
@@ -98,25 +90,24 @@ export const upload = (
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
-) =>
-    $.ajax({
-        url: Settings.global('platform.uri') + url,
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        xhr: () => {
-            const xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', onProgress, false);
-            return xhr;
-        },
-        beforeSend: (xhr) => {
-            beforeSend.call(this, xhr, tenantId, authenticationToken, event);
-        },
-    })
-        .done(Settings.event(`${event}.done`))
-        .fail(onError)
-        .fail(Settings.event(`${event}.fail`));
+) => $.ajax({
+    url: Settings.global('platform.uri') + url,
+    type: 'POST',
+    data: formData,
+    contentType: false,
+    processData: false,
+    xhr: () => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', onProgress, false);
+        return xhr;
+    },
+    beforeSend: (xhr) => {
+        beforeSend.call(this, xhr, tenantId, authenticationToken, event);
+    },
+})
+    .done(Settings.event(`${event}.done`))
+    .fail(onError)
+    .fail(Settings.event(`${event}.fail`));
 
 /**
  * Upload a file to the Boomi Flow platform
@@ -140,7 +131,6 @@ export const uploadFiles = (
     tenantId: string,
     authenticationToken: string,
     onProgress: EventListenerOrEventListenerObject,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _: string,
 ) => {
     const formData = new FormData();
@@ -151,7 +141,15 @@ export const uploadFiles = (
 
     formData.append('FileDataRequest', JSON.stringify(request));
 
-    return upload(context, event, url, formData, tenantId, authenticationToken, onProgress);
+    return upload(
+        context,
+        event,
+        url,
+        formData,
+        tenantId,
+        authenticationToken,
+        onProgress,
+    );
 };
 
 export const downloadPdf = (
@@ -175,16 +173,16 @@ export const downloadPdf = (
                 xhr.setRequestHeader('ManyWhoState', stateId);
             }
         },
-        success(responseData) {
+        success(responseData) {            
             const blob = new Blob([responseData], { type: 'application/octetstream' });
             const objectUrl: string = URL.createObjectURL(blob);
             const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-
+        
             a.href = objectUrl;
             a.download = filename;
             document.body.appendChild(a);
             a.click();
-
+        
             document.body.removeChild(a);
             URL.revokeObjectURL(objectUrl);
 

@@ -15,6 +15,7 @@ import { getModalContainer } from './modal-container';
 declare const manywho: any;
 
 class Main extends React.Component<any, any> {
+
     constructor(props) {
         super(props);
 
@@ -50,7 +51,7 @@ class Main extends React.Component<any, any> {
      */
     syncFlow = () => {
         manywho.engine.sync(this.props.flowKey);
-    };
+    }
 
     render() {
         manywho.log.info('Rendering Main');
@@ -72,29 +73,21 @@ class Main extends React.Component<any, any> {
         const state = manywho.state.getComponent('main', this.props.flowKey) || {};
         const attributes = manywho.model.getAttributes(this.props.flowKey);
         const componentElements = manywho.component.getChildComponents(
-            children,
-            this.props.id,
-            this.props.flowKey,
+            children, this.props.id, this.props.flowKey,
         );
         const isFixedNav: boolean = manywho.settings.global(
-            'navigation.isFixed',
-            this.props.flowKey,
-            true,
+            'navigation.isFixed', this.props.flowKey, true,
         );
         let isFixedFooter: boolean = manywho.settings.global(
-            'outcomes.isFixed',
-            this.props.flowKey,
-            false,
+            'outcomes.isFixed', this.props.flowKey, false,
         );
 
-        const navElement = (
-            <Navigation
-                id={manywho.model.getDefaultNavigationId(this.props.flowKey)}
-                flowKey={this.props.flowKey}
-                isFixed={isFixedNav}
-                isFullWidth={manywho.settings.global('isFullWidth', this.props.flowKey, false)}
-            />
-        );
+        const navElement = <Navigation
+            id={manywho.model.getDefaultNavigationId(this.props.flowKey)}
+            flowKey={this.props.flowKey}
+            isFixed={isFixedNav}
+            isFullWidth={manywho.settings.global('isFullWidth', this.props.flowKey, false)}
+        />;
 
         let outcomeElements = manywho.component.getOutcomes(outcomes, this.props.flowKey);
         let fixedFooter = null;
@@ -103,14 +96,17 @@ class Main extends React.Component<any, any> {
             isFixedFooter = manywho.utils.isEqual(attributes.outcomes, 'fixed', false);
 
         if (isFixedFooter) {
-            fixedFooter = <Footer flowKey={this.props.flowKey}>{outcomeElements}</Footer>;
+            fixedFooter = <Footer flowKey={ this.props.flowKey }>
+                {outcomeElements}
+            </Footer>;
             outcomeElements = null;
         }
 
         let classNames = 'main';
-        classNames += manywho.settings.global('isFullWidth', this.props.flowKey, false)
-            ? ' container-fluid full-width'
-            : ' container';
+        classNames +=
+            (manywho.settings.global('isFullWidth', this.props.flowKey, false)) ?
+            ' container-fluid full-width' :
+            ' container';
 
         if (
             manywho.settings.isDebugEnabled(this.props.flowKey) ||
@@ -120,57 +116,68 @@ class Main extends React.Component<any, any> {
         }
 
         const staticComponents = manywho.settings.global(
-            'components.static',
-            this.props.flowKey,
-            [],
+            'components.static', this.props.flowKey, [],
         );
         const modal = manywho.model.getModal(this.props.flowKey);
 
-        /* eslint-disable jsx-a11y/no-static-element-interactions */
-        return (
-            <div className="main-container">
-                <div className="main-container-inner">
-                    {isFixedNav ? navElement : null}
-                    <div className="main-scroller">
-                        {isFixedNav ? null : navElement}
-                        <div className={classNames} onKeyUp={this.onEnter} ref="main">
-                            <HistoricalNavigation flowKey={this.props.flowKey} />
-                            <h2 className="page-label">
-                                {manywho.model.getLabel(this.props.flowKey)}
-                            </h2>
-                            {componentElements}
-                            {outcomeElements}
-                            {<Status flowKey={this.props.flowKey} />}
-                            {<Voting flowKey={this.props.flowKey} />}
-                            {<Feed flowKey={this.props.flowKey} />}
-                        </div>
+        return (<div className="main-container">
+            <div className="main-container-inner">
+                {(isFixedNav) ? navElement : null}
+                <div className="main-scroller">
+                    {(isFixedNav) ? null : navElement}
+                    <div className={classNames} onKeyUp={this.onEnter} ref="main">
+                        <HistoricalNavigation flowKey={this.props.flowKey} />
+                        <h2 className="page-label">
+                            {manywho.model.getLabel(this.props.flowKey)}
+                        </h2>
+                        {componentElements}
+                        {outcomeElements}
+                        {
+                            <Status flowKey={ this.props.flowKey } />
+                        }
+                        {
+                            <Voting flowKey={ this.props.flowKey } />
+                        }
+                        {
+                            <Feed flowKey={ this.props.flowKey } />
+                        }
                     </div>
-                    {isFixedFooter ? fixedFooter : null}
-                    {<Notifications flowKey={this.props.flowKey} position={'center'} />}
-                    {<Notifications flowKey={this.props.flowKey} position={'right'} />}
-                    {<Notifications flowKey={this.props.flowKey} position={'bottom'} />}
-                    {
-                        <Wait
-                            isVisible={state.loading}
-                            message={state.loading && state.loading.message}
-                        />
-                    }
-                    {<Notifications flowKey={this.props.flowKey} position={'left'} />}
-                    {staticComponents.map((component) =>
-                        React.createElement(component, { flowKey: this.props.flowKey }),
-                    )}
-                    {modal ? <ModalContainer {...modal} /> : null}
                 </div>
-                {<Debug flowKey={this.props.flowKey} />}
-                {<History flowKey={this.props.flowKey} />}
+                {(isFixedFooter) ? fixedFooter : null}
+                {
+                    <Notifications flowKey={this.props.flowKey} position={'center'} />
+                }
+                {
+                    <Notifications flowKey={this.props.flowKey} position={'right'} />
+                }
+                {
+                    <Notifications flowKey={this.props.flowKey} position={'bottom'} />
+                }
+                {
+                    <Wait isVisible={state.loading} message={state.loading && state.loading.message} />
+                }
+                {
+                    <Notifications flowKey={this.props.flowKey} position={'left'} />
+                }
+                {
+                    staticComponents.map(component => React.createElement(component, { flowKey: this.props.flowKey }))
+                }
+                {
+                    modal ? <ModalContainer {...modal} /> : null
+                }
             </div>
-        );
-        /* eslint-enable jsx-a11y/no-static-element-interactions */
+            {
+                <Debug flowKey={ this.props.flowKey } />
+            }
+            {
+                <History flowKey={ this.props.flowKey } />
+            }
+        </div>);
     }
 }
 
 manywho.component.register(registeredComponents.MAIN, Main);
 
-export const getMain = (): typeof Main => manywho.component.getByName(registeredComponents.MAIN);
+export const getMain = () : typeof Main => manywho.component.getByName(registeredComponents.MAIN);
 
 export default Main;

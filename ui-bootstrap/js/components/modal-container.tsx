@@ -13,14 +13,16 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     confirmLabel,
     cancelLabel,
 }) => {
+
     const onKeyUp = (e) => {
-        if (e.keyCode === 27) manywho.model.setModal(flowKey, null);
-    };
+        if (e.keyCode === 27)
+            manywho.model.setModal(flowKey, null);
+    }
 
     // This is not desired behaviour and will be removed
-    const onClickBackdrop = () => {
+    const onClickBackdrop = (e) => {
         manywho.model.setModal(flowKey, null);
-    };
+    }
 
     let header = null;
     let footer = null;
@@ -36,21 +38,24 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
     if (onConfirm || onCancel) {
         footer = (
             <div className="modal-footer">
-                {onCancel ? (
+                {
+                    onCancel ? 
                     <button className="btn btn-default" onClick={onCancel}>
                         {cancelLabel || 'Cancel'}
-                    </button>
-                ) : null}
-                {onConfirm ? (
+                    </button> : 
+                    null
+                }
+                {
+                    onConfirm ? 
                     <button className="btn btn-primary" onClick={onConfirm}>
                         {confirmLabel || 'OK'}
-                    </button>
-                ) : null}
+                    </button> : 
+                    null
+                }                    
             </div>
         );
     }
 
-    /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
     return (
         <div onKeyUp={onKeyUp}>
             <div className="modal-backdrop full-height" onClick={onClickBackdrop} />
@@ -58,15 +63,16 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
                 <div className="modal-dialog">
                     <div className="modal-content">
                         {header}
-                        <div className="modal-body">{content}</div>
+                        <div className="modal-body">
+                            {content}
+                        </div>
                         {footer}
                     </div>
                 </div>
             </div>
         </div>
     );
-    /* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
-};
+}
 
 // Do not remove this as it is a public global and may be relied upon
 // Do not access this component via this property
@@ -74,7 +80,6 @@ const ModalContainer: React.SFC<IModalContainerProps> = ({
 manywho.component.modalContainer = ModalContainer;
 
 manywho.component.register(registeredComponents.MODAL_CONTAINER, ModalContainer);
-export const getModalContainer = (): typeof ModalContainer =>
-    manywho.component.getByName(registeredComponents.MODAL_CONTAINER) || ModalContainer;
+export const getModalContainer = () : typeof ModalContainer => manywho.component.getByName(registeredComponents.MODAL_CONTAINER) || ModalContainer;
 
 export default ModalContainer;
