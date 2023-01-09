@@ -49,6 +49,10 @@ export const checkCharacterLength = (keyCode: string, maxSize: number, text: str
         'ArrowRight',
     ];
 
+    if (maxSize === null) {
+        return true;
+    }
+
     const count: number = text.length;
     if (count >= maxSize && !(validKeyCodes.indexOf(keyCode) > -1)) {
         return true;
@@ -163,12 +167,14 @@ class Content extends React.Component<IComponentProps, IContentState> {
 
                     editor.on('nodechange', this.onChange);
                     editor.on('KeyDown', (e: KeyboardEvent) => {
-                        const body = tinymce.get(this.id).getBody();
-                        const text: string = tinymce.trim(body.innerText || body.textContent);
-                        const hasExceededMaxCharLength = checkCharacterLength(e.code, model.maxSize, text);
-
-                        if (hasExceededMaxCharLength) {
-                            tinymce.dom.Event.cancel(e);
+                        if (model.maxSize !== null) {
+                            const body = tinymce.get(this.id).getBody();
+                            const text: string = tinymce.trim(body.innerText || body.textContent);
+                            const hasExceededMaxCharLength = checkCharacterLength(e.code, model.maxSize, text);
+                            
+                            if (hasExceededMaxCharLength) {
+                                tinymce.dom.Event.cancel(e);
+                            }
                         }
                     });
 
