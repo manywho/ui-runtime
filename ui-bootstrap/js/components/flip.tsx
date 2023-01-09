@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface IFlipState {
     isFlipped: boolean;

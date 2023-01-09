@@ -5,7 +5,7 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getChart } from './chart';
 
 
-declare let manywho: any;
+declare var manywho: any;
 
 const ChartPolar: React.SFC<IComponentProps> = (props) => {
 

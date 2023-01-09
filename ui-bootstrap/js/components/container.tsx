@@ -8,7 +8,7 @@ import { getOutcome } from './outcome';
 // tslint:disable-next-line
 import Dynamic from './dynamic';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface IContainerState {
     isCollapsed: boolean;

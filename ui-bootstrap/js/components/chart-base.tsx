@@ -6,7 +6,7 @@ import IChartBaseProps from '../interfaces/IChartBaseProps';
 import { Chart } from 'chart.js';
 import { equals } from 'ramda';
 
-declare let manywho: any;
+declare var manywho: any;
 
 class ChartBase extends React.Component<IChartBaseProps, null> {
 

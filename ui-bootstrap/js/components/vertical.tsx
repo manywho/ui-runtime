@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import { getErrorFallback } from './error-fallback';
 import IComponentProps from '../interfaces/IComponentProps';
 
-declare let manywho: any;
+declare var manywho: any;
 
 class Vertical extends React.Component<IComponentProps> {
 

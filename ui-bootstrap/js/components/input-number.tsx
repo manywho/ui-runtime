@@ -2,7 +2,7 @@ import * as React from 'react';
 import IInputProps from '../interfaces/IInputProps';
 import registeredComponents from '../constants/registeredComponents';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface IInputNumberState {
     value: string;

@@ -5,7 +5,7 @@ import { getItemsHeader } from './items-header';
 import { getChartBase } from './chart-base';
 import { getWait } from './wait';
 
-declare let manywho: any;
+declare var manywho: any;
 
 const ChartComponent: React.SFC<IChartComponentProps> = (
     { id, flowKey, parentId, isDesignTime, contentElement, outcomes,

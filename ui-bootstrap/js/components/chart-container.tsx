@@ -5,7 +5,7 @@ import IChartContainerProps from '../interfaces/IChartContainerProps';
 import { getChartBase } from './chart-base';
 import { getWait } from './wait';
 
-declare let manywho: any;
+declare var manywho: any;
 
 class ChartContainer extends React.Component<IChartContainerProps> {
 

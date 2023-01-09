@@ -4,7 +4,7 @@ import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 import { getChart } from './chart';
 
-declare let manywho: any;
+declare var manywho: any;
 
 const ChartBar: React.SFC<IComponentProps> = (props) => {
 

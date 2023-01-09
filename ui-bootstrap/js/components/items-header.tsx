@@ -3,7 +3,7 @@ import registeredComponents from '../constants/registeredComponents';
 import IItemsHeaderProps from '../interfaces/IItemsHeaderProps';
 import { getOutcome } from './outcome';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface IItemsHeaderState {
     search: string;

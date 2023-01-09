@@ -33,7 +33,7 @@ import 'tinymce/plugins/textcolor';
 import 'tinymce/plugins/visualblocks';
 import 'tinymce/plugins/wordcount';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface IContentState {
     isImageUploadOpen: boolean;

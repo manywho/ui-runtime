@@ -6,7 +6,7 @@ import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as Utils from './utils';
 
-declare let window: any;
+declare var window: any;
 
 const dateTimeFormatRegex = new RegExp('[^dmyhsztkfg]+', 'gi');
 const dateTimeFormatMappings: any = [

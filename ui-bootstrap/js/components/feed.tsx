@@ -86,7 +86,7 @@ class Feed extends React.Component<IComponentProps, ErrorBoundary> {
                                                     return <a
                                                         key={i}
                                                         href={attachment.downloadUrl}
-                                                        target="_blank" rel="noreferrer">
+                                                        target="_blank">
                                                         {attachment.name}
                                                     </a>;
                                                 })

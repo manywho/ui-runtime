@@ -4,7 +4,7 @@ import IComponentProps from '../interfaces/IComponentProps';
 import { getOutcome } from './outcome';
 import { renderOutcomesInOrder } from './utils/CoreUtils';
 
-declare let manywho: any;
+declare var manywho: any;
 
 class Textarea extends React.Component<IComponentProps, null> {
 

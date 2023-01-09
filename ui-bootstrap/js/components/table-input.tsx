@@ -10,7 +10,7 @@ interface ITableInputState {
     isFocused?: boolean;
 }
 
-declare let manywho: any;
+declare var manywho: any;
 
 class TableInput extends React.Component<ITableInputProps, ITableInputState> {
 
@@ -84,7 +84,7 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
                 typeof this.state.value === 'string' && 
                 manywho.utils.isEqual(this.state.value, 'false', true) ? 
                 false : 
-                (this.state.value as boolean).valueOf();
+                (this.state.value as Boolean).valueOf();
                 
             this.setState({ value: !checked });
 

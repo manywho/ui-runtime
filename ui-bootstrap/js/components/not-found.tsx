@@ -1,7 +1,7 @@
 import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 
-declare let manywho: any;
+declare var manywho: any;
 
 const notFoundWrapper = (componentType) => {
     return () => <div style={{ color: 'red' }}>

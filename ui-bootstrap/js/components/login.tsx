@@ -5,7 +5,7 @@ import registeredComponents from '../constants/registeredComponents';
 import ILoginProps from '../interfaces/ILoginProps';
 import { getWait } from './wait';
 
-declare let manywho: any;
+declare var manywho: any;
 
 interface ILoginState {
     username?: string;

@@ -10,7 +10,7 @@ const createDOMPurify = require('dompurify');
 
 const DOMPurify = createDOMPurify(window);
 
-declare let manywho: any;
+declare var manywho: any;
 
 class Presentation extends React.Component<IComponentProps, null> {
 

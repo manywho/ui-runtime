@@ -2,7 +2,7 @@ import * as React from 'react';
 import registeredComponents from '../constants/registeredComponents';
 import IComponentProps from '../interfaces/IComponentProps';
 
-declare let manywho: any;
+declare var manywho: any;
 
 class Status extends React.Component<IComponentProps, null> {
 
