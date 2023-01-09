@@ -1,16 +1,14 @@
 {
     "compilerOptions": {
         "pretty": true,
-        "target": "es5",
-        "noEmit": true,
-        "allowJs": true,
-        "sourceMap": true,
-        "jsx": "react",
+        "target": "ES5",
         "lib": ["DOM", "ES6"],
+        "jsx": "react",
+        "outDir": "runtime_build",
+        "sourceMap": true,
+        "allowJs": true,
         "moduleResolution": "node",
-        "noUnusedLocals": true,
-        // Must be false or unset for tests to pass
-        "esModuleInterop": false
+        "noUnusedLocals": true
     },
     "include": ["ui-offline/js", "ui-bootstrap/js"]
 }

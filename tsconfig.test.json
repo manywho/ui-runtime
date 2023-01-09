@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2015",
+        "pretty": true,
+        "target": "ES5",
+        "lib": ["DOM", "ES6"],
+        "jsx": "react",
         "outDir": "dist_test",
         "inlineSourceMap": true,
-        "jsx": "react",
-        "lib": ["DOM", "ES6"],
         "removeComments": true,
         "skipLibCheck": true
     },
