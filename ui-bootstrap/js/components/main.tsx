@@ -94,6 +94,9 @@ class Main extends React.Component<any, any> {
 
         if (attributes != null && typeof attributes.outcomes !== 'undefined')
             isFixedFooter = manywho.utils.isEqual(attributes.outcomes, 'fixed', false);
+        
+        if (manywho.model.getModalPage(this.props.flowKey))
+            isFixedFooter = true;
 
         if (isFixedFooter) {
             fixedFooter = <Footer flowKey={ this.props.flowKey }>

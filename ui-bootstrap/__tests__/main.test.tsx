@@ -3,9 +3,11 @@ import { shallow } from 'enzyme';
 
 import Main from '../js/components/main';
 
+window.manywho.model.getModalPage = () => null;
+
 describe('Main component behaviour', () => {
 
-    const globalAny:any = global;
+    const globalAny: any = global;
 
     test('Component renders without crashing', () => {
         expect(shallow(<Main />).length).toEqual(1);
