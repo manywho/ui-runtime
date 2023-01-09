@@ -9,3 +9,7 @@ dist_test
 test-report.xml
 coverage-core
 core-test-results
+
+# Ignore all but the default .env file
+*.env
+!.env
