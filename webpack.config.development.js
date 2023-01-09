@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const configCommon = require('./webpack.config.common');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 module.exports = (env) => {
     // generate the common config object

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { repoPaths } = require('./config/paths');
 const dotenv = require('dotenv').config();
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 module.exports = (env) => ({
     entry: {

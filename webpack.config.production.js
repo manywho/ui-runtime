@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const CopyPlugin = require('copy-webpack-plugin');
 const configCommon = require('./webpack.config.common');
 const RemovePlugin = require('remove-files-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { repoPaths } = require('./config/paths');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 module.exports = (env) => {
     const common = configCommon(env);
