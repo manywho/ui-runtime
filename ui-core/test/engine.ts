@@ -1,7 +1,7 @@
-import test from 'ava';
-import $ from 'jquery';
-import * as mockery from 'mockery';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as sinon from 'sinon';
+import * as mockery from 'mockery';
+import * as $ from 'jquery';
 
 const flowKey = 'key1_key2_key3_key4_key5__main';
 
@@ -95,13 +95,15 @@ mockery.registerMock('./state', state);
 mockery.registerMock('./model', model);
 mockery.registerMock('./social', social);
 
-import * as Collaboration from '../js/services/collaboration';
-import * as Component from '../js/services/component';
-import * as Engine from '../js/services/engine';
 import * as Settings from '../js/services/settings';
+import * as Engine from '../js/services/engine';
 import * as Utils from '../js/services/utils';
+import * as Component from '../js/services/component';
+import * as Model from '../js/services/model';
+import * as State from '../js/services/state';
+import * as Collaboration from '../js/services/collaboration';
 
-test.before(() => {
+test.before((t) => {
     Settings.initialize(
         {
             platform: {
@@ -122,13 +124,13 @@ test.before(() => {
     sinon.stub(Utils, 'removeFlow');
 });
 
-test.beforeEach(() => {
+test.beforeEach((t) => {
     const container = document.createElement('div');
     container.id = 'manywho';
     document.body.appendChild(container);
 });
 
-test.afterEach(() => {
+test.afterEach((t) => {
     ReactDOM.render.resetHistory();
     ReactDOM.unmountComponentAtNode.resetHistory();
     react.createElement.resetHistory();
@@ -191,26 +193,22 @@ test.serial('Initialize', (t) => {
             developerName: 'Test Navigation',
             isEnabled: true,
             isVisible: true,
-            navigationItemDataResponses: [
-                {
-                    isActive: false,
-                    isCurrent: true,
-                    isEnabled: true,
-                    isVisible: true,
-                    locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
-                    navigationItemDeveloperName: 'Home',
-                    navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                },
-            ],
-            navigationItemResponses: [
-                {
-                    developerName: 'Home',
-                    id: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                    label: 'Home',
-                    navigationItems: null,
-                    order: 0,
-                },
-            ],
+            navigationItemDataResponses: [{
+                isActive: false,
+                isCurrent: true,
+                isEnabled: true,
+                isVisible: true,
+                locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
+                navigationItemDeveloperName: 'Home',
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
+            }],
+            navigationItemResponses: [{
+                developerName: 'Home',
+                id: 'c5086605-f34e-4d06-ba9e-83144e990641',
+                label: 'Home',
+                navigationItems: null,
+                order: 0,
+            }],
         });
         return deferred;
     });
@@ -220,50 +218,28 @@ test.serial('Initialize', (t) => {
         navigation: {},
     };
 
-    return Engine.initialize(
-        'key1',
-        'key2',
-        'key3',
-        null,
-        null,
-        'authenticationToken',
-        options,
-        'true',
-    ).always((flowKey) => {
-        t.not(flowKey, null);
-        t.true(model.initializeModel.calledWith(flowKey));
-        /*t.true(state.setState.calledWith(
+    return Engine.initialize('key1', 'key2', 'key3', null, null, 'authenticationToken', options, 'true')
+        .always((flowKey) => {
+            t.not(flowKey, null);
+            t.true(model.initializeModel.calledWith(flowKey));
+            /*t.true(state.setState.calledWith(
                 flowKey,
                 initializeResponse.stateId,
                 initializeResponse.stateToken,
                 initializeResponse.currentMapElementId,
             ));*/
-        t.true(state.setAuthenticationToken.calledWith('authenticationToken', flowKey));
-        t.true(model.setSelectedNavigation.calledTwice);
-        t.true(
-            model.setSelectedNavigation.firstCall.calledWith(
-                initializeResponse.navigationElementReferences[0].id,
-                flowKey,
-            ),
-        );
-        t.true(
-            model.setSelectedNavigation.secondCall.calledWith(options.navigationElementId, flowKey),
-        );
-        t.true(state.setComponentLoading.calledTwice);
-        t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
-        t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
-        t.true(model.parseEngineResponse.calledOnce);
-        t.true(
-            state.setState.calledWith(
-                invokeResponse.stateId,
-                invokeResponse.stateToken,
-                invokeResponse.currentMapElementId,
-                flowKey,
-            ),
-        );
-        t.true(state.setLocation.calledWith(flowKey));
-        t.true(social.initialize.calledWith(flowKey, invokeResponse.currentStreamId));
-    });
+            t.true(state.setAuthenticationToken.calledWith('authenticationToken', flowKey));
+            t.true(model.setSelectedNavigation.calledTwice);
+            t.true(model.setSelectedNavigation.firstCall.calledWith(initializeResponse.navigationElementReferences[0].id, flowKey));
+            t.true(model.setSelectedNavigation.secondCall.calledWith(options.navigationElementId, flowKey));
+            t.true(state.setComponentLoading.calledTwice);
+            t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
+            t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
+            t.true(model.parseEngineResponse.calledOnce);
+            t.true(state.setState.calledWith(invokeResponse.stateId, invokeResponse.stateToken, invokeResponse.currentMapElementId, flowKey));
+            t.true(state.setLocation.calledWith(flowKey));
+            t.true(social.initialize.calledWith(flowKey, invokeResponse.currentStreamId));
+        });
 });
 
 test.serial('Navigation componet player options get passed through into state', (t) => {
@@ -292,18 +268,10 @@ test.serial('Navigation componet player options get passed through into state', 
         },
     };
 
-    return Engine.initialize(
-        'key1',
-        'key2',
-        'key3',
-        null,
-        null,
-        'authenticationToken',
-        options,
-        'true',
-    ).always((flowKey) => {
-        t.true(state.setOptions.calledWith(options, flowKey));
-    });
+    return Engine.initialize('key1', 'key2', 'key3', null, null, 'authenticationToken', options, 'true')
+        .always((flowKey) => {
+            t.true(state.setOptions.calledWith(options, flowKey));
+        });
 });
 
 test.serial.cb('Initialize Failed', (t) => {
@@ -320,19 +288,11 @@ test.serial.cb('Initialize Failed', (t) => {
         navigation: {},
     };
 
-    Engine.initialize(
-        'tenantId',
-        'flowId',
-        'flowVersionId',
-        null,
-        null,
-        null,
-        options,
-        null,
-    ).always(() => {
-        t.not(document.querySelector('.alert'), null);
-        t.end();
-    });
+    Engine.initialize('tenantId', 'flowId', 'flowVersionId', null, null, null, options, null)
+        .always(() => {
+            t.not(document.querySelector('.alert'), null);
+            t.end();
+        });
 });
 
 test.serial('Move', (t) => {
@@ -365,26 +325,22 @@ test.serial('Move', (t) => {
             developerName: 'Test Navigation',
             isEnabled: true,
             isVisible: true,
-            navigationItemDataResponses: [
-                {
-                    isActive: false,
-                    isCurrent: true,
-                    isEnabled: true,
-                    isVisible: true,
-                    locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
-                    navigationItemDeveloperName: 'Home',
-                    navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                },
-            ],
-            navigationItemResponses: [
-                {
-                    developerName: 'Home',
-                    id: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                    label: 'Home',
-                    navigationItems: null,
-                    order: 0,
-                },
-            ],
+            navigationItemDataResponses: [{
+                isActive: false,
+                isCurrent: true,
+                isEnabled: true,
+                isVisible: true,
+                locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
+                navigationItemDeveloperName: 'Home',
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
+            }],
+            navigationItemResponses: [{
+                developerName: 'Home',
+                id: 'c5086605-f34e-4d06-ba9e-83144e990641',
+                label: 'Home',
+                navigationItems: null,
+                order: 0,
+            }],
         });
         return deferred;
     });
@@ -392,32 +348,30 @@ test.serial('Move', (t) => {
     model.getDefaultNavigationId.returns('navigationId');
     model.getOutcome.returns({ id: 'outcome' });
 
+    const options = {
+        navigationElementId: 'navigationId',
+    };
+
     const outcome = {
         id: 'outcome',
     };
 
-    return Engine.move(outcome, flowKey).always((flowKey) => {
-        t.not(flowKey, null);
-        /*t.true(state.setState.firstCall.calledWith(
+    return Engine.move(outcome, flowKey)
+        .always((flowKey) => {
+            t.not(flowKey, null);
+            /*t.true(state.setState.firstCall.calledWith(
                 flowKey,
                 invokeResponse.stateId,
                 invokeResponse.stateToken,
                 invokeResponse.currentMapElementId,
             ));*/
-        t.true(state.setComponentLoading.calledTwice);
-        t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
-        t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
-        t.is(model.parseEngineResponse.callCount, 1);
-        t.true(
-            state.setState.calledWith(
-                invokeResponse.stateId,
-                invokeResponse.stateToken,
-                invokeResponse.currentMapElementId,
-                flowKey,
-            ),
-        );
-        t.true(state.setLocation.calledWith(flowKey));
-    });
+            t.true(state.setComponentLoading.calledTwice);
+            t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
+            t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
+            t.is(model.parseEngineResponse.callCount, 1);
+            t.true(state.setState.calledWith(invokeResponse.stateId, invokeResponse.stateToken, invokeResponse.currentMapElementId, flowKey));
+            t.true(state.setLocation.calledWith(flowKey));
+        });
 });
 
 test.serial('Join', (t) => {
@@ -452,26 +406,22 @@ test.serial('Join', (t) => {
             developerName: 'Test Navigation',
             isEnabled: true,
             isVisible: true,
-            navigationItemDataResponses: [
-                {
-                    isActive: false,
-                    isCurrent: true,
-                    isEnabled: true,
-                    isVisible: true,
-                    locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
-                    navigationItemDeveloperName: 'Home',
-                    navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                },
-            ],
-            navigationItemResponses: [
-                {
-                    developerName: 'Home',
-                    id: 'c5086605-f34e-4d06-ba9e-83144e990641',
-                    label: 'Home',
-                    navigationItems: null,
-                    order: 0,
-                },
-            ],
+            navigationItemDataResponses: [{
+                isActive: false,
+                isCurrent: true,
+                isEnabled: true,
+                isVisible: true,
+                locationMapElementId: '735487cb-21e2-4467-b560-d725648b6257',
+                navigationItemDeveloperName: 'Home',
+                navigationItemId: 'c5086605-f34e-4d06-ba9e-83144e990641',
+            }],
+            navigationItemResponses: [{
+                developerName: 'Home',
+                id: 'c5086605-f34e-4d06-ba9e-83144e990641',
+                label: 'Home',
+                navigationItems: null,
+                order: 0,
+            }],
         });
         return deferred;
     });
@@ -483,19 +433,15 @@ test.serial('Join', (t) => {
         navigationElementId: 'navigationId',
     };
 
-    return Engine.join(
-        'Key1',
-        'Key2',
-        'Key3',
-        'Key4',
-        'main',
-        'key5',
-        'authenticationToken',
-        options,
-    ).always((flowKey) => {
-        t.not(flowKey, null);
-        sinon.stub(Engine, 'join');
-    });
+    const outcome = {
+        id: 'outcome',
+    };
+
+    return Engine.join('Key1', 'Key2', 'Key3', 'Key4', 'main', 'key5', 'authenticationToken', options)
+        .always((flowKey) => {
+            t.not(flowKey, null);
+            sinon.stub(Engine, 'join');
+        });
 });
 
 test.serial('Render', (t) => {
@@ -530,7 +476,7 @@ test.serial('Render Login', (t) => {
     sinon.stub(Engine, 'render');
 });
 
-test.serial("Don't render if there is no container", (t) => {
+test.serial('Don\'t render if there is no container', (t) => {
     (Engine.render as sinon.SinonStub).restore();
 
     Engine.render(flowKey);
@@ -543,20 +489,10 @@ test.serial("Don't render if there is no container", (t) => {
 test.serial('Ping', (t) => {
     model.getInvokeType.returns('WAIT');
 
-    return Engine.ping(flowKey).then(() => {
-        t.true(
-            (Engine.join as sinon.SinonStub).calledWith(
-                'key1',
-                'key2',
-                'key3',
-                'key4',
-                '',
-                undefined,
-                'authenticationToken',
-                'options',
-            ),
-        );
-    });
+    return Engine.ping(flowKey)
+        .then(() => {
+            t.true((Engine.join as sinon.SinonStub).calledWith('key1', 'key2', 'key3', 'key4', '', undefined, 'authenticationToken', 'options'));
+        });
 });
 
 test.serial('Parse Response', (t) => {
@@ -567,7 +503,7 @@ test.serial('Parse Response', (t) => {
         invokeType: 'WAIT',
     };
 
-    const parser = (data) => {
+    const parser = (data, flowKey) => {
         t.deepEqual(data, response);
     };
 
@@ -575,13 +511,7 @@ test.serial('Parse Response', (t) => {
 
     Engine.parseResponse(response, parser, response.invokeType, flowKey);
 
-    t.true(
-        state.setState.calledWith(
-            response.stateId,
-            response.stateToken,
-            response.currentMapElementId,
-        ),
-    );
+    t.true(state.setState.calledWith(response.stateId, response.stateToken, response.currentMapElementId));
     t.true(state.refreshComponents.calledWith([], flowKey));
     t.true(ping.calledOnce);
 });
@@ -600,7 +530,7 @@ test.serial('Toggle Debug', (t) => {
 
 test.serial('FileDataRequest Success', (t) => {
     ajax.dispatchFileDataRequest.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.resolve({
             objectData: 'objectData',
             hasMoreResults: true,
@@ -613,21 +543,13 @@ test.serial('FileDataRequest Success', (t) => {
         fileDataRequest: {},
     });
 
-    return Engine.fileDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).then(() => {
-        t.true((Engine.render as sinon.SinonStub).calledTwice);
-        t.true(state.setComponentError.calledWith('id', null, flowKey));
-        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
-        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
-    });
+    return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
+        .then(() => {
+            t.true((Engine.render as sinon.SinonStub).calledTwice);
+            t.true(state.setComponentError.calledWith('id', null, flowKey));
+            t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+            t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+        });
 });
 
 test.serial('FileDataRequest Fail', async (t) => {
@@ -642,16 +564,7 @@ test.serial('FileDataRequest Fail', async (t) => {
         fileDataRequest: {},
     });
 
-    return Engine.fileDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).catch(() => {
+    return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
         t.true((Engine.render as sinon.SinonStub).calledTwice);
         t.true(state.setComponentError.calledWith('id', 'error', flowKey));
         t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
@@ -671,16 +584,7 @@ test.serial('FileDataRequest Fail extended error response', async (t) => {
         fileDataRequest: {},
     });
 
-    return Engine.fileDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).catch(() => {
+    return Engine.fileDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
         t.true((Engine.render as sinon.SinonStub).calledTwice);
         t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
         t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
@@ -690,7 +594,7 @@ test.serial('FileDataRequest Fail extended error response', async (t) => {
 
 test.serial('ObjectDataRequest Success', (t) => {
     ajax.dispatchObjectDataRequest.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.resolve({
             objectData: 'objectData',
             hasMoreResults: true,
@@ -703,26 +607,18 @@ test.serial('ObjectDataRequest Success', (t) => {
         objectDataRequest: {},
     });
 
-    return Engine.objectDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).then(() => {
-        t.true((Engine.render as sinon.SinonStub).calledTwice);
-        t.true(state.setComponentError.calledWith('id', null, flowKey));
-        t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
-        t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
-    });
+    return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1)
+        .then(() => {
+            t.true((Engine.render as sinon.SinonStub).calledTwice);
+            t.true(state.setComponentError.calledWith('id', null, flowKey));
+            t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
+            t.true(state.setComponentLoading.secondCall.calledWith('id', null, flowKey));
+        });
 });
 
 test.serial('ObjectDataRequest Fail', async (t) => {
     ajax.dispatchObjectDataRequest.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.reject('xhr', 'status', 'error');
         return deferred;
     });
@@ -732,16 +628,7 @@ test.serial('ObjectDataRequest Fail', async (t) => {
         objectDataRequest: {},
     });
 
-    return Engine.objectDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).catch(() => {
+    return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
         t.true((Engine.render as sinon.SinonStub).calledTwice);
         t.true(state.setComponentError.calledWith('id', 'error', flowKey));
         t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
@@ -751,7 +638,7 @@ test.serial('ObjectDataRequest Fail', async (t) => {
 
 test.serial('ObjectDataRequest Fail extended error response', async (t) => {
     ajax.dispatchObjectDataRequest.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.reject({ responseJSON: { message: 'API error message returned' } }, 'status', '');
         return deferred;
     });
@@ -761,16 +648,7 @@ test.serial('ObjectDataRequest Fail extended error response', async (t) => {
         objectDataRequest: {},
     });
 
-    return Engine.objectDataRequest(
-        'id',
-        'request',
-        flowKey,
-        10,
-        'search',
-        'orderBy',
-        'orderByDirection',
-        1,
-    ).catch(() => {
+    return Engine.objectDataRequest('id', 'request', flowKey, 10, 'search', 'orderBy', 'orderByDirection', 1).catch(() => {
         t.true((Engine.render as sinon.SinonStub).calledTwice);
         t.true(state.setComponentError.calledWith('id', 'API error message returned', flowKey));
         t.true(state.setComponentLoading.firstCall.calledWith('id', { message: '' }, flowKey));
@@ -780,7 +658,7 @@ test.serial('ObjectDataRequest Fail extended error response', async (t) => {
 
 test.serial('Sync', (t) => {
     ajax.invoke.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.resolve({
             invokeType: 'FORWARD',
         });
@@ -814,15 +692,16 @@ test.serial('Sync', (t) => {
 
     const objectDataRequest = sinon.stub(Engine, 'objectDataRequest').resolves(null);
 
-    return Engine.sync(flowKey).always(() => {
-        t.true(model.parseEngineSyncResponse.calledOnce);
-        t.true((Engine.render as sinon.SinonStub).calledTwice);
-        t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
-        t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
-        t.true(objectDataRequest.calledOnce);
+    return Engine.sync(flowKey)
+        .always(() => {
+            t.true(model.parseEngineSyncResponse.calledOnce);
+            t.true((Engine.render as sinon.SinonStub).calledTwice);
+            t.true(state.setComponentLoading.firstCall.calledWith('', { message: '' }, flowKey));
+            t.true(state.setComponentLoading.secondCall.calledWith('', null, flowKey));
+            t.true(objectDataRequest.calledOnce);
 
-        objectDataRequest.restore();
-    });
+            objectDataRequest.restore();
+        });
 });
 
 test.serial('Return To Parent', (t) => {
@@ -833,52 +712,25 @@ test.serial('Return To Parent', (t) => {
     t.true(state.setComponentLoading.calledWith('', null, flowKey));
     t.true((Engine.render as sinon.SinonStub).calledOnce);
     t.true((Collaboration.returnToParent as sinon.SinonStub).calledWith(flowKey, 'parentStateId'));
-    t.true(
-        (Engine.join as sinon.SinonStub).calledWith(
-            'key1',
-            null,
-            null,
-            null,
-            'main',
-            'parentStateId',
-            'authenticationToken',
-            'options',
-        ),
-    );
+    t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, null, 'main', 'parentStateId', 'authenticationToken', 'options'));
 });
 
 test.serial('Flow Out', (t) => {
     sinon.stub(Collaboration, 'flowOut');
 
     ajax.flowOut.callsFake(() => {
-        const deferred = $.Deferred();
+        const deferred =  $.Deferred();
         deferred.resolve({
             stateId: 'stateId',
         });
         return deferred;
     });
 
-    return Engine.flowOut({}, flowKey).then(() => {
-        t.true(
-            (Collaboration.flowOut as sinon.SinonStub).calledWith(
-                flowKey,
-                'stateId',
-                'key1____stateId_',
-            ),
-        );
-        t.true(
-            (Engine.join as sinon.SinonStub).calledWith(
-                'key1',
-                null,
-                null,
-                null,
-                'main',
-                'stateId',
-                'authenticationToken',
-                'options',
-            ),
-        );
-    });
+    return Engine.flowOut({}, flowKey)
+        .then(() => {
+            t.true((Collaboration.flowOut as sinon.SinonStub).calledWith(flowKey, 'stateId', 'key1____stateId_'));
+            t.true((Engine.join as sinon.SinonStub).calledWith('key1', null, null, null, 'main', 'stateId', 'authenticationToken', 'options'));
+        });
 });
 
 test('Check Locale with undefined navigator.language', (t) => {

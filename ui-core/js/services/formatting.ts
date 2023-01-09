@@ -1,7 +1,8 @@
-import * as Log from 'loglevel';
-import moment from 'moment';
-import numbro from 'numbro';
+import * as numbro from 'numbro';
+import * as moment from 'moment';
+
 import * as Component from './component';
+import * as Log from 'loglevel';
 import * as Settings from './settings';
 import * as Utils from './utils';
 

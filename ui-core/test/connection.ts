@@ -1,7 +1,10 @@
-import test from 'ava';
-import mock from 'xhr-mock';
+import test from 'ava'; // tslint:disable-line:import-name
+import * as mock from 'xhr-mock';
+import * as FormData from 'form-data';
 import * as Connection from '../js/services/connection';
 import * as Settings from '../js/services/settings';
+
+const flowKey = 'key1_key2_key3_key4';
 
 test.before((t) => {
     mock.setup();
@@ -39,12 +42,12 @@ test.cb('Request', (t) => {
     };
 
     mock.post(url, (req, res) => {
-        t.is(req.body(), JSON.stringify(payload));
-        t.is(req.method(), 'POST');
-        t.is(req.url().toString(), url);
-        t.deepEqual(req.headers(), expectedHeaders);
+        t.is(req._body, JSON.stringify(payload));
+        t.is(req._method, 'POST');
+        t.is(req._url, url);
+        t.deepEqual(req._headers, expectedHeaders);
         t.end();
-        return res.status(200);
+        return res.status(200).body();
     });
 
     Connection.request(null, 'myevent', 'testurl', 'POST', 'tenantId', 'stateId', 'token', payload);
@@ -60,14 +63,14 @@ test.cb('Download Pdf', (t) => {
         authorization: 'token',
         manywhostate: 'stateId',
         manywhotenant: 'tenantId',
-    };
+    };    
 
     mock.get(url, (req, res) => {
-        t.is(req.method(), 'GET');
-        t.is(req.url().toString(), url);
-        t.deepEqual(req.headers(), expectedHeaders);
+        t.is(req._method, 'GET');
+        t.is(req._url, url);
+        t.deepEqual(req._headers, expectedHeaders);
         t.end();
-        return res.status(200);
+        return res.status(200).body();
     });
 
     Connection.downloadPdf('myevent', 'downloadpdf', 'tenantId', 'token', 'stateId', 'filename');

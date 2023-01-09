@@ -1,6 +1,6 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
+import * as moment from 'moment';
 import * as mockery from 'mockery';
-import moment from 'moment';
 import * as sinon from 'sinon';
 
 const validation = {
@@ -29,12 +29,12 @@ mockery.registerMock('./model', model);
 mockery.registerMock('./validation', validation);
 mockery.registerMock('./collaboration', collaboration);
 
-import * as Settings from '../js/services/settings';
 import * as State from '../js/services/state';
+import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(() => {
+test.beforeEach((t) => {
     State.remove(flowKey);
     validation.validate.resetHistory();
     model.getComponents.resetHistory();
@@ -42,7 +42,7 @@ test.beforeEach(() => {
     collaboration.push.resetHistory();
 });
 
-test.after(() => {
+test.after((t) => {
     mockery.deregisterAll();
     mockery.disable();
 });
@@ -149,6 +149,8 @@ test.serial('Set User Time With Offset', (t) => {
 
     t.not(State.getLocation(flowKey).time, null);
 
+    const time = moment();
+
     t.not(State.getLocation(flowKey).time.indexOf('-08:00'), -1);
 });
 
@@ -163,9 +165,7 @@ test.serial('Input Responses', (t) => {
 
     State.setComponents(components, flowKey);
 
-    t.deepEqual(State.getPageComponentInputResponseRequests(flowKey), [
-        components['dd5b8fd9-1f25-4e57-a53e-135d94faf7a6'],
-    ]);
+    t.deepEqual(State.getPageComponentInputResponseRequests(flowKey), [components['dd5b8fd9-1f25-4e57-a53e-135d94faf7a6']]);
 });
 
 test.serial('Set Location', (t) => {
@@ -202,6 +202,7 @@ test.serial('Set Location', (t) => {
 });
 
 test.serial('Refresh Components', (t) => {
+
     const id = '73d2bbeb-c45e-44af-bd14-163c83fdbd83';
     const models = {};
     models[id] = {
@@ -234,11 +235,13 @@ test.serial('Refresh Components', (t) => {
 });
 
 test.serial('Set Component with client-side validation disabled', (t) => {
+
     // Mock the validate() method guarded by 'validation.isEnabled' as if disabled.
-    validation.validate.returns({
-        isValid: true,
-        validationMessage: null,
-    });
+    validation.validate
+        .returns({
+            isValid: true,
+            validationMessage: null,
+        });
 
     const models = {
         id: {
@@ -267,11 +270,13 @@ test.serial('Set Component with client-side validation disabled', (t) => {
 });
 
 test.serial('Set Component with client-side validation enabled', (t) => {
+
     // Mock the validate() method guarded by 'validation.isEnabled' as if enabled.
-    validation.validate.returns({
-        isValid: false,
-        validationMessage: 'not valid',
-    });
+    validation.validate
+        .returns({
+            isValid: false,
+            validationMessage: 'not valid',
+        });
 
     const models = {
         id: {

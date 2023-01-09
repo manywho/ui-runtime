@@ -1,5 +1,5 @@
-import test from 'ava';
-import mock from 'xhr-mock';
+import test from 'ava'; // tslint:disable-line:import-name
+import * as mock from 'xhr-mock';
 import * as Authorization from '../js/services/authorization';
 import * as Settings from '../js/services/settings';
 import * as State from '../js/services/state';
@@ -7,7 +7,7 @@ import * as Utils from '../js/services/utils';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.before(() => {
+test.before((t) => {
     Settings.initialize(
         {
             platform: {
@@ -18,7 +18,7 @@ test.before(() => {
     );
 });
 
-test.beforeEach(() => {
+test.beforeEach((t) => {
     Authorization.setAuthenticationToken(null, flowKey);
     State.setLogin(null, flowKey);
 });
@@ -117,7 +117,7 @@ test.cb('Authorize By Session', (t) => {
 
     const onDone = {
         type: 'done',
-        execute: () => {
+        execute: (callback, response) => {
             t.pass();
             t.end();
         },
@@ -128,3 +128,4 @@ test.cb('Authorize By Session', (t) => {
 
     Authorization.authorizeBySession('loginurl', flowKey, onDone);
 });
+

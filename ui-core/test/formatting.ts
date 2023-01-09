@@ -1,17 +1,17 @@
-import test from 'ava';
-import moment from 'moment';
+import test from 'ava'; // tslint:disable-line:import-name
+import * as moment from 'moment';
 import * as Formatting from '../js/services/formatting';
 import * as Settings from '../js/services/settings';
 
 const flowKey = 'key1_key2_key3_key4';
 
-test.beforeEach(() => {
+test.beforeEach((t) => {
     Settings.initialize(
         {
             formatting: {
                 isEnabled: true,
             },
-        },
+        }, 
         null,
     );
 });
@@ -27,7 +27,7 @@ test.serial('Disabled', (t) => {
             formatting: {
                 isEnabled: false,
             },
-        },
+        }, 
         null,
     );
     t.is(Formatting.format('test', 'format', null, flowKey), 'test');
@@ -73,7 +73,7 @@ test.serial('DateTime Disabled', (t) => {
             formatting: {
                 isEnabled: false,
             },
-        },
+        }, 
         null,
     );
 

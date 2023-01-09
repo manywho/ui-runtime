@@ -1,4 +1,3 @@
-import * as $ from 'jquery';
 import * as moment from 'moment';
 
 import * as Collaboration from './collaboration';

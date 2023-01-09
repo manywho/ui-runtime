@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from 'ava'; // tslint:disable-line:import-name
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
@@ -79,7 +79,9 @@ test('Is Empty Objectdata 2', (t) => {
 test('Is Empty Objectdata 3', (t) => {
     const model = {
         objectDataRequest: {},
-        objectData: [{}],
+        objectData: [
+            {},
+        ],
     };
     t.is(Utils.isEmptyObjectData(model), true);
 });
@@ -224,6 +226,7 @@ test('Guid', (t) => {
 });
 
 test.cb('Debounce', (t) => {
+
     const callback = () => {
         t.end();
     };
@@ -251,6 +254,7 @@ test('Remove Flow From DOM', (t) => {
 });
 
 test('Extend Objectdata', (t) => {
+
     const mergedObjectData = [
         {
             developerName: 'property1',
