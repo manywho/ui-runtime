@@ -29,7 +29,7 @@ class Request extends React.Component<IRequestProps, Partial<IRequestState>> {
         }
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (!this.props.replayNow && nextProps.replayNow) {
             this.onReplay();
         }
