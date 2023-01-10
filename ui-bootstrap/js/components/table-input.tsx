@@ -183,11 +183,11 @@ class TableInput extends React.Component<ITableInputProps, ITableInputState> {
         manywho.model.setModal(this.props.flowKey, null);
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState({ value: this.props.value });
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.setState({ value: nextProps.value });
     }
 

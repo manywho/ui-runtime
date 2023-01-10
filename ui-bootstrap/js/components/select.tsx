@@ -45,7 +45,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
         this.selectizeRef = React.createRef();
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState({ options: this.getOptions(this.props.objectData || []) });
         window.addEventListener('blur', this.onWindowBlur);
     }
@@ -54,7 +54,7 @@ class Select extends React.Component<IItemsComponentProps, IDropDownState> {
         this.comboBoxRef.current.querySelector('input').classList.add('prevent-submit-on-enter');
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         const state = manywho.state.getComponent(this.props.id, this.props.flowKey);
 

@@ -56,7 +56,7 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
             manywho.state.setComponent(this.props.id, { isValid: false }, this.props.flowKey, true);
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState({
             value: !manywho.utils.isNullOrUndefined(this.props.value) ?
                 manywho.formatting.number(this.props.value, this.props.format) :
@@ -64,7 +64,7 @@ class InputNumber extends React.Component<IInputProps, IInputNumberState> {
         });
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (
             !manywho.utils.isNullOrUndefined(nextProps.value) &&
             parseFloat(this.state.value) !== nextProps.value

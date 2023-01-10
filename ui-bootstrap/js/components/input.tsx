@@ -30,7 +30,7 @@ class Input extends React.Component<IComponentProps, null> {
         this.onBlur = this.onBlur.bind(this);
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         const model = manywho.model.getComponent(this.props.id, this.props.flowKey);
         if (model && model.attributes && model.attributes.validation) {
             this.validationRegex = new RegExp(model.attributes.validation);
