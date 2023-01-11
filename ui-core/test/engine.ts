@@ -54,6 +54,7 @@ const model = {
     getDefaultNavigationId: sinon.stub(),
     getOutcome: sinon.stub(),
     parseNavigationResponse: sinon.stub(),
+    getModalPage: sinon.stub(),
 };
 
 const social = {
@@ -128,6 +129,8 @@ test.beforeEach((t) => {
     const container = document.createElement('div');
     container.id = 'manywho';
     document.body.appendChild(container);
+    
+    model.getModalPage.returns(null);
 });
 
 test.afterEach((t) => {
@@ -458,6 +461,27 @@ test.serial('Render', (t) => {
     t.deepEqual(react.createElement.args[0][0], Component.getByName('main'));
 
     sinon.stub(Engine, 'render');
+});
+
+test.serial("Render in a modal", (t) => {
+  const container = document.createElement("div");
+  container.id = Utils.getLookUpKey(flowKey);
+  document.querySelector("#manywho").appendChild(container);
+
+  (Engine.render as sinon.SinonStub).restore();
+  model.getModalPage.returns({ title: "Test Title" });
+
+  Engine.render(flowKey);
+
+  // Tests up until "Bail here if there is no container."
+  t.true(ReactDOM.render.calledOnce);
+  t.true(react.createElement.calledOnce);
+  t.deepEqual(
+    react.createElement.args[0][0],
+    Component.getByName("modal-container")
+  );
+
+  sinon.stub(Engine, "render");
 });
 
 test.serial('Render Login', (t) => {

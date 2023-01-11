@@ -124,6 +124,7 @@ describe('Table component behaviour', () => {
         });
         globalAny.window.manywho.component.getDisplayColumns = jest.fn(columns => columns);
         globalAny.window.manywho.styling.getClasses = jest.fn(() => [model.attributes.classes]);
+        globalAny.window.manywho.model.getModalPage = jest.fn(() => null);
 
         return shallow(<Table {...props} />, { disableLifecycleMethods: true });
     }
