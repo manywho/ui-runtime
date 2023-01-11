@@ -117,7 +117,7 @@
         "xhr-mock": "1.9.0"
     },
     "scripts": {
-        "start": "webpack-dev-server --config webpack.config.development.js",
+        "start": "webpack serve --config webpack.config.development.js",
         "build": "webpack build --config webpack.config.production.js",
         "docs:core": "typedoc --mode modules --module es2015 --excludeExternals --excludePrivate --excludeNotExported --ignoreCompilerErrors --out ./docs ./ui-core/js/services",
         "test": "jest test && npm run test:core",
