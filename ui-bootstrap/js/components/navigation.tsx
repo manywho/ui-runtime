@@ -47,7 +47,7 @@ class Navigation extends React.Component<INavigationProps, null> {
 
     // Concerns navigating the Flow if the navigation
     // item clicked has not got a sub menu
-    onClick(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item: { isEnabled: boolean; id: string; }, persistState: boolean) {
+    onClick({ e, item, persistState }: { e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>; item: { isEnabled: boolean; id: string; url: string | null; urlTarget: string | null }; persistState: boolean; }): boolean {
 
         if (!item.isEnabled) {
             return false;
@@ -65,6 +65,11 @@ class Navigation extends React.Component<INavigationProps, null> {
                 i.current.classList.toggle('open');
             }
         });
+
+        if (item.url != null) {
+            window.open(item.url, item.urlTarget, 'noopener,noreferrer');
+            return true;
+        }
 
         manywho.engine.navigate(this.props.id, item.id, null, this.props.flowKey, persistState);
 
@@ -152,7 +157,7 @@ class Navigation extends React.Component<INavigationProps, null> {
             } else {
                 element = (
                     <li className={classNames.join(' ')} key={item.id}>
-                        <a href="#" onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick(e, item, persistState)} id={item.id}>
+                        <a href="#" onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick({ e, item, persistState })} id={item.id}>
                             {item.label}
                         </a>
                     </li>
@@ -247,8 +252,8 @@ class Navigation extends React.Component<INavigationProps, null> {
                                     // TODO: Use more accessible elements for navigation items
                                     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
                                     <li
-                                        onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick(e, item, navigation.persistState)}
-                                        onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => this.onClick(e, item, navigation.persistState)}
+                                        onClick={(e: React.MouseEvent<HTMLElement>) => this.onClick({ e, item, persistState: navigation.persistState })}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => this.onClick({ e, item, persistState: navigation.persistState })}
                                         key={item.id}
                                         id={item.id}
                                         className={className}
