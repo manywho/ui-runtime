@@ -232,6 +232,7 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
     flowModel[lookUpKey].stateValues = [];
     flowModel[lookUpKey].preCommitStateValues = [];
     flowModel[lookUpKey].mapElement = {};
+    flowModel[lookUpKey].modalPage = null;
 
     flowModel[lookUpKey].rootFaults = [];
 
@@ -249,6 +250,11 @@ export const parseEngineResponse = (engineInvokeResponse, flowKey: string) => {
         flowModel[lookUpKey].waitMessage = engineInvokeResponse.notAuthorizedMessage || engineInvokeResponse.waitMessage;
         flowModel[lookUpKey].vote = engineInvokeResponse.voteResponse || null;
         flowModel[lookUpKey].waitExpiresAt = engineInvokeResponse.waitExpiresAt || null;
+        if (engineInvokeResponse.pageType === 1) {
+            flowModel[lookUpKey].modalPage = {
+                title: engineInvokeResponse.title
+            };
+        }
 
         if (engineInvokeResponse.mapElementInvokeResponses[0].pageResponse) {
 
@@ -1013,4 +1019,12 @@ export const setModal = (flowKey: string, modal) => {
 export const getModal = (flowKey: string) => {
     const lookUpKey = Utils.getLookUpKey(flowKey);
     return flowModel[lookUpKey].modal;
+};
+
+/**
+ * Contains the title of a modal map element
+ */
+ export const getModalPage = (flowKey: string) => {
+    const lookUpKey = Utils.getLookUpKey(flowKey);
+    return flowModel[lookUpKey].modalPage;
 };

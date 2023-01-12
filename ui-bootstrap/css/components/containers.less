@@ -97,9 +97,26 @@ body {
         margin-top: @container-margin;
     }
 
+    &#modal-map-element {
+        background: none;
+    }
+
+    &#modal-map-element .main-scroller {
+        max-height: calc(100vh - 220px);
+    }
+
+    &#modal-map-element .main {
+        width: 100%;
+    }
+
+    &#modal-map-element .main,
     .main-empty:nth-of-type(1) {
         margin-bottom: 0;
         margin-top: 0;
+    }
+
+    &#modal-map-element .modal-body {
+        min-height: 0;
     }
 
     .row {

@@ -150,7 +150,10 @@ class Table extends React.Component<ITableContainerProps, ITableContainerState> 
     }
 
     handleResize() {
-
+        if (manywho.model.getModalPage(this.props.flowKey)) {
+            // prevent base page from rerendering while modal is open
+            return;
+        }
         if ((this.state.windowWidth <= 768 && window.innerWidth > 768)
             || (this.state.windowWidth > 768 && window.innerWidth <= 768)) {
 
