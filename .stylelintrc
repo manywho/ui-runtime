@@ -1,6 +1,11 @@
 {
-  "extends": ["stylelint-config-standard"],
-  "rules": {
-    "indentation": 4
-  }
+    "extends": [
+        "stylelint-config-standard",
+        "stylelint-config-recommended-less",
+        "stylelint-config-prettier"
+    ],
+    "rules": {
+        "indentation": 4
+    },
+    "customSyntax": "postcss-less"
 }
