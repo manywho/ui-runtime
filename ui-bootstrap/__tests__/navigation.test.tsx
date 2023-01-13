@@ -163,4 +163,29 @@ describe('Navigation component behaviour', () => {
             expect(navWrapper.html().includes('open')).toEqual(false);
         });
     });
+    test('URL navigation works correctly', () => {
+        window.open = jest.fn();
+        globalAny.window.manywho.model.getNavigation.mockImplementation(() => ({
+            isVisible: true,
+            items: {
+                parent: {
+                    id: 'parent',
+                    label: 'My URL Nav',
+                    items: null,
+                    url: 'https://boomi.com',
+                    urlTarget: '_blank',
+                    isEnabled: true,
+                },
+            },
+        }));
+
+
+        const navWrapper = mount(<Navigation {...props} />);
+        const navItem = navWrapper.find('#parent');
+        navItem.simulate('click');
+
+        expect(window.open).toHaveBeenCalledWith(
+            'https://boomi.com', '_blank', 'noopener,noreferrer',
+        );
+    });
 });
