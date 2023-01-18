@@ -1,5 +1,5 @@
 import { CONTENT_TYPES } from '../../constants';
-import { clone } from '../Utils';
+import { clone, guid } from '../Utils';
 import { getMacroState, setMacroState } from './MacroState';
 
 /**
@@ -96,6 +96,8 @@ export const generateNewObjectData = (typeId: string, metadata: any) => {
         delete property.id;
         return property;
     });
+
+    typeElement.internalId = guid();
 
     return typeElement;
 };
